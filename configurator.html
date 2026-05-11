@@ -33,7 +33,7 @@
             <div class="space-y-8">
                 <div>
                     <label data-key="gpu-label" class="block text-[10px] font-black uppercase tracking-widest text-zinc-500 mb-3 text-blue-500">Videokaart (GPU)</label>
-                    <select id="gpu-select" onchange="updatePrice()" class="w-full p-4 rounded-xl outline-none focus:border-blue-600 transition uppercase text-[10px] font-bold tracking-widest">
+                    <select id="gpu-select" onchange="updatePrice()" class="w-full p-4 rounded-xl outline-none focus:border-blue-600 transition uppercase text-[10px] font-bold tracking-widest cursor-pointer">
                         <option value="0">AMD Radeon RX 9060 XT 16GB</option>
                         <option value="250">AMD Radeon RX 9070 XT 20GB (+250€)</option>
                     </select>
@@ -41,7 +41,7 @@
 
                 <div>
                     <label data-key="ram-label" class="block text-[10px] font-black uppercase tracking-widest text-zinc-500 mb-3 text-blue-500">Operatiivmälu (RAM)</label>
-                    <select id="ram-select" onchange="updatePrice()" class="w-full p-4 rounded-xl outline-none focus:border-blue-600 transition uppercase text-[10px] font-bold tracking-widest">
+                    <select id="ram-select" onchange="updatePrice()" class="w-full p-4 rounded-xl outline-none focus:border-blue-600 transition uppercase text-[10px] font-bold tracking-widest cursor-pointer">
                         <option value="0">16GB DDR5</option>
                         <option value="95">32GB DDR5 (+95€)</option>
                         <option value="190">64GB DDR5 (+190€)</option>
@@ -50,7 +50,7 @@
 
                 <div>
                     <label data-key="ssd-label" class="block text-[10px] font-black uppercase tracking-widest text-zinc-500 mb-3 text-blue-500">Salvestusruum (SSD)</label>
-                    <select id="ssd-select" onchange="updatePrice()" class="w-full p-4 rounded-xl outline-none focus:border-blue-600 transition uppercase text-[10px] font-bold tracking-widest">
+                    <select id="ssd-select" onchange="updatePrice()" class="w-full p-4 rounded-xl outline-none focus:border-blue-600 transition uppercase text-[10px] font-bold tracking-widest cursor-pointer">
                         <option value="0">512GB NVMe Gen4</option>
                         <option value="45">1TB NVMe Gen4 (+45€)</option>
                         <option value="120">2TB NVMe Gen4 (+120€)</option>
@@ -64,11 +64,11 @@
                 <div class="space-y-4 border-b border-white/5 pb-6 mb-6 text-[10px] uppercase tracking-widest text-zinc-400">
                     <div class="flex justify-between">
                         <span data-key="sum-model">Mudel:</span>
-                        <span class="text-white font-bold">CORE EDITION</span>
+                        <span id="model-display" class="text-white font-bold">CORE EDITION</span>
                     </div>
                     <div class="flex justify-between">
                         <span data-key="sum-build">Tüüp:</span>
-                        <span class="text-blue-400 font-bold">BUILD-TO-ORDER</span>
+                        <span class="text-blue-400 font-bold uppercase tracking-widest">Build-to-Order</span>
                     </div>
                 </div>
 
@@ -84,7 +84,14 @@
     </div>
 
     <script>
-        const BASE_PRICE = 1845;
+        // Логика подхвата базы
+        const urlParams = new URLSearchParams(window.location.search);
+        const BASE_PRICE = parseInt(urlParams.get('base')) || 1845;
+
+        // Если цена 2150 — значит выбран консольный набор
+        if (BASE_PRICE === 2150) {
+            document.getElementById('model-display').innerText = 'ULTIMATE KIT';
+        }
 
         function updatePrice() {
             const gpuExtra = parseInt(document.getElementById('gpu-select').value);
