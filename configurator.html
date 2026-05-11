@@ -59,7 +59,7 @@
                 </div>
 
                 <div>
-                    <label data-key="ssd-label" class="block text-[10px] font-black uppercase tracking-widest text-zinc-500 mb-3 uppercase text-zinc-500">Salvestusruum (Samsung SSD)</label>
+                    <label data-key="ssd-label" class="block text-[10px] font-black uppercase tracking-widest text-zinc-500 mb-3 uppercase text-zinc-500">Salvestusruum (SSD)</label>
                     <select id="ssd-select" onchange="updatePrice()" class="w-full p-4 rounded-xl outline-none transition uppercase text-[10px] font-bold tracking-widest cursor-pointer">
                         <option value="0">512GB Samsung NVMe</option>
                         <option value="45">1TB Samsung NVMe (+45€)</option>
@@ -73,7 +73,7 @@
                 <div class="space-y-4 border-b border-white/5 pb-6 mb-6 text-[10px] uppercase tracking-widest text-zinc-400">
                     <div class="flex justify-between">
                         <span data-key="sum-model">Mudel:</span>
-                        <span id="model-display" class="text-white font-bold">CORE EDITION</span>
+                        <span id="model-display" class="text-white font-bold">BAAS</span>
                     </div>
                     <div class="flex justify-between">
                         <span data-key="sum-build">Tüüp:</span>
@@ -98,9 +98,9 @@
             document.getElementById('gpu-select').disabled = true;
             document.getElementById('ram-select').disabled = true;
             document.getElementById('ssd-select').disabled = true;
-            document.getElementById('model-display').innerText = 'CORE EDITION';
+            document.getElementById('model-display').innerText = 'BAAS';
         } else if (BASE_PRICE === 2150) {
-            document.getElementById('model-display').innerText = 'ULTIMATE KIT';
+            document.getElementById('model-display').innerText = 'BAAS+';
         } else {
             document.getElementById('model-display').innerText = 'ENTHUSIAST';
         }
@@ -116,14 +116,14 @@
             'et': {
                 'back-link': '← Tagasi pealehele', 'config-title': 'Konfigureeri oma süsteem',
                 'case-label': 'Korpuse disain (Case Color)', 'gpu-label': 'Videokaart (GPU)',
-                'ram-label': 'Operatiivmälu (RAM)', 'ssd-label': 'Salvestusruum (Samsung SSD)',
+                'ram-label': 'Operatiivmälu (RAM)', 'ssd-label': 'Salvestusruum (SSD)',
                 'summary-title': 'Sinu valik', 'sum-model': 'Mudel:', 'sum-build': 'Tüüp:', 'send-btn': 'Saada päring',
                 'legal-info': '* Eritellimusel valmiv toode.\nVÕS § 53 lg 4 kohaselt tagastamisõigus puudub.'
             },
             'ru': {
                 'back-link': '← На главную', 'config-title': 'Настрой свою систему',
                 'case-label': 'Дизайн корпуса (Цвет)', 'gpu-label': 'Видеокарта (GPU)',
-                'ram-label': 'Оперативная память (RAM)', 'ssd-label': 'Накопитель (Samsung SSD)',
+                'ram-label': 'Оперативная память (RAM)', 'ssd-label': 'Накопитель (SSD)',
                 'summary-title': 'Ваш выбор', 'sum-model': 'Модель:', 'sum-build': 'Тип:', 'send-btn': 'Отправить запрос',
                 'legal-info': '* Товар, изготавливаемый под заказ.\nСогласно VÕS § 53 lg 4, право на возврат отсутствует.'
             }
