@@ -28,7 +28,7 @@
         <a href="index.html" data-key="back-link" class="text-zinc-500 hover:text-white text-[10px] uppercase tracking-[0.2em] mb-10 inline-block transition">← Tagasi pealehele</a>
 
         <h1 data-key="config-title" class="text-4xl font-black mb-2 uppercase tracking-tighter">Konfigureeri oma süsteem</h1>
-        <p class="text-zinc-500 mb-12 uppercase text-[10px] tracking-[0.3em] font-bold text-blue-500 uppercase">SFF Lab Build Tool v1.2</p>
+        <p class="text-zinc-500 mb-12 uppercase text-[10px] tracking-[0.3em] font-bold text-blue-500 uppercase">SFF Lab Build Tool v1.3</p>
 
         <div class="grid md:grid-cols-2 gap-12">
             <div class="space-y-8">
@@ -55,24 +55,25 @@
                     <label data-key="gpu-label" class="block text-[10px] font-black uppercase tracking-widest text-zinc-500 mb-3 uppercase">Videokaart (GPU)</label>
                     <select id="gpu-select" onchange="updatePrice()" class="w-full p-4 rounded-xl outline-none transition uppercase text-[10px] font-bold tracking-widest cursor-pointer">
                         <option value="0">AMD Radeon RX 9060 XT 16GB</option>
-                        <option value="250">AMD Radeon RX 9070 XT 20GB (+250€)</option>
+                        <option value="175">AMD Radeon RX 9070 XT 20GB (+175€)</option>
                     </select>
                 </div>
 
                 <div>
                     <label data-key="ram-label" class="block text-[10px] font-black uppercase tracking-widest text-zinc-500 mb-3 uppercase">Operatiivmälu (RAM)</label>
                     <select id="ram-select" onchange="updatePrice()" class="w-full p-4 rounded-xl outline-none transition uppercase text-[10px] font-bold tracking-widest cursor-pointer">
-                        <option value="0">16GB DDR5</option>
-                        <option value="95">32GB DDR5 (+95€)</option>
-                        <option value="190">64GB DDR5 (+190€)</option>
+                        <option value="0">16GB DDR5 Corsair Vengeance</option>
+                        <option value="139">32GB DDR5 Corsair Vengeance (+139€)</option>
+                        <option value="606">64GB DDR5 Corsair Vengeance (+606€)</option>
                     </select>
                 </div>
 
                 <div>
                     <label data-key="ssd-label" class="block text-[10px] font-black uppercase tracking-widest text-zinc-500 mb-3 uppercase text-zinc-500">Salvestusruum (SSD)</label>
                     <select id="ssd-select" onchange="updatePrice()" class="w-full p-4 rounded-xl outline-none transition uppercase text-[10px] font-bold tracking-widest cursor-pointer">
-                        <option value="0">1TB Samsung NVMe</option>
-                        <option value="80">2TB Samsung NVMe (+80€)</option>
+                        <option value="0">1TB Samsung 990 PRO</option>
+                        <option value="120">2TB Samsung 990 PRO (+120€)</option>
+                        <option value="425" id="ssd-4tb" style="display:none;">4TB Samsung 990 PRO (+425€)</option>
                     </select>
                 </div>
             </div>
@@ -109,6 +110,7 @@
             const ramSel = document.getElementById('ram-select');
             const ssdSel = document.getElementById('ssd-select');
             const modelDisp = document.getElementById('model-display');
+            const ssd4tb = document.getElementById('ssd-4tb');
 
             if (MODE === 'core') {
                 ctrlContainer.style.display = 'none';
@@ -121,6 +123,13 @@
                 ramSel.disabled = true;
                 ssdSel.disabled = true;
                 modelDisp.innerText = 'BAAS+';
+            } else if (MODE === 'enthusiast') {
+                ctrlContainer.style.display = 'none';
+                gpuSel.disabled = false;
+                ramSel.disabled = false;
+                ssdSel.disabled = false;
+                ssd4tb.style.display = 'block'; // Показываем 4TB только в Enthusiast
+                modelDisp.innerText = 'ENTHUSIAST';
             } else {
                 ctrlContainer.style.display = 'none';
                 modelDisp.innerText = 'ENTHUSIAST';
