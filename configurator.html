@@ -19,29 +19,39 @@
             background-position: right 1rem center;
             background-size: 1em;
         }
+        select:disabled { opacity: 0.5; cursor: not-allowed; border-color: #222 !important; }
     </style>
 </head>
-<body class="p-6 md:p-20 antialiased">
+<body class="p-6 md:p-20 antialiased text-zinc-100">
 
     <div class="max-w-4xl mx-auto">
         <a href="index.html" data-key="back-link" class="text-zinc-500 hover:text-white text-[10px] uppercase tracking-[0.2em] mb-10 inline-block transition">← Tagasi pealehele</a>
 
         <h1 data-key="config-title" class="text-4xl font-black mb-2 uppercase tracking-tighter">Konfigureeri oma süsteem</h1>
-        <p class="text-zinc-500 mb-12 uppercase text-[10px] tracking-[0.3em] font-bold text-blue-500">SFF Lab Build Tool v1.0</p>
+        <p class="text-zinc-500 mb-12 uppercase text-[10px] tracking-[0.3em] font-bold text-blue-500 uppercase">SFF Lab Build Tool v1.1</p>
 
         <div class="grid md:grid-cols-2 gap-12">
             <div class="space-y-8">
                 <div>
-                    <label data-key="gpu-label" class="block text-[10px] font-black uppercase tracking-widest text-zinc-500 mb-3 text-blue-500">Videokaart (GPU)</label>
-                    <select id="gpu-select" onchange="updatePrice()" class="w-full p-4 rounded-xl outline-none focus:border-blue-600 transition uppercase text-[10px] font-bold tracking-widest cursor-pointer">
+                    <label data-key="case-label" class="block text-[10px] font-black uppercase tracking-widest text-blue-500 mb-3">Korpuse disain (Case Color)</label>
+                    <select id="case-select" class="w-full p-4 rounded-xl outline-none focus:border-blue-600 transition uppercase text-[10px] font-bold tracking-widest cursor-pointer">
+                        <option>Obsidian Black</option>
+                        <option>Titanium Gray</option>
+                        <option>Frost White</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label data-key="gpu-label" class="block text-[10px] font-black uppercase tracking-widest text-zinc-500 mb-3 uppercase">Videokaart (GPU)</label>
+                    <select id="gpu-select" onchange="updatePrice()" class="w-full p-4 rounded-xl outline-none transition uppercase text-[10px] font-bold tracking-widest cursor-pointer">
                         <option value="0">AMD Radeon RX 9060 XT 16GB</option>
                         <option value="250">AMD Radeon RX 9070 XT 20GB (+250€)</option>
                     </select>
                 </div>
 
                 <div>
-                    <label data-key="ram-label" class="block text-[10px] font-black uppercase tracking-widest text-zinc-500 mb-3 text-blue-500">Operatiivmälu (RAM)</label>
-                    <select id="ram-select" onchange="updatePrice()" class="w-full p-4 rounded-xl outline-none focus:border-blue-600 transition uppercase text-[10px] font-bold tracking-widest cursor-pointer">
+                    <label data-key="ram-label" class="block text-[10px] font-black uppercase tracking-widest text-zinc-500 mb-3 uppercase">Operatiivmälu (RAM)</label>
+                    <select id="ram-select" onchange="updatePrice()" class="w-full p-4 rounded-xl outline-none transition uppercase text-[10px] font-bold tracking-widest cursor-pointer">
                         <option value="0">16GB DDR5</option>
                         <option value="95">32GB DDR5 (+95€)</option>
                         <option value="190">64GB DDR5 (+190€)</option>
@@ -49,18 +59,17 @@
                 </div>
 
                 <div>
-                    <label data-key="ssd-label" class="block text-[10px] font-black uppercase tracking-widest text-zinc-500 mb-3 text-blue-500">Salvestusruum (SSD)</label>
-                    <select id="ssd-select" onchange="updatePrice()" class="w-full p-4 rounded-xl outline-none focus:border-blue-600 transition uppercase text-[10px] font-bold tracking-widest cursor-pointer">
-                        <option value="0">512GB NVMe Gen4</option>
-                        <option value="45">1TB NVMe Gen4 (+45€)</option>
-                        <option value="120">2TB NVMe Gen4 (+120€)</option>
+                    <label data-key="ssd-label" class="block text-[10px] font-black uppercase tracking-widest text-zinc-500 mb-3 uppercase text-zinc-500">Salvestusruum (Samsung SSD)</label>
+                    <select id="ssd-select" onchange="updatePrice()" class="w-full p-4 rounded-xl outline-none transition uppercase text-[10px] font-bold tracking-widest cursor-pointer">
+                        <option value="0">512GB Samsung NVMe</option>
+                        <option value="45">1TB Samsung NVMe (+45€)</option>
+                        <option value="120">2TB Samsung NVMe (+120€)</option>
                     </select>
                 </div>
             </div>
 
             <div class="glass-panel p-10 rounded-[40px] h-fit sticky top-10">
-                <h2 data-key="summary-title" class="text-xl font-bold mb-6 uppercase tracking-widest text-white">Sinu valik</h2>
-
+                <h2 data-key="summary-title" class="text-xl font-bold mb-6 uppercase tracking-widest">Sinu valik</h2>
                 <div class="space-y-4 border-b border-white/5 pb-6 mb-6 text-[10px] uppercase tracking-widest text-zinc-400">
                     <div class="flex justify-between">
                         <span data-key="sum-model">Mudel:</span>
@@ -68,14 +77,11 @@
                     </div>
                     <div class="flex justify-between">
                         <span data-key="sum-build">Tüüp:</span>
-                        <span class="text-blue-400 font-bold uppercase tracking-widest">Build-to-Order</span>
+                        <span class="text-blue-400 font-bold uppercase tracking-widest">Eritellimus</span>
                     </div>
                 </div>
-
-                <div id="total-price" class="text-4xl font-black mb-8 tracking-tighter text-white">1845 €</div>
-
-                <button data-key="send-btn" class="w-full bg-blue-600 py-4 rounded-2xl font-black uppercase text-[10px] tracking-widest hover:bg-blue-500 transition shadow-lg shadow-blue-600/20 text-white">Saada päring</button>
-
+                <div id="total-price" class="text-4xl font-black mb-8 tracking-tighter">1845 €</div>
+                <button data-key="send-btn" class="w-full bg-blue-600 py-4 rounded-2xl font-black uppercase text-[10px] tracking-widest hover:bg-blue-500 transition shadow-lg shadow-blue-600/20">Saada päring</button>
                 <p data-key="legal-info" class="text-[8px] text-zinc-600 uppercase tracking-widest mt-6 text-center leading-relaxed">
                     * Eritellimusel valmiv toode.<br>VÕS § 53 lg 4 kohaselt tagastamisõigus puudub.
                 </p>
@@ -86,42 +92,39 @@
     <script>
         const urlParams = new URLSearchParams(window.location.search);
         const BASE_PRICE = parseInt(urlParams.get('base')) || 1845;
+        const MODE = urlParams.get('mode');
 
-        if (BASE_PRICE === 2150) {
+        if (MODE === 'core') {
+            document.getElementById('gpu-select').disabled = true;
+            document.getElementById('ram-select').disabled = true;
+            document.getElementById('ssd-select').disabled = true;
+            document.getElementById('model-display').innerText = 'CORE EDITION';
+        } else if (BASE_PRICE === 2150) {
             document.getElementById('model-display').innerText = 'ULTIMATE KIT';
+        } else {
+            document.getElementById('model-display').innerText = 'ENTHUSIAST';
         }
 
         function updatePrice() {
-            const gpuExtra = parseInt(document.getElementById('gpu-select').value);
-            const ramExtra = parseInt(document.getElementById('ram-select').value);
-            const ssdExtra = parseInt(document.getElementById('ssd-select').value);
-            const finalPrice = BASE_PRICE + gpuExtra + ramExtra + ssdExtra;
-            document.getElementById('total-price').innerText = finalPrice + ' €';
+            const gpu = parseInt(document.getElementById('gpu-select').value) || 0;
+            const ram = parseInt(document.getElementById('ram-select').value) || 0;
+            const ssd = parseInt(document.getElementById('ssd-select').value) || 0;
+            document.getElementById('total-price').innerText = (BASE_PRICE + gpu + ram + ssd) + ' €';
         }
 
         const translations = {
             'et': {
-                'back-link': '← Tagasi pealehele',
-                'config-title': 'Konfigureeri oma süsteem',
-                'gpu-label': 'Videokaart (GPU)',
-                'ram-label': 'Operatiivmälu (RAM)',
-                'ssd-label': 'Salvestusruum (SSD)',
-                'summary-title': 'Sinu valik',
-                'sum-model': 'Mudel:',
-                'sum-build': 'Tüüp:',
-                'send-btn': 'Saada päring',
+                'back-link': '← Tagasi pealehele', 'config-title': 'Konfigureeri oma süsteem',
+                'case-label': 'Korpuse disain (Case Color)', 'gpu-label': 'Videokaart (GPU)',
+                'ram-label': 'Operatiivmälu (RAM)', 'ssd-label': 'Salvestusruum (Samsung SSD)',
+                'summary-title': 'Sinu valik', 'sum-model': 'Mudel:', 'sum-build': 'Tüüp:', 'send-btn': 'Saada päring',
                 'legal-info': '* Eritellimusel valmiv toode.\nVÕS § 53 lg 4 kohaselt tagastamisõigus puudub.'
             },
             'ru': {
-                'back-link': '← На главную',
-                'config-title': 'Настрой свою систему',
-                'gpu-label': 'Видеокарта (GPU)',
-                'ram-label': 'Оперативная память (RAM)',
-                'ssd-label': 'Накопитель (SSD)',
-                'summary-title': 'Ваш выбор',
-                'sum-model': 'Модель:',
-                'sum-build': 'Тип:',
-                'send-btn': 'Отправить запрос',
+                'back-link': '← На главную', 'config-title': 'Настрой свою систему',
+                'case-label': 'Дизайн корпуса (Цвет)', 'gpu-label': 'Видеокарта (GPU)',
+                'ram-label': 'Оперативная память (RAM)', 'ssd-label': 'Накопитель (Samsung SSD)',
+                'summary-title': 'Ваш выбор', 'sum-model': 'Модель:', 'sum-build': 'Тип:', 'send-btn': 'Отправить запрос',
                 'legal-info': '* Товар, изготавливаемый под заказ.\nСогласно VÕS § 53 lg 4, право на возврат отсутствует.'
             }
         };
@@ -133,16 +136,12 @@
                 const key = el.getAttribute('data-key');
                 if (translations[lang][key]) {
                     el.innerText = translations[lang][key];
-                    // Для legal-info сохраняем переносы строк
                     if (key === 'legal-info') el.style.whiteSpace = 'pre-line';
                 }
             });
         }
 
-        window.onload = () => {
-            applyLanguage();
-            updatePrice();
-        };
+        window.onload = () => { applyLanguage(); updatePrice(); };
     </script>
 </body>
 </html>
