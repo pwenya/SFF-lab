@@ -9,7 +9,16 @@
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #050505; color: white; }
         .glass-panel { background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); }
-        select { background-color: #111 !important; border: 1px solid #333 !important; color: white !important; }
+        select {
+            background-color: #111 !important;
+            border: 1px solid #333 !important;
+            color: white !important;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='white'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 1em;
+        }
     </style>
 </head>
 <body class="p-6 md:p-20 antialiased">
@@ -17,52 +26,75 @@
     <div class="max-w-4xl mx-auto">
         <a href="index.html" data-key="back-link" class="text-zinc-500 hover:text-white text-[10px] uppercase tracking-[0.2em] mb-10 inline-block transition">← Tagasi pealehele</a>
 
-        <h1 data-key="config-title" class="text-4xl font-black mb-2 uppercase tracking-tighter">Konfigureeri oma süстеem</h1>
-        <p class="text-zinc-500 mb-12 uppercase text-[10px] tracking-[0.3em] font-bold text-blue-500">SFF Lab Custom Build Tool</p>
+        <h1 data-key="config-title" class="text-4xl font-black mb-2 uppercase tracking-tighter">Konfigureeri oma süsteem</h1>
+        <p class="text-zinc-500 mb-12 uppercase text-[10px] tracking-[0.3em] font-bold text-blue-500">SFF Lab Build Tool v1.0</p>
 
         <div class="grid md:grid-cols-2 gap-12">
             <div class="space-y-8">
                 <div>
                     <label data-key="gpu-label" class="block text-[10px] font-black uppercase tracking-widest text-zinc-500 mb-3 text-blue-500">Videokaart (GPU)</label>
-                    <select class="w-full p-4 rounded-xl outline-none focus:border-blue-600 transition uppercase text-[10px] font-bold tracking-widest">
-                        <option>AMD Radeon RX 9060 XT 16GB (Baas)</option>
-                        <option>AMD Radeon RX 9070 XT 20GB (+250€)</option>
-                        <option>AMD Radeon RX 9080 XT 24GB (+480€)</option>
+                    <select id="gpu-select" onchange="updatePrice()" class="w-full p-4 rounded-xl outline-none focus:border-blue-600 transition uppercase text-[10px] font-bold tracking-widest">
+                        <option value="0">AMD Radeon RX 9060 XT 16GB</option>
+                        <option value="250">AMD Radeon RX 9070 XT 20GB (+250€)</option>
                     </select>
                 </div>
 
                 <div>
                     <label data-key="ram-label" class="block text-[10px] font-black uppercase tracking-widest text-zinc-500 mb-3 text-blue-500">Operatiivmälu (RAM)</label>
-                    <select class="w-full p-4 rounded-xl outline-none focus:border-blue-600 transition uppercase text-[10px] font-bold tracking-widest">
-                        <option>16GB DDR5 6000MHz (Baas)</option>
-                        <option>32GB DDR5 6000MHz (+95€)</option>
-                        <option>64GB DDR5 6000MHz (+190€)</option>
+                    <select id="ram-select" onchange="updatePrice()" class="w-full p-4 rounded-xl outline-none focus:border-blue-600 transition uppercase text-[10px] font-bold tracking-widest">
+                        <option value="0">16GB DDR5</option>
+                        <option value="95">32GB DDR5 (+95€)</option>
+                        <option value="190">64GB DDR5 (+190€)</option>
                     </select>
                 </div>
 
                 <div>
                     <label data-key="ssd-label" class="block text-[10px] font-black uppercase tracking-widest text-zinc-500 mb-3 text-blue-500">Salvestusruum (SSD)</label>
-                    <select class="w-full p-4 rounded-xl outline-none focus:border-blue-600 transition uppercase text-[10px] font-bold tracking-widest">
-                        <option>1TB NVMe Gen4 (Baas)</option>
-                        <option>2TB NVMe Gen4 (+80€)</option>
-                        <option>4TB NVMe Gen4 (+210€)</option>
+                    <select id="ssd-select" onchange="updatePrice()" class="w-full p-4 rounded-xl outline-none focus:border-blue-600 transition uppercase text-[10px] font-bold tracking-widest">
+                        <option value="0">512GB NVMe Gen4</option>
+                        <option value="45">1TB NVMe Gen4 (+45€)</option>
+                        <option value="120">2TB NVMe Gen4 (+120€)</option>
                     </select>
                 </div>
             </div>
 
             <div class="glass-panel p-10 rounded-[40px] h-fit sticky top-10">
-                <h2 data-key="summary-title" class="text-xl font-bold mb-6 uppercase tracking-widest">Sinu valik</h2>
+                <h2 data-key="summary-title" class="text-xl font-bold mb-6 uppercase tracking-widest text-white">Sinu valik</h2>
+
                 <div class="space-y-4 border-b border-white/5 pb-6 mb-6 text-[10px] uppercase tracking-widest text-zinc-400">
-                    <div class="flex justify-between"><span data-key="sum-model">Mudel:</span> <span class="text-white font-bold tracking-widest uppercase">Eritellimus</span></div>
-                    <div class="flex justify-between"><span data-key="sum-color">Värv:</span> <span class="text-white font-bold tracking-widest italic">BUILD-TO-ORDER</span></div>
+                    <div class="flex justify-between">
+                        <span data-key="sum-model">Mudel:</span>
+                        <span class="text-white font-bold">CORE EDITION</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span data-key="sum-build">Tüüp:</span>
+                        <span class="text-blue-400 font-bold">BUILD-TO-ORDER</span>
+                    </div>
                 </div>
-                <div class="text-3xl font-black mb-8 tracking-tighter">1845 €</div>
-                <button data-key="send-btn" class="w-full bg-blue-600 py-4 rounded-2xl font-black uppercase text-[10px] tracking-widest hover:bg-blue-500 transition shadow-lg shadow-blue-600/20">Saada päring</button>
+
+                <div id="total-price" class="text-4xl font-black mb-8 tracking-tighter text-white">1845 €</div>
+
+                <button data-key="send-btn" class="w-full bg-blue-600 py-4 rounded-2xl font-black uppercase text-[10px] tracking-widest hover:bg-blue-500 transition shadow-lg shadow-blue-600/20 text-white">Saada päring</button>
+
+                <p class="text-[8px] text-zinc-600 uppercase tracking-widest mt-6 text-center leading-relaxed">
+                    * Eritellimusel valmiv toode.<br>VÕS § 53 lg 4 kohaselt tagastamisõigus puudub.
+                </p>
             </div>
         </div>
     </div>
 
     <script>
+        const BASE_PRICE = 1845;
+
+        function updatePrice() {
+            const gpuExtra = parseInt(document.getElementById('gpu-select').value);
+            const ramExtra = parseInt(document.getElementById('ram-select').value);
+            const ssdExtra = parseInt(document.getElementById('ssd-select').value);
+
+            const finalPrice = BASE_PRICE + gpuExtra + ramExtra + ssdExtra;
+            document.getElementById('total-price').innerText = finalPrice + ' €';
+        }
+
         const translations = {
             'et': {
                 'back-link': '← Tagasi pealehele',
@@ -72,7 +104,7 @@
                 'ssd-label': 'Salvestusruum (SSD)',
                 'summary-title': 'Sinu valik',
                 'sum-model': 'Mudel:',
-                'sum-color': 'Värv:',
+                'sum-build': 'Tüüp:',
                 'send-btn': 'Saada päring'
             },
             'ru': {
@@ -83,7 +115,7 @@
                 'ssd-label': 'Накопитель (SSD)',
                 'summary-title': 'Ваш выбор',
                 'sum-model': 'Модель:',
-                'sum-color': 'Цвет:',
+                'sum-build': 'Тип:',
                 'send-btn': 'Отправить запрос'
             }
         };
@@ -97,7 +129,10 @@
             });
         }
 
-        window.onload = applyLanguage;
+        window.onload = () => {
+            applyLanguage();
+            updatePrice();
+        };
     </script>
 </body>
 </html>
