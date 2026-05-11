@@ -52,6 +52,14 @@
                 </div>
 
                 <div>
+                    <label data-key="cpu-label" class="block text-[10px] font-black uppercase tracking-widest text-zinc-500 mb-3 uppercase">Protsessor (CPU)</label>
+                    <select id="cpu-select" onchange="updatePrice()" class="w-full p-4 rounded-xl outline-none transition uppercase text-[10px] font-bold tracking-widest cursor-pointer">
+                        <option value="0">AMD Ryzen 5 7500F</option>
+                        <option value="79">AMD Ryzen 5 7500X3D (+79€)</option>
+                    </select>
+                </div>
+
+                <div>
                     <label data-key="gpu-label" class="block text-[10px] font-black uppercase tracking-widest text-zinc-500 mb-3 uppercase">Videokaart (GPU)</label>
                     <select id="gpu-select" onchange="updatePrice()" class="w-full p-4 rounded-xl outline-none transition uppercase text-[10px] font-bold tracking-widest cursor-pointer">
                         <option value="0">AMD Radeon RX 9060 XT 16GB</option>
@@ -106,6 +114,7 @@
 
         function initMode() {
             const ctrlContainer = document.getElementById('ctrl-container');
+            const cpuSel = document.getElementById('cpu-select');
             const gpuSel = document.getElementById('gpu-select');
             const ramSel = document.getElementById('ram-select');
             const ssdSel = document.getElementById('ssd-select');
@@ -114,21 +123,24 @@
 
             if (MODE === 'core') {
                 ctrlContainer.style.display = 'none';
+                cpuSel.disabled = true;
                 gpuSel.disabled = true;
                 ramSel.disabled = true;
                 ssdSel.disabled = true;
                 modelDisp.innerText = 'BAAS';
             } else if (MODE === 'plus') {
+                cpuSel.disabled = false; // Разрешаем выбор CPU в База+
                 gpuSel.disabled = true;
                 ramSel.disabled = true;
                 ssdSel.disabled = true;
                 modelDisp.innerText = 'BAAS+';
             } else if (MODE === 'enthusiast') {
                 ctrlContainer.style.display = 'none';
+                cpuSel.disabled = false;
                 gpuSel.disabled = false;
                 ramSel.disabled = false;
                 ssdSel.disabled = false;
-                ssd4tb.style.display = 'block'; // Показываем 4TB только в Enthusiast
+                ssd4tb.style.display = 'block';
                 modelDisp.innerText = 'ENTHUSIAST';
             } else {
                 ctrlContainer.style.display = 'none';
@@ -137,6 +149,7 @@
         }
 
         function updatePrice() {
+            const cpu = parseInt(document.getElementById('cpu-select').value) || 0;
             const gpu = parseInt(document.getElementById('gpu-select').value) || 0;
             const ram = parseInt(document.getElementById('ram-select').value) || 0;
             const ssd = parseInt(document.getElementById('ssd-select').value) || 0;
@@ -144,21 +157,23 @@
                          ? parseInt(document.getElementById('ctrl-select').value) || 0
                          : 0;
 
-            document.getElementById('total-price').innerText = (BASE_PRICE + gpu + ram + ssd + ctrl) + ' €';
+            document.getElementById('total-price').innerText = (BASE_PRICE + cpu + gpu + ram + ssd + ctrl) + ' €';
         }
 
         const translations = {
             'et': {
                 'back-link': '← Tagasi pealehele', 'config-title': 'Konfigureeri oma süsteem',
                 'case-label': 'Korpuse disain (Case Color)', 'ctrl-label': 'Kontroller (Controller)',
-                'gpu-label': 'Videokaart (GPU)', 'ram-label': 'Operatiivmälu (RAM)', 'ssd-label': 'Salvestusruum (SSD)',
+                'cpu-label': 'Protsessor (CPU)', 'gpu-label': 'Videokaart (GPU)',
+                'ram-label': 'Operatiivmälu (RAM)', 'ssd-label': 'Salvestusruum (SSD)',
                 'summary-title': 'Sinu valik', 'sum-model': 'Mudel:', 'sum-build': 'Tüüp:', 'send-btn': 'Saada päring',
                 'legal-info': '* Eritellimusel valmiv toode.\nVÕS § 53 lg 4 kohaselt tagastamisõigus puudub.'
             },
             'ru': {
                 'back-link': '← На главную', 'config-title': 'Настрой свою систему',
                 'case-label': 'Дизайн корпуса (Цвет)', 'ctrl-label': 'Контроллер (Геймпад)',
-                'gpu-label': 'Видеокарта (GPU)', 'ram-label': 'Оперативная память (RAM)', 'ssd-label': 'Накопитель (SSD)',
+                'cpu-label': 'Процессор (CPU)', 'gpu-label': 'Видеокарта (GPU)',
+                'ram-label': 'Оперативная память (RAM)', 'ssd-label': 'Накопитель (SSD)',
                 'summary-title': 'Ваш выбор', 'sum-model': 'Модель:', 'sum-build': 'Тип:', 'send-btn': 'Отправить запрос',
                 'legal-info': '* Товар, изготавливаемый под заказ.\nСогласно VÕS § 53 lg 4, право на возврат отсутствует.'
             }
