@@ -19,7 +19,7 @@
             background-position: right 1rem center;
             background-size: 1em;
         }
-        select:disabled { opacity: 0.5; cursor: not-allowed; border-color: #222 !important; }
+        select:disabled { opacity: 0.6; cursor: not-allowed; border-color: #222 !important; color: #888 !important; }
     </style>
 </head>
 <body class="p-6 md:p-20 antialiased text-zinc-100">
@@ -28,7 +28,7 @@
         <a href="index.html" data-key="back-link" class="text-zinc-500 hover:text-white text-[10px] uppercase tracking-[0.2em] mb-10 inline-block transition">← Tagasi pealehele</a>
 
         <h1 data-key="config-title" class="text-4xl font-black mb-2 uppercase tracking-tighter">Konfigureeri oma süsteem</h1>
-        <p class="text-zinc-500 mb-12 uppercase text-[10px] tracking-[0.3em] font-bold text-blue-500">SFF Lab Build Tool v1.4</p>
+        <p class="text-zinc-500 mb-12 uppercase text-[10px] tracking-[0.3em] font-bold text-blue-500">SFF Lab Build Tool v1.5</p>
 
         <div class="grid md:grid-cols-2 gap-12">
             <div class="space-y-8">
@@ -49,6 +49,39 @@
                     </select>
                 </div>
 
+                <div>
+                    <label data-key="cpu-label" class="block text-[10px] font-black uppercase tracking-widest text-zinc-500 mb-3">Protsessor (CPU)</label>
+                    <select id="cpu-select" onchange="updatePrice()" class="w-full p-4 rounded-xl outline-none transition uppercase text-[10px] font-bold tracking-widest cursor-pointer">
+                        <option value="0">AMD Ryzen 5 7500F</option>
+                        <option value="79">AMD Ryzen 5 7500X3D (+79€)</option>
+                    </select>
+                </div>
+
+                <div id="ctrl-container">
+                    <label data-key="ctrl-label" class="block text-[10px] font-black uppercase tracking-widest text-blue-500 mb-3">Kontroller (Controller)</label>
+                    <select id="ctrl-select" onchange="updatePrice()" class="w-full p-4 rounded-xl outline-none focus:border-blue-600 transition uppercase text-[10px] font-bold tracking-widest cursor-pointer">
+                        <option value="0">Xbox Wireless Controller</option>
+                        <option value="0">Sony DualSense</option>
+                        <option value="90">Xbox Elite Series 2 (+90€)</option>
+                        <option value="-80">Ilma kontrollerita (-80€)</option>
+                    </select>
+                </div>
+
+                <div id="extras-container" class="space-y-8" style="display:none;">
+                    <div>
+                        <label data-key="hdmi-label" class="block text-[10px] font-black uppercase tracking-widest text-blue-500 mb-3">Kaabel (Cable)</label>
+                        <select disabled class="w-full p-4 rounded-xl outline-none transition uppercase text-[10px] font-bold tracking-widest">
+                            <option>✓ 4K HDMI 2.1 Ultra High Speed</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label data-key="pkg-label" class="block text-[10px] font-black uppercase tracking-widest text-blue-500 mb-3">Pakend (Packaging)</label>
+                        <select disabled class="w-full p-4 rounded-xl outline-none transition uppercase text-[10px] font-bold tracking-widest">
+                            <option>✓ SFF Lab Premium Packaging</option>
+                        </select>
+                    </div>
+                </div>
+
                 <div id="psu-container">
                     <label data-key="psu-label" class="block text-[10px] font-black uppercase tracking-widest text-zinc-500 mb-3">Toiteplokk (PSU)</label>
                     <select id="psu-select" onchange="updatePrice()" class="w-full p-4 rounded-xl outline-none transition uppercase text-[10px] font-bold tracking-widest cursor-pointer">
@@ -56,14 +89,6 @@
                         <option value="45" id="psu-850">850W SFX Platinum (+45€)</option>
                     </select>
                     <p id="psu-warning" class="text-[9px] text-amber-500 uppercase mt-2 hidden" data-key="psu-req">9070 XT jaoks on vajalik 850W toiteplokk</p>
-                </div>
-
-                <div>
-                    <label data-key="cpu-label" class="block text-[10px] font-black uppercase tracking-widest text-zinc-500 mb-3">Protsessor (CPU)</label>
-                    <select id="cpu-select" onchange="updatePrice()" class="w-full p-4 rounded-xl outline-none transition uppercase text-[10px] font-bold tracking-widest cursor-pointer">
-                        <option value="0">AMD Ryzen 5 7500F</option>
-                        <option value="79">AMD Ryzen 5 7500X3D (+79€)</option>
-                    </select>
                 </div>
 
                 <div>
@@ -81,16 +106,6 @@
                         <option value="0">1TB Samsung 990 PRO</option>
                         <option value="120">2TB Samsung 990 PRO (+120€)</option>
                         <option value="425" id="ssd-4tb" style="display:none;">4TB Samsung 990 PRO (+425€)</option>
-                    </select>
-                </div>
-
-                <div id="ctrl-container">
-                    <label data-key="ctrl-label" class="block text-[10px] font-black uppercase tracking-widest text-blue-500 mb-3">Kontroller (Controller)</label>
-                    <select id="ctrl-select" onchange="updatePrice()" class="w-full p-4 rounded-xl outline-none focus:border-blue-600 transition uppercase text-[10px] font-bold tracking-widest cursor-pointer">
-                        <option value="0">Xbox Wireless Controller</option>
-                        <option value="0">Sony DualSense</option>
-                        <option value="90">Xbox Elite Series 2 (+90€)</option>
-                        <option value="-80">Ilma kontrollerita (-80€)</option>
                     </select>
                 </div>
             </div>
@@ -123,6 +138,7 @@
 
         function initMode() {
             const ctrlContainer = document.getElementById('ctrl-container');
+            const extrasContainer = document.getElementById('extras-container');
             const psuContainer = document.getElementById('psu-container');
             const cpuSel = document.getElementById('cpu-select');
             const gpuSel = document.getElementById('gpu-select');
@@ -133,6 +149,7 @@
 
             if (MODE === 'core') {
                 ctrlContainer.style.display = 'none';
+                extrasContainer.style.display = 'none';
                 psuContainer.style.display = 'none';
                 cpuSel.disabled = true;
                 gpuSel.disabled = true;
@@ -141,6 +158,7 @@
                 modelDisp.innerText = 'BAAS';
             } else if (MODE === 'plus') {
                 ctrlContainer.style.display = 'block';
+                extrasContainer.style.display = 'block';
                 psuContainer.style.display = 'none';
                 cpuSel.disabled = false;
                 gpuSel.disabled = true;
@@ -149,6 +167,7 @@
                 modelDisp.innerText = 'BAAS+';
             } else if (MODE === 'enthusiast') {
                 ctrlContainer.style.display = 'none';
+                extrasContainer.style.display = 'none';
                 psuContainer.style.display = 'block';
                 cpuSel.disabled = false;
                 gpuSel.disabled = false;
@@ -196,7 +215,9 @@
                 'back-link': '← Tagasi pealehele', 'config-title': 'Konfigureeri oma süsteem',
                 'case-label': 'Korpuse disain (Case Color)', 'ctrl-label': 'Kontroller (Controller)',
                 'cpu-label': 'Protsessor (CPU)', 'gpu-label': 'Videokaart (GPU)', 'psu-label': 'Toiteplokk (PSU)',
-                'ram-label': 'Operatiivmälu (RAM)', 'ssd-label': 'Salvestusruum (SSD)', 'psu-req': '9070 XT jaoks on vajalik 850W toiteplokk',
+                'ram-label': 'Operatiivmälu (RAM)', 'ssd-label': 'Salvestusruum (SSD)',
+                'hdmi-label': 'Kaabel (Cable)', 'pkg-label': 'Pakend (Packaging)',
+                'psu-req': '9070 XT jaoks on vajalik 850W toiteplokk',
                 'summary-title': 'Sinu valik', 'sum-model': 'Mudel:', 'sum-build': 'Tüüp:', 'send-btn': 'Saada päring',
                 'legal-info': '* Eritellimusel valmiv toode.\nVÕS § 53 lg 4 kohaselt tagastamisõigus puudub.'
             },
@@ -204,7 +225,9 @@
                 'back-link': '← На главную', 'config-title': 'Настрой свою систему',
                 'case-label': 'Дизайн корпуса (Цвет)', 'ctrl-label': 'Контроллер (Геймпад)',
                 'cpu-label': 'Процессор (CPU)', 'gpu-label': 'Видеокарта (GPU)', 'psu-label': 'Блок питания (PSU)',
-                'ram-label': 'Оперативная память (RAM)', 'ssd-label': 'Накопитель (SSD)', 'psu-req': 'Для 9070 XT необходим блок 850W',
+                'ram-label': 'Оперативная память (RAM)', 'ssd-label': 'Накопитель (SSD)',
+                'hdmi-label': 'Кабель (Cable)', 'pkg-label': 'Упаковка (Packaging)',
+                'psu-req': 'Для 9070 XT необходим блок 850W',
                 'summary-title': 'Ваш выбор', 'sum-model': 'Модель:', 'sum-build': 'Тип:', 'send-btn': 'Отправить запрос',
                 'legal-info': '* Товар, изготавливаемый под заказ.\nСогласно VÕS § 53 lg 4, право на возврат отсутствует.'
             }
