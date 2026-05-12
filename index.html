@@ -50,19 +50,19 @@
     </nav>
 
     <section id="about" class="relative min-h-[70vh] flex flex-col items-center justify-center px-6 overflow-hidden pt-32">
-        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] md:w-[700px] h-[300px] md:h-[700px] bg-blue-600/10 blur-[130px] rounded-full"></div>
+        <!-- Исправленный градиент: уменьшена прозрачность и увеличен разброс, чтобы не было краев -->
+        <div class="absolute top-[40%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] md:w-[900px] h-[400px] bg-blue-600/5 blur-[120px] rounded-full pointer-events-none"></div>
+
         <div class="relative z-10 max-w-5xl text-center w-full">
             <h1 class="text-5xl md:text-9xl font-extrabold tracking-tighter leading-none mb-12 text-gradient uppercase">SFF<br>EXPERIENCE.</h1>
 
             <div class="relative inline-block group">
-                <div class="absolute inset-0 bg-blue-500/25 blur-[60px] md:blur-[80px] rounded-full opacity-40 group-hover:opacity-80 transition duration-1000"></div>
                 <img src="IMG/title.png" alt="SFF Lab" class="relative z-10 w-full max-w-[700px] mx-auto drop-shadow-[0_20px_20px_rgba(0,0,0,0.6)] transform transition duration-700 group-hover:scale-105">
             </div>
         </div>
     </section>
 
-    <!-- Секция без фоновой полосы (bg-transparent) -->
-    <section id="pricing" class="pt-24 pb-24 px-6 bg-transparent">
+    <section id="pricing" class="pt-24 pb-24 px-6 bg-transparent relative z-20">
         <div class="max-w-6xl mx-auto">
 
             <div class="flex justify-center space-x-4 mb-20">
