@@ -11,7 +11,7 @@
         .glass-card {
             background: rgba(255, 255, 255, 0.02);
             backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
             height: 100%;
         }
@@ -61,11 +61,10 @@
         </div>
     </section>
 
-    <!-- Секция с кнопками и карточками опущена ниже -->
-    <section id="pricing" class="pt-32 pb-24 px-6 bg-black">
+    <!-- Секция без фоновой полосы (bg-transparent) -->
+    <section id="pricing" class="pt-24 pb-24 px-6 bg-transparent">
         <div class="max-w-6xl mx-auto">
 
-            <!-- Кнопки выбора ОС (Центрированы и прижаты к контенту) -->
             <div class="flex justify-center space-x-4 mb-20">
                 <button onclick="switchOS('steamos')" id="btn-steamos" class="os-switch-btn active px-10 py-3 rounded-full text-[11px] font-black uppercase tracking-widest shadow-xl">SteamOS</button>
                 <button onclick="switchOS('windows')" id="btn-windows" class="os-switch-btn px-10 py-3 rounded-full text-[11px] font-black uppercase tracking-widest shadow-xl">Windows 11</button>
@@ -88,7 +87,7 @@
                         </div>
                         <div class="mt-12">
                             <div class="text-4xl font-black mb-8 tracking-tighter text-white">1845 €</div>
-                            <a href="configurator.html?base=1845&mode=core&os=steamos" data-key="p1-btn" class="block text-center bg-blue-600 text-white py-5 rounded-2xl hover:bg-blue-500 transition-all font-bold text-xs uppercase tracking-widest shadow-lg shadow-blue-600/20">Vali disain</a>
+                            <a href="configurator.html?base=1845&mode=core&os=steamos" class="block text-center bg-blue-600 text-white py-5 rounded-2xl hover:bg-blue-500 transition-all font-bold text-xs uppercase tracking-widest shadow-lg shadow-blue-600/20">Vali disain</a>
                         </div>
                     </div>
                 </div>
@@ -109,7 +108,7 @@
                         </div>
                         <div class="mt-12">
                             <div class="text-4xl font-black mb-8 tracking-tighter text-white">1999 €</div>
-                            <a href="configurator.html?base=1999&mode=plus&os=steamos" data-key="p2-btn" class="block text-center bg-blue-600 text-white py-5 rounded-2xl hover:bg-blue-500 transition-all font-bold text-xs uppercase tracking-widest shadow-lg shadow-blue-600/20">Telli komplekt</a>
+                            <a href="configurator.html?base=1999&mode=plus&os=steamos" class="block text-center bg-blue-600 text-white py-5 rounded-2xl hover:bg-blue-500 transition-all font-bold text-xs uppercase tracking-widest shadow-lg shadow-blue-600/20">Telli komplekt</a>
                         </div>
                     </div>
                 </div>
@@ -126,7 +125,7 @@
                         </div>
                         <div class="mt-12">
                             <div class="text-4xl font-black mb-8 tracking-tighter text-white">1845 € +</div>
-                            <a href="configurator.html?base=1845&mode=enthusiast&os=steamos" data-key="p3-btn" class="block text-center bg-blue-600 text-white py-5 rounded-2xl hover:bg-blue-500 transition-all font-bold text-xs uppercase tracking-widest shadow-lg shadow-blue-600/20">Alusta koostamist</a>
+                            <a href="configurator.html?base=1845&mode=enthusiast&os=steamos" class="block text-center bg-blue-600 text-white py-5 rounded-2xl hover:bg-blue-500 transition-all font-bold text-xs uppercase tracking-widest shadow-lg shadow-blue-600/20">Alusta koostamist</a>
                         </div>
                     </div>
                 </div>
@@ -147,7 +146,7 @@
         </div>
     </section>
 
-    <footer class="py-20 border-t border-white/5 px-6 text-zinc-600 text-[10px] uppercase tracking-[0.3em] bg-black">
+    <footer class="py-20 border-t border-white/5 px-6 text-zinc-600 text-[10px] uppercase tracking-[0.3em]">
         <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center space-y-6 md:space-y-0 text-center md:text-left">
             <div>SFF LAB</div>
             <div class="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-12">
