@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>SFF Lab</title>
-    <!-- Проверь, чтобы этот скрипт был доступен -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
@@ -62,80 +61,101 @@
         </div>
     </section>
 
-    <section id="pricing" class="py-12 px-6 bg-black">
+    <!-- Секция с кнопками и карточками опущена ниже -->
+    <section id="pricing" class="pt-32 pb-24 px-6 bg-black">
         <div class="max-w-6xl mx-auto">
 
-            <!-- Кнопки по центру, прижаты к карточкам -->
-            <div class="flex justify-center space-x-4 mb-16">
-                <button onclick="switchOS('steamos')" id="btn-steamos" class="os-switch-btn active px-8 py-3 rounded-full text-[10px] font-black uppercase tracking-widest">SteamOS</button>
-                <button onclick="switchOS('windows')" id="btn-windows" class="os-switch-btn px-8 py-3 rounded-full text-[10px] font-black uppercase tracking-widest">Windows 11</button>
+            <!-- Кнопки выбора ОС (Центрированы и прижаты к контенту) -->
+            <div class="flex justify-center space-x-4 mb-20">
+                <button onclick="switchOS('steamos')" id="btn-steamos" class="os-switch-btn active px-10 py-3 rounded-full text-[11px] font-black uppercase tracking-widest shadow-xl">SteamOS</button>
+                <button onclick="switchOS('windows')" id="btn-windows" class="os-switch-btn px-10 py-3 rounded-full text-[11px] font-black uppercase tracking-widest shadow-xl">Windows 11</button>
             </div>
 
             <!-- SteamOS Grid -->
-            <div id="grid-steamos" class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
+            <div id="grid-steamos" class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
+                <!-- Baas -->
                 <div class="flex">
-                    <div class="glass-card p-8 md:p-10 rounded-[40px] flex flex-col justify-between w-full border-white/5">
+                    <div class="glass-card p-10 rounded-[40px] flex flex-col justify-between w-full border-white/5">
                         <div>
-                            <span class="text-blue-500 text-[10px] font-black uppercase tracking-widest">Core Edition</span>
-                            <h3 data-key="p1-title" class="text-3xl font-extrabold mt-2 mb-8 uppercase">Baas</h3>
-                            <ul class="space-y-4 text-zinc-400 text-sm">
+                            <span class="text-blue-600 text-[11px] font-black uppercase tracking-[0.2em]">Core Edition</span>
+                            <h3 data-key="p1-title" class="text-3xl font-extrabold mt-3 mb-10 text-white uppercase">Baas</h3>
+                            <ul class="space-y-5 text-zinc-400 text-sm">
                                 <li>✓ Ryzen 5 7500F + RX 9060 XT</li>
                                 <li>✓ 16GB DDR5 + 1TB</li>
-                                <li>✓ 650W SFX Gold</li>
+                                <li>✓ 650W SFX Gold (Quiet Edition)</li>
                                 <li data-key="p1-custom">✓ Vali korpuse disain</li>
                             </ul>
                         </div>
                         <div class="mt-12">
-                            <div class="text-3xl font-bold mb-6">1845 €</div>
-                            <a href="configurator.html?base=1845&mode=core&os=steamos" class="block text-center bg-blue-600 text-white py-4 rounded-2xl hover:bg-blue-500 transition font-bold text-xs uppercase tracking-widest">Vali disain</a>
+                            <div class="text-4xl font-black mb-8 tracking-tighter text-white">1845 €</div>
+                            <a href="configurator.html?base=1845&mode=core&os=steamos" data-key="p1-btn" class="block text-center bg-blue-600 text-white py-5 rounded-2xl hover:bg-blue-500 transition-all font-bold text-xs uppercase tracking-widest shadow-lg shadow-blue-600/20">Vali disain</a>
                         </div>
                     </div>
                 </div>
 
+                <!-- Baas+ -->
                 <div class="flex">
-                    <div class="glass-card p-8 md:p-10 rounded-[40px] flex flex-col justify-between relative overflow-hidden group w-full border-white/5">
-                        <div data-key="popular-badge" class="absolute top-6 right-6 bg-blue-600 text-[9px] font-black px-3 py-1 rounded-full uppercase text-white">Populaarne</div>
+                    <div class="glass-card p-10 rounded-[40px] flex flex-col justify-between relative overflow-hidden group w-full border-white/5">
+                        <div data-key="popular-badge" class="absolute top-6 right-6 bg-blue-600/90 text-[10px] font-black px-4 py-1.5 rounded-full uppercase tracking-widest text-white shadow-lg shadow-blue-600/10">Populaarne</div>
                         <div>
-                            <span class="text-blue-500 text-[10px] font-black uppercase tracking-widest">Ultimate Kit</span>
-                            <h3 data-key="p2-title" class="text-3xl font-extrabold mt-2 mb-8 uppercase">Baas+</h3>
-                            <ul class="space-y-4 text-zinc-400 text-sm">
-                                <li>✓ Ryzen 5 7500F / 7500X3D</li>
-                                <li>✓ Xbox / DualSense kontroller</li>
-                                <li>✓ 4K HDMI 2.1 kaabel</li>
-                                <li>✓ SFF Lab premium pakend</li>
+                            <span class="text-blue-600 text-[11px] font-black uppercase tracking-[0.2em]">Ultimate Kit</span>
+                            <h3 data-key="p2-title" class="text-3xl font-extrabold mt-3 mb-10 text-white uppercase">Baas+</h3>
+                            <ul class="space-y-5 text-zinc-400 text-sm">
+                                <li data-key="p2-feature-1">✓ Ryzen 5 7500F / 7500X3D</li>
+                                <li data-key="p2-feature-2">✓ Xbox / DualSense kontroller</li>
+                                <li data-key="p2-feature-3">✓ 4K HDMI 2.1 Ultra High Speed kaabel</li>
+                                <li data-key="p2-feature-4">✓ SFF Lab premium pakend</li>
                             </ul>
                         </div>
                         <div class="mt-12">
-                            <div class="text-3xl font-bold mb-6">1999 €</div>
-                            <a href="configurator.html?base=1999&mode=plus&os=steamos" class="block text-center bg-blue-600 text-white py-4 rounded-2xl hover:bg-blue-500 transition font-bold text-xs uppercase tracking-widest">Telli komplekt</a>
+                            <div class="text-4xl font-black mb-8 tracking-tighter text-white">1999 €</div>
+                            <a href="configurator.html?base=1999&mode=plus&os=steamos" data-key="p2-btn" class="block text-center bg-blue-600 text-white py-5 rounded-2xl hover:bg-blue-500 transition-all font-bold text-xs uppercase tracking-widest shadow-lg shadow-blue-600/20">Telli komplekt</a>
                         </div>
                     </div>
                 </div>
 
+                <!-- Enthusiast -->
                 <div class="flex">
-                    <div class="glass-card p-8 md:p-10 rounded-[40px] flex flex-col justify-between w-full border-white/5">
+                    <div class="glass-card p-10 rounded-[40px] flex flex-col justify-between w-full border-white/5">
                         <div>
-                            <span class="text-blue-500 text-[10px] font-black uppercase tracking-widest">Enthusiast</span>
-                            <h3 data-key="p3-title" class="text-3xl font-extrabold mt-2 mb-8 uppercase">Pane kokku</h3>
-                            <p class="text-zinc-400 text-sm mb-4">Koosta oma unistuste SFF süsteem.</p>
+                            <span class="text-blue-600 text-[11px] font-black uppercase tracking-[0.2em]">Enthusiast</span>
+                            <h3 data-key="p3-title" class="text-3xl font-extrabold mt-3 mb-10 text-white uppercase">Pane kokku</h3>
+                            <p data-key="p3-desc" class="text-zinc-400 text-sm leading-relaxed">
+                                Koosta oma unistuste SFF süsteem: vali 7500X3D, RX 9070 XT ja kuni 4TB Samsung SSD.
+                            </p>
                         </div>
                         <div class="mt-12">
-                            <div class="text-3xl font-bold mb-6">1845 € +</div>
-                            <a href="configurator.html?base=1845&mode=enthusiast&os=steamos" class="block text-center bg-blue-600 text-white py-4 rounded-2xl hover:bg-blue-500 transition font-bold text-xs uppercase tracking-widest">Alusta</a>
+                            <div class="text-4xl font-black mb-8 tracking-tighter text-white">1845 € +</div>
+                            <a href="configurator.html?base=1845&mode=enthusiast&os=steamos" data-key="p3-btn" class="block text-center bg-blue-600 text-white py-5 rounded-2xl hover:bg-blue-500 transition-all font-bold text-xs uppercase tracking-widest shadow-lg shadow-blue-600/20">Alusta koostamist</a>
                         </div>
                     </div>
                 </div>
             </div>
 
             <!-- Windows Grid -->
-            <div id="grid-windows" class="hidden grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
-                <!-- Аналогичные карточки с пометкой Coming Soon -->
-                <div class="flex"><div class="glass-card p-10 rounded-[40px] w-full border-white/5 opacity-50 flex items-center justify-center italic">Coming Soon</div></div>
-                <div class="flex"><div class="glass-card p-10 rounded-[40px] w-full border-white/5 opacity-50 flex items-center justify-center italic">Coming Soon</div></div>
-                <div class="flex"><div class="glass-card p-10 rounded-[40px] w-full border-white/5 opacity-50 flex items-center justify-center italic">Coming Soon</div></div>
+            <div id="grid-windows" class="hidden grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
+                <div class="flex">
+                    <div class="glass-card p-10 rounded-[40px] w-full border-white/5 opacity-50 flex items-center justify-center italic text-zinc-600 uppercase tracking-widest text-[10px]">Windows Core Coming Soon</div>
+                </div>
+                <div class="flex">
+                    <div class="glass-card p-10 rounded-[40px] w-full border-white/5 opacity-50 flex items-center justify-center italic text-zinc-600 uppercase tracking-widest text-[10px]">Windows Pro Coming Soon</div>
+                </div>
+                <div class="flex">
+                    <div class="glass-card p-10 rounded-[40px] w-full border-white/5 opacity-50 flex items-center justify-center italic text-zinc-600 uppercase tracking-widest text-[10px]">Enthusiast Coming Soon</div>
+                </div>
             </div>
         </div>
     </section>
+
+    <footer class="py-20 border-t border-white/5 px-6 text-zinc-600 text-[10px] uppercase tracking-[0.3em] bg-black">
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center space-y-6 md:space-y-0 text-center md:text-left">
+            <div>SFF LAB</div>
+            <div class="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-12">
+                <span class="italic uppercase" data-key="footer-slogan">Designed for living rooms</span>
+                <span data-key="footer-power" class="hidden md:block">Powered by SteamOS & Windows</span>
+            </div>
+        </div>
+    </footer>
 
     <script>
         function switchOS(os) {
@@ -143,6 +163,7 @@
             const gridWin = document.getElementById('grid-windows');
             const btnSteam = document.getElementById('btn-steamos');
             const btnWin = document.getElementById('btn-windows');
+
             if (os === 'steamos') {
                 gridSteam.classList.remove('hidden');
                 gridWin.classList.add('hidden');
@@ -158,12 +179,18 @@
 
         const translations = {
             'et': {
-                'nav-pricing': 'Paketid', 'p1-title': 'Baas', 'p1-custom': '✓ Vali korpuse disain',
-                'popular-badge': 'Populaarne', 'p2-title': 'Baas+', 'p3-title': 'Pane kokku'
+                'nav-pricing': 'Paketid', 'hero-sub': 'Eksklusiivsed kompaktsed mängusüsteemid Tallinnas.',
+                'p1-title': 'Baas', 'p1-btn': 'Vali disain', 'p1-custom': '✓ Vali korpuse disain',
+                'popular-badge': 'Populaarne', 'p2-title': 'Baas+', 'p2-btn': 'Telli komplekt',
+                'p3-title': 'Pane kokku', 'p3-desc': 'Koosta oma unistuste SFF süsteem: vali 7500X3D, RX 9070 XT ja kuni 4TB Samsung SSD.',
+                'p3-btn': 'Alusta koostamist', 'footer-slogan': 'Designed for living rooms'
             },
             'ru': {
-                'nav-pricing': 'Цены', 'p1-title': 'База', 'p1-custom': '✓ Выбор дизайна корпуса',
-                'popular-badge': 'Популярно', 'p2-title': 'База+', 'p3-title': 'Собери сам'
+                'nav-pricing': 'Цены', 'hero-sub': 'Ультимативные игровые системы в компактном формате.',
+                'p1-title': 'База', 'p1-btn': 'Выбрать дизайн', 'p1-custom': '✓ Выбор дизайна корпуса',
+                'popular-badge': 'Популярно', 'p2-title': 'База+', 'p2-btn': 'Заказать набор',
+                'p3-title': 'Собери сам', 'p3-desc': 'Собери систему своей мечты: выбери 7500X3D, RX 9070 XT и до 4ТБ Samsung SSD.',
+                'p3-btn': 'Начать сборку', 'footer-slogan': 'Создано для гостиной'
             }
         };
 
@@ -176,6 +203,10 @@
             document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active', 'text-white'));
             document.getElementById('lang-' + lang).classList.add('active', 'text-white');
         }
+
+        window.onload = () => {
+            setLanguage(localStorage.getItem('selectedLanguage') || 'et');
+        };
     </script>
 </body>
 </html>
