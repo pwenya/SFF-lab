@@ -11,6 +11,8 @@
         .glass-panel { background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.1); backdrop-filter: blur(12px); }
         .color-circle { transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; border: 2px solid transparent; }
         .color-circle.active { border-color: #2563eb; transform: scale(1.15); box-shadow: 0 0 20px rgba(37, 99, 235, 0.3); }
+        .product-section { border-bottom: 1px solid rgba(255,255,255,0.05); padding: 100px 0; }
+        .product-section:last-child { border-bottom: none; }
     </style>
 </head>
 <body class="antialiased">
@@ -24,76 +26,130 @@
         </div>
     </nav>
 
-    <main class="min-h-screen pt-40 pb-20 px-6 flex items-center justify-center">
-        <div class="max-w-6xl w-full flex flex-col md:flex-row items-center gap-16">
+    <main class="pt-20">
 
-            <div class="flex-1 w-full relative">
-                <div class="glass-panel rounded-[40px] p-10 flex items-center justify-center min-h-[400px] md:min-h-[600px]">
-                    <img id="case-image" src="IMG/MoodBlack.1.png" class="max-h-[500px] w-auto transition-all duration-500 drop-shadow-[0_20px_50px_rgba(0,0,0,0.8)]">
+        <!-- КАРТОЧКА 1: MOOD (Твоя первая) -->
+        <section class="product-section flex items-center justify-center px-6">
+            <div class="max-w-6xl w-full flex flex-col md:flex-row items-center gap-16">
+                <div class="flex-1 w-full">
+                    <div class="glass-panel rounded-[40px] p-10 flex items-center justify-center min-h-[400px] md:min-h-[600px]">
+                        <img id="img-mood" src="IMG/MoodBlack.1.png" class="max-h-[500px] w-auto transition-all duration-500 drop-shadow-[0_20px_50px_rgba(0,0,0,0.8)]">
+                    </div>
+                    <div class="flex justify-center space-x-6 mt-10">
+                        <button onclick="nav('mood', -1)" class="glass-panel p-5 rounded-2xl hover:bg-white/10 transition">←</button>
+                        <button onclick="nav('mood', 1)" class="glass-panel p-5 rounded-2xl hover:bg-white/10 transition">→</button>
+                    </div>
                 </div>
-
-                <div class="flex justify-center space-x-6 mt-10">
-                    <button onclick="navPhoto(-1)" class="glass-panel p-5 rounded-2xl hover:bg-white/10 transition active:scale-95">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                    </button>
-                    <button onclick="navPhoto(1)" class="glass-panel p-5 rounded-2xl hover:bg-white/10 transition active:scale-95">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                    </button>
-                </div>
-            </div>
-
-            <div class="flex flex-row md:flex-col items-center md:items-start gap-12">
-                <div class="flex flex-col gap-6 order-1 md:order-2">
-                    <div onclick="switchColor('black')" id="circle-black" class="color-circle active w-12 h-12 rounded-full bg-black border border-white/20"></div>
-                    <div onclick="switchColor('white')" id="circle-white" class="color-circle w-12 h-12 rounded-full bg-white border border-black/10"></div>
-                </div>
-
-                <div class="order-2 md:order-1 text-left">
-                    <h2 class="text-5xl font-black uppercase tracking-tighter mb-4 text-white">Mood v1</h2>
-                    <p class="text-zinc-500 uppercase text-[11px] tracking-[0.4em] font-bold leading-loose">
-                        Премиальный SFF дизайн<br>Текстильная панель<br>Экосистема SFF Lab
-                    </p>
+                <div class="flex flex-row md:flex-col items-center md:items-start gap-12">
+                    <div class="flex flex-col gap-6 order-1 md:order-2">
+                        <div onclick="setColor('mood', 'black')" id="mood-black" class="color-circle active w-12 h-12 rounded-full bg-black border border-white/10"></div>
+                        <div onclick="setColor('mood', 'white')" id="mood-white" class="color-circle w-12 h-12 rounded-full bg-white border border-black/10"></div>
+                    </div>
+                    <div class="order-2 md:order-1">
+                        <h2 class="text-5xl font-black uppercase tracking-tighter mb-4">Mood v1</h2>
+                        <p class="text-zinc-500 uppercase text-[11px] tracking-[0.4em] font-bold">Premium SFF Design</p>
+                    </div>
                 </div>
             </div>
-        </div>
+        </section>
+
+        <!-- КАРТОЧКА 2: TERRA (3 цвета) -->
+        <section class="product-section flex items-center justify-center px-6">
+            <div class="max-w-6xl w-full flex flex-col md:flex-row items-center gap-16">
+                <div class="flex-1 w-full">
+                    <div class="glass-panel rounded-[40px] p-10 flex items-center justify-center min-h-[400px] md:min-h-[600px]">
+                        <img id="img-terra" src="IMG/TerraGraphite.1.png" class="max-h-[500px] w-auto transition-all duration-500 drop-shadow-[0_20px_50px_rgba(0,0,0,0.8)]">
+                    </div>
+                    <div class="flex justify-center space-x-6 mt-10">
+                        <button onclick="nav('terra', -1)" class="glass-panel p-5 rounded-2xl hover:bg-white/10 transition">←</button>
+                        <button onclick="nav('terra', 1)" class="glass-panel p-5 rounded-2xl hover:bg-white/10 transition">→</button>
+                    </div>
+                </div>
+                <div class="flex flex-row md:flex-col items-center md:items-start gap-12">
+                    <div class="flex flex-col gap-6 order-1 md:order-2">
+                        <div onclick="setColor('terra', 'graphite')" id="terra-graphite" class="color-circle active w-12 h-12 rounded-full bg-[#1c1c1c] border border-white/10"></div>
+                        <div onclick="setColor('terra', 'jade')" id="terra-jade" class="color-circle w-12 h-12 rounded-full bg-[#4d5d53] border border-white/10"></div>
+                        <div onclick="setColor('terra', 'silver')" id="terra-silver" class="color-circle w-12 h-12 rounded-full bg-[#d1d5db] border border-white/10"></div>
+                    </div>
+                    <div class="order-2 md:order-1">
+                        <h2 class="text-5xl font-black uppercase tracking-tighter mb-4">Terra</h2>
+                        <p class="text-zinc-500 uppercase text-[11px] tracking-[0.4em] font-bold">Crafted for Gamers</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- КАРТОЧКА 3: RIDGE (2 цвета) -->
+        <section class="product-section flex items-center justify-center px-6">
+            <div class="max-w-6xl w-full flex flex-col md:flex-row items-center gap-16">
+                <div class="flex-1 w-full">
+                    <div class="glass-panel rounded-[40px] p-10 flex items-center justify-center min-h-[400px] md:min-h-[600px]">
+                        <img id="img-ridge" src="IMG/RidgeBlack.1.png" class="max-h-[500px] w-auto transition-all duration-500 drop-shadow-[0_20px_50px_rgba(0,0,0,0.8)]">
+                    </div>
+                    <div class="flex justify-center space-x-6 mt-10">
+                        <button onclick="nav('ridge', -1)" class="glass-panel p-5 rounded-2xl hover:bg-white/10 transition">←</button>
+                        <button onclick="nav('ridge', 1)" class="glass-panel p-5 rounded-2xl hover:bg-white/10 transition">→</button>
+                    </div>
+                </div>
+                <div class="flex flex-row md:flex-col items-center md:items-start gap-12">
+                    <div class="flex flex-col gap-6 order-1 md:order-2">
+                        <div onclick="setColor('ridge', 'black')" id="ridge-black" class="color-circle active w-12 h-12 rounded-full bg-black border border-white/10"></div>
+                        <div onclick="setColor('ridge', 'white')" id="ridge-white" class="color-circle w-12 h-12 rounded-full bg-white border border-black/10"></div>
+                    </div>
+                    <div class="order-2 md:order-1">
+                        <h2 class="text-5xl font-black uppercase tracking-tighter mb-4">Ridge</h2>
+                        <p class="text-zinc-500 uppercase text-[11px] tracking-[0.4em] font-bold">Slim Console Format</p>
+                    </div>
+                </div>
+            </div>
+        </section>
     </main>
 
     <script>
-        // Используем строго те названия и расширения, что подтверждены системой на скриншоте
-        const sets = {
-            black: ['IMG/MoodBlack.1.png', 'IMG/MoodBlack.2.png', 'IMG/MoodBlack.3.png'],
-            white: ['IMG/MoodLight.1.png', 'IMG/MoodLight.2.png', 'IMG/MoodLight.3.png']
+        const config = {
+            mood: {
+                current: 'black', idx: 0,
+                black: ['IMG/MoodBlack.1.png', 'IMG/MoodBlack.2.png', 'IMG/MoodBlack.3.png'],
+                white: ['IMG/MoodLight.1.png', 'IMG/MoodLight.2.png', 'IMG/MoodLight.3.png']
+            },
+            terra: {
+                current: 'graphite', idx: 0,
+                graphite: ['IMG/TerraGraphite.1.png', 'IMG/TerraGraphite.2.png', 'IMG/TerraGraphite.3.png'],
+                jade: ['IMG/TerraJade.1.png', 'IMG/TerraJade.2.png', 'IMG/TerraJade.3.png'],
+                silver: ['IMG/TerraSilver.1.png', 'IMG/TerraSilver.2.png', 'IMG/TerraSilver.3.png']
+            },
+            ridge: {
+                current: 'black', idx: 0,
+                black: ['IMG/RidgeBlack.1.png', 'IMG/RidgeBlack.2.png'],
+                white: ['IMG/RidgeWhite.1.png', 'IMG/RidgeWhite.2.png']
+            }
         };
 
-        let currentSet = 'black';
-        let currentIndex = 0;
-        const mainImg = document.getElementById('case-image');
+        function setColor(model, color) {
+            config[model].current = color;
+            config[model].idx = 0;
 
-        function switchColor(color) {
-            currentSet = color;
-            currentIndex = 0;
+            document.querySelectorAll(`[id^="${model}-"]`).forEach(c => c.classList.remove('active'));
+            document.getElementById(`${model}-${color}`).classList.add('active');
 
-            document.querySelectorAll('.color-circle').forEach(c => c.classList.remove('active'));
-            document.getElementById(`circle-${color}`).classList.add('active');
-
-            updateView();
+            update(model);
         }
 
-        function navPhoto(dir) {
-            currentIndex = (currentIndex + dir + 3) % 3;
-            updateView();
+        function nav(model, dir) {
+            const m = config[model];
+            const len = m[m.current].length;
+            m.idx = (m.idx + dir + len) % len;
+            update(model);
         }
 
-        function updateView() {
-            mainImg.style.opacity = '0';
-            mainImg.style.transform = 'scale(0.95)';
-
+        function update(model) {
+            const m = config[model];
+            const el = document.getElementById(`img-${model}`);
+            el.style.opacity = '0';
             setTimeout(() => {
-                // Если картинка все равно не грузится, проверь, не лежит ли она в папке IMG в нижнем регистре (img)
-                mainImg.src = sets[currentSet][currentIndex];
-                mainImg.style.opacity = '1';
-                mainImg.style.transform = 'scale(1)';
-            }, 250);
+                el.src = m[m.current][m.idx];
+                el.style.opacity = '1';
+            }, 200);
         }
     </script>
 </body>
