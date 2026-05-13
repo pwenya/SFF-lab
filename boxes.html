@@ -17,9 +17,7 @@
 
         .case-img {
             transition: opacity 0.4s ease, transform 0.4s ease;
-            image-rendering: auto;
             will-change: opacity, transform;
-            /* Гарантируем центровку */
             max-width: 100%;
             max-height: 100%;
             object-fit: contain;
@@ -38,11 +36,6 @@
             display: flex;
             align-items: center;
             justify-content: center;
-        }
-
-        /* Прячем стрелки на мобилках */
-        @media (max-width: 767px) {
-            .nav-arrows { display: none; }
         }
     </style>
 </head>
@@ -66,13 +59,13 @@
                     <div class="glass-panel rounded-[30px] md:rounded-[40px] p-6 md:p-10 flex items-center justify-center h-[350px] md:h-[600px] overflow-hidden touch-pan-y">
                         <img id="img-mood" src="IMG/MoodBlack.1.png" class="case-img pointer-events-none">
                     </div>
-                    <div class="nav-arrows flex justify-center space-x-6 mt-10">
+                    <!-- Гарантированное скрытие через Tailwind: hidden на мобилках, flex на десктопе (md) -->
+                    <div class="hidden md:flex justify-center space-x-6 mt-10">
                         <button onclick="nav('mood', -1)" class="nav-btn p-5 rounded-2xl w-16 h-16">←</button>
                         <button onclick="nav('mood', 1)" class="nav-btn p-5 rounded-2xl w-16 h-16">→</button>
                     </div>
                 </div>
                 <div class="flex flex-col items-center md:items-start gap-6 md:gap-12 w-full md:w-auto">
-                    <!-- Кружочки: на мобилках в ряд под фото, на десктопе вертикально -->
                     <div class="flex flex-row md:flex-col gap-6 order-2 md:order-2">
                         <div onclick="setColor('mood', 'black')" id="mood-black" class="color-circle active w-10 h-10 md:w-12 md:h-12 rounded-full bg-black border border-white/10"></div>
                         <div onclick="setColor('mood', 'white')" id="mood-white" class="color-circle w-10 h-10 md:w-12 md:h-12 rounded-full bg-white border border-black/10"></div>
@@ -92,7 +85,7 @@
                     <div class="glass-panel rounded-[30px] md:rounded-[40px] p-6 md:p-10 flex items-center justify-center h-[350px] md:h-[600px] overflow-hidden touch-pan-y">
                         <img id="img-terra" src="IMG/TerraGraphite.1.png" class="case-img pointer-events-none">
                     </div>
-                    <div class="nav-arrows flex justify-center space-x-6 mt-10">
+                    <div class="hidden md:flex justify-center space-x-6 mt-10">
                         <button onclick="nav('terra', -1)" class="nav-btn p-5 rounded-2xl w-16 h-16">←</button>
                         <button onclick="nav('terra', 1)" class="nav-btn p-5 rounded-2xl w-16 h-16">→</button>
                     </div>
@@ -118,7 +111,7 @@
                     <div class="glass-panel rounded-[30px] md:rounded-[40px] p-6 md:p-10 flex items-center justify-center h-[350px] md:h-[600px] overflow-hidden touch-pan-y">
                         <img id="img-ridge" src="IMG/RidgeBlack.1.png" class="case-img pointer-events-none">
                     </div>
-                    <div class="nav-arrows flex justify-center space-x-6 mt-10">
+                    <div class="hidden md:flex justify-center space-x-6 mt-10">
                         <button onclick="nav('ridge', -1)" class="nav-btn p-5 rounded-2xl w-16 h-16">←</button>
                         <button onclick="nav('ridge', 1)" class="nav-btn p-5 rounded-2xl w-16 h-16">→</button>
                     </div>
@@ -184,7 +177,7 @@
             }, 250);
         }
 
-        // --- ЛОГИКА СВАЙПОВ ---
+        // --- УЛУЧШЕННАЯ ЛОГИКА СВАЙПОВ ---
         let touchStartX = 0;
         let touchEndX = 0;
 
@@ -197,18 +190,15 @@
 
             panel.addEventListener('touchend', e => {
                 touchEndX = e.changedTouches[0].screenX;
-                handleSwipe(model);
+                const swipeThreshold = 40; // Немного уменьшил для большей чувствительности
+
+                if (touchStartX - touchEndX > swipeThreshold) {
+                    nav(model, 1);  // След
+                } else if (touchEndX - touchStartX > swipeThreshold) {
+                    nav(model, -1); // Пред
+                }
             }, { passive: true });
         });
-
-        function handleSwipe(model) {
-            const swipeThreshold = 50;
-            if (touchStartX - touchEndX > swipeThreshold) {
-                nav(model, 1); // Свайп влево -> след. фото
-            } else if (touchEndX - touchStartX > swipeThreshold) {
-                nav(model, -1); // Свайп вправо -> пред. фото
-            }
-        }
     </script>
 </body>
 </html>
