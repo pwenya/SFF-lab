@@ -13,7 +13,7 @@
             background: rgba(255, 255, 255, 0.02);
             border: 1px solid rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(12px);
-            position: relative; /* Для позиционирования стрелок внутри */
+            position: relative;
         }
 
         .case-img {
@@ -31,7 +31,6 @@
         .product-section { border-bottom: 1px solid rgba(255,255,255,0.05); padding: 60px 0; }
         @media (min-width: 768px) { .product-section { padding: 100px 0; } }
 
-        /* Стили стрелок внутри карточки */
         .nav-btn-inside {
             position: absolute;
             top: 50%;
@@ -75,11 +74,8 @@
             <div class="max-w-6xl w-full flex flex-col md:flex-row items-center gap-8 md:gap-16">
                 <div class="w-full md:flex-1">
                     <div class="glass-panel rounded-[30px] md:rounded-[40px] p-6 md:p-20 flex items-center justify-center h-[350px] md:h-[600px] overflow-hidden touch-pan-y">
-                        <!-- Стрелки внутри (только десктоп) -->
                         <button onclick="nav('mood', -1)" class="hidden md:flex nav-btn-inside btn-left">←</button>
-
                         <img id="img-mood" src="IMG/MoodBlack.1.png" class="case-img pointer-events-none relative z-10">
-
                         <button onclick="nav('mood', 1)" class="hidden md:flex nav-btn-inside btn-right">→</button>
                     </div>
                 </div>
@@ -167,9 +163,12 @@
         function setColor(model, color) {
             config[model].current = color;
             config[model].idx = 0;
+
             document.querySelectorAll(`[id^="${model}-"]`).forEach(c => c.classList.remove('active'));
-            document.getElementById(`${model}-${color}`).classList.add('active');
-            update(model);
+            const activeCircle = document.getElementById(`${model}-${color}`);
+            if (activeCircle) activeCircle.classList.add('active');
+
+            update(model); // Принудительно обновляем картинку сразу после клика
         }
 
         function nav(model, dir) {
@@ -182,16 +181,19 @@
         function update(model) {
             const m = config[model];
             const el = document.getElementById(`img-${model}`);
+
+            // Визуальный фидбек переключения
             el.style.opacity = '0';
             el.style.transform = 'scale(0.98)';
+
             setTimeout(() => {
                 el.src = m[m.current][m.idx];
                 el.style.opacity = '1';
                 el.style.transform = 'scale(1)';
-            }, 250);
+            }, 200); // Уменьшил задержку для большей отзывчивости
         }
 
-        // --- ЛОГИКА СВАЙПОВ ---
+        // Логика свайпов
         let touchStartX = 0;
         let touchEndX = 0;
 
