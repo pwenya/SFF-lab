@@ -2,113 +2,244 @@
 <html lang="et">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SFF Lab | Konfiguraator</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #050505; color: white; overflow-x: hidden; }
-        .glass-card {
-            background: rgba(255, 255, 255, 0.02);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #050505; color: white; }
+        .glass-panel { background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); }
+        select {
+            background-color: #111 !important;
+            border: 1px solid #333 !important;
+            color: white !important;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='white'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 1em;
         }
-        .config-option {
-            transition: all 0.3s ease;
-            cursor: pointer;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-        .config-option:hover { background: rgba(255, 255, 255, 0.05); }
-        .config-option.selected {
-            border-color: #2563eb;
-            background: rgba(37, 99, 235, 0.1);
-        }
+        select:disabled { opacity: 0.6; cursor: not-allowed; border-color: #222 !important; color: #888 !important; }
     </style>
 </head>
-<body class="antialiased">
+<body class="p-6 md:p-20 antialiased text-zinc-100">
 
-    <!-- Навигация -->
-    <nav class="fixed w-full z-50 border-b border-white/5 bg-black/70 backdrop-blur-md">
-        <div class="max-w-[1400px] mx-auto flex justify-between items-center py-4 md:py-6 px-6 md:px-10">
-            <!-- Ссылка "/" вместо index.html -->
-            <a href="/" class="text-2xl font-extrabold tracking-tighter uppercase text-white">
-                SFF LAB<span class="text-blue-600">.</span>
-            </a>
-            <!-- Ссылка "boxes" вместо boxes.html -->
-            <a href="boxes" class="text-zinc-400 hover:text-white transition uppercase tracking-widest text-[12px] font-bold">
-                ← Tagasi korpuste juurde
-            </a>
-        </div>
-    </nav>
+    <div class="max-w-4xl mx-auto">
+        <a href="index.html" data-key="back-link" class="text-zinc-500 hover:text-white text-[10px] uppercase tracking-[0.2em] mb-10 inline-block transition">← Tagasi pealehele</a>
 
-    <main class="pt-32 pb-20 px-6">
-        <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-12">
+        <h1 data-key="config-title" class="text-4xl font-black mb-2 uppercase tracking-tighter">Konfigureeri oma süsteem</h1>
+        <p class="text-blue-500 mb-12 uppercase text-[10px] tracking-[0.3em] font-bold">SFF Lab Build Tool v1.5</p>
 
-            <!-- Левая колонка: Настройки -->
-            <div class="lg:col-span-2 space-y-12">
-                <section>
-                    <h2 class="text-sm font-black uppercase tracking-[0.3em] text-blue-600 mb-8">01. Protsessor</h2>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div class="config-option selected p-6 rounded-3xl glass-card">
-                            <div class="font-bold">Ryzen 5 7500F</div>
-                            <div class="text-zinc-500 text-sm italic">Standard Edition</div>
-                        </div>
-                        <div class="config-option p-6 rounded-3xl glass-card">
-                            <div class="font-bold">Ryzen 7 7800X3D</div>
-                            <div class="text-zinc-500 text-sm">+320 €</div>
-                        </div>
-                    </div>
-                </section>
+        <div class="grid md:grid-cols-2 gap-12">
+            <div id="selectors-container" class="space-y-8">
+                <div id="case-block">
+                    <label data-key="case-label" class="block text-[10px] font-black uppercase tracking-widest text-blue-500 mb-3">Korpuse disain (Case Color)</label>
+                    <select id="case-select" class="w-full p-4 rounded-xl outline-none focus:border-blue-600 transition uppercase text-[10px] font-bold tracking-widest cursor-pointer">
+                        <option>Obsidian Black</option>
+                        <option>Titanium Gray</option>
+                        <option>Frost White</option>
+                    </select>
+                </div>
 
-                <section>
-                    <h2 class="text-sm font-black uppercase tracking-[0.3em] text-blue-600 mb-8">02. Graafika</h2>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div class="config-option selected p-6 rounded-3xl glass-card">
-                            <div class="font-bold">Radeon RX 9060 XT</div>
-                            <div class="text-zinc-500 text-sm">Included</div>
-                        </div>
-                        <div class="config-option p-6 rounded-3xl glass-card">
-                            <div class="font-bold">Radeon RX 9070 XT</div>
-                            <div class="text-zinc-500 text-sm">+210 €</div>
-                        </div>
-                    </div>
-                </section>
-            </div>
+                <div id="cpu-block">
+                    <label data-key="cpu-label" class="block text-[10px] font-black uppercase tracking-widest text-blue-500 mb-3">Protsessor (CPU)</label>
+                    <select id="cpu-select" onchange="updatePrice()" class="w-full p-4 rounded-xl outline-none transition uppercase text-[10px] font-bold tracking-widest cursor-pointer">
+                        <option value="0">AMD Ryzen 5 7500F</option>
+                        <option value="79">AMD Ryzen 5 7500X3D (+79€)</option>
+                    </select>
+                </div>
 
-            <!-- Правая колонка: Итого -->
-            <div class="lg:col-span-1">
-                <div class="glass-card p-10 rounded-[40px] sticky top-32">
-                    <h3 class="text-2xl font-extrabold uppercase tracking-tighter mb-8">Sinu SFF</h3>
-                    <div id="summary-list" class="space-y-4 mb-10 text-sm text-zinc-400">
-                        <div class="flex justify-between"><span>Base System</span><span class="text-white" id="base-price">0 €</span></div>
-                        <div class="flex justify-between"><span>OS</span><span class="text-white" id="os-name">-</span></div>
-                    </div>
-                    <div class="border-t border-white/10 pt-8">
-                        <div class="flex justify-between items-end mb-10">
-                            <span class="uppercase font-bold text-xs tracking-widest text-zinc-500">Kokku</span>
-                            <span class="text-5xl font-black tracking-tighter" id="total-price">0 €</span>
-                        </div>
-                        <button class="w-full bg-white text-black py-5 rounded-2xl font-black uppercase tracking-widest hover:bg-zinc-200 transition">
-                            Vormista tellimus
-                        </button>
-                    </div>
+                <div id="gpu-block">
+                    <label data-key="gpu-label" class="block text-[10px] font-black uppercase tracking-widest text-blue-500 mb-3">Videokaart (GPU)</label>
+                    <select id="gpu-select" onchange="handleGpuChange()" class="w-full p-4 rounded-xl outline-none transition uppercase text-[10px] font-bold tracking-widest cursor-pointer">
+                        <option value="0">AMD Radeon RX 9060 XT 16GB</option>
+                        <option value="175">AMD Radeon RX 9070 XT 20GB (+175€)</option>
+                    </select>
+                </div>
+
+                <div id="psu-block" style="display:none;">
+                    <label data-key="psu-label" class="block text-[10px] font-black uppercase tracking-widest text-blue-500 mb-3">Toiteplokk (PSU)</label>
+                    <select id="psu-select" onchange="updatePrice()" class="w-full p-4 rounded-xl outline-none transition uppercase text-[10px] font-bold tracking-widest cursor-pointer">
+                        <option value="0" id="psu-650">650W SFX Gold Quiet Edition</option>
+                        <option value="45" id="psu-850">850W SFX Platinum (+45€)</option>
+                    </select>
+                    <p id="psu-warning" class="text-[9px] text-amber-500 uppercase mt-2 hidden" data-key="psu-req">9070 XT jaoks on vajalik 850W toiteplokk</p>
+                </div>
+
+                <div id="ram-block">
+                    <label data-key="ram-label" class="block text-[10px] font-black uppercase tracking-widest text-blue-500 mb-3">Operatiivmälu (RAM)</label>
+                    <select id="ram-select" onchange="updatePrice()" class="w-full p-4 rounded-xl outline-none transition uppercase text-[10px] font-bold tracking-widest cursor-pointer">
+                        <option value="0">16GB DDR5 Corsair Vengeance</option>
+                        <option value="139">32GB DDR5 Corsair Vengeance (+139€)</option>
+                        <option value="606">64GB DDR5 Corsair Vengeance (+606€)</option>
+                    </select>
+                </div>
+
+                <div id="ssd-block">
+                    <label data-key="ssd-label" class="block text-[10px] font-black uppercase tracking-widest text-blue-500 mb-3">Salvestusruum (SSD)</label>
+                    <select id="ssd-select" onchange="updatePrice()" class="w-full p-4 rounded-xl outline-none transition uppercase text-[10px] font-bold tracking-widest cursor-pointer">
+                        <option value="0">1TB Samsung 990 PRO</option>
+                        <option value="120">2TB Samsung 990 PRO (+120€)</option>
+                        <option value="425" id="ssd-4tb" style="display:none;">4TB Samsung 990 PRO (+425€)</option>
+                    </select>
+                </div>
+
+                <div id="ctrl-block" style="display:none;">
+                    <label data-key="ctrl-label" class="block text-[10px] font-black uppercase tracking-widest text-blue-500 mb-3">Kontroller (Controller)</label>
+                    <select id="ctrl-select" onchange="updatePrice()" class="w-full p-4 rounded-xl outline-none transition uppercase text-[10px] font-bold tracking-widest cursor-pointer">
+                        <option value="0">Xbox Wireless Controller</option>
+                        <option value="0">Sony DualSense</option>
+                        <option value="90">Xbox Elite Series 2 (+90€)</option>
+                        <option value="-80">Ilma kontrollerita (-80€)</option>
+                    </select>
+                </div>
+
+                <div id="hdmi-block" style="display:none;">
+                    <label data-key="hdmi-label" class="block text-[10px] font-black uppercase tracking-widest text-blue-500 mb-3">Kaabel (Cable)</label>
+                    <select disabled class="w-full p-4 rounded-xl outline-none transition uppercase text-[10px] font-bold tracking-widest">
+                        <option>✓ 4K HDMI 2.1 Ultra High Speed</option>
+                    </select>
+                </div>
+
+                <div id="pkg-block" style="display:none;">
+                    <label data-key="pkg-label" class="block text-[10px] font-black uppercase tracking-widest text-blue-500 mb-3">Pakend (Packaging)</label>
+                    <select disabled class="w-full p-4 rounded-xl outline-none transition uppercase text-[10px] font-bold tracking-widest">
+                        <option>✓ SFF Lab Premium Packaging</option>
+                    </select>
                 </div>
             </div>
 
+            <div class="glass-panel p-10 rounded-[40px] h-fit sticky top-10">
+                <h2 data-key="summary-title" class="text-xl font-bold mb-6 uppercase tracking-widest">Sinu valik</h2>
+                <div class="space-y-4 border-b border-white/5 pb-6 mb-6 text-[10px] uppercase tracking-widest text-zinc-400">
+                    <div class="flex justify-between">
+                        <span data-key="sum-model">Mudel:</span>
+                        <span id="model-display" class="text-white font-bold uppercase">BAAS</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span data-key="sum-build">Tüüp:</span>
+                        <span class="text-blue-400 font-bold uppercase tracking-widest">Eritellimus</span>
+                    </div>
+                </div>
+                <div id="total-price" class="text-4xl font-black mb-8 tracking-tighter">1845 €</div>
+                <button data-key="send-btn" class="w-full bg-blue-600 py-4 rounded-2xl font-black uppercase text-[10px] tracking-widest hover:bg-blue-500 transition shadow-lg shadow-blue-600/20">Saada päring</button>
+                <p data-key="legal-info" class="text-[8px] text-zinc-600 uppercase tracking-widest mt-6 text-center leading-relaxed">
+                    * Eritellimusel valmiv toode.<br>VÕS § 53 lg 4 kohaselt tagastamisõigus puudub.
+                </p>
+            </div>
         </div>
-    </main>
+    </div>
 
     <script>
-        // Простая логика обработки параметров URL
-        window.onload = () => {
-            const params = new URLSearchParams(window.location.search);
-            const base = params.get('base') || '1845';
-            const os = params.get('os') || 'steamos';
-            const mode = params.get('mode') || 'core';
+        const urlParams = new URLSearchParams(window.location.search);
+        const BASE_PRICE = parseInt(urlParams.get('base')) || 1845;
+        const MODE = urlParams.get('mode');
 
-            document.getElementById('base-price').innerText = base + ' €';
-            document.getElementById('total-price').innerText = base + ' €';
-            document.getElementById('os-name').innerText = os === 'steamos' ? 'SteamOS Holo' : 'Windows 11 Pro';
+        function initMode() {
+            const cpu = document.getElementById('cpu-select');
+            const gpu = document.getElementById('gpu-select');
+            const ram = document.getElementById('ram-select');
+            const ssd = document.getElementById('ssd-select');
+            const ssd4tb = document.getElementById('ssd-4tb');
+            const psuBlock = document.getElementById('psu-block');
+            const ctrlBlock = document.getElementById('ctrl-block');
+            const hdmiBlock = document.getElementById('hdmi-block');
+            const pkgBlock = document.getElementById('pkg-block');
+            const modelDisp = document.getElementById('model-display');
+
+            if (MODE === 'core') {
+                cpu.disabled = true;
+                gpu.disabled = true;
+                ram.disabled = true;
+                ssd.disabled = true;
+                modelDisp.innerText = 'BAAS';
+            } else if (MODE === 'plus') {
+                cpu.disabled = false;
+                gpu.disabled = true;
+                ram.disabled = true;
+                ssd.disabled = true;
+                ctrlBlock.style.display = 'block';
+                hdmiBlock.style.display = 'block';
+                pkgBlock.style.display = 'block';
+                modelDisp.innerText = 'BAAS+';
+            } else if (MODE === 'enthusiast') {
+                cpu.disabled = false;
+                gpu.disabled = false;
+                ram.disabled = false;
+                ssd.disabled = false;
+                ssd4tb.style.display = 'block';
+                psuBlock.style.display = 'block';
+                modelDisp.innerText = 'ENTHUSIAST';
+            }
+        }
+
+        function handleGpuChange() {
+            const gpuVal = document.getElementById('gpu-select').value;
+            const psuSel = document.getElementById('psu-select');
+            const psu650 = document.getElementById('psu-650');
+            const psuWarning = document.getElementById('psu-warning');
+
+            if (gpuVal === "175") {
+                psuSel.value = "45";
+                psu650.disabled = true;
+                psuWarning.classList.remove('hidden');
+            } else {
+                psu650.disabled = false;
+                psuWarning.classList.add('hidden');
+            }
+            updatePrice();
+        }
+
+        function updatePrice() {
+            const cpu = parseInt(document.getElementById('cpu-select').value) || 0;
+            const gpu = parseInt(document.getElementById('gpu-select').value) || 0;
+            const ram = parseInt(document.getElementById('ram-select').value) || 0;
+            const ssd = parseInt(document.getElementById('ssd-select').value) || 0;
+            const psu = (document.getElementById('psu-block').style.display !== 'none') ? parseInt(document.getElementById('psu-select').value) || 0 : 0;
+            const ctrl = (document.getElementById('ctrl-block').style.display !== 'none') ? parseInt(document.getElementById('ctrl-select').value) || 0 : 0;
+
+            document.getElementById('total-price').innerText = (BASE_PRICE + cpu + gpu + ram + ssd + psu + ctrl) + ' €';
+        }
+
+        const translations = {
+            'et': {
+                'back-link': '← Tagasi pealehele', 'config-title': 'Konfigureeri oma süsteem',
+                'case-label': 'Korpuse disain (Case Color)', 'ctrl-label': 'Kontroller (Controller)',
+                'cpu-label': 'Protsessor (CPU)', 'gpu-label': 'Videokaart (GPU)', 'psu-label': 'Toiteplokk (PSU)',
+                'ram-label': 'Operatiivmälu (RAM)', 'ssd-label': 'Salvestusruum (SSD)',
+                'hdmi-label': 'Kaabel (Cable)', 'pkg-label': 'Pakend (Packaging)',
+                'psu-req': '9070 XT jaoks on vajalik 850W toiteplokk',
+                'summary-title': 'Sinu valik', 'sum-model': 'Mudel:', 'sum-build': 'Tüüp:', 'send-btn': 'Saada päring',
+                'legal-info': '* Eritellimusel valmiv toode.\nVÕS § 53 lg 4 kohaselt tagastamisõigus puudub.'
+            },
+            'ru': {
+                'back-link': '← На главную', 'config-title': 'Настрой свою систему',
+                'case-label': 'Дизайн корпуса (Цвет)', 'ctrl-label': 'Контроллер (Геймпад)',
+                'cpu-label': 'Процессор (CPU)', 'gpu-label': 'Видеокарта (GPU)', 'psu-label': 'Блок питания (PSU)',
+                'ram-label': 'Оперативная память (RAM)', 'ssd-label': 'Накопитель (SSD)',
+                'hdmi-label': 'Кабель (Cable)', 'pkg-label': 'Упаковка (Packaging)',
+                'psu-req': 'Для 9070 XT необходим блок 850W',
+                'summary-title': 'Ваш выбор', 'sum-model': 'Модель:', 'sum-build': 'Тип:', 'send-btn': 'Отправить запрос',
+                'legal-info': '* Товар, изготавливаемый под заказ.\nСогласно VÕS § 53 lg 4, право на возврат отсутствует.'
+            }
+        };
+
+        function applyLanguage() {
+            const lang = localStorage.getItem('selectedLanguage') || 'et';
+            document.documentElement.lang = lang;
+            document.querySelectorAll('[data-key]').forEach(el => {
+                const key = el.getAttribute('data-key');
+                if (translations[lang][key]) {
+                    el.innerText = translations[lang][key];
+                    if (key === 'legal-info') el.style.whiteSpace = 'pre-line';
+                }
+            });
+        }
+
+        window.onload = () => {
+            initMode();
+            applyLanguage();
+            updatePrice();
         };
     </script>
 </body>
