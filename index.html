@@ -31,7 +31,7 @@
 
     <nav class="fixed w-full z-50 border-b border-white/5 bg-black/70 backdrop-blur-md">
         <div class="max-w-[1400px] mx-auto flex justify-between items-center py-4 md:py-6 px-6 md:px-10">
-            <a href="#about" class="text-2xl md:text-3xl font-extrabold tracking-tighter uppercase text-white hover:opacity-80 transition">
+            <a href="/" class="text-2xl md:text-3xl font-extrabold tracking-tighter uppercase text-white hover:opacity-80 transition">
                 SFF LAB<span class="text-blue-600">.</span>
             </a>
             <div class="flex items-center space-x-6 md:space-x-12">
@@ -43,7 +43,7 @@
                     <span class="text-zinc-800">|</span>
                     <button onclick="setLanguage('ru')" id="lang-ru" class="lang-btn transition hover:text-white text-zinc-500">RU</button>
                 </div>
-                <a href="#" data-key="nav-status" class="hidden md:block bg-white text-black px-8 py-3 rounded-full hover:bg-zinc-200 transition uppercase tracking-widest text-[14px] font-black text-center">Статус заказа</a>
+                <a href="#" data-key="nav-status" class="hidden md:block bg-white text-black px-8 py-3 rounded-full hover:bg-zinc-200 transition uppercase tracking-widest text-[14px] font-black">Статус заказа</a>
             </div>
         </div>
     </nav>
@@ -55,14 +55,14 @@
             <h1 class="text-5xl md:text-9xl font-extrabold tracking-tighter leading-none mb-12 text-gradient uppercase">SFF<br>EXPERIENCE.</h1>
 
             <div class="relative inline-block mt-8">
-                <a href="boxes.html" class="bg-white text-black px-16 py-5 rounded-full hover:bg-zinc-200 transition-all duration-300 uppercase tracking-[0.3em] text-[18px] font-black shadow-2xl shadow-white/5">
+                <!-- Ссылка на коробки БЕЗ .html -->
+                <a href="boxes" class="bg-white text-black px-16 py-5 rounded-full hover:bg-zinc-200 transition-all duration-300 uppercase tracking-[0.3em] text-[18px] font-black shadow-2xl shadow-white/5">
                     Коробки
                 </a>
             </div>
         </div>
     </section>
 
-    <!-- Секция цен остается без изменений -->
     <section id="pricing" class="pt-24 pb-24 px-6 bg-transparent relative z-20">
         <div class="max-w-6xl mx-auto">
             <div class="flex justify-center space-x-4 mb-20">
@@ -71,6 +71,7 @@
             </div>
 
             <div id="grid-steamos" class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
+                <!-- Baas -->
                 <div class="flex">
                     <div class="glass-card p-10 rounded-[40px] flex flex-col justify-between w-full border-white/5">
                         <div>
@@ -85,11 +86,13 @@
                         </div>
                         <div class="mt-12">
                             <div class="text-4xl font-black mb-8 tracking-tighter text-white">1845 €</div>
-                            <a href="configurator.html?base=1845&mode=core&os=steamos" class="block text-center bg-blue-600 text-white py-5 rounded-2xl hover:bg-blue-500 transition-all font-bold text-xs uppercase tracking-widest shadow-lg shadow-blue-600/20">Vali disain</a>
+                            <!-- Конфигуратор БЕЗ .html -->
+                            <a href="configurator?base=1845&mode=core&os=steamos" class="block text-center bg-blue-600 text-white py-5 rounded-2xl hover:bg-blue-500 transition-all font-bold text-xs uppercase tracking-widest shadow-lg shadow-blue-600/20">Vali disain</a>
                         </div>
                     </div>
                 </div>
 
+                <!-- Baas+ -->
                 <div class="flex">
                     <div class="glass-card p-10 rounded-[40px] flex flex-col justify-between relative overflow-hidden group w-full border-white/5">
                         <div data-key="popular-badge" class="absolute top-6 right-6 bg-blue-600/90 text-[10px] font-black px-4 py-1.5 rounded-full uppercase tracking-widest text-white shadow-lg shadow-blue-600/10">Populaarne</div>
@@ -105,28 +108,32 @@
                         </div>
                         <div class="mt-12">
                             <div class="text-4xl font-black mb-8 tracking-tighter text-white">1999 €</div>
-                            <a href="configurator.html?base=1999&mode=plus&os=steamos" class="block text-center bg-blue-600 text-white py-5 rounded-2xl hover:bg-blue-500 transition-all font-bold text-xs uppercase tracking-widest shadow-lg shadow-blue-600/20">Telli komplekt</a>
+                            <!-- Конфигуратор БЕЗ .html -->
+                            <a href="configurator?base=1999&mode=plus&os=steamos" class="block text-center bg-blue-600 text-white py-5 rounded-2xl hover:bg-blue-500 transition-all font-bold text-xs uppercase tracking-widest shadow-lg shadow-blue-600/20">Telli komplekt</a>
                         </div>
                     </div>
                 </div>
 
+                <!-- Enthusiast -->
                 <div class="flex">
                     <div class="glass-card p-10 rounded-[40px] flex flex-col justify-between w-full border-white/5">
                         <div>
                             <span class="text-blue-600 text-[11px] font-black uppercase tracking-[0.2em]">Enthusiast</span>
                             <h3 data-key="p3-title" class="text-3xl font-extrabold mt-3 mb-10 text-white uppercase">Pane kokku</h3>
                             <p data-key="p3-desc" class="text-zinc-400 text-sm leading-relaxed">
-                                Koosta oma unistuste SFF süsteem: vali 7500X3D, RX 9070 XT и до 4ТБ Samsung SSD.
+                                Koosta oma unistuste SFF süsteem: vali 7500X3D, RX 9070 XT ja kuni 4TB Samsung SSD.
                             </p>
                         </div>
                         <div class="mt-12">
                             <div class="text-4xl font-black mb-8 tracking-tighter text-white">1845 € +</div>
-                            <a href="configurator.html?base=1845&mode=enthusiast&os=steamos" class="block text-center bg-blue-600 text-white py-5 rounded-2xl hover:bg-blue-500 transition-all font-bold text-xs uppercase tracking-widest shadow-lg shadow-blue-600/20">Alusta koostamist</a>
+                            <!-- Конфигуратор БЕЗ .html -->
+                            <a href="configurator?base=1845&mode=enthusiast&os=steamos" class="block text-center bg-blue-600 text-white py-5 rounded-2xl hover:bg-blue-500 transition-all font-bold text-xs uppercase tracking-widest shadow-lg shadow-blue-600/20">Alusta koostamist</a>
                         </div>
                     </div>
                 </div>
             </div>
 
+            <!-- Windows Grid (аналогично) -->
             <div id="grid-windows" class="hidden grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
                 <div class="flex">
                     <div class="glass-card p-10 rounded-[40px] w-full border-white/5 opacity-50 flex items-center justify-center italic text-zinc-600 uppercase tracking-widest text-[10px]">Windows Core Coming Soon</div>
@@ -142,7 +149,7 @@
     </section>
 
     <footer class="py-20 border-t border-white/5 px-6 text-zinc-600 text-[10px] uppercase tracking-[0.3em]">
-        <div class="max-w-[1400px] mx-auto flex flex-col md:flex-row justify-between items-center space-y-6 md:space-y-0 text-center md:text-left">
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center space-y-6 md:space-y-0 text-center md:text-left">
             <div>SFF LAB</div>
             <div class="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-12">
                 <span class="italic uppercase" data-key="footer-slogan">Designed for living rooms</span>
@@ -158,32 +165,24 @@
             const btnSteam = document.getElementById('btn-steamos');
             const btnWin = document.getElementById('btn-windows');
             if (os === 'steamos') {
-                gridSteam.classList.remove('hidden');
-                gridWin.classList.add('hidden');
-                btnSteam.classList.add('active');
-                btnWin.classList.remove('active');
+                gridSteam.classList.remove('hidden'); gridWin.classList.add('hidden');
+                btnSteam.classList.add('active'); btnWin.classList.remove('active');
             } else {
-                gridSteam.classList.add('hidden');
-                gridWin.classList.remove('hidden');
-                btnSteam.classList.remove('active');
-                btnWin.classList.add('active');
+                gridSteam.classList.add('hidden'); gridWin.classList.remove('hidden');
+                btnSteam.classList.remove('active'); btnWin.classList.add('active');
             }
         }
 
         const translations = {
             'et': {
-                'nav-pricing': 'Paketid',
-                'p1-title': 'Baas', 'p1-btn': 'Vali disain', 'p1-custom': '✓ Vali korpuse disain',
-                'popular-badge': 'Populaarne', 'p2-title': 'Baas+', 'p2-btn': 'Telli komplekt',
-                'p3-title': 'Pane kokku', 'p3-desc': 'Koosta oma unistuste SFF süsteem: vali 7500X3D, RX 9070 XT ja kuni 4TB Samsung SSD.',
-                'p3-btn': 'Alusta koostamist', 'footer-slogan': 'Designed for living rooms'
+                'nav-pricing': 'Paketid', 'p1-title': 'Baas', 'p2-title': 'Baas+', 'p3-title': 'Pane kokku',
+                'p3-desc': 'Koosta oma unistuste SFF süsteem: vali 7500X3D, RX 9070 XT ja kuni 4TB Samsung SSD.',
+                'footer-slogan': 'Designed for living rooms', 'popular-badge': 'Populaarne'
             },
             'ru': {
-                'nav-pricing': 'Цены',
-                'p1-title': 'База', 'p1-btn': 'Выбрать дизайн', 'p1-custom': '✓ Выбор дизайна корпуса',
-                'popular-badge': 'Популярно', 'p2-title': 'База+', 'p2-btn': 'Заказать набор',
-                'p3-title': 'Собери сам', 'p3-desc': 'Собери систему своей мечты: выбери 7500X3D, RX 9070 XT и до 4ТБ Samsung SSD.',
-                'p3-btn': 'Начать сборку', 'footer-slogan': 'Создано для гостиной'
+                'nav-pricing': 'Цены', 'p1-title': 'База', 'p2-title': 'База+', 'p3-title': 'Собери сам',
+                'p3-desc': 'Собери систему своей мечты: выбери 7500X3D, RX 9070 XT и до 4ТБ Samsung SSD.',
+                'footer-slogan': 'Создано для гостиной', 'popular-badge': 'Популярно'
             }
         };
 
@@ -197,9 +196,7 @@
             document.getElementById('lang-' + lang).classList.add('active', 'text-white');
         }
 
-        window.onload = () => {
-            setLanguage(localStorage.getItem('selectedLanguage') || 'et');
-        };
+        window.onload = () => { setLanguage(localStorage.getItem('selectedLanguage') || 'et'); };
     </script>
 </body>
 </html>
