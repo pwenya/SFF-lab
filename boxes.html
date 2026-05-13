@@ -65,10 +65,10 @@
     </main>
 
     <script>
-        // ИСПРАВЛЕННЫЕ ПУТИ К ФАЙЛАМ
+        // ИСПРАВЛЕННЫЕ ПУТИ К ФАЙЛАМ НА ОСНОВЕ ТВОЕГО СПИСКА
         const sets = {
             black: ['IMG/MoodBlack.1.png', 'IMG/MoodBlack.2.png', 'IMG/MoodBlack.3.png'],
-            white: ['IMG/MoodWhite.1.png', 'IMG/MoodWhite.2.png', 'IMG/MoodWhite.3.png']
+            white: ['IMG/MoodLight.1.jpg', 'IMG/MoodLight.2.jpg', 'IMG/MoodLight.3.png']
         };
 
         let currentSet = 'black';
@@ -79,7 +79,6 @@
             currentSet = color;
             currentIndex = 0;
 
-            // Обновляем кружочки
             document.querySelectorAll('.color-circle').forEach(c => c.classList.remove('active'));
             document.getElementById(`circle-${color}`).classList.add('active');
 
