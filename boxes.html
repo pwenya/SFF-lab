@@ -27,13 +27,11 @@
     <main class="min-h-screen pt-40 pb-20 px-6 flex items-center justify-center">
         <div class="max-w-6xl w-full flex flex-col md:flex-row items-center gap-16">
 
-            <!-- ГАЛЕРЕЯ (Слева) -->
             <div class="flex-1 w-full relative">
                 <div class="glass-panel rounded-[40px] p-10 flex items-center justify-center min-h-[400px] md:min-h-[600px]">
                     <img id="case-image" src="IMG/MoodBlack.1.png" class="max-h-[500px] w-auto transition-all duration-500 drop-shadow-[0_20px_50px_rgba(0,0,0,0.8)]">
                 </div>
 
-                <!-- Стрелки под фото -->
                 <div class="flex justify-center space-x-6 mt-10">
                     <button onclick="navPhoto(-1)" class="glass-panel p-5 rounded-2xl hover:bg-white/10 transition active:scale-95">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -44,10 +42,7 @@
                 </div>
             </div>
 
-            <!-- ИНФОРМАЦИЯ И КРУЖОЧКИ (Справа) -->
             <div class="flex flex-row md:flex-col items-center md:items-start gap-12">
-
-                <!-- Вертикальные переключатели цвета -->
                 <div class="flex flex-col gap-6 order-1 md:order-2">
                     <div onclick="switchColor('black')" id="circle-black" class="color-circle active w-12 h-12 rounded-full bg-black border border-white/20"></div>
                     <div onclick="switchColor('white')" id="circle-white" class="color-circle w-12 h-12 rounded-full bg-white border border-black/10"></div>
@@ -59,16 +54,15 @@
                         Премиальный SFF дизайн<br>Текстильная панель<br>Экосистема SFF Lab
                     </p>
                 </div>
-
             </div>
         </div>
     </main>
 
     <script>
-        // ИСПРАВЛЕННЫЕ ПУТИ К ФАЙЛАМ НА ОСНОВЕ ТВОЕГО СПИСКА
+        // Используем строго те названия и расширения, что подтверждены системой на скриншоте
         const sets = {
             black: ['IMG/MoodBlack.1.png', 'IMG/MoodBlack.2.png', 'IMG/MoodBlack.3.png'],
-            white: ['IMG/MoodLight.1.jpg', 'IMG/MoodLight.2.jpg', 'IMG/MoodLight.3.png']
+            white: ['IMG/MoodLight.1.png', 'IMG/MoodLight.2.png', 'IMG/MoodLight.3.png']
         };
 
         let currentSet = 'black';
@@ -95,6 +89,7 @@
             mainImg.style.transform = 'scale(0.95)';
 
             setTimeout(() => {
+                // Если картинка все равно не грузится, проверь, не лежит ли она в папке IMG в нижнем регистре (img)
                 mainImg.src = sets[currentSet][currentIndex];
                 mainImg.style.opacity = '1';
                 mainImg.style.transform = 'scale(1)';
