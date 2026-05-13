@@ -8,73 +8,29 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #050505; color: white; overflow-x: hidden; }
-
         .glass-panel {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(12px);
-            position: relative;
-            width: 100%;
-            height: 350px;
-            min-height: 350px;
-            max-height: 350px;
-            overflow: hidden;
+            background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(12px); position: relative; width: 100%; height: 350px;
+            min-height: 350px; max-height: 350px; overflow: hidden;
         }
-
-        @media (min-width: 768px) {
-            .glass-panel { height: 600px; min-height: 600px; max-height: 600px; width: 750px; }
-        }
-
+        @media (min-width: 768px) { .glass-panel { height: 600px; min-height: 600px; max-height: 600px; width: 750px; } }
         .case-stack-img {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: auto;
-            height: auto;
-            max-width: 85%;
-            max-height: 85%;
-            object-fit: contain;
-            transition: opacity 0.4s ease-in-out;
-            pointer-events: none;
-            will-change: opacity;
-            opacity: 0;
-            image-rendering: -webkit-optimize-contrast;
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: auto; height: auto; max-width: 85%; max-height: 85%; object-fit: contain;
+            transition: opacity 0.4s ease-in-out; pointer-events: none; will-change: opacity;
+            opacity: 0; image-rendering: -webkit-optimize-contrast;
         }
-
         .case-stack-img.active { opacity: 1; }
         .mood-white-fix { transform: translate(-48.5%, -50%) !important; }
-
-        /* СТИЛИ КРУЖОЧКОВ С ФИКСОМ ДЛЯ МОБИЛОК */
         .color-circle {
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            cursor: pointer;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            position: relative;
-            /* Убираем задержку клика в 300мс на мобилках */
-            touch-action: manipulation;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.15); position: relative; touch-action: manipulation;
         }
-
         #mood-black, #ridge-black, #terra-graphite { border: 1px solid rgba(255, 255, 255, 0.25); }
-
-        /* Hover только для десктопа (мышки), чтобы не ломать первый клик на тачскринах */
-        @media (hover: hover) {
-            .color-circle:hover {
-                border-color: rgba(255, 255, 255, 0.5);
-                transform: scale(1.05);
-            }
-        }
-
-        .color-circle.active {
-            border-color: #2563eb !important;
-            border-width: 2px;
-            transform: scale(1.15);
-            box-shadow: 0 0 20px rgba(37, 99, 235, 0.4);
-        }
-
+        @media (hover: hover) { .color-circle:hover { border-color: rgba(255, 255, 255, 0.5); transform: scale(1.05); } }
+        .color-circle.active { border-color: #2563eb !important; border-width: 2px; transform: scale(1.15); box-shadow: 0 0 20px rgba(37, 99, 235, 0.4); }
         .product-section { border-bottom: 1px solid rgba(255,255,255,0.05); padding: 60px 0; }
         @media (min-width: 768px) { .product-section { padding: 100px 0; } }
-
         .nav-btn-inside {
             position: absolute; top: 50%; transform: translateY(-50%);
             background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1);
@@ -86,14 +42,12 @@
     </style>
 </head>
 <body class="antialiased">
-
     <nav class="fixed w-full z-50 border-b border-white/5 bg-black/70 backdrop-blur-md">
         <div class="max-w-[1400px] mx-auto flex justify-between items-center py-4 md:py-6 px-6 md:px-10">
-            <a href="index.html" class="text-2xl font-extrabold tracking-tighter uppercase">SFF LAB<span class="text-blue-600">.</span></a>
-            <a href="#" class="bg-white text-black px-6 md:px-8 py-2 md:py-3 rounded-full hover:bg-zinc-200 transition uppercase tracking-widest text-[12px] md:text-[14px] font-black text-center">Статус заказа</a>
+            <a href="/" class="text-2xl font-extrabold tracking-tighter uppercase">SFF LAB<span class="text-blue-600">.</span></a>
+            <a href="#" class="bg-white text-black px-6 md:px-8 py-2 md:py-3 rounded-full hover:bg-zinc-200 transition uppercase tracking-widest text-[14px] font-black text-center text-[12px] md:text-[14px]">Статус заказа</a>
         </div>
     </nav>
-
     <main class="pt-20">
         <!-- MOOD -->
         <section class="product-section flex items-center justify-center px-6" data-model="mood">
@@ -108,8 +62,8 @@
                 </div>
                 <div class="flex flex-col items-center md:items-start gap-6 md:gap-12 w-full md:w-[300px]">
                     <div class="flex flex-row md:flex-col gap-6 order-2 md:order-2">
-                        <div onclick="setColor('mood', 'black')" id="mood-black" class="color-circle active w-10 h-10 md:w-12 md:h-12 rounded-full bg-black"></div>
-                        <div onclick="setColor('mood', 'white')" id="mood-white" class="color-circle w-10 h-10 md:w-12 md:h-12 rounded-full bg-white"></div>
+                        <div id="mood-black" class="color-circle active w-10 h-10 md:w-12 md:h-12 rounded-full bg-black"></div>
+                        <div id="mood-white" class="color-circle w-10 h-10 md:w-12 md:h-12 rounded-full bg-white"></div>
                     </div>
                     <div class="text-center md:text-left order-1 md:order-1">
                         <h2 class="text-3xl md:text-5xl font-black uppercase tracking-tighter mb-2 md:mb-4">Mood <span id="title-mood">Black</span></h2>
@@ -118,7 +72,6 @@
                 </div>
             </div>
         </section>
-
         <!-- TERRA -->
         <section class="product-section flex items-center justify-center px-6" data-model="terra">
             <div class="max-w-6xl w-full flex flex-col md:flex-row items-center justify-center gap-8 md:gap-16">
@@ -133,9 +86,9 @@
                 </div>
                 <div class="flex flex-col items-center md:items-start gap-6 md:gap-12 w-full md:w-[300px]">
                     <div class="flex flex-row md:flex-col gap-6 order-2 md:order-2">
-                        <div onclick="setColor('terra', 'graphite')" id="terra-graphite" class="color-circle active w-10 h-10 md:w-12 md:h-12 rounded-full bg-[#1c1c1c]"></div>
-                        <div onclick="setColor('terra', 'jade')" id="terra-jade" class="color-circle w-10 h-10 md:w-12 md:h-12 rounded-full bg-[#4d5d53]"></div>
-                        <div onclick="setColor('terra', 'silver')" id="terra-silver" class="color-circle w-10 h-10 md:w-12 md:h-12 rounded-full bg-[#d1d5db]"></div>
+                        <div id="terra-graphite" class="color-circle active w-10 h-10 md:w-12 md:h-12 rounded-full bg-[#1c1c1c]"></div>
+                        <div id="terra-jade" class="color-circle w-10 h-10 md:w-12 md:h-12 rounded-full bg-[#4d5d53]"></div>
+                        <div id="terra-silver" class="color-circle w-10 h-10 md:w-12 md:h-12 rounded-full bg-[#d1d5db]"></div>
                     </div>
                     <div class="text-center md:text-left order-1 md:order-1">
                         <h2 class="text-3xl md:text-5xl font-black uppercase tracking-tighter mb-2 md:mb-4">Terra <span id="title-terra">Graphite</span></h2>
@@ -144,7 +97,6 @@
                 </div>
             </div>
         </section>
-
         <!-- RIDGE -->
         <section class="product-section flex items-center justify-center px-6" data-model="ridge">
             <div class="max-w-6xl w-full flex flex-col md:flex-row items-center justify-center gap-8 md:gap-16">
@@ -158,8 +110,8 @@
                 </div>
                 <div class="flex flex-col items-center md:items-start gap-6 md:gap-12 w-full md:w-[300px]">
                     <div class="flex flex-row md:flex-col gap-6 order-2 md:order-2">
-                        <div onclick="setColor('ridge', 'black')" id="ridge-black" class="color-circle active w-10 h-10 md:w-12 md:h-12 rounded-full bg-black"></div>
-                        <div onclick="setColor('ridge', 'white')" id="ridge-white" class="color-circle w-10 h-10 md:w-12 md:h-12 rounded-full bg-white"></div>
+                        <div id="ridge-black" class="color-circle active w-10 h-10 md:w-12 md:h-12 rounded-full bg-black"></div>
+                        <div id="ridge-white" class="color-circle w-10 h-10 md:w-12 md:h-12 rounded-full bg-white"></div>
                     </div>
                     <div class="text-center md:text-left order-1 md:order-1">
                         <h2 class="text-3xl md:text-5xl font-black uppercase tracking-tighter mb-2 md:mb-4">Ridge <span id="title-ridge">Black</span></h2>
@@ -169,68 +121,52 @@
             </div>
         </section>
     </main>
-
     <script>
         const config = {
             mood: { current: 'black', idx: 0, black: ['IMG/MoodBlack.1.png', 'IMG/MoodBlack.2.png', 'IMG/MoodBlack.3.png'], white: ['IMG/MoodLight.1.png', 'IMG/MoodLight.2.png', 'IMG/MoodLight.3.png'] },
             terra: { current: 'graphite', idx: 0, graphite: ['IMG/TerraGraphite.1.png', 'IMG/TerraGraphite.2.png', 'IMG/TerraGraphite.3.png'], jade: ['IMG/TerraJade.1.png', 'IMG/TerraJade.2.png', 'IMG/TerraJade.3.png'], silver: ['IMG/TerraSilver.1.png', 'IMG/TerraSilver.2.png', 'IMG/TerraSilver.3.png'] },
             ridge: { current: 'black', idx: 0, black: ['IMG/RidgeBlack.1.png', 'IMG/RidgeBlack.2.png'], white: ['IMG/RidgeWhite.1.png', 'IMG/RidgeWhite.2.png'] }
         };
-
         const colorNames = { 'black': 'Black', 'white': 'Light', 'graphite': 'Graphite', 'jade': 'Jade', 'silver': 'Silver' };
-
         let lastCall = 0;
         function setColor(model, color) {
-            // Защита от дребезга тапов на 300мс
             const now = Date.now();
             if (now - lastCall < 300) return;
             lastCall = now;
-
             const m = config[model];
             m.current = color;
-
             document.querySelectorAll(`[id^="${model}-"]`).forEach(c => c.classList.remove('active'));
             document.getElementById(`${model}-${color}`).classList.add('active');
-
             document.getElementById(`title-${model}`).innerText = colorNames[color];
-
             document.querySelectorAll(`[id^="img-${model}-"]`).forEach(img => img.classList.remove('active'));
             document.getElementById(`img-${model}-${color}`).classList.add('active');
         }
-
         function nav(model, dir) {
             const m = config[model];
             const colors = Object.keys(m).filter(k => Array.isArray(m[k]));
             const len = m[m.current].length;
             m.idx = (m.idx + dir + len) % len;
-
             colors.forEach(color => {
                 const img = document.getElementById(`img-${model}-${color}`);
                 if (img) img.src = m[color][m.idx];
             });
         }
-
-        // Универсальная регистрация событий тача и клика
         ['mood', 'terra', 'ridge'].forEach(model => {
             const container = document.getElementById(`container-${model}`);
             let startX = 0;
-
-            // Свайпы
             container.addEventListener('touchstart', e => { startX = e.changedTouches[0].screenX; }, { passive: true });
             container.addEventListener('touchend', e => {
                 const endX = e.changedTouches[0].screenX;
                 if (startX - endX > 40) nav(model, 1);
                 else if (endX - startX > 40) nav(model, -1);
             }, { passive: true });
-
-            // Явное назначение setColor на клики и тапы кружочков
             document.querySelectorAll(`[id^="${model}-"]`).forEach(circle => {
                 const color = circle.id.split('-')[1];
-                circle.addEventListener('click', (e) => { e.preventDefault(); setColor(model, color); });
-                circle.addEventListener('touchend', (e) => { e.preventDefault(); setColor(model, color); });
+                const trigger = (e) => { e.preventDefault(); setColor(model, color); };
+                circle.addEventListener('click', trigger);
+                circle.addEventListener('touchend', trigger);
             });
         });
-
         window.onload = () => {
             Object.values(config).forEach(m => {
                 Object.values(m).forEach(arr => {

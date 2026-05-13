@@ -23,16 +23,13 @@
     </style>
 </head>
 <body class="p-6 md:p-20 antialiased text-zinc-100">
-
     <div class="max-w-4xl mx-auto">
-        <a href="index.html" data-key="back-link" class="text-zinc-500 hover:text-white text-[10px] uppercase tracking-[0.2em] mb-10 inline-block transition">← Tagasi pealehele</a>
-
+        <a href="/" data-key="back-link" class="text-zinc-500 hover:text-white text-[10px] uppercase tracking-[0.2em] mb-10 inline-block transition">← Tagasi pealehele</a>
         <h1 data-key="config-title" class="text-4xl font-black mb-2 uppercase tracking-tighter">Konfigureeri oma süsteem</h1>
         <p class="text-blue-500 mb-12 uppercase text-[10px] tracking-[0.3em] font-bold">SFF Lab Build Tool v1.5</p>
-
         <div class="grid md:grid-cols-2 gap-12">
             <div id="selectors-container" class="space-y-8">
-                <div id="case-block">
+                <div>
                     <label data-key="case-label" class="block text-[10px] font-black uppercase tracking-widest text-blue-500 mb-3">Korpuse disain (Case Color)</label>
                     <select id="case-select" class="w-full p-4 rounded-xl outline-none focus:border-blue-600 transition uppercase text-[10px] font-bold tracking-widest cursor-pointer">
                         <option>Obsidian Black</option>
@@ -40,23 +37,20 @@
                         <option>Frost White</option>
                     </select>
                 </div>
-
-                <div id="cpu-block">
+                <div>
                     <label data-key="cpu-label" class="block text-[10px] font-black uppercase tracking-widest text-blue-500 mb-3">Protsessor (CPU)</label>
                     <select id="cpu-select" onchange="updatePrice()" class="w-full p-4 rounded-xl outline-none transition uppercase text-[10px] font-bold tracking-widest cursor-pointer">
                         <option value="0">AMD Ryzen 5 7500F</option>
                         <option value="79">AMD Ryzen 5 7500X3D (+79€)</option>
                     </select>
                 </div>
-
-                <div id="gpu-block">
+                <div>
                     <label data-key="gpu-label" class="block text-[10px] font-black uppercase tracking-widest text-blue-500 mb-3">Videokaart (GPU)</label>
                     <select id="gpu-select" onchange="handleGpuChange()" class="w-full p-4 rounded-xl outline-none transition uppercase text-[10px] font-bold tracking-widest cursor-pointer">
                         <option value="0">AMD Radeon RX 9060 XT 16GB</option>
                         <option value="175">AMD Radeon RX 9070 XT 20GB (+175€)</option>
                     </select>
                 </div>
-
                 <div id="psu-block" style="display:none;">
                     <label data-key="psu-label" class="block text-[10px] font-black uppercase tracking-widest text-blue-500 mb-3">Toiteplokk (PSU)</label>
                     <select id="psu-select" onchange="updatePrice()" class="w-full p-4 rounded-xl outline-none transition uppercase text-[10px] font-bold tracking-widest cursor-pointer">
@@ -65,8 +59,7 @@
                     </select>
                     <p id="psu-warning" class="text-[9px] text-amber-500 uppercase mt-2 hidden" data-key="psu-req">9070 XT jaoks on vajalik 850W toiteplokk</p>
                 </div>
-
-                <div id="ram-block">
+                <div>
                     <label data-key="ram-label" class="block text-[10px] font-black uppercase tracking-widest text-blue-500 mb-3">Operatiivmälu (RAM)</label>
                     <select id="ram-select" onchange="updatePrice()" class="w-full p-4 rounded-xl outline-none transition uppercase text-[10px] font-bold tracking-widest cursor-pointer">
                         <option value="0">16GB DDR5 Corsair Vengeance</option>
@@ -74,8 +67,7 @@
                         <option value="606">64GB DDR5 Corsair Vengeance (+606€)</option>
                     </select>
                 </div>
-
-                <div id="ssd-block">
+                <div>
                     <label data-key="ssd-label" class="block text-[10px] font-black uppercase tracking-widest text-blue-500 mb-3">Salvestusruum (SSD)</label>
                     <select id="ssd-select" onchange="updatePrice()" class="w-full p-4 rounded-xl outline-none transition uppercase text-[10px] font-bold tracking-widest cursor-pointer">
                         <option value="0">1TB Samsung 990 PRO</option>
@@ -83,7 +75,6 @@
                         <option value="425" id="ssd-4tb" style="display:none;">4TB Samsung 990 PRO (+425€)</option>
                     </select>
                 </div>
-
                 <div id="ctrl-block" style="display:none;">
                     <label data-key="ctrl-label" class="block text-[10px] font-black uppercase tracking-widest text-blue-500 mb-3">Kontroller (Controller)</label>
                     <select id="ctrl-select" onchange="updatePrice()" class="w-full p-4 rounded-xl outline-none transition uppercase text-[10px] font-bold tracking-widest cursor-pointer">
@@ -93,22 +84,19 @@
                         <option value="-80">Ilma kontrollerita (-80€)</option>
                     </select>
                 </div>
-
                 <div id="hdmi-block" style="display:none;">
                     <label data-key="hdmi-label" class="block text-[10px] font-black uppercase tracking-widest text-blue-500 mb-3">Kaabel (Cable)</label>
-                    <select disabled class="w-full p-4 rounded-xl outline-none transition uppercase text-[10px] font-bold tracking-widest">
+                    <select disabled class="w-full p-4 rounded-xl outline-none uppercase text-[10px] font-bold tracking-widest">
                         <option>✓ 4K HDMI 2.1 Ultra High Speed</option>
                     </select>
                 </div>
-
                 <div id="pkg-block" style="display:none;">
                     <label data-key="pkg-label" class="block text-[10px] font-black uppercase tracking-widest text-blue-500 mb-3">Pakend (Packaging)</label>
-                    <select disabled class="w-full p-4 rounded-xl outline-none transition uppercase text-[10px] font-bold tracking-widest">
+                    <select disabled class="w-full p-4 rounded-xl outline-none uppercase text-[10px] font-bold tracking-widest">
                         <option>✓ SFF Lab Premium Packaging</option>
                     </select>
                 </div>
             </div>
-
             <div class="glass-panel p-10 rounded-[40px] h-fit sticky top-10">
                 <h2 data-key="summary-title" class="text-xl font-bold mb-6 uppercase tracking-widest">Sinu valik</h2>
                 <div class="space-y-4 border-b border-white/5 pb-6 mb-6 text-[10px] uppercase tracking-widest text-zinc-400">
@@ -129,67 +117,43 @@
             </div>
         </div>
     </div>
-
     <script>
         const urlParams = new URLSearchParams(window.location.search);
         const BASE_PRICE = parseInt(urlParams.get('base')) || 1845;
         const MODE = urlParams.get('mode');
-
         function initMode() {
             const cpu = document.getElementById('cpu-select');
             const gpu = document.getElementById('gpu-select');
             const ram = document.getElementById('ram-select');
             const ssd = document.getElementById('ssd-select');
-            const ssd4tb = document.getElementById('ssd-4tb');
-            const psuBlock = document.getElementById('psu-block');
-            const ctrlBlock = document.getElementById('ctrl-block');
-            const hdmiBlock = document.getElementById('hdmi-block');
-            const pkgBlock = document.getElementById('pkg-block');
             const modelDisp = document.getElementById('model-display');
-
             if (MODE === 'core') {
-                cpu.disabled = true;
-                gpu.disabled = true;
-                ram.disabled = true;
-                ssd.disabled = true;
+                cpu.disabled = true; gpu.disabled = true; ram.disabled = true; ssd.disabled = true;
                 modelDisp.innerText = 'BAAS';
             } else if (MODE === 'plus') {
-                cpu.disabled = false;
-                gpu.disabled = true;
-                ram.disabled = true;
-                ssd.disabled = true;
-                ctrlBlock.style.display = 'block';
-                hdmiBlock.style.display = 'block';
-                pkgBlock.style.display = 'block';
+                cpu.disabled = false; gpu.disabled = true; ram.disabled = true; ssd.disabled = true;
+                document.getElementById('ctrl-block').style.display = 'block';
+                document.getElementById('hdmi-block').style.display = 'block';
+                document.getElementById('pkg-block').style.display = 'block';
                 modelDisp.innerText = 'BAAS+';
             } else if (MODE === 'enthusiast') {
-                cpu.disabled = false;
-                gpu.disabled = false;
-                ram.disabled = false;
-                ssd.disabled = false;
-                ssd4tb.style.display = 'block';
-                psuBlock.style.display = 'block';
+                cpu.disabled = false; gpu.disabled = false; ram.disabled = false; ssd.disabled = false;
+                document.getElementById('ssd-4tb').style.display = 'block';
+                document.getElementById('psu-block').style.display = 'block';
                 modelDisp.innerText = 'ENTHUSIAST';
             }
         }
-
         function handleGpuChange() {
             const gpuVal = document.getElementById('gpu-select').value;
             const psuSel = document.getElementById('psu-select');
             const psu650 = document.getElementById('psu-650');
             const psuWarning = document.getElementById('psu-warning');
-
             if (gpuVal === "175") {
-                psuSel.value = "45";
-                psu650.disabled = true;
+                psuSel.value = "45"; psu650.disabled = true;
                 psuWarning.classList.remove('hidden');
-            } else {
-                psu650.disabled = false;
-                psuWarning.classList.add('hidden');
-            }
+            } else { psu650.disabled = false; psuWarning.classList.add('hidden'); }
             updatePrice();
         }
-
         function updatePrice() {
             const cpu = parseInt(document.getElementById('cpu-select').value) || 0;
             const gpu = parseInt(document.getElementById('gpu-select').value) || 0;
@@ -197,50 +161,20 @@
             const ssd = parseInt(document.getElementById('ssd-select').value) || 0;
             const psu = (document.getElementById('psu-block').style.display !== 'none') ? parseInt(document.getElementById('psu-select').value) || 0 : 0;
             const ctrl = (document.getElementById('ctrl-block').style.display !== 'none') ? parseInt(document.getElementById('ctrl-select').value) || 0 : 0;
-
             document.getElementById('total-price').innerText = (BASE_PRICE + cpu + gpu + ram + ssd + psu + ctrl) + ' €';
         }
-
         const translations = {
-            'et': {
-                'back-link': '← Tagasi pealehele', 'config-title': 'Konfigureeri oma süsteem',
-                'case-label': 'Korpuse disain (Case Color)', 'ctrl-label': 'Kontroller (Controller)',
-                'cpu-label': 'Protsessor (CPU)', 'gpu-label': 'Videokaart (GPU)', 'psu-label': 'Toiteplokk (PSU)',
-                'ram-label': 'Operatiivmälu (RAM)', 'ssd-label': 'Salvestusruum (SSD)',
-                'hdmi-label': 'Kaabel (Cable)', 'pkg-label': 'Pakend (Packaging)',
-                'psu-req': '9070 XT jaoks on vajalik 850W toiteplokk',
-                'summary-title': 'Sinu valik', 'sum-model': 'Mudel:', 'sum-build': 'Tüüp:', 'send-btn': 'Saada päring',
-                'legal-info': '* Eritellimusel valmiv toode.\nVÕS § 53 lg 4 kohaselt tagastamisõigus puudub.'
-            },
-            'ru': {
-                'back-link': '← На главную', 'config-title': 'Настрой свою систему',
-                'case-label': 'Дизайн корпуса (Цвет)', 'ctrl-label': 'Контроллер (Геймпад)',
-                'cpu-label': 'Процессор (CPU)', 'gpu-label': 'Видеокарта (GPU)', 'psu-label': 'Блок питания (PSU)',
-                'ram-label': 'Оперативная память (RAM)', 'ssd-label': 'Накопитель (SSD)',
-                'hdmi-label': 'Кабель (Cable)', 'pkg-label': 'Упаковка (Packaging)',
-                'psu-req': 'Для 9070 XT необходим блок 850W',
-                'summary-title': 'Ваш выбор', 'sum-model': 'Модель:', 'sum-build': 'Тип:', 'send-btn': 'Отправить запрос',
-                'legal-info': '* Товар, изготавливаемый под заказ.\nСогласно VÕS § 53 lg 4, право на возврат отсутствует.'
-            }
+            'et': { 'back-link': '← Tagasi pealehele', 'config-title': 'Konfigureeri oma süsteem', 'case-label': 'Korpuse disain', 'ctrl-label': 'Kontroller', 'cpu-label': 'Protsessor', 'gpu-label': 'Videokaart', 'psu-label': 'Toiteplokk', 'ram-label': 'Operatiivmälu', 'ssd-label': 'Salvestusruum', 'hdmi-label': 'Kaabel', 'pkg-label': 'Pakend', 'psu-req': '9070 XT jaoks on vajalik 850W toiteplokk', 'summary-title': 'Sinu valik', 'sum-model': 'Mudel:', 'sum-build': 'Tüüp:', 'send-btn': 'Saada päring', 'legal-info': '* Eritellimusel valmiv toode.\nVÕS § 53 lg 4 kohaselt tagastamisõigus puudub.' },
+            'ru': { 'back-link': '← На главную', 'config-title': 'Настрой свою систему', 'case-label': 'Дизайн корпуса', 'ctrl-label': 'Контроллер', 'cpu-label': 'Процессор', 'gpu-label': 'Видеокарта', 'psu-label': 'Блок питания', 'ram-label': 'Оперативная память', 'ssd-label': 'Накопитель', 'hdmi-label': 'Кабель', 'pkg-label': 'Упаковка', 'psu-req': 'Для 9070 XT необходим блок 850W', 'summary-title': 'Ваш выбор', 'sum-model': 'Модель:', 'sum-build': 'Тип:', 'send-btn': 'Отправить запрос', 'legal-info': '* Товар под заказ.\nСогласно VÕS § 53 lg 4, возврат невозможен.' }
         };
-
         function applyLanguage() {
             const lang = localStorage.getItem('selectedLanguage') || 'et';
-            document.documentElement.lang = lang;
             document.querySelectorAll('[data-key]').forEach(el => {
                 const key = el.getAttribute('data-key');
-                if (translations[lang][key]) {
-                    el.innerText = translations[lang][key];
-                    if (key === 'legal-info') el.style.whiteSpace = 'pre-line';
-                }
+                if (translations[lang][key]) el.innerText = translations[lang][key];
             });
         }
-
-        window.onload = () => {
-            initMode();
-            applyLanguage();
-            updatePrice();
-        };
+        window.onload = () => { initMode(); applyLanguage(); updatePrice(); };
     </script>
 </body>
 </html>
