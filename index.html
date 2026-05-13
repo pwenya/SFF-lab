@@ -23,7 +23,6 @@
         }
         .text-gradient { background: linear-gradient(to right, #fff 30%, #64748b 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .lang-btn.active { color: white; border-bottom: 2px solid #2563eb; padding-bottom: 2px; }
-
         .os-switch-btn { transition: all 0.3s ease; border: 1px solid rgba(255,255,255,0.1); background: transparent; color: #52525b; }
         .os-switch-btn.active { background: white; color: black; border-color: white; }
     </style>
@@ -44,35 +43,34 @@
                     <span class="text-zinc-800">|</span>
                     <button onclick="setLanguage('ru')" id="lang-ru" class="lang-btn transition hover:text-white text-zinc-500">RU</button>
                 </div>
-                <a href="#" data-key="nav-status" class="hidden md:block bg-white text-black px-8 py-3 rounded-full hover:bg-zinc-200 transition uppercase tracking-widest text-[14px] font-black">Статус заказа</a>
+                <a href="#" data-key="nav-status" class="hidden md:block bg-white text-black px-8 py-3 rounded-full hover:bg-zinc-200 transition uppercase tracking-widest text-[14px] font-black text-center">Статус заказа</a>
             </div>
         </div>
     </nav>
 
     <section id="about" class="relative min-h-[70vh] flex flex-col items-center justify-center px-6 overflow-hidden pt-32">
-        <!-- Исправленный градиент: уменьшена прозрачность и увеличен разброс, чтобы не было краев -->
         <div class="absolute top-[40%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] md:w-[900px] h-[400px] bg-blue-600/5 blur-[120px] rounded-full pointer-events-none"></div>
 
         <div class="relative z-10 max-w-5xl text-center w-full">
             <h1 class="text-5xl md:text-9xl font-extrabold tracking-tighter leading-none mb-12 text-gradient uppercase">SFF<br>EXPERIENCE.</h1>
 
-            <div class="relative inline-block group">
-                <img src="IMG/title.png" alt="SFF Lab" class="relative z-10 w-full max-w-[700px] mx-auto drop-shadow-[0_20px_20px_rgba(0,0,0,0.6)] transform transition duration-700 group-hover:scale-105">
+            <!-- НОВАЯ КНОПКА ВМЕСТО title.png -->
+            <div class="relative inline-block mt-8">
+                <a href="boxes.html" class="bg-white text-black px-16 py-5 rounded-full hover:bg-zinc-200 transition-all duration-300 uppercase tracking-[0.3em] text-[18px] font-black shadow-2xl shadow-white/5">
+                    Коробки
+                </a>
             </div>
         </div>
     </section>
 
     <section id="pricing" class="pt-24 pb-24 px-6 bg-transparent relative z-20">
         <div class="max-w-6xl mx-auto">
-
             <div class="flex justify-center space-x-4 mb-20">
                 <button onclick="switchOS('steamos')" id="btn-steamos" class="os-switch-btn active px-10 py-3 rounded-full text-[11px] font-black uppercase tracking-widest shadow-xl">SteamOS</button>
                 <button onclick="switchOS('windows')" id="btn-windows" class="os-switch-btn px-10 py-3 rounded-full text-[11px] font-black uppercase tracking-widest shadow-xl">Windows 11</button>
             </div>
 
-            <!-- SteamOS Grid -->
             <div id="grid-steamos" class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
-                <!-- Baas -->
                 <div class="flex">
                     <div class="glass-card p-10 rounded-[40px] flex flex-col justify-between w-full border-white/5">
                         <div>
@@ -92,7 +90,6 @@
                     </div>
                 </div>
 
-                <!-- Baas+ -->
                 <div class="flex">
                     <div class="glass-card p-10 rounded-[40px] flex flex-col justify-between relative overflow-hidden group w-full border-white/5">
                         <div data-key="popular-badge" class="absolute top-6 right-6 bg-blue-600/90 text-[10px] font-black px-4 py-1.5 rounded-full uppercase tracking-widest text-white shadow-lg shadow-blue-600/10">Populaarne</div>
@@ -113,7 +110,6 @@
                     </div>
                 </div>
 
-                <!-- Enthusiast -->
                 <div class="flex">
                     <div class="glass-card p-10 rounded-[40px] flex flex-col justify-between w-full border-white/5">
                         <div>
@@ -131,7 +127,6 @@
                 </div>
             </div>
 
-            <!-- Windows Grid -->
             <div id="grid-windows" class="hidden grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
                 <div class="flex">
                     <div class="glass-card p-10 rounded-[40px] w-full border-white/5 opacity-50 flex items-center justify-center italic text-zinc-600 uppercase tracking-widest text-[10px]">Windows Core Coming Soon</div>
@@ -147,7 +142,7 @@
     </section>
 
     <footer class="py-20 border-t border-white/5 px-6 text-zinc-600 text-[10px] uppercase tracking-[0.3em]">
-        <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center space-y-6 md:space-y-0 text-center md:text-left">
+        <div class="max-w-[1400px] mx-auto flex flex-col md:flex-row justify-between items-center space-y-6 md:space-y-0 text-center md:text-left">
             <div>SFF LAB</div>
             <div class="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-12">
                 <span class="italic uppercase" data-key="footer-slogan">Designed for living rooms</span>
@@ -162,7 +157,6 @@
             const gridWin = document.getElementById('grid-windows');
             const btnSteam = document.getElementById('btn-steamos');
             const btnWin = document.getElementById('btn-windows');
-
             if (os === 'steamos') {
                 gridSteam.classList.remove('hidden');
                 gridWin.classList.add('hidden');
@@ -178,14 +172,14 @@
 
         const translations = {
             'et': {
-                'nav-pricing': 'Paketid', 'hero-sub': 'Eksklusiivsed kompaktsed mängusüsteemid Tallinnas.',
+                'nav-pricing': 'Paketid', 'nav-status': 'TELLI STAATUS',
                 'p1-title': 'Baas', 'p1-btn': 'Vali disain', 'p1-custom': '✓ Vali korpuse disain',
                 'popular-badge': 'Populaarne', 'p2-title': 'Baas+', 'p2-btn': 'Telli komplekt',
                 'p3-title': 'Pane kokku', 'p3-desc': 'Koosta oma unistuste SFF süsteem: vali 7500X3D, RX 9070 XT ja kuni 4TB Samsung SSD.',
                 'p3-btn': 'Alusta koostamist', 'footer-slogan': 'Designed for living rooms'
             },
             'ru': {
-                'nav-pricing': 'Цены', 'hero-sub': 'Ультимативные игровые системы в компактном формате.',
+                'nav-pricing': 'Цены', 'nav-status': 'СТАТУС ЗАКАЗА',
                 'p1-title': 'База', 'p1-btn': 'Выбрать дизайн', 'p1-custom': '✓ Выбор дизайна корпуса',
                 'popular-badge': 'Популярно', 'p2-title': 'База+', 'p2-btn': 'Заказать набор',
                 'p3-title': 'Собери сам', 'p3-desc': 'Собери систему своей мечты: выбери 7500X3D, RX 9070 XT и до 4ТБ Samsung SSD.',
