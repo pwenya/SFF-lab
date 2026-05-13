@@ -18,37 +18,39 @@
             height: 350px;
             min-height: 350px;
             max-height: 350px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             overflow: hidden;
         }
 
         @media (min-width: 768px) {
-            .glass-panel {
-                height: 600px;
-                min-height: 600px;
-                max-height: 600px;
-                width: 750px;
-            }
+            .glass-panel { height: 600px; min-height: 600px; max-height: 600px; width: 750px; }
         }
 
-        .case-img {
-            display: block;
+        /* Общие стили для стека картинок */
+        .case-stack-img {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             width: auto;
             height: auto;
             max-width: 85%;
             max-height: 85%;
             object-fit: contain;
-            transition: opacity 0.2s ease-out, transform 0.2s ease-out;
+            transition: opacity 0.4s ease-in-out;
             pointer-events: none;
+            will-change: opacity;
+            opacity: 0;
             image-rendering: -webkit-optimize-contrast;
-            backface-visibility: hidden;
-            will-change: opacity, transform;
         }
+
+        .case-stack-img.active { opacity: 1; }
+
+        /* Тот самый фикс для белого Mood */
+        .mood-white-fix { transform: translate(-48.5%, -50%) !important; }
 
         .color-circle { transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; border: 2px solid transparent; }
         .color-circle.active { border-color: #2563eb; transform: scale(1.15); box-shadow: 0 0 20px rgba(37, 99, 235, 0.3); }
+
         .product-section { border-bottom: 1px solid rgba(255,255,255,0.05); padding: 60px 0; }
         @media (min-width: 768px) { .product-section { padding: 100px 0; } }
 
@@ -56,7 +58,7 @@
             position: absolute; top: 50%; transform: translateY(-50%);
             background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1);
             color: white; width: 45px; height: 45px; border-radius: 12px;
-            display: flex; align-items: center; justify-content: center; z-index: 30;
+            display: flex; align-items: center; justify-content: center; z-index: 50;
         }
         .btn-left { left: 15px; }
         .btn-right { right: 15px; }
@@ -77,15 +79,16 @@
             <div class="max-w-6xl w-full flex flex-col md:flex-row items-center justify-center gap-8 md:gap-16">
                 <div class="w-full md:w-[750px] shrink-0">
                     <div class="glass-panel rounded-[30px] md:rounded-[40px] touch-pan-y" id="container-mood">
-                        <button onclick="nav('mood', -1)" class="hidden md:flex nav-btn-inside btn-left">←</button>
-                        <img id="img-mood" src="IMG/MoodBlack.1.png" class="case-img">
-                        <button onclick="nav('mood', 1)" class="hidden md:flex nav-btn-inside btn-right">→</button>
+                        <button onclick="nav('mood', -1)" class="nav-btn-inside btn-left hidden md:flex">←</button>
+                        <img id="img-mood-black" src="IMG/MoodBlack.1.png" class="case-stack-img active">
+                        <img id="img-mood-white" src="IMG/MoodLight.1.png" class="case-stack-img mood-white-fix">
+                        <button onclick="nav('mood', 1)" class="nav-btn-inside btn-right hidden md:flex">→</button>
                     </div>
                 </div>
                 <div class="flex flex-col items-center md:items-start gap-6 md:gap-12 w-full md:w-[300px]">
                     <div class="flex flex-row md:flex-col gap-6 order-2 md:order-2">
-                        <div onclick="setColor('mood', 'black')" id="mood-black" class="color-circle active w-10 h-10 md:w-12 md:h-12 rounded-full bg-black border border-white/10"></div>
-                        <div onclick="setColor('mood', 'white')" id="mood-white" class="color-circle w-10 h-10 md:w-12 md:h-12 rounded-full bg-white border border-black/10"></div>
+                        <div onclick="setColor('mood', 'black')" id="mood-black" class="color-circle active w-10 h-10 md:w-12 md:h-12 rounded-full bg-black"></div>
+                        <div onclick="setColor('mood', 'white')" id="mood-white" class="color-circle w-10 h-10 md:w-12 md:h-12 rounded-full bg-white"></div>
                     </div>
                     <div class="text-center md:text-left order-1 md:order-1">
                         <h2 class="text-3xl md:text-5xl font-black uppercase tracking-tighter mb-2 md:mb-4">Mood <span id="title-mood">Black</span></h2>
@@ -100,16 +103,18 @@
             <div class="max-w-6xl w-full flex flex-col md:flex-row items-center justify-center gap-8 md:gap-16">
                 <div class="w-full md:w-[750px] shrink-0">
                     <div class="glass-panel rounded-[30px] md:rounded-[40px] touch-pan-y" id="container-terra">
-                        <button onclick="nav('terra', -1)" class="hidden md:flex nav-btn-inside btn-left">←</button>
-                        <img id="img-terra" src="IMG/TerraGraphite.1.png" class="case-img">
-                        <button onclick="nav('terra', 1)" class="hidden md:flex nav-btn-inside btn-right">→</button>
+                        <button onclick="nav('terra', -1)" class="nav-btn-inside btn-left hidden md:flex">←</button>
+                        <img id="img-terra-graphite" src="IMG/TerraGraphite.1.png" class="case-stack-img active">
+                        <img id="img-terra-jade" src="IMG/TerraJade.1.png" class="case-stack-img">
+                        <img id="img-terra-silver" src="IMG/TerraSilver.1.png" class="case-stack-img">
+                        <button onclick="nav('terra', 1)" class="nav-btn-inside btn-right hidden md:flex">→</button>
                     </div>
                 </div>
                 <div class="flex flex-col items-center md:items-start gap-6 md:gap-12 w-full md:w-[300px]">
                     <div class="flex flex-row md:flex-col gap-6 order-2 md:order-2">
-                        <div onclick="setColor('terra', 'graphite')" id="terra-graphite" class="color-circle active w-10 h-10 md:w-12 md:h-12 rounded-full bg-[#1c1c1c] border border-white/10"></div>
-                        <div onclick="setColor('terra', 'jade')" id="terra-jade" class="color-circle w-10 h-10 md:w-12 md:h-12 rounded-full bg-[#4d5d53] border border-white/10"></div>
-                        <div onclick="setColor('terra', 'silver')" id="terra-silver" class="color-circle w-10 h-10 md:w-12 md:h-12 rounded-full bg-[#d1d5db] border border-white/10"></div>
+                        <div onclick="setColor('terra', 'graphite')" id="terra-graphite" class="color-circle active w-10 h-10 md:w-12 md:h-12 rounded-full bg-[#1c1c1c]"></div>
+                        <div onclick="setColor('terra', 'jade')" id="terra-jade" class="color-circle w-10 h-10 md:w-12 md:h-12 rounded-full bg-[#4d5d53]"></div>
+                        <div onclick="setColor('terra', 'silver')" id="terra-silver" class="color-circle w-10 h-10 md:w-12 md:h-12 rounded-full bg-[#d1d5db]"></div>
                     </div>
                     <div class="text-center md:text-left order-1 md:order-1">
                         <h2 class="text-3xl md:text-5xl font-black uppercase tracking-tighter mb-2 md:mb-4">Terra <span id="title-terra">Graphite</span></h2>
@@ -124,15 +129,16 @@
             <div class="max-w-6xl w-full flex flex-col md:flex-row items-center justify-center gap-8 md:gap-16">
                 <div class="w-full md:w-[750px] shrink-0">
                     <div class="glass-panel rounded-[30px] md:rounded-[40px] touch-pan-y" id="container-ridge">
-                        <button onclick="nav('ridge', -1)" class="hidden md:flex nav-btn-inside btn-left">←</button>
-                        <img id="img-ridge" src="IMG/RidgeBlack.1.png" class="case-img">
-                        <button onclick="nav('ridge', 1)" class="hidden md:flex nav-btn-inside btn-right">→</button>
+                        <button onclick="nav('ridge', -1)" class="nav-btn-inside btn-left hidden md:flex">←</button>
+                        <img id="img-ridge-black" src="IMG/RidgeBlack.1.png" class="case-stack-img active">
+                        <img id="img-ridge-white" src="IMG/RidgeWhite.1.png" class="case-stack-img">
+                        <button onclick="nav('ridge', 1)" class="nav-btn-inside btn-right hidden md:flex">→</button>
                     </div>
                 </div>
                 <div class="flex flex-col items-center md:items-start gap-6 md:gap-12 w-full md:w-[300px]">
                     <div class="flex flex-row md:flex-col gap-6 order-2 md:order-2">
-                        <div onclick="setColor('ridge', 'black')" id="ridge-black" class="color-circle active w-10 h-10 md:w-12 md:h-12 rounded-full bg-black border border-white/10"></div>
-                        <div onclick="setColor('ridge', 'white')" id="ridge-white" class="color-circle w-10 h-10 md:w-12 md:h-12 rounded-full bg-white border border-black/10"></div>
+                        <div onclick="setColor('ridge', 'black')" id="ridge-black" class="color-circle active w-10 h-10 md:w-12 md:h-12 rounded-full bg-black"></div>
+                        <div onclick="setColor('ridge', 'white')" id="ridge-white" class="color-circle w-10 h-10 md:w-12 md:h-12 rounded-full bg-white"></div>
                     </div>
                     <div class="text-center md:text-left order-1 md:order-1">
                         <h2 class="text-3xl md:text-5xl font-black uppercase tracking-tighter mb-2 md:mb-4">Ridge <span id="title-ridge">Black</span></h2>
@@ -152,66 +158,55 @@
 
         const colorNames = { 'black': 'Black', 'white': 'Light', 'graphite': 'Graphite', 'jade': 'Jade', 'silver': 'Silver' };
 
-        function preloadAll() {
-            for (const m in config) {
-                for (const c in config[m]) {
-                    if (Array.isArray(config[m][c])) {
-                        config[m][c].forEach(s => { const i = new Image(); i.src = s; });
-                    }
-                }
-            }
-        }
-
         function setColor(model, color) {
             const m = config[model];
             m.current = color;
-            if (m.idx >= m[color].length) m.idx = m[color].length - 1;
+
+            // 1. UI кружки
             document.querySelectorAll(`[id^="${model}-"]`).forEach(c => c.classList.remove('active'));
             document.getElementById(`${model}-${color}`).classList.add('active');
-            const titleEl = document.getElementById(`title-${model}`);
-            if (titleEl) titleEl.innerText = colorNames[color];
-            update(model);
+
+            // 2. Текст
+            document.getElementById(`title-${model}`).innerText = colorNames[color];
+
+            // 3. Бесшовное переключение (opacity)
+            document.querySelectorAll(`[id^="img-${model}-"]`).forEach(img => img.classList.remove('active'));
+            document.getElementById(`img-${model}-${color}`).classList.add('active');
         }
 
         function nav(model, dir) {
             const m = config[model];
+            const colors = Object.keys(m).filter(k => Array.isArray(m[k]));
             const len = m[m.current].length;
             m.idx = (m.idx + dir + len) % len;
-            update(model);
+
+            // Синхронизируем все картинки в стеке на новый индекс
+            colors.forEach(color => {
+                const img = document.getElementById(`img-${model}-${color}`);
+                if (img) img.src = m[color][m.idx];
+            });
         }
 
-        function update(model) {
-            const m = config[model];
-            const el = document.getElementById(`img-${model}`);
-            el.style.opacity = '0';
-
-            setTimeout(() => {
-                el.src = m[m.current][m.idx];
-
-                // КОРРЕКЦИЯ ЦЕНТРОВКИ MOOD
-                if (model === 'mood' && m.current === 'white') {
-                    el.style.transform = 'translateX(1.5%)';
-                } else {
-                    el.style.transform = 'translateX(0)';
-                }
-
-                el.onload = () => { el.style.opacity = '1'; };
-                if (el.complete) el.style.opacity = '1';
-            }, 30);
-        }
-
-        let touchStartX = 0;
-        document.querySelectorAll('.glass-panel').forEach(panel => {
-            const model = panel.closest('section').dataset.model;
-            panel.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; }, { passive: true });
-            panel.addEventListener('touchend', e => {
-                const touchEndX = e.changedTouches[0].screenX;
-                if (touchStartX - touchEndX > 40) nav(model, 1);
-                else if (touchEndX - touchStartX > 40) nav(model, -1);
+        // Свайпы для всех
+        ['mood', 'terra', 'ridge'].forEach(model => {
+            let startX = 0;
+            const container = document.getElementById(`container-${model}`);
+            container.addEventListener('touchstart', e => { startX = e.changedTouches[0].screenX; }, { passive: true });
+            container.addEventListener('touchend', e => {
+                const endX = e.changedTouches[0].screenX;
+                if (startX - endX > 40) nav(model, 1);
+                else if (endX - startX > 40) nav(model, -1);
             }, { passive: true });
         });
 
-        window.onload = preloadAll;
+        // Предзагрузка для стабильности
+        window.onload = () => {
+            Object.values(config).forEach(m => {
+                Object.values(m).forEach(arr => {
+                    if (Array.isArray(arr)) arr.forEach(src => { const i = new Image(); i.src = src; });
+                });
+            });
+        };
     </script>
 </body>
 </html>
