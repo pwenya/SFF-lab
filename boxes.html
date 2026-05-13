@@ -8,50 +8,14 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #050505; color: white; overflow-x: hidden; }
-
-        .glass-panel {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(12px);
-            position: relative;
-        }
-
-        .case-img {
-            transition: opacity 0.4s ease, transform 0.4s ease;
-            will-change: opacity, transform;
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
-            z-index: 10;
-        }
-
+        .glass-panel { background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.1); backdrop-filter: blur(12px); position: relative; }
+        .case-img { transition: opacity 0.4s ease, transform 0.4s ease; will-change: opacity, transform; max-width: 100%; max-height: 100%; object-fit: contain; z-index: 10; }
         .color-circle { transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; border: 2px solid transparent; }
         .color-circle.active { border-color: #2563eb; transform: scale(1.15); box-shadow: 0 0 20px rgba(37, 99, 235, 0.3); }
-
         .product-section { border-bottom: 1px solid rgba(255,255,255,0.05); padding: 60px 0; }
         @media (min-width: 768px) { .product-section { padding: 100px 0; } }
-
-        .nav-btn-inside {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: white;
-            width: 50px;
-            height: 50px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-            z-index: 20;
-        }
-        .nav-btn-inside:hover {
-            background: rgba(255, 255, 255, 0.15);
-            border-color: rgba(255, 255, 255, 0.3);
-            transform: translateY(-50%) scale(1.1);
-        }
+        .nav-btn-inside { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: white; width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease; z-index: 20; }
+        .nav-btn-inside:hover { background: rgba(255, 255, 255, 0.15); border-color: rgba(255, 255, 255, 0.3); transform: translateY(-50%) scale(1.1); }
         .btn-left { left: 20px; }
         .btn-right { right: 20px; }
     </style>
@@ -60,15 +24,12 @@
 
     <nav class="fixed w-full z-50 border-b border-white/5 bg-black/70 backdrop-blur-md">
         <div class="max-w-[1400px] mx-auto flex justify-between items-center py-4 md:py-6 px-6 md:px-10">
-            <a href="index.html" class="text-2xl font-extrabold tracking-tighter uppercase">
-                SFF LAB<span class="text-blue-600">.</span>
-            </a>
+            <a href="index.html" class="text-2xl font-extrabold tracking-tighter uppercase">SFF LAB<span class="text-blue-600">.</span></a>
             <a href="#" class="bg-white text-black px-6 md:px-8 py-2 md:py-3 rounded-full hover:bg-zinc-200 transition uppercase tracking-widest text-[12px] md:text-[14px] font-black">Статус заказа</a>
         </div>
     </nav>
 
     <main class="pt-20">
-
         <!-- КАРТОЧКА 1: MOOD -->
         <section class="product-section flex items-center justify-center px-6" data-model="mood">
             <div class="max-w-6xl w-full flex flex-col md:flex-row items-center gap-8 md:gap-16">
@@ -85,7 +46,7 @@
                         <div onclick="setColor('mood', 'white')" id="mood-white" class="color-circle w-10 h-10 md:w-12 md:h-12 rounded-full bg-white border border-black/10"></div>
                     </div>
                     <div class="text-center md:text-left order-1 md:order-1">
-                        <h2 class="text-3xl md:text-5xl font-black uppercase tracking-tighter mb-2 md:mb-4">Mood v1</h2>
+                        <h2 class="text-3xl md:text-5xl font-black uppercase tracking-tighter mb-2 md:mb-4">Mood <span id="title-mood">Black</span></h2>
                         <p class="text-zinc-500 uppercase text-[10px] md:text-[11px] tracking-[0.4em] font-bold">Premium SFF Design</p>
                     </div>
                 </div>
@@ -109,7 +70,7 @@
                         <div onclick="setColor('terra', 'silver')" id="terra-silver" class="color-circle w-10 h-10 md:w-12 md:h-12 rounded-full bg-[#d1d5db] border border-white/10"></div>
                     </div>
                     <div class="text-center md:text-left order-1 md:order-1">
-                        <h2 class="text-3xl md:text-5xl font-black uppercase tracking-tighter mb-2 md:mb-4">Terra</h2>
+                        <h2 class="text-3xl md:text-5xl font-black uppercase tracking-tighter mb-2 md:mb-4">Terra <span id="title-terra">Graphite</span></h2>
                         <p class="text-zinc-500 uppercase text-[10px] md:text-[11px] tracking-[0.4em] font-bold">Crafted for Gamers</p>
                     </div>
                 </div>
@@ -132,7 +93,7 @@
                         <div onclick="setColor('ridge', 'white')" id="ridge-white" class="color-circle w-10 h-10 md:w-12 md:h-12 rounded-full bg-white border border-black/10"></div>
                     </div>
                     <div class="text-center md:text-left order-1 md:order-1">
-                        <h2 class="text-3xl md:text-5xl font-black uppercase tracking-tighter mb-2 md:mb-4">Ridge</h2>
+                        <h2 class="text-3xl md:text-5xl font-black uppercase tracking-tighter mb-2 md:mb-4">Ridge <span id="title-ridge">Black</span></h2>
                         <p class="text-zinc-500 uppercase text-[10px] md:text-[11px] tracking-[0.4em] font-bold">Slim Console Format</p>
                     </div>
                 </div>
@@ -161,14 +122,26 @@
         };
 
         function setColor(model, color) {
-            config[model].current = color;
-            config[model].idx = 0;
+            const m = config[model];
+            m.current = color;
 
+            // Защита: если текущий индекс больше, чем есть фото в новом цвете, сбрасываем на последнее доступное
+            if (m.idx >= m[color].length) {
+                m.idx = m[color].length - 1;
+            }
+
+            // Обновляем кружки
             document.querySelectorAll(`[id^="${model}-"]`).forEach(c => c.classList.remove('active'));
             const activeCircle = document.getElementById(`${model}-${color}`);
             if (activeCircle) activeCircle.classList.add('active');
 
-            update(model); // Принудительно обновляем картинку сразу после клика
+            // Обновляем текст названия цвета
+            const titleEl = document.getElementById(`title-${model}`);
+            if (titleEl) {
+                titleEl.innerText = color.charAt(0).toUpperCase() + color.slice(1);
+            }
+
+            update(model);
         }
 
         function nav(model, dir) {
@@ -181,29 +154,20 @@
         function update(model) {
             const m = config[model];
             const el = document.getElementById(`img-${model}`);
-
-            // Визуальный фидбек переключения
             el.style.opacity = '0';
             el.style.transform = 'scale(0.98)';
-
             setTimeout(() => {
                 el.src = m[m.current][m.idx];
                 el.style.opacity = '1';
                 el.style.transform = 'scale(1)';
-            }, 200); // Уменьшил задержку для большей отзывчивости
+            }, 200);
         }
 
-        // Логика свайпов
         let touchStartX = 0;
         let touchEndX = 0;
-
         document.querySelectorAll('.glass-panel').forEach(panel => {
             const model = panel.closest('section').dataset.model;
-
-            panel.addEventListener('touchstart', e => {
-                touchStartX = e.changedTouches[0].screenX;
-            }, { passive: true });
-
+            panel.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; }, { passive: true });
             panel.addEventListener('touchend', e => {
                 touchEndX = e.changedTouches[0].screenX;
                 const swipeThreshold = 40;
