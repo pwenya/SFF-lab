@@ -9,6 +9,7 @@
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #050505; color: white; overflow-x: hidden; }
 
+        /* ГЕОМЕТРИЯ КАРТОЧКИ */
         .glass-panel {
             background: rgba(255, 255, 255, 0.02);
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -25,7 +26,7 @@
             .glass-panel { height: 600px; min-height: 600px; max-height: 600px; width: 750px; }
         }
 
-        /* Общие стили для стека картинок */
+        /* СТЕК КАРТИНOK ДЛЯ БЕСШОВНОСТИ */
         .case-stack-img {
             position: absolute;
             top: 50%;
@@ -45,11 +46,33 @@
 
         .case-stack-img.active { opacity: 1; }
 
-        /* Тот самый фикс для белого Mood */
+        /* Фикс центровки для белого Mood */
         .mood-white-fix { transform: translate(-48.5%, -50%) !important; }
 
-        .color-circle { transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; border: 2px solid transparent; }
-        .color-circle.active { border-color: #2563eb; transform: scale(1.15); box-shadow: 0 0 20px rgba(37, 99, 235, 0.3); }
+        /* СТИЛИ КРУЖОЧКОВ (чтобы черные не терялись) */
+        .color-circle {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            position: relative;
+        }
+
+        /* Дополнительная видимость для темных цветов */
+        #mood-black, #ridge-black, #terra-graphite {
+            border: 1px solid rgba(255, 255, 255, 0.25);
+        }
+
+        .color-circle:hover {
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: scale(1.05);
+        }
+
+        .color-circle.active {
+            border-color: #2563eb;
+            border-width: 2px;
+            transform: scale(1.15);
+            box-shadow: 0 0 20px rgba(37, 99, 235, 0.4);
+        }
 
         .product-section { border-bottom: 1px solid rgba(255,255,255,0.05); padding: 60px 0; }
         @media (min-width: 768px) { .product-section { padding: 100px 0; } }
@@ -162,14 +185,11 @@
             const m = config[model];
             m.current = color;
 
-            // 1. UI кружки
             document.querySelectorAll(`[id^="${model}-"]`).forEach(c => c.classList.remove('active'));
             document.getElementById(`${model}-${color}`).classList.add('active');
 
-            // 2. Текст
             document.getElementById(`title-${model}`).innerText = colorNames[color];
 
-            // 3. Бесшовное переключение (opacity)
             document.querySelectorAll(`[id^="img-${model}-"]`).forEach(img => img.classList.remove('active'));
             document.getElementById(`img-${model}-${color}`).classList.add('active');
         }
@@ -180,14 +200,12 @@
             const len = m[m.current].length;
             m.idx = (m.idx + dir + len) % len;
 
-            // Синхронизируем все картинки в стеке на новый индекс
             colors.forEach(color => {
                 const img = document.getElementById(`img-${model}-${color}`);
                 if (img) img.src = m[color][m.idx];
             });
         }
 
-        // Свайпы для всех
         ['mood', 'terra', 'ridge'].forEach(model => {
             let startX = 0;
             const container = document.getElementById(`container-${model}`);
@@ -199,7 +217,6 @@
             }, { passive: true });
         });
 
-        // Предзагрузка для стабильности
         window.onload = () => {
             Object.values(config).forEach(m => {
                 Object.values(m).forEach(arr => {
