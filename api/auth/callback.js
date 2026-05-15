@@ -5,9 +5,11 @@ const jwt   = require('jsonwebtoken');
 const fetch = require('node-fetch');
 
 module.exports = async function handler(req, res) {
-    var code  = req.query.code;
-    var error = req.query.error;
+    var searchParams = new URL(req.url, 'https://sfflab.ee').searchParams;
+    var code  = searchParams.get('code');
+    var error = searchParams.get('error');
 
+    console.log('Code received:', !!code);
     console.log('[callback] query params:', { code: code ? code.slice(0,12) + '…' : null, error });
 
     if (error || !code) {
@@ -35,6 +37,7 @@ module.exports = async function handler(req, res) {
 
         var tokenData = await tokenRes.json();
 
+        console.log('Token response status:', tokenRes.status);
         console.log('[callback] Token response status:', tokenRes.status);
         console.log('[callback] Token response body:', JSON.stringify({
             access_token:  tokenData.access_token  ? tokenData.access_token.slice(0,16)  + '…' : null,
@@ -59,6 +62,9 @@ module.exports = async function handler(req, res) {
 
         var user = await userRes.json();
 
+        console.log('User email:', user.email);
+        console.log('Admin email:', process.env.ADMIN_EMAIL);
+        console.log('Match:', user.email && user.email.toLowerCase() === (process.env.ADMIN_EMAIL || '').toLowerCase());
         console.log('[callback] Userinfo body:', JSON.stringify({
             id:             user.id,
             email:          user.email,
