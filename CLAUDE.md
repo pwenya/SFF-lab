@@ -51,3 +51,23 @@ Never use absolute paths like `/boxes` or `/` — the site is opened via file://
 - ET (Estonian) is the primary language
 - RU (Russian) is secondary
 - Content is mixed — some labels are ET/RU bilingual by design (e.g. placeholder text)
+
+## Token efficiency rules
+- Work on ONE file at a time unless explicitly told otherwise
+- Read only the file being modified, not the whole project
+- Keep explanations short — just do the task
+- Never refactor code that wasn't mentioned in the task
+- If unsure which file to edit — ask before reading everything
+
+## API & backend
+- Vercel serverless functions in /api folder
+- Upstash Redis for order storage (KV_REST_API_URL, KV_REST_API_TOKEN)
+- Email via nodemailer + Google Workspace SMTP (GMAIL_USER, GMAIL_APP_PASSWORD)
+- Google OAuth for admin panel (GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET)
+- Admin email: info@sfflab.ee
+
+## Legal
+- Company: SFF Lab OÜ
+- Reg: 17506407
+- VAT: EE102985942
+- Address: Sinimäe tn 16-30, Tallinn
