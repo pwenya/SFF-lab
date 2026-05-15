@@ -172,13 +172,30 @@ module.exports = async function handler(req, res) {
     var orderNumber = generateOrderNumber();
     var d = { name, email, phone, model, os, caseTxt, cpu, gpu, ram, ssd, psu, controller, scenario, price, estimatedDelivery, orderNumber };
 
-    var transporter = nodemailer.createTransport({
-        host: 'smtp.gmail.com', port: 465, secure: true,
-        auth: { user: process.env.GMAIL_USER, pass: process.env.GMAIL_APP_PASSWORD }
-    });
-
-    /* Send both emails */
+    /* Save to Redis first — this is the order of record */
     try {
+        var redis = createRedis();
+        var orderRecord = {
+            orderNumber, name, email, phone,
+            model, cpu, gpu, ram, ssd,
+            'case': caseTxt, os, price,
+            estimatedDelivery,
+            status: 'pending',
+            createdAt: new Date().toISOString()
+        };
+        await redis.set('order:' + orderNumber, orderRecord);
+        await redis.lpush('orders:all', orderNumber);
+    } catch (redisErr) {
+        console.error('Redis save error:', redisErr.message);
+        return res.status(500).json({ error: 'Database error' });
+    }
+
+    /* Send emails best-effort — never fail the order if mail fails */
+    try {
+        var transporter = nodemailer.createTransport({
+            host: 'smtp.gmail.com', port: 465, secure: true,
+            auth: { user: process.env.GMAIL_USER, pass: process.env.GMAIL_APP_PASSWORD }
+        });
         await Promise.all([
             transporter.sendMail({
                 from:    'SFF Lab Orders <info@sfflab.ee>',
@@ -194,26 +211,8 @@ module.exports = async function handler(req, res) {
                 html:    buildConfirmationHtml(d)
             })
         ]);
-    } catch (err) {
-        console.error('Mail send error:', err.message);
-        return res.status(500).json({ error: 'Failed to send email' });
-    }
-
-    /* Save to Redis (best-effort — emails already sent) */
-    try {
-        var redis = createRedis();
-        var orderRecord = {
-            orderNumber, name, email, phone,
-            model, cpu, gpu, ram, ssd,
-            'case': caseTxt, os, price,
-            estimatedDelivery,
-            status: 'pending',
-            createdAt: new Date().toISOString()
-        };
-        await redis.set('order:' + orderNumber, orderRecord);
-        await redis.lpush('orders:all', orderNumber);
-    } catch (redisErr) {
-        console.error('Redis save error:', redisErr.message);
+    } catch (mailErr) {
+        console.error('Mail send error:', mailErr.message);
     }
 
     return res.status(200).json({ success: true, orderNumber: orderNumber });
