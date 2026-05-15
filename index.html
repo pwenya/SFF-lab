@@ -69,16 +69,6 @@
         .os-switch-btn { transition: all 0.3s ease; border: 1px solid rgba(255,255,255,0.1); background: transparent; color: #52525b; }
         .os-switch-btn.active { background: white; color: black; border-color: white; }
 
-        /* ── Scenario filter ── */
-        .scenario-btn {
-            padding: 8px 16px; border-radius: 100px; border: 1px solid rgba(255,255,255,0.08);
-            background: transparent; color: #52525b; font-size: 11px; font-weight: 900;
-            text-transform: uppercase; letter-spacing: 0.1em; cursor: pointer; white-space: nowrap;
-            transition: all 0.25s;
-        }
-        .scenario-btn:hover { border-color: rgba(255,255,255,0.18); color: #a1a1aa; }
-        .scenario-btn.active { background: rgba(37,99,235,0.15); border-color: rgba(37,99,235,0.5); color: #60a5fa; }
-        .scenario-dim { opacity: 0.25 !important; transform: scale(0.97) !important; pointer-events: none; transition: opacity 0.3s, transform 0.3s !important; }
 
         /* ── Card specs ── */
         .card-specs { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 16px; font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: #52525b; }
@@ -251,14 +241,6 @@
     <section id="pricing" class="pt-4 pb-24 px-6 bg-transparent relative z-20">
         <div class="max-w-6xl mx-auto">
 
-            <div class="reveal flex justify-start md:justify-center gap-2 mb-8 overflow-x-auto pb-2">
-                <button onclick="filterScenario('steamos',this)" data-scenario="steamos" class="scenario-btn active" data-key="filter-steamos">🎮 Gaming SteamOS</button>
-                <button onclick="filterScenario('windows',this)" data-scenario="windows" class="scenario-btn" data-key="filter-windows">🪟 Gaming Windows</button>
-                <button onclick="filterScenario('office',this)"  data-scenario="office"  class="scenario-btn" data-key="filter-office">💼 Vaikne kontor</button>
-                <button onclick="filterScenario('dualboot',this)" data-scenario="dualboot" class="scenario-btn" data-key="filter-dualboot">🔄 Dual Boot</button>
-                <button onclick="filterScenario('travel',this)"  data-scenario="travel"  class="scenario-btn" data-key="filter-travel">✈️ Reisi-PC</button>
-            </div>
-
             <div class="reveal reveal-delay-1 flex justify-center space-x-4 mb-16">
                 <button onclick="switchOS('steamos')" id="btn-steamos" class="os-switch-btn active px-10 py-3 rounded-full text-[11px] font-black uppercase tracking-widest shadow-xl">SteamOS</button>
                 <button onclick="switchOS('windows')" id="btn-windows" class="os-switch-btn px-10 py-3 rounded-full text-[11px] font-black uppercase tracking-widest shadow-xl">Windows 11</button>
@@ -381,10 +363,98 @@
                     </div>
                 </div>
 
-                <div id="grid-windows" class="os-grid os-grid-hidden grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
-                    <div class="flex" data-card="win-core" data-scenarios="windows"><div class="glass-card p-10 rounded-[40px] w-full opacity-50 flex items-center justify-center italic text-zinc-600 uppercase tracking-widest text-[10px]">Windows Core — Coming Soon</div></div>
-                    <div class="flex" data-card="win-pro" data-scenarios="windows"><div class="glass-card p-10 rounded-[40px] w-full opacity-50 flex items-center justify-center italic text-zinc-600 uppercase tracking-widest text-[10px]">Windows Pro — Coming Soon</div></div>
-                    <div class="flex" data-card="win-enthusiast" data-scenarios="windows"><div class="glass-card p-10 rounded-[40px] w-full opacity-50 flex items-center justify-center italic text-zinc-600 uppercase tracking-widest text-[10px]">Enthusiast — Coming Soon</div></div>
+                <div id="grid-windows" class="os-grid os-grid-hidden">
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
+
+                        <div class="flex reveal reveal-delay-1" data-card="win-core">
+                            <div class="glass-card p-10 rounded-[40px] flex flex-col justify-between w-full">
+                                <div>
+                                    <span class="text-blue-600 text-[11px] font-black uppercase tracking-[0.2em]">Core Edition</span>
+                                    <h3 data-key="p1-title" class="text-3xl font-extrabold mt-3 mb-8 text-white uppercase">Baas</h3>
+                                    <ul class="space-y-4 text-zinc-400 text-sm mb-8">
+                                        <li>✓ Ryzen 5 7500F + RX 9060 XT</li>
+                                        <li>✓ 16GB DDR5 + 1TB</li>
+                                        <li>✓ 650W SFX Gold (Quiet Edition)</li>
+                                        <li data-key="win-license">✓ Windows 11 Pro litsents</li>
+                                    </ul>
+                                    <div class="card-specs pt-5 border-t border-white/5">
+                                        <span class="spec-label" data-key="spec-noise-lbl">Müra</span><span class="spec-val">~24 dB / ~36 dB</span>
+                                        <span class="spec-label" data-key="spec-power-lbl">Tarbimine</span><span class="spec-val">~55W / ~250W</span>
+                                        <span class="spec-label" data-key="spec-vol-lbl">Maht</span><span class="spec-val">~8 L</span>
+                                        <span class="spec-label" data-key="spec-tv-lbl">TV alla</span><span class="spec-val text-green-600">✓</span>
+                                        <span class="spec-label">Windows 11</span><span class="spec-val text-green-600">✓</span>
+                                        <span class="spec-label" data-key="spec-upg-lbl">Upg.</span><span class="spec-val">RAM ✓ SSD ✓ GPU ✗</span>
+                                    </div>
+                                    <div class="mt-4">
+                                        <span class="text-[10px] font-black text-green-500 bg-green-600/10 px-3 py-1 rounded-full uppercase tracking-widest" data-key="win-compat">✓ Maksimaalne mängude ühilduvus</span>
+                                    </div>
+                                </div>
+                                <div class="mt-8">
+                                    <div class="text-4xl font-black mb-6 tracking-tighter text-white">1924 €</div>
+                                    <a href="configurator.html?os=windows&mode=core" class="btn-ripple block text-center bg-blue-600 text-white py-4 rounded-2xl hover:bg-blue-500 transition-all font-bold text-xs uppercase tracking-widest shadow-lg shadow-blue-600/20" data-key="p1-btn">Vali disain</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex reveal reveal-delay-2" data-card="win-plus">
+                            <div class="featured-card p-10 rounded-[40px] flex flex-col justify-between relative overflow-hidden w-full">
+                                <div data-key="popular-badge" class="absolute top-6 right-6 bg-blue-600/90 text-[10px] font-black px-4 py-1.5 rounded-full uppercase tracking-widest text-white shadow-lg">Populaarne</div>
+                                <div>
+                                    <span class="text-blue-600 text-[11px] font-black uppercase tracking-[0.2em]">Ultimate Kit</span>
+                                    <h3 data-key="p2-title" class="text-3xl font-extrabold mt-3 mb-8 text-white uppercase">Baas+</h3>
+                                    <ul class="space-y-4 text-zinc-400 text-sm mb-8">
+                                        <li data-key="p2-feature-1">✓ Ryzen 5 7500F / 7500X3D</li>
+                                        <li data-key="p2-feature-2">✓ Xbox / DualSense kontroller</li>
+                                        <li data-key="p2-feature-3">✓ 4K HDMI 2.1 Ultra High Speed</li>
+                                        <li data-key="win-license">✓ Windows 11 Pro litsents</li>
+                                    </ul>
+                                    <div class="card-specs pt-5 border-t border-white/5">
+                                        <span class="spec-label" data-key="spec-noise-lbl">Müra</span><span class="spec-val">~24 dB / ~38 dB</span>
+                                        <span class="spec-label" data-key="spec-power-lbl">Tarbimine</span><span class="spec-val">~55W / ~280W</span>
+                                        <span class="spec-label" data-key="spec-vol-lbl">Maht</span><span class="spec-val">~8 L</span>
+                                        <span class="spec-label" data-key="spec-tv-lbl">TV alla</span><span class="spec-val text-green-600">✓</span>
+                                        <span class="spec-label">Windows 11</span><span class="spec-val text-green-600">✓</span>
+                                        <span class="spec-label" data-key="spec-upg-lbl">Upg.</span><span class="spec-val">RAM ✓ SSD ✓ GPU ✗</span>
+                                    </div>
+                                    <div class="mt-4">
+                                        <span class="text-[10px] font-black text-green-500 bg-green-600/10 px-3 py-1 rounded-full uppercase tracking-widest" data-key="win-compat">✓ Maksimaalne mängude ühilduvus</span>
+                                    </div>
+                                </div>
+                                <div class="mt-8">
+                                    <div class="text-4xl font-black mb-6 tracking-tighter text-white">2078 €</div>
+                                    <a href="configurator.html?os=windows&mode=plus" class="btn-ripple block text-center bg-blue-600 text-white py-4 rounded-2xl hover:bg-blue-500 transition-all font-bold text-xs uppercase tracking-widest shadow-lg shadow-blue-600/20" data-key="p2-btn">Telli komplekt</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex reveal reveal-delay-3" data-card="win-enthusiast">
+                            <div class="glass-card p-10 rounded-[40px] flex flex-col justify-between w-full">
+                                <div>
+                                    <span class="text-blue-600 text-[11px] font-black uppercase tracking-[0.2em]">Enthusiast</span>
+                                    <h3 data-key="p3-title" class="text-3xl font-extrabold mt-3 mb-8 text-white uppercase">Pane kokku</h3>
+                                    <p data-key="p3-desc" class="text-zinc-400 text-sm leading-relaxed mb-8">
+                                        Koosta oma unistuste SFF süsteem: vali 7500X3D, RX 9070 XT ja kuni 4TB Samsung SSD.
+                                    </p>
+                                    <div class="card-specs pt-5 border-t border-white/5">
+                                        <span class="spec-label" data-key="spec-noise-lbl">Müra</span><span class="spec-val">~26 dB / ~42 dB</span>
+                                        <span class="spec-label" data-key="spec-power-lbl">Tarbimine</span><span class="spec-val">~65W / ~320W</span>
+                                        <span class="spec-label" data-key="spec-vol-lbl">Maht</span><span class="spec-val">~9 L</span>
+                                        <span class="spec-label" data-key="spec-tv-lbl">TV alla</span><span class="spec-val text-green-600">✓</span>
+                                        <span class="spec-label">Windows 11</span><span class="spec-val text-green-600">✓</span>
+                                        <span class="spec-label" data-key="spec-upg-lbl">Upg.</span><span class="spec-val">RAM ✓ SSD ✓ GPU ✗</span>
+                                    </div>
+                                    <div class="mt-4">
+                                        <span class="text-[10px] font-black text-green-500 bg-green-600/10 px-3 py-1 rounded-full uppercase tracking-widest" data-key="win-compat">✓ Maksimaalne mängude ühilduvus</span>
+                                    </div>
+                                </div>
+                                <div class="mt-8">
+                                    <div class="text-4xl font-black mb-6 tracking-tighter text-white">1924 € +</div>
+                                    <a href="configurator.html?os=windows&mode=enthusiast" class="btn-ripple block text-center bg-blue-600 text-white py-4 rounded-2xl hover:bg-blue-500 transition-all font-bold text-xs uppercase tracking-widest shadow-lg shadow-blue-600/20" data-key="p3-btn">Alusta koostamist</a>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
             </div>
         </div>
@@ -525,6 +595,7 @@
                 'popular-badge':'Populaarne','p2-title':'Baas+','p2-btn':'Telli komplekt',
                 'p2-feature-1':'✓ Ryzen 5 7500F / 7500X3D','p2-feature-2':'✓ Xbox / DualSense kontroller','p2-feature-3':'✓ 4K HDMI 2.1 Ultra High Speed','p2-feature-4':'✓ SFF Lab premium pakend',
                 'p3-title':'Pane kokku','p3-btn':'Alusta koostamist','p3-desc':'Koosta oma unistuste SFF süsteem: vali 7500X3D, RX 9070 XT ja kuni 4TB Samsung SSD.',
+                'win-license':'✓ Windows 11 Pro litsents','win-compat':'✓ Maksimaalne mängude ühilduvus',
                 'db-badge':'Mõlema maailma parim','db-desc':'Gaming SteamOS-iga, töö Windowsiga. Vaheta ühe taaskäivitusega. Ilma kompromissideta.','db-allgames':'Kõik mängud ✓','db-from':'Alates','db-btn':'Konfigureeri',
                 'compat-title':'Ühilduvus','compat-sub':'SteamOS toetab 90%+ Steami mängudest tänu Proton ühilduvuskihile.',
                 'tab-games':'Mängud','tab-controllers':'Kontrollerid','tab-launchers':'Platvormid',
@@ -546,6 +617,7 @@
                 'popular-badge':'Популярно','p2-title':'База+','p2-btn':'Заказать набор',
                 'p2-feature-1':'✓ Ryzen 5 7500F / 7500X3D','p2-feature-2':'✓ Xbox / DualSense контроллер','p2-feature-3':'✓ 4K HDMI 2.1 Ultra High Speed','p2-feature-4':'✓ SFF Lab премиум упаковка',
                 'p3-title':'Собери сам','p3-btn':'Начать сборку','p3-desc':'Собери систему своей мечты: выбери 7500X3D, RX 9070 XT и до 4ТБ Samsung SSD.',
+                'win-license':'✓ Лицензия Windows 11 Pro','win-compat':'✓ Максимальная совместимость игр',
                 'db-badge':'Лучшее из обоих миров','db-desc':'Игры на SteamOS, работа на Windows. Переключение одной перезагрузкой. Без компромиссов.','db-allgames':'Все игры ✓','db-from':'От','db-btn':'Настроить',
                 'compat-title':'Совместимость','compat-sub':'SteamOS поддерживает 90%+ игр Steam благодаря слою совместимости Proton.',
                 'tab-games':'Игры','tab-controllers':'Контроллеры','tab-launchers':'Платформы',
@@ -567,6 +639,7 @@
                 'popular-badge':'Popular','p2-title':'Core+','p2-btn':'Order kit',
                 'p2-feature-1':'✓ Ryzen 5 7500F / 7500X3D','p2-feature-2':'✓ Xbox / DualSense controller','p2-feature-3':'✓ 4K HDMI 2.1 Ultra High Speed','p2-feature-4':'✓ SFF Lab premium packaging',
                 'p3-title':'Build your own','p3-btn':'Start building','p3-desc':'Build your dream SFF system: choose 7500X3D, RX 9070 XT and up to 4TB Samsung SSD.',
+                'win-license':'✓ Windows 11 Pro license','win-compat':'✓ Maximum game compatibility',
                 'db-badge':'Best of both worlds','db-desc':'Gaming on SteamOS, work on Windows. Switch with one reboot. No compromises.','db-allgames':'All games ✓','db-from':'From','db-btn':'Configure',
                 'compat-title':'Compatibility','compat-sub':'SteamOS supports 90%+ of Steam games via the Proton compatibility layer.',
                 'tab-games':'Games','tab-controllers':'Controllers','tab-launchers':'Platforms',
@@ -577,31 +650,6 @@
                 'footer-slogan':'Designed for living rooms','footer-cookies':'No tracking cookies','footer-built':'Built in Estonia'
             }
         };
-
-        var scenarioMap = {
-            steamos:  { os: 'steamos',  cards: ['core','plus','enthusiast'] },
-            windows:  { os: 'windows',  cards: ['win-core','win-pro','win-enthusiast'] },
-            office:   { os: 'steamos',  cards: ['core'] },
-            dualboot: { os: 'steamos',  cards: ['dualboot'] },
-            travel:   { os: 'steamos',  cards: ['core','enthusiast'] }
-        };
-        var activeScenario = null;
-
-        function filterScenario(scenario, btn) {
-            document.querySelectorAll('.scenario-btn').forEach(function(b) { b.classList.remove('active'); });
-            if (activeScenario === scenario) { activeScenario = null; clearDim(); return; }
-            activeScenario = scenario;
-            btn.classList.add('active');
-            var cfg = scenarioMap[scenario];
-            if (!cfg) return;
-            switchOS(cfg.os);
-            setTimeout(function() {
-                document.querySelectorAll('[data-card]').forEach(function(c) {
-                    c.classList.toggle('scenario-dim', !cfg.cards.includes(c.getAttribute('data-card')));
-                });
-            }, 80);
-        }
-        function clearDim() { document.querySelectorAll('[data-card]').forEach(function(c) { c.classList.remove('scenario-dim'); }); }
 
         var currentOS = 'steamos';
         function switchOS(os) {
