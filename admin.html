@@ -8,7 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; background: #111111; color: white; }
-        .glass { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); backdrop-filter: blur(12px); }
+        .glass { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); backdrop-filter: blur(12px); position: relative; }
         .stat-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07); border-radius: 20px; padding: 20px 24px; }
         .status-badge { display: inline-block; padding: 3px 10px; border-radius: 100px; font-size: 9px; font-weight: 800; letter-spacing: 0.15em; text-transform: uppercase; }
         .s-pending         { background: rgba(161,161,170,0.12); color: #a1a1aa; border: 1px solid rgba(161,161,170,0.2); }
@@ -16,7 +16,7 @@
         .s-in_progress     { background: rgba(59,130,246,0.12);  color: #60a5fa; border: 1px solid rgba(59,130,246,0.25); }
         .s-ready           { background: rgba(34,197,94,0.12);   color: #4ade80; border: 1px solid rgba(34,197,94,0.25); }
         .s-shipped         { background: rgba(167,139,250,0.12); color: #a78bfa; border: 1px solid rgba(167,139,250,0.25); }
-        .order-row { border-bottom: 1px solid rgba(255,255,255,0.04); transition: background 0.2s; cursor: pointer; min-height: 64px; }
+        .order-row { border-bottom: 1px solid rgba(255,255,255,0.04); transition: background 0.2s; cursor: pointer; }
         .order-row:hover { background: rgba(255,255,255,0.03); }
         .order-row:last-child { border-bottom: none; }
         .filter-btn { background: transparent; border: 1px solid rgba(255,255,255,0.08); color: #52525b; font-size: 10px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; padding: 6px 14px; border-radius: 100px; cursor: pointer; transition: all 0.2s; }
@@ -25,7 +25,7 @@
         .admin-input { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: white; padding: 12px 16px; font-size: 14px; font-family: inherit; outline: none; transition: border-color 0.2s; }
         .admin-input:focus { border-color: rgba(59,130,246,0.5); }
         .admin-input::placeholder { color: #3f3f46; }
-        .status-select { background: #111; border: 1px solid rgba(255,255,255,0.1); color: white; border-radius: 8px; padding: 4px 8px; font-size: 10px; font-weight: 700; font-family: inherit; outline: none; cursor: pointer; letter-spacing: 0.08em; text-transform: uppercase; position: relative; z-index: 10; }
+        .status-select { background: #111; border: 1px solid rgba(255,255,255,0.1); color: white; border-radius: 8px; padding: 4px 8px; font-size: 10px; font-weight: 700; font-family: inherit; outline: none; cursor: pointer; letter-spacing: 0.08em; text-transform: uppercase; position: relative; z-index: 50; }
         .detail-row { display: flex; justify-content: space-between; align-items: baseline; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 11px; }
         .detail-row:last-child { border-bottom: none; }
         .detail-lbl { color: #52525b; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; padding-right: 16px; white-space: nowrap; }
@@ -149,7 +149,7 @@
                 <span style="font-size:9px;font-weight:800;letter-spacing:0.18em;text-transform:uppercase;color:#3f3f46">Status</span>
                 <span style="font-size:9px;font-weight:800;letter-spacing:0.18em;text-transform:uppercase;color:#3f3f46">Update</span>
             </div>
-            <div id="orders-table-body" style="position: relative;">
+            <div id="orders-table-body" class="pb-32">
                 <div style="padding:48px;text-align:center;color:#3f3f46;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase">Loading orders…</div>
             </div>
         </div>
