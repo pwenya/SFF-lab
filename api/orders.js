@@ -1,9 +1,24 @@
 // VERCEL ENV VARS NEEDED:
 //   KV_REST_API_URL / UPSTASH_REDIS_REST_URL
 //   KV_REST_API_TOKEN / UPSTASH_REDIS_REST_TOKEN
-//   ADMIN_PASSWORD
+//   NEXTAUTH_SECRET, ADMIN_EMAIL
 
 const { Redis } = require('@upstash/redis');
+const jwt       = require('jsonwebtoken');
+
+function parseCookie(req, name) {
+    var cookies = req.headers.cookie || '';
+    var match = cookies.split(';')
+        .map(function (c) { return c.trim(); })
+        .find(function (c) { return c.startsWith(name + '='); });
+    return match ? match.slice(name.length + 1) : null;
+}
+
+function isAdmin(req) {
+    var token = parseCookie(req, 'admin_session');
+    if (!token || !process.env.NEXTAUTH_SECRET) return false;
+    try { jwt.verify(token, process.env.NEXTAUTH_SECRET); return true; } catch (e) { return false; }
+}
 
 function createRedis() {
     return new Redis({
@@ -13,18 +28,10 @@ function createRedis() {
 }
 
 module.exports = async function handler(req, res) {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-
     if (req.method === 'OPTIONS') return res.status(200).end();
     if (req.method !== 'GET')    return res.status(405).json({ error: 'Method not allowed' });
 
-    /* Auth */
-    var auth  = (req.headers.authorization || '').replace(/^Bearer\s+/i, '');
-    if (!process.env.ADMIN_PASSWORD || auth !== process.env.ADMIN_PASSWORD) {
-        return res.status(401).json({ error: 'Unauthorized' });
-    }
+    if (!isAdmin(req)) return res.status(401).json({ error: 'Unauthorized' });
 
     try {
         var redis        = createRedis();

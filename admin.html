@@ -83,14 +83,30 @@
     </div>
 </div>
 
-<div id="screen-login" class="min-h-screen flex items-center justify-center px-6">
-    <div style="width:100%;max-width:380px">
+<div id="screen-login" class="min-h-screen flex items-center justify-center px-6" style="display:none!important">
+    <div style="width:100%;max-width:380px;text-align:center">
+        <div style="width:48px;height:48px;background:rgba(37,99,235,0.1);border:1px solid rgba(37,99,235,0.25);border-radius:14px;display:flex;align-items:center;justify-content:center;margin:0 auto 20px">
+            <svg width="24" height="24" viewBox="0 0 32 32" fill="none"><rect x="3" y="2" width="26" height="28" rx="4" stroke="#2563eb" stroke-width="2"/><circle cx="22" cy="8" r="3" stroke="#2563eb" stroke-width="1.5"/><rect x="5" y="14" width="12" height="2" rx="1" fill="#2563eb"/><rect x="5" y="19" width="12" height="2" rx="1" fill="#2563eb"/></svg>
+        </div>
         <p style="font-size:10px;font-weight:800;letter-spacing:0.3em;text-transform:uppercase;color:#2563eb;margin-bottom:8px">SFF Lab</p>
         <h1 style="font-size:32px;font-weight:900;letter-spacing:-0.03em;text-transform:uppercase;margin-bottom:4px">Admin</h1>
-        <p style="font-size:11px;color:#52525b;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:32px">Dashboard</p>
-        <input id="login-password" type="password" class="admin-input w-full mb-4" placeholder="Admin password" onkeydown="if(event.key==='Enter')doLogin()">
-        <div id="login-error" style="display:none;font-size:10px;color:#f87171;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:12px;text-align:center">Incorrect password</div>
-        <button onclick="doLogin()" style="width:100%;background:#2563eb;border:none;color:white;padding:14px;border-radius:14px;font-size:10px;font-weight:800;letter-spacing:0.2em;text-transform:uppercase;cursor:pointer;transition:background 0.2s" onmouseover="this.style.background='#1d4ed8'" onmouseout="this.style.background='#2563eb'">Sign In</button>
+        <p style="font-size:11px;color:#52525b;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:40px">Restricted Access</p>
+
+        <a href="/api/auth/login" id="google-btn" style="
+            display:flex;align-items:center;justify-content:center;gap:12px;
+            width:100%;padding:15px 24px;border-radius:14px;
+            background:white;border:none;cursor:pointer;
+            font-size:13px;font-weight:700;color:#1f1f1f;
+            text-decoration:none;letter-spacing:0.02em;
+            box-shadow:0 2px 8px rgba(0,0,0,0.4);
+            transition:box-shadow 0.2s,transform 0.2s;
+        " onmouseover="this.style.boxShadow='0 4px 20px rgba(0,0,0,0.5)';this.style.transform='translateY(-1px)'" onmouseout="this.style.boxShadow='0 2px 8px rgba(0,0,0,0.4)';this.style.transform='translateY(0)'">
+            <svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd"><path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z" fill="#4285F4"/><path d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z" fill="#34A853"/><path d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z" fill="#FBBC05"/><path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 6.29C4.672 4.163 6.656 3.58 9 3.58z" fill="#EA4335"/></g></svg>
+            Sign in with Google
+        </a>
+
+        <div id="login-error" style="display:none;margin-top:20px;font-size:10px;color:#f87171;font-weight:700;letter-spacing:0.1em;text-transform:uppercase"></div>
+        <p style="margin-top:28px;font-size:9px;color:#3f3f46;font-weight:700;letter-spacing:0.1em;text-transform:uppercase">Access restricted to authorized accounts</p>
     </div>
 </div>
 
@@ -101,9 +117,10 @@
             <span style="font-size:9px;font-weight:800;letter-spacing:0.25em;text-transform:uppercase;color:#2563eb;background:rgba(37,99,235,0.1);border:1px solid rgba(37,99,235,0.2);padding:3px 10px;border-radius:100px">Admin</span>
         </div>
         <div style="display:flex;align-items:center;gap:16px">
+            <span id="admin-email-label" style="font-size:9px;color:#3f3f46;font-weight:700;letter-spacing:0.1em;text-transform:uppercase"></span>
             <span id="refresh-indicator" style="font-size:9px;color:#3f3f46;font-weight:700;letter-spacing:0.1em;text-transform:uppercase"></span>
             <button onclick="loadOrders()" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);color:#71717a;font-size:9px;font-weight:800;letter-spacing:0.15em;text-transform:uppercase;padding:6px 12px;border-radius:8px;cursor:pointer;transition:all 0.2s" onmouseover="this.style.color='white'" onmouseout="this.style.color='#71717a'">Refresh</button>
-            <button onclick="doLogout()" style="background:none;border:none;color:#52525b;font-size:9px;font-weight:800;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;transition:color 0.2s" onmouseover="this.style.color='white'" onmouseout="this.style.color='#52525b'">Logout</button>
+            <a href="/api/auth/logout" style="background:none;border:none;color:#52525b;font-size:9px;font-weight:800;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;text-decoration:none;transition:color 0.2s" onmouseover="this.style.color='white'" onmouseout="this.style.color='#52525b'">Logout</a>
         </div>
     </div>
 
@@ -162,7 +179,6 @@
 </div>
 
 <script>
-    var TOKEN        = '';
     var ALL_ORDERS   = [];
     var activeFilter = 'all';
     var currentDetailOrder = null;
@@ -177,38 +193,30 @@
         shipped:         'Shipped'
     };
 
-    function doLogin() {
-        var pw = document.getElementById('login-password').value.trim();
-        if (!pw) return;
-        TOKEN = pw;
-        sessionStorage.setItem('adminToken', pw);
-        document.getElementById('login-error').style.display = 'none';
-        loadOrders();
-    }
-
-    function doLogout() {
-        TOKEN = '';
-        sessionStorage.removeItem('adminToken');
-        ALL_ORDERS = [];
-        document.getElementById('screen-dashboard').style.display = 'none';
-        document.getElementById('screen-login').style.display = 'flex';
-        document.getElementById('login-password').value = '';
+    function showLoginScreen(errorKey) {
         if (refreshTimer) clearInterval(refreshTimer);
+        document.getElementById('screen-dashboard').style.display = 'none';
+        document.getElementById('screen-login').style.removeProperty('display');
+        if (errorKey) {
+            var msgs = { unauthorized: 'Access denied — wrong Google account', auth_failed: 'Authentication failed — try again' };
+            var errEl = document.getElementById('login-error');
+            errEl.innerText = msgs[errorKey] || 'Authentication error';
+            errEl.style.display = 'block';
+        }
     }
 
-    function showDashboard() {
-        document.getElementById('screen-login').style.display = 'none';
+    function showDashboard(email) {
+        document.getElementById('screen-login').style.setProperty('display', 'none', 'important');
         document.getElementById('screen-dashboard').style.display = 'block';
+        if (email) document.getElementById('admin-email-label').innerText = email;
         startAutoRefresh();
     }
 
     function loadOrders() {
         refreshCountdown = 60;
-        fetch('/api/orders', {
-            headers: { 'Authorization': 'Bearer ' + TOKEN, 'Accept': 'application/json' }
-        })
+        fetch('/api/orders', { credentials: 'include', headers: { 'Accept': 'application/json' } })
         .then(function (r) {
-            if (r.status === 401) { doLogout(); return null; }
+            if (r.status === 401) { showLoginScreen(); return null; }
             if (!r.ok) throw new Error('Server error ' + r.status);
             return r.json();
         })
@@ -219,18 +227,13 @@
             });
             updateStats();
             renderTable();
-            showDashboard();
             var now = new Date();
             document.getElementById('refresh-indicator').innerText =
                 'Last: ' + now.getHours() + ':' + String(now.getMinutes()).padStart(2,'0') + ':' + String(now.getSeconds()).padStart(2,'0');
         })
         .catch(function (err) {
             console.error(err);
-            if (document.getElementById('screen-dashboard').style.display === 'block') {
-                showToast('Failed to refresh orders', '#f87171');
-            } else {
-                document.getElementById('login-error').style.display = 'block';
-            }
+            showToast('Failed to refresh orders', '#f87171');
         });
     }
 
@@ -348,7 +351,8 @@
     function callUpdateStatus(orderNumber, newStatus, cb) {
         fetch('/api/update-status', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + TOKEN },
+            credentials: 'include',
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ orderNumber: orderNumber, status: newStatus })
         })
         .then(function (r) { return r.json(); })
@@ -395,10 +399,24 @@
         t.classList.add('show');
         setTimeout(function () { t.classList.remove('show'); }, 3000);
     }
+    /* Check URL for error params from OAuth redirect */
     (function () {
-        var saved = sessionStorage.getItem('adminToken');
-        if (saved) { TOKEN = saved; loadOrders(); }
-        document.getElementById('login-password').focus();
+        var params = new URLSearchParams(window.location.search);
+        var errorKey = params.get('error');
+
+        fetch('/api/auth/verify', { credentials: 'include' })
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+            if (data.authorized) {
+                showDashboard(data.email);
+                loadOrders();
+            } else {
+                showLoginScreen(errorKey || null);
+            }
+        })
+        .catch(function () {
+            showLoginScreen(errorKey || null);
+        });
     })();
 </script>
 </body>
