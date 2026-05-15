@@ -25,7 +25,7 @@
 <div class="max-w-4xl mx-auto">
 
   <!-- Header -->
-  <a href="index.html" class="text-zinc-600 hover:text-white text-[10px] uppercase tracking-[0.2em] mb-10 inline-block transition">← Tagasi / Назад</a>
+  <a id="back-btn" href="index.html" class="text-zinc-600 hover:text-white text-[10px] uppercase tracking-[0.2em] mb-10 inline-block transition">← Tagasi pealehele</a>
   <div class="flex justify-between items-start mb-10">
     <div>
       <p class="text-blue-500 text-[10px] uppercase tracking-[0.3em] font-black mb-2">SFF Lab OÜ</p>
@@ -275,12 +275,15 @@
 </div>
 
 <script>
+var BACK_LABEL = { et: '← Tagasi pealehele', ru: '← Назад на главную', en: '← Back to home' };
+
 function setLang(lang) {
   localStorage.setItem('selectedLanguage', lang);
   document.querySelectorAll('.et, .ru').forEach(el => el.classList.add('hidden'));
   document.querySelectorAll('.' + lang).forEach(el => el.classList.remove('hidden'));
   document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('lang-' + lang).classList.add('active');
+  document.getElementById('back-btn').textContent = BACK_LABEL[lang] || BACK_LABEL.et;
 }
 
 var TABS = ['terms', 'privacy', 'returns'];
