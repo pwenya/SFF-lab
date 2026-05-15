@@ -515,6 +515,7 @@
             var readyStr  = readyDate.toLocaleDateString(isRu ? 'ru-RU' : 'et-EE', { day: '2-digit', month: '2-digit', year: 'numeric' });
 
             var payload = {
+                _subject:           'New Order — ' + snap.model + ' — ' + snap.price + ' — ' + nameEl.value.trim(),
                 name:               nameEl.value.trim(),
                 email:              emailEl.value.trim(),
                 phone:              phoneEl.value.trim(),
@@ -533,7 +534,7 @@
             if (snap.ctrl)   payload.controller = snap.ctrl;
             if (snap.preset) payload.scenario   = snap.preset;
 
-            fetch('https://formspree.io/f/mrejwjnj', {
+            fetch('/api/order', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
                 body: JSON.stringify(payload)

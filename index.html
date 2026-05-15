@@ -115,13 +115,14 @@
 <body class="antialiased text-zinc-100">
 
     <!-- ── Trust banner (sits below fixed nav) ── -->
-    <div style="padding-top:73px">
+    <!-- pt-[73px] clears mobile nav (py-4 ≈ 64px); pt-[88px] clears desktop nav (py-6 ≈ 84px) -->
+    <div class="pt-[73px] md:pt-[88px]">
         <div class="border-b border-white/5 py-3 overflow-x-auto">
-            <div class="flex items-center justify-start md:justify-center gap-6 md:gap-10 px-6 whitespace-nowrap text-zinc-600 text-[9px] font-black uppercase tracking-[0.2em]">
+            <div class="flex items-center justify-start md:justify-center gap-6 md:gap-10 px-6 whitespace-nowrap text-zinc-400 text-[9px] font-black uppercase tracking-[0.2em]">
                 <span data-key="trust-1">Euroopa mini-PC turg kasvab 7% aastas</span>
-                <span class="text-zinc-800 shrink-0">·</span>
+                <span class="text-zinc-600 shrink-0">·</span>
                 <span data-key="trust-2">18 000+ Steami mängu SteamOS-ühilduvad</span>
-                <span class="text-zinc-800 shrink-0">·</span>
+                <span class="text-zinc-600 shrink-0">·</span>
                 <span data-key="trust-3">Koostatud ja testitud Eestis</span>
             </div>
         </div>
@@ -359,7 +360,7 @@
             </div>
 
             <!-- Tab buttons -->
-            <div class="flex gap-3 justify-center mb-10 reveal">
+            <div class="flex gap-3 justify-start md:justify-center mb-10 overflow-x-auto pb-2 reveal">
                 <button onclick="switchCompatTab('games')" id="tab-games" class="compat-tab active" data-key="tab-games">Mängud</button>
                 <button onclick="switchCompatTab('controllers')" id="tab-controllers" class="compat-tab" data-key="tab-controllers">Kontrollerid</button>
                 <button onclick="switchCompatTab('launchers')" id="tab-launchers" class="compat-tab" data-key="tab-launchers">Platvormid</button>
