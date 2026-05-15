@@ -44,6 +44,64 @@
         /* Определение сетки в одном месте для удобства */
         .admin-grid { display: grid; grid-template-columns: 160px 100px 1.2fr 130px 90px 130px 130px; gap: 12px; align-items: center; padding: 14px 20px; }
         .header-grid { display: grid; grid-template-columns: 160px 100px 1.2fr 130px 90px 130px 130px; gap: 12px; padding: 12px 20px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+
+        /* ── Mobile ── */
+        @media (max-width: 768px) {
+            body { overflow-x: hidden; }
+
+            /* Navbar: hide email + last-refresh, keep Admin badge + Refresh + Logout */
+            #admin-email-label,
+            #refresh-indicator { display: none !important; }
+
+            /* Main content */
+            #admin-content { padding: 16px 12px !important; }
+
+            /* Search: override inline min-width */
+            #search-input { min-width: 0 !important; width: 100% !important; margin-left: 0 !important; box-sizing: border-box; }
+
+            /* Table grid: collapse to 3 visible columns */
+            .admin-grid,
+            .header-grid {
+                grid-template-columns: 1fr 54px auto;
+                gap: 8px;
+                padding: 11px 40px 11px 14px;
+            }
+
+            /* Tap arrow on each data row */
+            .order-row { position: relative; }
+            .order-row::after {
+                content: '›';
+                position: absolute;
+                right: 12px;
+                top: 50%;
+                transform: translateY(-50%);
+                font-size: 20px;
+                color: #3f3f46;
+                pointer-events: none;
+            }
+
+            /* Hide: Customer (3), Config (4), Price (5), Update (7) */
+            .admin-grid > *:nth-child(3),
+            .admin-grid > *:nth-child(4),
+            .admin-grid > *:nth-child(5),
+            .admin-grid > *:nth-child(7),
+            .header-grid > *:nth-child(3),
+            .header-grid > *:nth-child(4),
+            .header-grid > *:nth-child(5),
+            .header-grid > *:nth-child(7) { display: none !important; }
+
+            /* Order number: smaller font, no vertical overflow */
+            .admin-grid > *:nth-child(1) {
+                font-size: 9px !important;
+                letter-spacing: 0.02em !important;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            /* Date column */
+            .admin-grid > *:nth-child(2) { font-size: 10px !important; }
+        }
     </style>
 </head>
 <body class="antialiased min-h-screen">
@@ -124,7 +182,7 @@
         </div>
     </div>
 
-    <div style="max-width:1400px;margin:0 auto;padding:32px 24px">
+    <div id="admin-content" style="max-width:1400px;margin:0 auto;padding:32px 24px">
         <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-10">
             <div class="stat-card">
                 <div id="stat-total" style="font-size:28px;font-weight:900;letter-spacing:-0.03em;color:white;margin-bottom:4px">—</div>
