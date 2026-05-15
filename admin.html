@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>SFF Lab — Admin</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link rel="apple-touch-icon" href="/favicon.svg">
@@ -49,22 +49,56 @@
         @media (max-width: 768px) {
             body { overflow-x: hidden; }
 
-            /* Navbar: hide email + last-refresh, keep Admin badge + Refresh + Logout */
+            /* Navbar: hide email + last-refresh */
             #admin-email-label,
             #refresh-indicator { display: none !important; }
 
-            /* Main content */
-            #admin-content { padding: 16px 12px !important; }
+            /* Navbar buttons: 44px touch targets */
+            #nav-refresh-btn,
+            #nav-logout-btn {
+                min-height: 44px !important;
+                min-width: 44px !important;
+                display: inline-flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                padding: 0 14px !important;
+                font-size: 11px !important;
+            }
+
+            /* Main content: full width, 16px padding, no max-width cap */
+            #admin-content {
+                padding: 16px !important;
+                max-width: 100% !important;
+            }
+
+            /* Stat card numbers */
+            .stat-card > div:first-child { font-size: 36px !important; }
+
+            /* Filter buttons: 44px touch target */
+            .filter-btn {
+                min-height: 44px;
+                padding: 0 16px;
+                display: inline-flex;
+                align-items: center;
+                font-size: 11px;
+            }
 
             /* Search: override inline min-width */
-            #search-input { min-width: 0 !important; width: 100% !important; margin-left: 0 !important; box-sizing: border-box; }
+            #search-input {
+                min-width: 0 !important;
+                width: 100% !important;
+                margin-left: 0 !important;
+                box-sizing: border-box;
+                min-height: 44px;
+                font-size: 14px !important;
+            }
 
-            /* Table grid: collapse to 3 visible columns */
+            /* Table grid: 3 visible columns sized for 14px text */
             .admin-grid,
             .header-grid {
-                grid-template-columns: 1fr 54px auto;
-                gap: 8px;
-                padding: 11px 40px 11px 14px;
+                grid-template-columns: 1fr 68px auto;
+                gap: 10px;
+                padding: 14px 44px 14px 16px;
             }
 
             /* Tap arrow on each data row */
@@ -72,11 +106,11 @@
             .order-row::after {
                 content: '›';
                 position: absolute;
-                right: 12px;
+                right: 14px;
                 top: 50%;
                 transform: translateY(-50%);
-                font-size: 20px;
-                color: #3f3f46;
+                font-size: 22px;
+                color: #52525b;
                 pointer-events: none;
             }
 
@@ -90,9 +124,9 @@
             .header-grid > *:nth-child(5),
             .header-grid > *:nth-child(7) { display: none !important; }
 
-            /* Order number: smaller font, no vertical overflow */
+            /* Order number: 13px, truncate with ellipsis */
             .admin-grid > *:nth-child(1) {
-                font-size: 9px !important;
+                font-size: 13px !important;
                 letter-spacing: 0.02em !important;
                 white-space: nowrap;
                 overflow: hidden;
@@ -100,7 +134,15 @@
             }
 
             /* Date column */
-            .admin-grid > *:nth-child(2) { font-size: 10px !important; }
+            .admin-grid > *:nth-child(2) { font-size: 13px !important; }
+
+            /* Status badge */
+            .status-badge { font-size: 11px !important; padding: 5px 10px !important; }
+
+            /* Detail modal: full screen on mobile */
+            .om-box { border-radius: 20px; padding: 24px; }
+            .detail-row { font-size: 13px; }
+            .detail-lbl { font-size: 11px; }
         }
     </style>
 </head>
@@ -177,8 +219,8 @@
         <div style="display:flex;align-items:center;gap:16px">
             <span id="admin-email-label" style="font-size:9px;color:#3f3f46;font-weight:700;letter-spacing:0.1em;text-transform:uppercase"></span>
             <span id="refresh-indicator" style="font-size:9px;color:#3f3f46;font-weight:700;letter-spacing:0.1em;text-transform:uppercase"></span>
-            <button onclick="loadOrders()" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);color:#71717a;font-size:9px;font-weight:800;letter-spacing:0.15em;text-transform:uppercase;padding:6px 12px;border-radius:8px;cursor:pointer;transition:all 0.2s" onmouseover="this.style.color='white'" onmouseout="this.style.color='#71717a'">Refresh</button>
-            <a href="/api/auth/logout" style="background:none;border:none;color:#52525b;font-size:9px;font-weight:800;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;text-decoration:none;transition:color 0.2s" onmouseover="this.style.color='white'" onmouseout="this.style.color='#52525b'">Logout</a>
+            <button id="nav-refresh-btn" onclick="loadOrders()" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);color:#71717a;font-size:9px;font-weight:800;letter-spacing:0.15em;text-transform:uppercase;padding:6px 12px;border-radius:8px;cursor:pointer;transition:all 0.2s" onmouseover="this.style.color='white'" onmouseout="this.style.color='#71717a'">Refresh</button>
+            <a id="nav-logout-btn" href="/api/auth/logout" style="background:none;border:none;color:#52525b;font-size:9px;font-weight:800;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;text-decoration:none;transition:color 0.2s" onmouseover="this.style.color='white'" onmouseout="this.style.color='#52525b'">Logout</a>
         </div>
     </div>
 
