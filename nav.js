@@ -25,18 +25,15 @@
         + '<button onclick="window.closeModal()" style="position:absolute;top:20px;right:24px;background:none;border:none;cursor:pointer;color:#71717a;font-size:20px;line-height:1" onmouseover="this.style.color=\'white\'" onmouseout="this.style.color=\'#71717a\'">✕</button>'
         + '<p class="text-blue-500 text-[11px] font-black uppercase tracking-[0.25em] mb-3">SFF Lab</p>'
         + '<h2 id="modal-title" class="text-2xl font-extrabold mb-2 text-white">Tellimuse staatus</h2>'
-        + '<p id="modal-sub" class="text-zinc-500 text-sm mb-8">Sisesta oma email ja tellimuse number ning võtame sinuga ühendust tunni jooksul.</p>'
+        + '<p id="modal-sub" class="text-zinc-500 text-sm mb-8">Sisesta oma tellimuse number, et kontrollida selle staatust.</p>'
         + '<div id="modal-form">'
-        + '<div class="space-y-3 mb-6">'
-        + '<input id="order-email" type="email" class="modal-input" placeholder="Email / Meiliaadress">'
-        + '<input id="order-id" type="text" class="modal-input" placeholder="Tellimuse nr. / Номер заказа">'
+        + '<div style="margin-bottom:24px">'
+        + '<input id="order-id" type="text" class="modal-input" placeholder="SFF-2026-0515-1234">'
+        + '<p id="modal-error" style="display:none;color:#ef4444;font-size:12px;font-weight:600;margin-top:8px;text-align:left"></p>'
         + '</div>'
-        + '<button onclick="window.submitOrder()" class="btn-ripple w-full bg-blue-600 hover:bg-blue-500 text-white py-4 rounded-2xl font-black text-xs uppercase tracking-widest" style="border:none;cursor:pointer;transition:background 0.2s">Kontrolli / Проверить</button>'
+        + '<button onclick="window.submitOrder()" id="modal-submit-btn" class="btn-ripple w-full bg-blue-600 hover:bg-blue-500 text-white py-4 rounded-2xl font-black text-xs uppercase tracking-widest" style="border:none;cursor:pointer;transition:background 0.2s">Kontrolli / Проверить</button>'
         + '</div>'
-        + '<div id="modal-success" style="display:none;text-align:center;padding:24px 0">'
-        + '<div style="font-size:36px;margin-bottom:16px">✓</div>'
-        + '<p class="text-white font-bold mb-2">Saadud!</p>'
-        + '<p class="text-zinc-500 text-sm">Võtame teiega varsti ühendust.<br>Скоро свяжемся с вами.</p>'
+        + '<div id="modal-success" style="display:none;text-align:center;padding:8px 0">'
         + '</div>'
         + '</div>'
         + '</div>'
@@ -116,10 +113,12 @@
         var isRu = lang === 'ru';
         var mt = document.getElementById('modal-title');
         var ms = document.getElementById('modal-sub');
+        var mb = document.getElementById('modal-submit-btn');
         if (mt) mt.innerText = isRu ? 'Статус заказа' : 'Tellimuse staatus';
         if (ms) ms.innerText = isRu
-            ? 'Введи свой email и номер заказа, и мы ответим в течение часа.'
-            : 'Sisesta oma email ja tellimuse number ning võtame sinuga ühendust tunni jooksul.';
+            ? 'Введи номер заказа, чтобы проверить его статус.'
+            : 'Sisesta oma tellimuse number, et kontrollida selle staatust.';
+        if (mb && !mb.disabled) mb.innerText = isRu ? 'Проверить' : 'Kontrolli';
     };
 
     /* ── Modal ── */
@@ -135,27 +134,101 @@
     window._navBackdrop = function (e) {
         if (e.target === document.getElementById('modal-overlay')) window.closeModal();
     };
+    var STATUS_ET = { pending: 'Ootel', pending_payment: 'Ootel makset', in_progress: 'Töös', ready: 'Valmis', shipped: 'Saadetud' };
+    var STATUS_RU = { pending: 'Ожидает', pending_payment: 'Ожидает оплаты', in_progress: 'В работе', ready: 'Готово', shipped: 'Отправлено' };
+    var STATUS_COLOR = { pending: '#a1a1aa', pending_payment: '#f59e0b', in_progress: '#3b82f6', ready: '#22c55e', shipped: '#a78bfa' };
+
+    function _statusBackBtn(isRu) {
+        return '<button onclick="window._navStatusBack()" style="background:none;border:1px solid rgba(255,255,255,0.1);border-radius:14px;color:#71717a;font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;padding:10px 24px;margin-top:8px">'
+            + (isRu ? 'Назад' : 'Tagasi') + '</button>';
+    }
+
     window.submitOrder = function () {
-        var emailEl = document.getElementById('order-email');
-        var email = emailEl ? emailEl.value.trim() : '';
-        if (!email || !email.includes('@')) {
-            if (emailEl) { emailEl.style.borderColor = 'rgba(239,68,68,0.6)'; setTimeout(function () { emailEl.style.borderColor = ''; }, 1500); }
+        var idEl  = document.getElementById('order-id');
+        var errEl = document.getElementById('modal-error');
+        var btn   = document.getElementById('modal-submit-btn');
+        var isRu  = (localStorage.getItem('selectedLanguage') || 'et') === 'ru';
+        var orderNumber = idEl ? idEl.value.trim().toUpperCase() : '';
+
+        if (errEl) errEl.style.display = 'none';
+
+        if (!orderNumber || !/^SFF-\d{4}-\d{4}-\d{4}$/.test(orderNumber)) {
+            if (idEl) { idEl.style.borderColor = 'rgba(239,68,68,0.6)'; setTimeout(function () { idEl.style.borderColor = ''; }, 1500); }
+            if (errEl) { errEl.innerText = isRu ? 'Неверный формат: SFF-2026-0515-1234' : 'Vale vorming: SFF-2026-0515-1234'; errEl.style.display = 'block'; }
             return;
         }
-        var f = document.getElementById('modal-form');
-        var sc = document.getElementById('modal-success');
-        if (f) f.style.display = 'none';
-        if (sc) sc.style.display = 'block';
+
+        if (btn) { btn.disabled = true; btn.innerText = '···'; btn.style.opacity = '0.6'; }
+
+        fetch('/api/order-status?orderNumber=' + encodeURIComponent(orderNumber))
+            .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, status: r.status, data: d }; }); })
+            .then(function (res) {
+                if (btn) { btn.disabled = false; btn.style.opacity = ''; btn.innerText = isRu ? 'Проверить' : 'Kontrolli'; }
+
+                var f  = document.getElementById('modal-form');
+                var sc = document.getElementById('modal-success');
+
+                if (res.status === 404) {
+                    if (sc) {
+                        sc.innerHTML = '<div style="font-size:32px;margin-bottom:16px">⚠</div>'
+                            + '<p style="color:#fff;font-weight:700;font-size:15px;margin-bottom:8px">' + (isRu ? 'Заказ не найден' : 'Tellimust ei leitud') + '</p>'
+                            + '<p style="color:#71717a;font-size:13px;margin-bottom:24px">' + orderNumber + '</p>'
+                            + _statusBackBtn(isRu);
+                        sc.style.display = 'block';
+                    }
+                    if (f) f.style.display = 'none';
+                    return;
+                }
+
+                if (!res.ok) throw new Error('http ' + res.status);
+
+                var d = res.data;
+                var color = STATUS_COLOR[d.status] || '#a1a1aa';
+                var etLabel = STATUS_ET[d.status] || d.status;
+                var ruLabel = STATUS_RU[d.status] || d.status;
+                var deliveryHtml = d.estimatedDelivery
+                    ? '<div style="font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#52525b;margin-bottom:4px">'
+                      + (isRu ? 'Готовность' : 'Eeldatav') + '</div>'
+                      + '<div style="font-size:13px;color:#a1a1aa;margin-bottom:24px">' + d.estimatedDelivery + '</div>'
+                    : '<div style="margin-bottom:24px"></div>';
+
+                if (sc) {
+                    sc.innerHTML = '<div style="font-size:10px;font-weight:800;letter-spacing:0.2em;text-transform:uppercase;color:#52525b;margin-bottom:6px">ORDER</div>'
+                        + '<div style="font-size:18px;font-weight:900;letter-spacing:0.04em;color:#fff;margin-bottom:20px">' + d.orderNumber + '</div>'
+                        + '<div style="display:inline-block;padding:8px 24px;border-radius:100px;background:' + color + '1a;border:1px solid ' + color + '55;margin-bottom:20px">'
+                        + '<span style="font-size:12px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:' + color + '">' + etLabel + ' / ' + ruLabel + '</span>'
+                        + '</div>'
+                        + (d.model ? '<div style="font-size:13px;font-weight:700;color:#e4e4e7;margin-bottom:16px">' + d.model + '</div>' : '')
+                        + deliveryHtml
+                        + _statusBackBtn(isRu);
+                    sc.style.display = 'block';
+                }
+                if (f) f.style.display = 'none';
+            })
+            .catch(function () {
+                if (btn) { btn.disabled = false; btn.style.opacity = ''; btn.innerText = isRu ? 'Проверить' : 'Kontrolli'; }
+                if (errEl) { errEl.innerText = isRu ? 'Ühenduse viga. Proovi uuesti.' : 'Ошибка соединения. Попробуй ещё раз.'; errEl.style.display = 'block'; }
+            });
     };
-    function _reset() {
-        var f = document.getElementById('modal-form');
+
+    window._navStatusBack = function () {
+        var f  = document.getElementById('modal-form');
         var sc = document.getElementById('modal-success');
-        var e = document.getElementById('order-email');
-        var i = document.getElementById('order-id');
-        if (f) f.style.display = '';
-        if (sc) sc.style.display = 'none';
-        if (e) e.value = '';
-        if (i) i.value = '';
+        if (f)  f.style.display  = '';
+        if (sc) { sc.style.display = 'none'; sc.innerHTML = ''; }
+    };
+
+    function _reset() {
+        var f  = document.getElementById('modal-form');
+        var sc = document.getElementById('modal-success');
+        var i  = document.getElementById('order-id');
+        var e  = document.getElementById('modal-error');
+        var b  = document.getElementById('modal-submit-btn');
+        if (f)  f.style.display  = '';
+        if (sc) { sc.style.display = 'none'; sc.innerHTML = ''; }
+        if (i)  i.value = '';
+        if (e)  e.style.display  = 'none';
+        if (b)  { b.disabled = false; b.style.opacity = ''; }
     }
 
     /* ── Apply saved language on page load ── */
