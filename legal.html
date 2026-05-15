@@ -283,19 +283,25 @@ function setLang(lang) {
   document.getElementById('lang-' + lang).classList.add('active');
 }
 
+var TABS = ['terms', 'privacy', 'returns'];
+
 function showTab(tab) {
-  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(b => {
-    b.classList.remove('active');
-    b.classList.add('text-zinc-400');
+  TABS.forEach(function(t) {
+    document.getElementById('section-' + t).style.display = (t === tab) ? 'block' : 'none';
+    var btn = document.getElementById('tab-' + t);
+    if (t === tab) {
+      btn.classList.add('active');
+      btn.classList.remove('text-zinc-400');
+    } else {
+      btn.classList.remove('active');
+      btn.classList.add('text-zinc-400');
+    }
   });
-  document.getElementById('section-' + tab).classList.add('active');
-  document.getElementById('tab-' + tab).classList.add('active');
-  document.getElementById('tab-' + tab).classList.remove('text-zinc-400');
 }
 
-window.onload = () => {
+window.onload = function() {
   setLang(localStorage.getItem('selectedLanguage') || 'et');
+  showTab('terms');
 };
 </script>
 </body>
