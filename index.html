@@ -220,22 +220,20 @@
 
             <!-- Comparison table -->
             <div class="reveal" id="cmp-table-wrap" style="overflow-x:auto">
-                <table style="width:100%;border-collapse:collapse">
+                <table style="width:100%;border-collapse:separate;border-spacing:0">
                     <!-- Column headers -->
                     <thead>
                         <tr>
-                            <th style="width:38%;padding:0 0 20px 0;text-align:left"></th>
-                            <th style="width:20%;padding:0 0 20px 0;text-align:center">
+                            <th style="width:38%;padding:0 0 16px 0;text-align:left;vertical-align:bottom"></th>
+                            <th style="width:20%;padding:0 0 16px 0;text-align:center;vertical-align:bottom">
                                 <div style="font-size:9px;font-weight:800;letter-spacing:0.2em;text-transform:uppercase;color:#52525b;margin-bottom:6px">PS5</div>
                                 <div style="font-size:18px;font-weight:900;color:#71717a;letter-spacing:-0.02em">~7.5 L</div>
                             </th>
-                            <th style="width:22%;padding:0 0 20px 0;text-align:center">
-                                <div style="background:rgba(37,99,235,0.1);border:1px solid rgba(37,99,235,0.25);border-radius:16px 16px 0 0;padding:14px 8px 6px;margin:0 -1px">
-                                    <div style="font-size:9px;font-weight:800;letter-spacing:0.2em;text-transform:uppercase;color:#2563eb;margin-bottom:6px">Lab PC</div>
-                                    <div style="font-size:18px;font-weight:900;color:#60a5fa;letter-spacing:-0.02em">~9 L</div>
-                                </div>
+                            <th style="width:22%;padding:14px 8px 16px;text-align:center;vertical-align:bottom;background:rgba(37,99,235,0.08);border-top:1px solid rgba(37,99,235,0.25);border-left:1px solid rgba(37,99,235,0.25);border-right:1px solid rgba(37,99,235,0.25);border-radius:12px 12px 0 0">
+                                <div style="font-size:9px;font-weight:800;letter-spacing:0.2em;text-transform:uppercase;color:#2563eb;margin-bottom:6px">Lab PC</div>
+                                <div style="font-size:18px;font-weight:900;color:#60a5fa;letter-spacing:-0.02em">~9 L</div>
                             </th>
-                            <th style="width:20%;padding:0 0 20px 0;text-align:center">
+                            <th style="width:20%;padding:0 0 16px 0;text-align:center;vertical-align:bottom">
                                 <div style="font-size:9px;font-weight:800;letter-spacing:0.2em;text-transform:uppercase;color:#52525b;margin-bottom:6px">ATX Tower</div>
                                 <div style="font-size:18px;font-weight:900;color:#71717a;letter-spacing:-0.02em">~50 L</div>
                             </th>
@@ -607,15 +605,15 @@
                 { et: 'Vaikne töö',           ru: 'Тихая работа',         ps5: '~', sff: '✓', atx: '✗' },
             ];
             var COLOR = { '✓': '#4ade80', '✗': '#3f3f46', '~': '#f59e0b' };
-            var ROW_STYLE = 'border-top:1px solid rgba(255,255,255,0.05)';
-            var CELL = 'padding:12px 8px;text-align:center;font-size:15px;font-weight:900';
-            var LABEL = 'padding:12px 0;font-size:11px;font-weight:700;color:#52525b;letter-spacing:0.05em';
-            var SFF_BG = 'background:rgba(37,99,235,0.07);border-left:1px solid rgba(37,99,235,0.15);border-right:1px solid rgba(37,99,235,0.15)';
+            var ROW_STYLE = '';
+            var CELL = 'padding:12px 8px;text-align:center;font-size:15px;font-weight:900;border-top:1px solid rgba(255,255,255,0.05)';
+            var LABEL = 'padding:12px 0;font-size:11px;font-weight:700;color:#52525b;letter-spacing:0.05em;border-top:1px solid rgba(255,255,255,0.05)';
+            var SFF_BG = 'background:rgba(37,99,235,0.07);border-left:1px solid rgba(37,99,235,0.25);border-right:1px solid rgba(37,99,235,0.25)';
 
             var html = rows.map(function(r, i) {
                 var label = isRu ? r.ru : r.et;
                 var isLast = i === rows.length - 1;
-                var sffExtra = isLast ? 'border-bottom:1px solid rgba(37,99,235,0.15);border-radius:0 0 12px 12px;' : '';
+                var sffExtra = isLast ? 'border-bottom:1px solid rgba(37,99,235,0.25);border-radius:0 0 12px 12px;' : '';
                 return '<tr style="' + ROW_STYLE + '">'
                     + '<td style="' + LABEL + '">' + label + '</td>'
                     + '<td style="' + CELL + ';color:' + COLOR[r.ps5] + '">' + r.ps5 + '</td>'
@@ -634,7 +632,7 @@
                 var h = rows.map(function(r, i) {
                     var label = isRu ? r.ru : r.et;
                     var isLast = i === rows.length - 1;
-                    var sffExtra = isLast ? 'border-bottom:1px solid rgba(37,99,235,0.15);border-radius:0 0 12px 12px;' : '' ;
+                    var sffExtra = isLast ? 'border-bottom:1px solid rgba(37,99,235,0.25);border-radius:0 0 12px 12px;' : '' ;
                     return '<tr style="' + ROW_STYLE + '">'
                         + '<td style="' + LABEL + '">' + label + '</td>'
                         + '<td style="' + CELL + ';color:' + COLOR[r.ps5] + '">' + r.ps5 + '</td>'
