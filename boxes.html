@@ -48,10 +48,6 @@
             bottom: 14px; left: 14px;
             background: rgba(0,0,0,0.72); border: 1px solid rgba(255,255,255,0.14); color: white;
         }
-        .badge-airflow {
-            bottom: 14px; right: 14px;
-            background: rgba(0,0,0,0.65); border: 1px solid rgba(255,255,255,0.08); color: #71717a;
-        }
         .badge-ps5 {
             top: 14px; left: 14px;
             background: rgba(37,99,235,0.14); border: 1px solid rgba(37,99,235,0.28); color: #93c5fd;
@@ -65,34 +61,6 @@
 </head>
 <body class="antialiased">
     <main class="pt-20">
-        <!-- MOOD -->
-        <section class="product-section flex items-center justify-center px-6" data-model="mood">
-            <div class="max-w-6xl w-full flex flex-col md:flex-row items-center justify-center gap-8 md:gap-16">
-                <div class="w-full md:w-[750px] shrink-0">
-                    <div class="glass-panel rounded-[30px] md:rounded-[40px] touch-pan-y" id="container-mood">
-                        <button onclick="nav('mood', -1)" class="nav-btn-inside btn-left hidden md:flex">←</button>
-                        <img id="img-mood-black" src="IMG/MoodBlack.1.png" class="case-stack-img active">
-                        <img id="img-mood-white" src="IMG/MoodLight.1.png" class="case-stack-img mood-white-fix">
-                        <div class="panel-badge badge-ps5">Smaller than PS5 ✓</div>
-                        <div class="panel-badge badge-volume">~8 L</div>
-                        <div class="panel-badge badge-airflow">Front → Rear</div>
-                        <button onclick="nav('mood', 1)" class="nav-btn-inside btn-right hidden md:flex">→</button>
-                    </div>
-                </div>
-                <div class="flex flex-col items-center md:items-start gap-6 md:gap-12 w-full md:w-[300px]">
-                    <div class="flex flex-row md:flex-col gap-6 order-2 md:order-2">
-                        <div id="mood-black" class="color-circle active w-10 h-10 md:w-12 md:h-12 rounded-full bg-black"></div>
-                        <div id="mood-white" class="color-circle w-10 h-10 md:w-12 md:h-12 rounded-full bg-white"></div>
-                    </div>
-                    <div class="text-center md:text-left order-1 md:order-1">
-                        <h2 class="text-3xl md:text-5xl font-black uppercase tracking-tighter mb-2 md:mb-4">Mood <span id="title-mood">Black</span></h2>
-                        <p class="text-zinc-500 uppercase text-[10px] md:text-[11px] tracking-[0.4em] font-bold">Premium SFF Design</p>
-                        <span class="ps5-tag">Väiksem kui PS5 ✓</span>
-                    </div>
-                </div>
-            </div>
-        </section>
-        <!-- TERRA -->
         <section class="product-section flex items-center justify-center px-6" data-model="terra">
             <div class="max-w-6xl w-full flex flex-col md:flex-row items-center justify-center gap-8 md:gap-16">
                 <div class="w-full md:w-[750px] shrink-0">
@@ -101,8 +69,7 @@
                         <img id="img-terra-graphite" src="IMG/TerraGraphite.1.png" class="case-stack-img active">
                         <img id="img-terra-jade" src="IMG/TerraJade.1.png" class="case-stack-img">
                         <img id="img-terra-silver" src="IMG/TerraSilver.1.png" class="case-stack-img">
-                        <div class="panel-badge badge-volume">~9.5 L</div>
-                        <div class="panel-badge badge-airflow">Bottom → Top</div>
+                        <div class="panel-badge badge-volume">~10.4 L</div>
                         <button onclick="nav('terra', 1)" class="nav-btn-inside btn-right hidden md:flex">→</button>
                     </div>
                 </div>
@@ -119,7 +86,7 @@
                 </div>
             </div>
         </section>
-        <!-- RIDGE -->
+
         <section class="product-section flex items-center justify-center px-6" data-model="ridge">
             <div class="max-w-6xl w-full flex flex-col md:flex-row items-center justify-center gap-8 md:gap-16">
                 <div class="w-full md:w-[750px] shrink-0">
@@ -128,8 +95,7 @@
                         <img id="img-ridge-black" src="IMG/RidgeBlack.1.png" class="case-stack-img active">
                         <img id="img-ridge-white" src="IMG/RidgeWhite.1.png" class="case-stack-img">
                         <div class="panel-badge badge-ps5">Smaller than PS5 ✓</div>
-                        <div class="panel-badge badge-volume">~7 L</div>
-                        <div class="panel-badge badge-airflow">Side → Top</div>
+                        <div class="panel-badge badge-volume">~12.59 L</div>
                         <button onclick="nav('ridge', 1)" class="nav-btn-inside btn-right hidden md:flex">→</button>
                     </div>
                 </div>
@@ -141,6 +107,32 @@
                     <div class="text-center md:text-left order-1 md:order-1">
                         <h2 class="text-3xl md:text-5xl font-black uppercase tracking-tighter mb-2 md:mb-4">Ridge <span id="title-ridge">Black</span></h2>
                         <p class="text-zinc-500 uppercase text-[10px] md:text-[11px] tracking-[0.4em] font-bold">Slim Console Format</p>
+                        <span class="ps5-tag">Väiksem kui PS5 ✓</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="product-section flex items-center justify-center px-6" data-model="mood">
+            <div class="max-w-6xl w-full flex flex-col md:flex-row items-center justify-center gap-8 md:gap-16">
+                <div class="w-full md:w-[750px] shrink-0">
+                    <div class="glass-panel rounded-[30px] md:rounded-[40px] touch-pan-y" id="container-mood">
+                        <button onclick="nav('mood', -1)" class="nav-btn-inside btn-left hidden md:flex">←</button>
+                        <img id="img-mood-black" src="IMG/MoodBlack.1.png" class="case-stack-img active">
+                        <img id="img-mood-white" src="IMG/MoodLight.1.png" class="case-stack-img mood-white-fix">
+                        <div class="panel-badge badge-ps5">Smaller than PS5 ✓</div>
+                        <div class="panel-badge badge-volume">~13.6 L</div>
+                        <button onclick="nav('mood', 1)" class="nav-btn-inside btn-right hidden md:flex">→</button>
+                    </div>
+                </div>
+                <div class="flex flex-col items-center md:items-start gap-6 md:gap-12 w-full md:w-[300px]">
+                    <div class="flex flex-row md:flex-col gap-6 order-2 md:order-2">
+                        <div id="mood-black" class="color-circle active w-10 h-10 md:w-12 md:h-12 rounded-full bg-black"></div>
+                        <div id="mood-white" class="color-circle w-10 h-10 md:w-12 md:h-12 rounded-full bg-white"></div>
+                    </div>
+                    <div class="text-center md:text-left order-1 md:order-1">
+                        <h2 class="text-3xl md:text-5xl font-black uppercase tracking-tighter mb-2 md:mb-4">Mood <span id="title-mood">Black</span></h2>
+                        <p class="text-zinc-500 uppercase text-[10px] md:text-[11px] tracking-[0.4em] font-bold">Premium SFF Design</p>
                         <span class="ps5-tag">Väiksem kui PS5 ✓</span>
                     </div>
                 </div>
