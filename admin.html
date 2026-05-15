@@ -8,7 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; background: #111111; color: white; }
-        .glass { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); backdrop-filter: blur(12px); position: relative; }
+        .glass { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); backdrop-filter: blur(12px); position: relative; overflow: visible !important; }
         .stat-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07); border-radius: 20px; padding: 20px 24px; }
         .status-badge { display: inline-block; padding: 3px 10px; border-radius: 100px; font-size: 9px; font-weight: 800; letter-spacing: 0.15em; text-transform: uppercase; }
         .s-pending         { background: rgba(161,161,170,0.12); color: #a1a1aa; border: 1px solid rgba(161,161,170,0.2); }
@@ -89,7 +89,6 @@
 </div>
 
 <div id="screen-dashboard" style="display:none" class="min-h-screen">
-
     <div style="border-bottom:1px solid rgba(255,255,255,0.05);padding:16px 24px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:rgba(5,5,5,0.92);backdrop-filter:blur(12px);z-index:50">
         <div style="display:flex;align-items:center;gap:16px">
             <span style="font-size:20px;font-weight:900;letter-spacing:-0.03em;text-transform:uppercase">SFF LAB<span style="color:#2563eb">.</span></span>
@@ -103,7 +102,6 @@
     </div>
 
     <div style="max-width:1400px;margin:0 auto;padding:32px 24px">
-
         <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-10">
             <div class="stat-card">
                 <div id="stat-total" style="font-size:28px;font-weight:900;letter-spacing:-0.03em;color:white;margin-bottom:4px">—</div>
@@ -149,12 +147,11 @@
                 <span style="font-size:9px;font-weight:800;letter-spacing:0.18em;text-transform:uppercase;color:#3f3f46">Status</span>
                 <span style="font-size:9px;font-weight:800;letter-spacing:0.18em;text-transform:uppercase;color:#3f3f46">Update</span>
             </div>
-            <div id="orders-table-body" class="pb-32">
+            <div id="orders-table-body">
                 <div style="padding:48px;text-align:center;color:#3f3f46;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase">Loading orders…</div>
             </div>
         </div>
         <div id="no-orders" style="display:none;padding:60px;text-align:center;color:#3f3f46;font-size:11px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase">No orders found</div>
-
     </div>
 </div>
 
@@ -174,7 +171,6 @@
         shipped:         'Shipped'
     };
 
-    /* ── Auth ── */
     function doLogin() {
         var pw = document.getElementById('login-password').value.trim();
         if (!pw) return;
@@ -200,7 +196,6 @@
         startAutoRefresh();
     }
 
-    /* ── Load orders ── */
     function loadOrders() {
         refreshCountdown = 60;
         fetch('/api/orders', {
@@ -233,7 +228,6 @@
         });
     }
 
-    /* ── Auto-refresh every 60 s ── */
     function startAutoRefresh() {
         if (refreshTimer) clearInterval(refreshTimer);
         refreshTimer = setInterval(function () {
@@ -245,7 +239,6 @@
         }, 1000);
     }
 
-    /* ── Stats ── */
     function updateStats() {
         var t = ALL_ORDERS.length;
         var counts = { pending: 0, pending_payment: 0, in_progress: 0, ready: 0, shipped: 0 };
@@ -257,7 +250,6 @@
         document.getElementById('stat-done').innerText     = counts.ready + counts.shipped;
     }
 
-    /* ── Filter ── */
     function setFilter(f, btn) {
         activeFilter = f;
         document.querySelectorAll('.filter-btn').forEach(function (b) { b.classList.remove('active'); });
@@ -265,7 +257,6 @@
         renderTable();
     }
 
-    /* ── Render table ── */
     function renderTable() {
         var search = (document.getElementById('search-input').value || '').toLowerCase();
         var filtered = ALL_ORDERS.filter(function (o) {
@@ -289,9 +280,7 @@
 
         body.innerHTML = filtered.map(function (o) {
             var date = o.createdAt ? new Date(o.createdAt) : null;
-            var dateStr = date
-                ? date.getDate() + '.' + (date.getMonth()+1) + '.' + date.getFullYear()
-                : '—';
+            var dateStr = date ? date.getDate() + '.' + (date.getMonth()+1) + '.' + date.getFullYear() : '—';
             return '<div class="order-row" style="display:grid;grid-template-columns:160px 110px 1fr 140px 90px 140px 120px;gap:0;padding:14px 20px;align-items:center" onclick="openDetail(\'' + esc(o.orderNumber) + '\')">'
                 + '<span style="font-size:11px;font-weight:800;letter-spacing:0.06em;color:white">' + esc(o.orderNumber) + '</span>'
                 + '<span style="font-size:11px;color:#71717a;font-weight:600">' + dateStr + '</span>'
@@ -317,7 +306,6 @@
         }).join('');
     }
 
-    /* ── Quick status update from table ── */
     function quickUpdateStatus(orderNumber, selectEl) {
         var newStatus = selectEl.value;
         callUpdateStatus(orderNumber, newStatus, function (ok) {
@@ -328,12 +316,11 @@
                 renderTable();
                 showToast('Status updated → ' + STATUS_LABELS[newStatus], '#4ade80');
             } else {
-                renderTable(); /* reset select to old value */
+                renderTable();
             }
         });
     }
 
-    /* ── Status update from detail modal ── */
     function updateStatusFromDetail() {
         if (!currentDetailOrder) return;
         var newStatus = document.getElementById('detail-status-select').value;
@@ -366,46 +353,19 @@
         .catch(function () { showToast('Network error', '#f87171'); cb(false); });
     }
 
-    /* ── Order detail modal ── */
     function openDetail(orderNumber) {
         var o = ALL_ORDERS.find(function (x) { return x.orderNumber === orderNumber; });
         if (!o) return;
         currentDetailOrder = o;
-
         document.getElementById('detail-order-num').innerText = o.orderNumber;
-
         var date = o.createdAt ? new Date(o.createdAt) : null;
-        document.getElementById('detail-date').innerText = date
-            ? date.toLocaleString('en-GB', { day:'2-digit', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' })
-            : '';
-
+        document.getElementById('detail-date').innerText = date ? date.toLocaleString('en-GB', { day:'2-digit', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' }) : '';
         var badge = document.getElementById('detail-status-badge');
         badge.className = 'status-badge s-' + o.status;
         badge.innerText = STATUS_LABELS[o.status] || o.status;
-
         document.getElementById('detail-status-select').value = o.status;
-
-        document.getElementById('detail-customer').innerHTML =
-            dRow('Name',  esc(o.name  || ''))
-          + dRow('Email', '<a href="mailto:' + esc(o.email) + '" style="color:#60a5fa">' + esc(o.email || '') + '</a>')
-          + dRow('Phone', esc(o.phone || '—'));
-
-        document.getElementById('detail-config').innerHTML =
-            dRow('Model',  esc(o.model  || ''))
-          + dRow('OS',     esc(o.os     || ''))
-          + dRow('Case',   esc(o['case']|| ''))
-          + dRow('CPU',    esc(o.cpu    || ''))
-          + dRow('GPU',    esc(o.gpu    || ''))
-          + dRow('RAM',    esc(o.ram    || ''))
-          + dRow('SSD',    esc(o.ssd    || ''))
-          + (o.psu        ? dRow('PSU', esc(o.psu))               : '')
-          + (o.controller ? dRow('Controller', esc(o.controller)) : '')
-          + (o.scenario   ? dRow('Scenario',   esc(o.scenario))   : '')
-          + '<div style="padding-top:12px;margin-top:4px;border-top:1px solid rgba(255,255,255,0.06)">'
-          + dRow('Price',    '<strong style="color:white;font-size:16px">' + esc(o.price || '') + '</strong>')
-          + dRow('Est. Delivery', esc(o.estimatedDelivery || ''))
-          + '</div>';
-
+        document.getElementById('detail-customer').innerHTML = dRow('Name', esc(o.name || '')) + dRow('Email', '<a href="mailto:' + esc(o.email) + '" style="color:#60a5fa">' + esc(o.email || '') + '</a>') + dRow('Phone', esc(o.phone || '—'));
+        document.getElementById('detail-config').innerHTML = dRow('Model', esc(o.model || '')) + dRow('OS', esc(o.os || '')) + dRow('Case', esc(o['case']|| '')) + dRow('CPU', esc(o.cpu || '')) + dRow('GPU', esc(o.gpu || '')) + dRow('RAM', esc(o.ram || '')) + dRow('SSD', esc(o.ssd || '')) + (o.psu ? dRow('PSU', esc(o.psu)) : '') + (o.controller ? dRow('Controller', esc(o.controller)) : '') + (o.scenario ? dRow('Scenario', esc(o.scenario)) : '') + '<div style="padding-top:12px;margin-top:4px;border-top:1px solid rgba(255,255,255,0.06)">' + dRow('Price', '<strong style="color:white;font-size:16px">' + esc(o.price || '') + '</strong>') + dRow('Est. Delivery', esc(o.estimatedDelivery || '')) + '</div>';
         document.getElementById('detail-modal').classList.add('open');
         document.body.style.overflow = 'hidden';
     }
@@ -416,40 +376,22 @@
         currentDetailOrder = null;
     }
 
-    function _modalBackdrop(e) {
-        if (e.target === document.getElementById('detail-modal')) closeDetail();
-    }
-
-    document.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape') closeDetail();
-    });
-
-    /* ── Helpers ── */
-    function dRow(label, value) {
-        return '<div class="detail-row"><span class="detail-lbl">' + label + '</span><span class="detail-val">' + value + '</span></div>';
-    }
-
-    function esc(str) {
-        return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
-    }
-
+    function _modalBackdrop(e) { if (e.target === document.getElementById('detail-modal')) closeDetail(); }
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeDetail(); });
+    function dRow(label, value) { return '<div class="detail-row"><span class="detail-lbl">' + label + '</span><span class="detail-val">' + value + '</span></div>'; }
+    function esc(str) { return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
     function showToast(msg, color) {
         var t = document.getElementById('toast');
         t.innerText = msg;
         t.style.background = (color === '#4ade80') ? 'rgba(34,197,94,0.15)' : 'rgba(239,68,68,0.15)';
         t.style.border = '1px solid ' + color + '44';
-        t.style.color  = color;
+        t.style.color = color;
         t.classList.add('show');
         setTimeout(function () { t.classList.remove('show'); }, 3000);
     }
-
-    /* ── Init ── */
     (function () {
         var saved = sessionStorage.getItem('adminToken');
-        if (saved) {
-            TOKEN = saved;
-            loadOrders();
-        }
+        if (saved) { TOKEN = saved; loadOrders(); }
         document.getElementById('login-password').focus();
     })();
 </script>
