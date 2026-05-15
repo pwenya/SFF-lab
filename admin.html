@@ -16,7 +16,7 @@
         .s-in_progress     { background: rgba(59,130,246,0.12);  color: #60a5fa; border: 1px solid rgba(59,130,246,0.25); }
         .s-ready           { background: rgba(34,197,94,0.12);   color: #4ade80; border: 1px solid rgba(34,197,94,0.25); }
         .s-shipped         { background: rgba(167,139,250,0.12); color: #a78bfa; border: 1px solid rgba(167,139,250,0.25); }
-        .order-row { border-bottom: 1px solid rgba(255,255,255,0.04); transition: background 0.2s; cursor: pointer; }
+        .order-row { border-bottom: 1px solid rgba(255,255,255,0.04); transition: background 0.2s; cursor: pointer; min-height: 64px; }
         .order-row:hover { background: rgba(255,255,255,0.03); }
         .order-row:last-child { border-bottom: none; }
         .filter-btn { background: transparent; border: 1px solid rgba(255,255,255,0.08); color: #52525b; font-size: 10px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; padding: 6px 14px; border-radius: 100px; cursor: pointer; transition: all 0.2s; }
@@ -25,7 +25,7 @@
         .admin-input { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: white; padding: 12px 16px; font-size: 14px; font-family: inherit; outline: none; transition: border-color 0.2s; }
         .admin-input:focus { border-color: rgba(59,130,246,0.5); }
         .admin-input::placeholder { color: #3f3f46; }
-        .status-select { background: #111; border: 1px solid rgba(255,255,255,0.1); color: white; border-radius: 8px; padding: 4px 8px; font-size: 10px; font-weight: 700; font-family: inherit; outline: none; cursor: pointer; letter-spacing: 0.08em; text-transform: uppercase; }
+        .status-select { background: #111; border: 1px solid rgba(255,255,255,0.1); color: white; border-radius: 8px; padding: 4px 8px; font-size: 10px; font-weight: 700; font-family: inherit; outline: none; cursor: pointer; letter-spacing: 0.08em; text-transform: uppercase; position: relative; z-index: 10; }
         .detail-row { display: flex; justify-content: space-between; align-items: baseline; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 11px; }
         .detail-row:last-child { border-bottom: none; }
         .detail-lbl { color: #52525b; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; padding-right: 16px; white-space: nowrap; }
@@ -42,10 +42,8 @@
 </head>
 <body class="antialiased min-h-screen">
 
-<!-- ── Toast ── -->
 <div id="toast"></div>
 
-<!-- ── Order detail modal ── -->
 <div id="detail-modal" class="om-overlay" onclick="_modalBackdrop(event)">
     <div class="om-box" id="detail-box">
         <button onclick="closeDetail()" style="position:absolute;top:16px;right:20px;background:none;border:none;cursor:pointer;color:#71717a;font-size:20px;line-height:1" onmouseover="this.style.color='white'" onmouseout="this.style.color='#71717a'">✕</button>
@@ -79,7 +77,6 @@
     </div>
 </div>
 
-<!-- ── Login Screen ── -->
 <div id="screen-login" class="min-h-screen flex items-center justify-center px-6">
     <div style="width:100%;max-width:380px">
         <p style="font-size:10px;font-weight:800;letter-spacing:0.3em;text-transform:uppercase;color:#2563eb;margin-bottom:8px">SFF Lab</p>
@@ -91,10 +88,8 @@
     </div>
 </div>
 
-<!-- ── Dashboard ── -->
 <div id="screen-dashboard" style="display:none" class="min-h-screen">
 
-    <!-- Top bar -->
     <div style="border-bottom:1px solid rgba(255,255,255,0.05);padding:16px 24px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:rgba(5,5,5,0.92);backdrop-filter:blur(12px);z-index:50">
         <div style="display:flex;align-items:center;gap:16px">
             <span style="font-size:20px;font-weight:900;letter-spacing:-0.03em;text-transform:uppercase">SFF LAB<span style="color:#2563eb">.</span></span>
@@ -109,7 +104,6 @@
 
     <div style="max-width:1400px;margin:0 auto;padding:32px 24px">
 
-        <!-- Stats row -->
         <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-10">
             <div class="stat-card">
                 <div id="stat-total" style="font-size:28px;font-weight:900;letter-spacing:-0.03em;color:white;margin-bottom:4px">—</div>
@@ -133,7 +127,6 @@
             </div>
         </div>
 
-        <!-- Filters + Search -->
         <div style="display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:20px">
             <div style="display:flex;flex-wrap:wrap;gap:6px">
                 <button class="filter-btn active" onclick="setFilter('all',this)">All</button>
@@ -146,9 +139,7 @@
             <input id="search-input" type="text" class="admin-input" style="padding:8px 14px;font-size:11px;min-width:220px;margin-left:auto" placeholder="Search order # or customer..." oninput="renderTable()">
         </div>
 
-        <!-- Orders table -->
-        <div class="glass rounded-[24px] overflow-hidden">
-            <!-- Table header -->
+        <div class="glass rounded-[24px]">
             <div style="display:grid;grid-template-columns:160px 110px 1fr 140px 90px 140px 120px;gap:0;padding:12px 20px;border-bottom:1px solid rgba(255,255,255,0.06)">
                 <span style="font-size:9px;font-weight:800;letter-spacing:0.18em;text-transform:uppercase;color:#3f3f46">Order #</span>
                 <span style="font-size:9px;font-weight:800;letter-spacing:0.18em;text-transform:uppercase;color:#3f3f46">Date</span>
@@ -158,7 +149,7 @@
                 <span style="font-size:9px;font-weight:800;letter-spacing:0.18em;text-transform:uppercase;color:#3f3f46">Status</span>
                 <span style="font-size:9px;font-weight:800;letter-spacing:0.18em;text-transform:uppercase;color:#3f3f46">Update</span>
             </div>
-            <div id="orders-table-body">
+            <div id="orders-table-body" style="position: relative;">
                 <div style="padding:48px;text-align:center;color:#3f3f46;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase">Loading orders…</div>
             </div>
         </div>
