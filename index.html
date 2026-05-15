@@ -85,6 +85,9 @@
             text-transform: uppercase; letter-spacing: 0.12em; cursor: pointer; transition: all 0.2s;
         }
         .compat-tab.active { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.2); color: white; }
+        @media (max-width: 640px) {
+            .compat-tab { flex: 1; text-align: center; padding: 8px 6px; letter-spacing: 0.06em; font-size: 10px; }
+        }
         .compat-content { display: none; }
         .compat-content.active { display: block; }
         .game-row { display: flex; justify-content: space-between; align-items: center; padding: 9px 0; border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 13px; }
