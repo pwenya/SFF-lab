@@ -193,51 +193,40 @@
     </section>
 
     <section id="size" class="py-20 px-6 relative z-20">
-        <div class="max-w-5xl mx-auto">
-            <div class="text-center mb-16 reveal">
-                <span class="text-blue-600 text-[11px] font-black uppercase tracking-[0.3em]">Form Factor</span>
-                <h2 data-key="size-title" class="text-4xl md:text-6xl font-extrabold uppercase tracking-tighter mt-4 mb-5 text-gradient">Väiksem kui PS5.</h2>
-                <p data-key="size-sub" class="text-zinc-500 text-sm max-w-md mx-auto leading-relaxed">Mahub teleri kõrval riiulile. Käivitab kogu Steami raamatukogu.</p>
+        <div class="max-w-3xl mx-auto">
+            <div class="text-center mb-12 reveal">
+                <h2 class="text-4xl md:text-6xl font-extrabold uppercase tracking-tighter mb-5 text-gradient">Small Form Factor</h2>
             </div>
-            <div class="flex items-end justify-center gap-6 md:gap-14 mb-6 reveal">
-                <div class="flex flex-col items-center gap-4">
-                    <div class="size-bar w-14 md:w-20 bg-zinc-900 border border-white/8" style="height:210px">
-                        <span class="text-zinc-700 text-[8px] font-black uppercase" style="writing-mode:vertical-rl;transform:rotate(180deg);letter-spacing:0.15em">Tower</span>
-                    </div>
-                    <div class="text-center">
-                        <p class="text-zinc-600 text-[10px] font-black uppercase tracking-widest">ATX Tower</p>
-                        <p class="text-zinc-700 text-[9px] uppercase tracking-widest mt-1">~50 L</p>
-                    </div>
-                </div>
-                <div class="flex flex-col items-center gap-4">
-                    <div class="size-bar w-20 md:w-28 bg-zinc-800/50 border border-white/10" style="height:84px"></div>
-                    <div class="text-center">
-                        <p class="text-zinc-400 text-[10px] font-black uppercase tracking-widest">PlayStation 5</p>
-                        <p class="text-zinc-600 text-[9px] uppercase tracking-widest mt-1">~10 L</p>
-                    </div>
-                </div>
-                <div class="flex flex-col items-center gap-4">
-                    <div class="size-bar w-14 md:w-20 bg-blue-600/15 border border-blue-600/35" style="height:76px"></div>
-                    <div class="text-center">
-                        <p class="text-blue-400 text-[10px] font-black uppercase tracking-widest">SFF Lab PC</p>
-                        <p class="text-blue-600/60 text-[9px] uppercase tracking-widest mt-1">~9 L</p>
-                    </div>
-                </div>
+
+            <!-- Comparison table -->
+            <div class="reveal" style="overflow-x:auto">
+                <table style="width:100%;border-collapse:collapse;min-width:480px">
+                    <!-- Column headers -->
+                    <thead>
+                        <tr>
+                            <th style="width:38%;padding:0 0 20px 0;text-align:left"></th>
+                            <th style="width:20%;padding:0 0 20px 0;text-align:center">
+                                <div style="font-size:9px;font-weight:800;letter-spacing:0.2em;text-transform:uppercase;color:#52525b;margin-bottom:6px">PlayStation 5</div>
+                                <div style="font-size:18px;font-weight:900;color:#71717a;letter-spacing:-0.02em">~7.5 L</div>
+                            </th>
+                            <th style="width:22%;padding:0 0 20px 0;text-align:center">
+                                <div style="background:rgba(37,99,235,0.1);border:1px solid rgba(37,99,235,0.25);border-radius:16px 16px 0 0;padding:14px 8px 6px;margin:0 -1px">
+                                    <div style="font-size:9px;font-weight:800;letter-spacing:0.2em;text-transform:uppercase;color:#2563eb;margin-bottom:6px">SFF Lab PC</div>
+                                    <div style="font-size:18px;font-weight:900;color:#60a5fa;letter-spacing:-0.02em">~9 L</div>
+                                </div>
+                            </th>
+                            <th style="width:20%;padding:0 0 20px 0;text-align:center">
+                                <div style="font-size:9px;font-weight:800;letter-spacing:0.2em;text-transform:uppercase;color:#52525b;margin-bottom:6px">ATX Tower</div>
+                                <div style="font-size:18px;font-weight:900;color:#71717a;letter-spacing:-0.02em">~50 L</div>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="cmp-body">
+                    </tbody>
+                </table>
             </div>
-            <div class="grid grid-cols-3 gap-4 max-w-xl mx-auto mt-10 reveal">
-                <div class="glass-panel p-5 rounded-3xl text-center">
-                    <div class="text-xl font-black text-white mb-1">~9 L</div>
-                    <div data-key="size-stat1" class="text-zinc-500 text-[9px] uppercase tracking-widest">Maht</div>
-                </div>
-                <div class="glass-panel p-5 rounded-3xl text-center">
-                    <div class="text-xl font-black text-white mb-1">&lt;25 dB</div>
-                    <div data-key="size-stat2" class="text-zinc-500 text-[9px] uppercase tracking-widest">Müratase</div>
-                </div>
-                <div class="glass-panel p-5 rounded-3xl text-center">
-                    <div class="text-xl font-black text-white mb-1">4K</div>
-                    <div data-key="size-stat3" class="text-zinc-500 text-[9px] uppercase tracking-widest">Max resolutsioon</div>
-                </div>
-            </div>
+
+            <p data-key="size-sub" class="text-center text-zinc-400 text-sm md:text-lg font-medium tracking-wide mt-10 reveal">Sama suurus. Lõputult rohkem võimalusi.</p>
         </div>
     </section>
 
@@ -498,8 +487,7 @@
                 'hero-l1':'VAIKSEM.','hero-l2':'VÄIKSEM.','hero-l3':'VÕIMSAM.',
                 'hero-img-caption':'Väiksem kui PS5 →',
                 'hero-sub':'Täisvõimsus. Konsooli suurus. Vaikne töö.','hero-btn-boxes':'Korpused','hero-btn-pricing':'Paketid ↓',
-                'size-title':'Väiksem kui PS5.','size-sub':'Mahub teleri kõrval riiulile. Käivitab kogu Steami raamatukogu.',
-                'size-stat1':'Maht','size-stat2':'Müratase','size-stat3':'Max resolutsioon',
+                'size-title':'Konsool või PC?','size-sub':'Sama suurus. Lõputult rohkem võimalusi.',
                 'filter-steamos':'🎮 Gaming SteamOS','filter-windows':'🪟 Gaming Windows','filter-office':'💼 Vaikne kontor','filter-dualboot':'🔄 Dual Boot','filter-travel':'✈️ Reisi-PC',
                 'spec-noise-lbl':'Müra','spec-power-lbl':'Tarbimine','spec-vol-lbl':'Maht','spec-tv-lbl':'TV alla','spec-upg-lbl':'Upg.',
                 'p1-title':'Baas','p1-custom':'✓ Vali korpuse disain','p1-btn':'Vali disain',
@@ -520,8 +508,7 @@
                 'hero-l1':'ТИШЕ.','hero-l2':'МЕНЬШЕ.','hero-l3':'МОЩНЕЕ.',
                 'hero-img-caption':'Меньше, чем PS5 →',
                 'hero-sub':'Максимальная мощность. Размер консоли. Тихая работа.','hero-btn-boxes':'Корпуса','hero-btn-pricing':'Цены ↓',
-                'size-title':'Меньше, чем PS5.','size-sub':'Помещается на полке рядом с телевизором. Запускает всю библиотеку Steam.',
-                'size-stat1':'Объём','size-stat2':'Уровень шума','size-stat3':'Макс. разрешение',
+                'size-title':'Консоль или ПК?','size-sub':'Тот же размер. Бесконечно больше возможностей.',
                 'filter-steamos':'🎮 Gaming SteamOS','filter-windows':'🪟 Gaming Windows','filter-office':'💼 Тихий офис','filter-dualboot':'🔄 Dual Boot','filter-travel':'✈️ Travel PC',
                 'spec-noise-lbl':'Шум','spec-power-lbl':'Потребление','spec-vol-lbl':'Объём','spec-tv-lbl':'Под TV','spec-upg-lbl':'Апгр.',
                 'p1-title':'База','p1-custom':'✓ Выбор дизайна корпуса','p1-btn':'Выбрать дизайн',
@@ -587,6 +574,57 @@
             document.getElementById('tab-' + tab).classList.add('active');
             document.getElementById('compat-' + tab).classList.add('active');
         }
+
+        /* ── Comparison table ── */
+        (function buildCmpTable() {
+            var isRu = (localStorage.getItem('selectedLanguage') || 'et') === 'ru';
+            var rows = [
+                { et: 'Täiendatav riistvara', ru: 'Апгрейд железа',      ps5: '✗', sff: '✓', atx: '✓' },
+                { et: 'Täis Steam raamatukogu', ru: 'Вся библиотека Steam', ps5: '✗', sff: '✓', atx: '✓' },
+                { et: 'Modid & emulaatorid',  ru: 'Моды и эмуляторы',    ps5: '✗', sff: '✓', atx: '✓' },
+                { et: 'SteamOS',              ru: 'SteamOS',              ps5: '✗', sff: '✓', atx: '✗' },
+                { et: 'Elutuppa sobiv',       ru: 'Для гостиной',         ps5: '✓', sff: '✓', atx: '✗' },
+                { et: 'Vaikne töö',           ru: 'Тихая работа',         ps5: '~', sff: '✓', atx: '✗' },
+            ];
+            var COLOR = { '✓': '#4ade80', '✗': '#3f3f46', '~': '#f59e0b' };
+            var ROW_STYLE = 'border-top:1px solid rgba(255,255,255,0.05)';
+            var CELL = 'padding:12px 8px;text-align:center;font-size:15px;font-weight:900';
+            var LABEL = 'padding:12px 0;font-size:11px;font-weight:700;color:#52525b;letter-spacing:0.05em';
+            var SFF_BG = 'background:rgba(37,99,235,0.07);border-left:1px solid rgba(37,99,235,0.15);border-right:1px solid rgba(37,99,235,0.15)';
+
+            var html = rows.map(function(r, i) {
+                var label = isRu ? r.ru : r.et;
+                var isLast = i === rows.length - 1;
+                var sffExtra = isLast ? 'border-bottom:1px solid rgba(37,99,235,0.15);border-radius:0 0 12px 12px;' : '';
+                return '<tr style="' + ROW_STYLE + '">'
+                    + '<td style="' + LABEL + '">' + label + '</td>'
+                    + '<td style="' + CELL + ';color:' + COLOR[r.ps5] + '">' + r.ps5 + '</td>'
+                    + '<td style="' + CELL + ';color:' + COLOR[r.sff] + ';' + SFF_BG + sffExtra + '">' + r.sff + '</td>'
+                    + '<td style="' + CELL + ';color:' + COLOR[r.atx] + '">' + r.atx + '</td>'
+                    + '</tr>';
+            }).join('');
+            var el = document.getElementById('cmp-body');
+            if (el) el.innerHTML = html;
+
+            /* re-render on language switch */
+            var _orig = window.setLanguage;
+            window.setLanguage = function(lang) {
+                _orig(lang);
+                isRu = lang === 'ru';
+                var h = rows.map(function(r, i) {
+                    var label = isRu ? r.ru : r.et;
+                    var isLast = i === rows.length - 1;
+                    var sffExtra = isLast ? 'border-bottom:1px solid rgba(37,99,235,0.15);border-radius:0 0 12px 12px;' : '' ;
+                    return '<tr style="' + ROW_STYLE + '">'
+                        + '<td style="' + LABEL + '">' + label + '</td>'
+                        + '<td style="' + CELL + ';color:' + COLOR[r.ps5] + '">' + r.ps5 + '</td>'
+                        + '<td style="' + CELL + ';color:' + COLOR[r.sff] + ';' + SFF_BG + sffExtra + '">' + r.sff + '</td>'
+                        + '<td style="' + CELL + ';color:' + COLOR[r.atx] + '">' + r.atx + '</td>'
+                        + '</tr>';
+                }).join('');
+                if (el) el.innerHTML = h;
+            };
+        })();
 
         var observer = new IntersectionObserver(function(entries) {
             entries.forEach(function(e) { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
