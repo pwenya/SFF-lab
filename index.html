@@ -114,8 +114,6 @@
 </head>
 <body class="antialiased text-zinc-100">
 
-    <!-- ── Trust banner (sits below fixed nav) ── -->
-    <!-- pt-[73px] clears mobile nav (py-4 ≈ 64px); pt-[88px] clears desktop nav (py-6 ≈ 84px) -->
     <div class="pt-[73px] md:pt-[88px]">
         <div class="border-b border-white/5 py-3 overflow-x-auto">
             <div class="flex items-center justify-start md:justify-center gap-6 md:gap-10 px-6 whitespace-nowrap text-zinc-400 text-[9px] font-black uppercase tracking-[0.2em]">
@@ -128,7 +126,6 @@
         </div>
     </div>
 
-    <!-- ── Hero ── -->
     <section id="about" class="relative min-h-[90vh] flex flex-col items-center justify-center px-6 overflow-hidden py-20">
         <div class="glow-blob absolute top-[40%] left-1/2 w-[700px] md:w-[1000px] h-[500px] bg-blue-600/10 blur-[130px] rounded-full pointer-events-none"></div>
         <div class="glow-blob absolute top-[55%] left-[45%] w-[300px] h-[300px] bg-indigo-700/8 blur-[100px] rounded-full pointer-events-none" style="animation-delay:-3s"></div>
@@ -149,7 +146,6 @@
         </div>
     </section>
 
-    <!-- ── Size comparison ── -->
     <section id="size" class="py-20 px-6 relative z-20">
         <div class="max-w-5xl mx-auto">
             <div class="text-center mb-16 reveal">
@@ -199,11 +195,9 @@
         </div>
     </section>
 
-    <!-- ── Pricing ── -->
     <section id="pricing" class="pt-4 pb-24 px-6 bg-transparent relative z-20">
         <div class="max-w-6xl mx-auto">
 
-            <!-- Scenario filters -->
             <div class="reveal flex justify-start md:justify-center gap-2 mb-8 overflow-x-auto pb-2">
                 <button onclick="filterScenario('steamos',this)" data-scenario="steamos" class="scenario-btn active" data-key="filter-steamos">🎮 Gaming SteamOS</button>
                 <button onclick="filterScenario('windows',this)" data-scenario="windows" class="scenario-btn" data-key="filter-windows">🪟 Gaming Windows</button>
@@ -212,18 +206,15 @@
                 <button onclick="filterScenario('travel',this)"  data-scenario="travel"  class="scenario-btn" data-key="filter-travel">✈️ Reisi-PC</button>
             </div>
 
-            <!-- OS toggle -->
             <div class="reveal reveal-delay-1 flex justify-center space-x-4 mb-16">
                 <button onclick="switchOS('steamos')" id="btn-steamos" class="os-switch-btn active px-10 py-3 rounded-full text-[11px] font-black uppercase tracking-widest shadow-xl">SteamOS</button>
                 <button onclick="switchOS('windows')" id="btn-windows" class="os-switch-btn px-10 py-3 rounded-full text-[11px] font-black uppercase tracking-widest shadow-xl">Windows 11</button>
             </div>
 
             <div class="relative">
-                <!-- SteamOS grid (includes dual boot) -->
                 <div id="grid-steamos" class="os-grid os-grid-visible">
                     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
 
-                        <!-- Core -->
                         <div class="flex reveal reveal-delay-1" data-card="core" data-scenarios="steamos office travel">
                             <div class="glass-card p-10 rounded-[40px] flex flex-col justify-between w-full">
                                 <div>
@@ -251,7 +242,6 @@
                             </div>
                         </div>
 
-                        <!-- Baas+ -->
                         <div class="flex reveal reveal-delay-2" data-card="plus" data-scenarios="steamos travel">
                             <div class="featured-card p-10 rounded-[40px] flex flex-col justify-between relative overflow-hidden w-full">
                                 <div data-key="popular-badge" class="absolute top-6 right-6 bg-blue-600/90 text-[10px] font-black px-4 py-1.5 rounded-full uppercase tracking-widest text-white shadow-lg">Populaarne</div>
@@ -280,7 +270,6 @@
                             </div>
                         </div>
 
-                        <!-- Enthusiast -->
                         <div class="flex reveal reveal-delay-3" data-card="enthusiast" data-scenarios="steamos">
                             <div class="glass-card p-10 rounded-[40px] flex flex-col justify-between w-full">
                                 <div>
@@ -306,7 +295,6 @@
                         </div>
                     </div>
 
-                    <!-- Dual Boot card (full width) -->
                     <div class="dual-boot-card p-8 mt-6 reveal" data-card="dualboot" data-scenarios="dualboot">
                         <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8">
                             <div class="flex-1">
@@ -320,7 +308,7 @@
                                     <h3 class="text-2xl md:text-3xl font-extrabold uppercase tracking-tighter text-white">Dual Boot Edition</h3>
                                 </div>
                                 <p data-key="db-desc" class="text-zinc-400 text-sm leading-relaxed max-w-xl mb-5">
-                                    Gaming SteamOS-iga, töö Windowsiga. Vaheta ühe taaskäivitusega. Ilma kompromissideta.
+                                    Gaming SteamOS-iga, töö Windowsiga. Vaheta ühe taaskäivitusega. Ilma komпромиссideta.
                                 </p>
                                 <div class="flex flex-wrap gap-2">
                                     <span class="text-[10px] font-black text-blue-400 bg-blue-600/10 px-3 py-1 rounded-full uppercase tracking-widest">Windows 11 Pro</span>
@@ -340,7 +328,6 @@
                     </div>
                 </div>
 
-                <!-- Windows grid -->
                 <div id="grid-windows" class="os-grid os-grid-hidden grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
                     <div class="flex" data-card="win-core" data-scenarios="windows"><div class="glass-card p-10 rounded-[40px] w-full opacity-50 flex items-center justify-center italic text-zinc-600 uppercase tracking-widest text-[10px]">Windows Core — Coming Soon</div></div>
                     <div class="flex" data-card="win-pro" data-scenarios="windows"><div class="glass-card p-10 rounded-[40px] w-full opacity-50 flex items-center justify-center italic text-zinc-600 uppercase tracking-widest text-[10px]">Windows Pro — Coming Soon</div></div>
@@ -350,23 +337,20 @@
         </div>
     </section>
 
-    <!-- ── Compatibility (tabbed) ── -->
     <section id="compatibility" class="py-20 px-6 relative z-20 border-t border-white/5">
         <div class="max-w-6xl mx-auto">
             <div class="text-center mb-12 reveal">
                 <span class="text-blue-600 text-[11px] font-black uppercase tracking-[0.3em]">SteamOS</span>
                 <h2 data-key="compat-title" class="text-4xl md:text-5xl font-extrabold uppercase tracking-tighter mt-4 mb-4 text-gradient">Ühilduvus</h2>
-                <p data-key="compat-sub" class="text-zinc-500 text-sm max-w-md mx-auto">SteamOS toetab 90%+ Steami mängudest tänu Proton ühilduvuskihile.</p>
+                <p data-key="compat-sub" class="text-zinc-500 text-sm max-w-md mx-auto">SteamOS toetab 90%+ Steami mängudest tänu Proton ühilдувусkihile.</p>
             </div>
 
-            <!-- Tab buttons -->
             <div class="flex gap-3 justify-start md:justify-center mb-10 overflow-x-auto pb-2 reveal">
                 <button onclick="switchCompatTab('games')" id="tab-games" class="compat-tab active" data-key="tab-games">Mängud</button>
                 <button onclick="switchCompatTab('controllers')" id="tab-controllers" class="compat-tab" data-key="tab-controllers">Kontrollerid</button>
                 <button onclick="switchCompatTab('launchers')" id="tab-launchers" class="compat-tab" data-key="tab-launchers">Platvormid</button>
             </div>
 
-            <!-- Games tab -->
             <div id="compat-games" class="compat-content active">
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 reveal">
                     <div class="glass-panel p-8 rounded-[40px]">
@@ -411,7 +395,6 @@
                 </div>
             </div>
 
-            <!-- Controllers tab -->
             <div id="compat-controllers" class="compat-content">
                 <div class="glass-panel p-8 rounded-[40px] max-w-2xl mx-auto reveal">
                     <div class="compat-row"><span class="text-zinc-300">DualSense (PS5)</span><span class="text-green-500 text-[10px] font-black tracking-widest">✓ <span data-key="compat-works">Töötab</span></span></div>
@@ -422,7 +405,6 @@
                 </div>
             </div>
 
-            <!-- Launchers tab -->
             <div id="compat-launchers" class="compat-content">
                 <div class="glass-panel p-8 rounded-[40px] max-w-2xl mx-auto reveal">
                     <div class="compat-row"><span class="text-zinc-300">Steam</span><span class="text-green-500 text-[10px] font-black tracking-widest">✓ <span data-key="compat-native">Native</span></span></div>
@@ -435,7 +417,6 @@
         </div>
     </section>
 
-    <!-- ── Honest disclaimer ── -->
     <section class="px-6 pb-20 relative z-20">
         <div class="max-w-3xl mx-auto reveal">
             <div class="disclaimer-box p-8 rounded-[28px]">
@@ -468,7 +449,7 @@
         window.pageTranslations = {
             et: {
                 'trust-1':'Euroopa mini-PC turg kasvab 7% aastas','trust-2':'18 000+ Steami mängu SteamOS-ühilduvad','trust-3':'Koostatud ja testitud Eestis',
-                'hero-l1':'4K mängimine diivanilt.','hero-l2':'Ilma mürarika tornita.','hero-l3':'Ilma konsoolipiiranguteta.',
+                'hero-l1':'Mänguarvuti diivanile ja TV-le.','hero-l2':'Ilma müra ja üleliigse suuruseta.','hero-l3':'',
                 'hero-sub':'Täisvõimsus. Konsooli suurus. Vaikne töö.','hero-btn-boxes':'Korpused','hero-btn-pricing':'Paketid ↓',
                 'size-title':'Väiksem kui PS5.','size-sub':'Mahub teleri kõrval riiulile. Käivitab kogu Steami raamatukogu.',
                 'size-stat1':'Maht','size-stat2':'Müratase','size-stat3':'Max resolutsioon',
@@ -484,12 +465,12 @@
                 'games-works-title':'Töötab','games-broken-title':'Anti-cheat piirang',
                 'games-broken-note':'Need mängud kasutavad kernel-tasemel anti-cheat tarkvara, mis nõuab Windows-i. Vali Dual Boot või Windows versioon.',
                 'compat-works':'Töötab','compat-native':'Native','compat-partial':'Osaliselt','compat-no':'Ei tööta',
-                'disc-title':'Aus hoiatus','disc-text':'Testame iga arvuti enne saatmist SteamOS-iga. Mõned mängud kernel-tasemel anti-cheatiga (Valorant, Fortnite, EA FC) ei tööta SteamOS-iga. Nende jaoks vali Windows või Dual Boot versioon.',
+                'disc-title':'Aus hoiatus','disc-text':'Testame iga arvuti enne saatmist SteamOS-iga. Mõned mängud kernel-tasemel anti-cheatiga (Valorant, Fortnite, EA FC) ei tööta SteamOS-iga. Nende jaoks vali Windows или Dual Boot versioon.',
                 'footer-slogan':'Designed for living rooms','footer-cookies':'Jälgimisküpsiseid ei kasutata','footer-built':'Ehitatud Eestis'
             },
             ru: {
                 'trust-1':'Европейский рынок мини-ПК растёт на 7% в год','trust-2':'18 000+ игр Steam совместимы с SteamOS','trust-3':'Собрано и протестировано в Эстонии',
-                'hero-l1':'4K игры с дивана.','hero-l2':'Без шумного системника.','hero-l3':'Без ограничений консоли.',
+                'hero-l1':'Игровой ПК для дивана и TV.','hero-l2':'Без шума и лишнего размера.','hero-l3':'',
                 'hero-sub':'Максимальная мощность. Размер консоли. Тихая работа.','hero-btn-boxes':'Корпуса','hero-btn-pricing':'Цены ↓',
                 'size-title':'Меньше, чем PS5.','size-sub':'Помещается на полке рядом с телевизором. Запускает всю библиотеку Steam.',
                 'size-stat1':'Объём','size-stat2':'Уровень шума','size-stat3':'Макс. разрешение',
@@ -510,7 +491,6 @@
             }
         };
 
-        /* ── Scenario config ── */
         var scenarioMap = {
             steamos:  { os: 'steamos',  cards: ['core','plus','enthusiast'] },
             windows:  { os: 'windows',  cards: ['win-core','win-pro','win-enthusiast'] },
@@ -536,7 +516,6 @@
         }
         function clearDim() { document.querySelectorAll('[data-card]').forEach(function(c) { c.classList.remove('scenario-dim'); }); }
 
-        /* ── OS switch ── */
         var currentOS = 'steamos';
         function switchOS(os) {
             if (os === currentOS) return;
@@ -554,7 +533,6 @@
             }
         }
 
-        /* ── Compatibility tabs ── */
         function switchCompatTab(tab) {
             document.querySelectorAll('.compat-tab').forEach(function(b) { b.classList.remove('active'); });
             document.querySelectorAll('.compat-content').forEach(function(c) { c.classList.remove('active'); });
@@ -562,7 +540,6 @@
             document.getElementById('compat-' + tab).classList.add('active');
         }
 
-        /* ── Scroll reveal ── */
         var observer = new IntersectionObserver(function(entries) {
             entries.forEach(function(e) { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
         }, { threshold: 0.08 });
