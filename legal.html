@@ -52,7 +52,7 @@
   </div>
 
   <!-- TERMS -->
-  <div id="section-terms" class="section active glass rounded-[28px] p-8 md:p-12">
+  <div id="terms" class="section active glass rounded-[28px] p-8 md:p-12">
 
     <!-- ET -->
     <div class="et">
@@ -126,7 +126,7 @@
   </div>
 
   <!-- PRIVACY -->
-  <div id="section-privacy" class="section glass rounded-[28px] p-8 md:p-12">
+  <div id="privacy" class="section glass rounded-[28px] p-8 md:p-12">
 
     <!-- ET -->
     <div class="et">
@@ -215,7 +215,7 @@
   </div>
 
   <!-- RETURNS -->
-  <div id="section-returns" class="section glass rounded-[28px] p-8 md:p-12">
+  <div id="returns" class="section glass rounded-[28px] p-8 md:p-12">
 
     <!-- ET -->
     <div class="et">
@@ -287,7 +287,7 @@ var TABS = ['terms', 'privacy', 'returns'];
 
 function showTab(tab) {
   TABS.forEach(function(t) {
-    document.getElementById('section-' + t).style.display = (t === tab) ? 'block' : 'none';
+    document.getElementById(t).style.display = (t === tab) ? 'block' : 'none';
     var btn = document.getElementById('tab-' + t);
     if (t === tab) {
       btn.classList.add('active');
@@ -301,7 +301,8 @@ function showTab(tab) {
 
 window.onload = function() {
   setLang(localStorage.getItem('selectedLanguage') || 'et');
-  showTab('terms');
+  var hash = location.hash.replace('#', '');
+  showTab(TABS.indexOf(hash) !== -1 ? hash : 'terms');
 };
 </script>
 </body>
