@@ -8,197 +8,564 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #050505; color: white; overflow-x: hidden; }
+
         .glass-card {
-            background: rgba(255, 255, 255, 0.02);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            height: 100%;
+            background: rgba(255,255,255,0.02); backdrop-filter: blur(12px);
+            border: 1px solid rgba(255,255,255,0.08); height: 100%;
+            transition: border-color 0.5s cubic-bezier(0.4,0,0.2,1), transform 0.5s cubic-bezier(0.4,0,0.2,1),
+                        box-shadow 0.5s cubic-bezier(0.4,0,0.2,1), background 0.5s cubic-bezier(0.4,0,0.2,1);
         }
         .glass-card:hover {
-            border-color: rgba(59, 130, 246, 0.5);
-            transform: translateY(-8px) scale(1.02);
-            box-shadow: 0 20px 40px rgba(59, 130, 246, 0.15);
-            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(59,130,246,0.45); transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 24px 48px rgba(59,130,246,0.14); background: rgba(255,255,255,0.04);
         }
+        .glass-panel { background: rgba(255,255,255,0.02); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.08); }
+
+        .featured-card {
+            background: rgba(255,255,255,0.025); backdrop-filter: blur(12px);
+            border: 1px solid transparent; background-clip: padding-box;
+            position: relative; height: 100%;
+            transition: transform 0.5s cubic-bezier(0.4,0,0.2,1), box-shadow 0.5s cubic-bezier(0.4,0,0.2,1);
+        }
+        .featured-card::before {
+            content: ''; position: absolute; inset: -1px; border-radius: inherit; padding: 1px;
+            background: linear-gradient(135deg, rgba(59,130,246,0.6) 0%, rgba(255,255,255,0.08) 50%, rgba(59,130,246,0.6) 100%);
+            background-size: 200% 200%;
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor; mask-composite: exclude;
+            animation: borderRotate 4s linear infinite;
+        }
+        .featured-card:hover { transform: translateY(-8px) scale(1.02); box-shadow: 0 28px 56px rgba(59,130,246,0.2); }
+        @keyframes borderRotate { 0% { background-position: 0% 0%; } 100% { background-position: 200% 200%; } }
+
         .text-gradient { background: linear-gradient(to right, #fff 30%, #64748b 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .lang-btn.active { color: white; border-bottom: 2px solid #2563eb; padding-bottom: 2px; }
+
+        @keyframes blobFloat {
+            0%,100% { transform: translate(-50%,-50%) scale(1) rotate(0deg); }
+            33%      { transform: translate(-50%,-50%) scale(1.12) rotate(4deg); }
+            66%      { transform: translate(-50%,-50%) scale(0.92) rotate(-4deg); }
+        }
+        @keyframes blobPulse { 0%,100% { opacity: 0.06; } 50% { opacity: 0.14; } }
+        .glow-blob { animation: blobFloat 10s ease-in-out infinite, blobPulse 5s ease-in-out infinite; }
+
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(36px); } to { opacity: 1; transform: translateY(0); } }
+        .anim-hero-badge { animation: fadeUp 0.7s cubic-bezier(0.16,1,0.3,1) 0s both; }
+        .anim-hero-title { animation: fadeUp 0.9s cubic-bezier(0.16,1,0.3,1) 0.15s both; }
+        .anim-hero-sub   { animation: fadeUp 0.9s cubic-bezier(0.16,1,0.3,1) 0.45s both; }
+        .anim-hero-cta   { animation: fadeUp 0.9s cubic-bezier(0.16,1,0.3,1) 0.65s both; }
+
+        .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.7s cubic-bezier(0.16,1,0.3,1), transform 0.7s cubic-bezier(0.16,1,0.3,1); }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+        .reveal-delay-1 { transition-delay: 0.05s; }
+        .reveal-delay-2 { transition-delay: 0.18s; }
+        .reveal-delay-3 { transition-delay: 0.31s; }
+
+        /* ── OS grid switch ── */
+        .os-grid { transition: opacity 0.35s ease, transform 0.35s ease; }
+        .os-grid-hidden { opacity: 0; transform: translateY(12px); pointer-events: none; position: absolute; width: 100%; }
+        .os-grid-visible { opacity: 1; transform: translateY(0); }
         .os-switch-btn { transition: all 0.3s ease; border: 1px solid rgba(255,255,255,0.1); background: transparent; color: #52525b; }
         .os-switch-btn.active { background: white; color: black; border-color: white; }
+
+        /* ── Scenario filter ── */
+        .scenario-btn {
+            padding: 8px 16px; border-radius: 100px; border: 1px solid rgba(255,255,255,0.08);
+            background: transparent; color: #52525b; font-size: 11px; font-weight: 900;
+            text-transform: uppercase; letter-spacing: 0.1em; cursor: pointer; white-space: nowrap;
+            transition: all 0.25s;
+        }
+        .scenario-btn:hover { border-color: rgba(255,255,255,0.18); color: #a1a1aa; }
+        .scenario-btn.active { background: rgba(37,99,235,0.15); border-color: rgba(37,99,235,0.5); color: #60a5fa; }
+        .scenario-dim { opacity: 0.25 !important; transform: scale(0.97) !important; pointer-events: none; transition: opacity 0.3s, transform 0.3s !important; }
+
+        /* ── Card specs ── */
+        .card-specs { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 16px; font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: #52525b; }
+        .spec-label { color: #3f3f46; }
+        .spec-val { color: #71717a; }
+
+        /* ── Size comparison ── */
+        .size-bar { border-radius: 18px; display: flex; align-items: center; justify-content: center; }
+
+        /* ── Games / compat tabs ── */
+        .compat-tab {
+            padding: 8px 20px; border-radius: 100px; border: 1px solid rgba(255,255,255,0.08);
+            background: transparent; color: #52525b; font-size: 11px; font-weight: 900;
+            text-transform: uppercase; letter-spacing: 0.12em; cursor: pointer; transition: all 0.2s;
+        }
+        .compat-tab.active { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.2); color: white; }
+        .compat-content { display: none; }
+        .compat-content.active { display: block; }
+        .game-row { display: flex; justify-content: space-between; align-items: center; padding: 9px 0; border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 13px; }
+        .game-row:last-child { border-bottom: none; }
+        .compat-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 13px; }
+        .compat-row:last-child { border-bottom: none; }
+
+        /* ── Dual boot card ── */
+        .dual-boot-card {
+            background: rgba(124,58,237,0.04); backdrop-filter: blur(12px);
+            border: 1px solid rgba(124,58,237,0.2); border-radius: 32px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        .dual-boot-card:hover { border-color: rgba(124,58,237,0.4); box-shadow: 0 20px 40px rgba(124,58,237,0.1); }
+
+        /* ── Disclaimer ── */
+        .disclaimer-box { background: rgba(245,158,11,0.04); border: 1px solid rgba(245,158,11,0.15); border-radius: 28px; }
     </style>
 </head>
 <body class="antialiased text-zinc-100">
 
-    <nav class="fixed w-full z-50 border-b border-white/5 bg-black/70 backdrop-blur-md">
-        <div class="max-w-[1400px] mx-auto flex justify-between items-center py-4 md:py-6 px-6 md:px-10">
-            <a href="/" class="text-2xl md:text-3xl font-extrabold tracking-tighter uppercase text-white hover:opacity-80 transition">
-                SFF LAB<span class="text-blue-600">.</span>
-            </a>
-            <div class="flex items-center space-x-6 md:space-x-12">
-                <div class="hidden md:flex items-center space-x-12 text-[16px] font-bold uppercase tracking-[0.2em] text-zinc-500">
-                    <a href="#pricing" data-key="nav-pricing" class="hover:text-white transition uppercase">Paketid</a>
-                </div>
-                <div class="flex items-center space-x-3 md:space-x-5 border-l border-white/10 pl-6 md:pl-12 text-sm md:text-[16px] font-bold tracking-widest">
-                    <button onclick="setLanguage('et')" id="lang-et" class="lang-btn active transition hover:text-white">ET</button>
-                    <span class="text-zinc-800">|</span>
-                    <button onclick="setLanguage('ru')" id="lang-ru" class="lang-btn transition hover:text-white text-zinc-500">RU</button>
-                </div>
-                <a href="#" data-key="nav-status" class="hidden md:block bg-white text-black px-8 py-3 rounded-full hover:bg-zinc-200 transition uppercase tracking-widest text-[14px] font-black text-center">Статус заказа</a>
+    <!-- ── Trust banner (sits below fixed nav) ── -->
+    <div style="padding-top:73px">
+        <div class="border-b border-white/5 py-3 overflow-x-auto">
+            <div class="flex items-center justify-start md:justify-center gap-6 md:gap-10 px-6 whitespace-nowrap text-zinc-600 text-[9px] font-black uppercase tracking-[0.2em]">
+                <span data-key="trust-1">Euroopa mini-PC turg kasvab 7% aastas</span>
+                <span class="text-zinc-800 shrink-0">·</span>
+                <span data-key="trust-2">18 000+ Steami mängu SteamOS-ühilduvad</span>
+                <span class="text-zinc-800 shrink-0">·</span>
+                <span data-key="trust-3">Koostatud ja testitud Eestis</span>
             </div>
         </div>
-    </nav>
+    </div>
 
-    <section id="about" class="relative min-h-[70vh] flex flex-col items-center justify-center px-6 overflow-hidden pt-32">
-        <div class="absolute top-[40%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] md:w-[900px] h-[400px] bg-blue-600/5 blur-[120px] rounded-full pointer-events-none"></div>
-
-        <div class="relative z-10 max-w-5xl text-center w-full">
-            <h1 class="text-5xl md:text-9xl font-extrabold tracking-tighter leading-none mb-12 text-gradient uppercase">SFF<br>EXPERIENCE.</h1>
-
-            <div class="relative inline-block mt-8">
-                <a href="/boxes" class="bg-white text-black px-16 py-5 rounded-full hover:bg-zinc-200 transition-all duration-300 uppercase tracking-[0.3em] text-[18px] font-black shadow-2xl shadow-white/5">
-                    Коробки
-                </a>
+    <!-- ── Hero ── -->
+    <section id="about" class="relative min-h-[90vh] flex flex-col items-center justify-center px-6 overflow-hidden py-20">
+        <div class="glow-blob absolute top-[40%] left-1/2 w-[700px] md:w-[1000px] h-[500px] bg-blue-600/10 blur-[130px] rounded-full pointer-events-none"></div>
+        <div class="glow-blob absolute top-[55%] left-[45%] w-[300px] h-[300px] bg-indigo-700/8 blur-[100px] rounded-full pointer-events-none" style="animation-delay:-3s"></div>
+        <div class="relative z-10 max-w-4xl text-center w-full">
+            <span class="anim-hero-badge text-blue-600 text-[11px] font-black uppercase tracking-[0.35em] mb-8 inline-block">SFF Lab</span>
+            <h1 class="anim-hero-title text-5xl sm:text-7xl md:text-[88px] font-extrabold tracking-tighter leading-[0.92] mb-8 uppercase">
+                <span data-key="hero-l1" class="text-gradient block">4K couch gaming.</span>
+                <span data-key="hero-l2" class="text-white block">No noisy tower.</span>
+                <span data-key="hero-l3" class="text-zinc-600 block">No console limits.</span>
+            </h1>
+            <p data-key="hero-sub" class="anim-hero-sub text-zinc-400 text-sm md:text-lg mb-12 font-medium tracking-wide max-w-lg mx-auto leading-relaxed">
+                Full PC power. Console size. Silent operation.
+            </p>
+            <div class="anim-hero-cta flex flex-col sm:flex-row items-center justify-center gap-4">
+                <a href="boxes.html" data-key="hero-btn-boxes" class="btn-ripple inline-block bg-white text-black px-10 py-4 rounded-full hover:bg-zinc-200 hover:scale-105 transition-all duration-300 uppercase tracking-[0.25em] text-[14px] font-black">Korpused</a>
+                <a href="#pricing" data-key="hero-btn-pricing" class="inline-block border border-white/20 text-white px-10 py-4 rounded-full hover:border-white/40 hover:bg-white/5 transition-all duration-300 uppercase tracking-[0.25em] text-[14px] font-black">Paketid ↓</a>
             </div>
         </div>
     </section>
 
-    <section id="pricing" class="pt-24 pb-24 px-6 bg-transparent relative z-20">
+    <!-- ── Size comparison ── -->
+    <section id="size" class="py-20 px-6 relative z-20">
+        <div class="max-w-5xl mx-auto">
+            <div class="text-center mb-16 reveal">
+                <span class="text-blue-600 text-[11px] font-black uppercase tracking-[0.3em]">Form Factor</span>
+                <h2 data-key="size-title" class="text-4xl md:text-6xl font-extrabold uppercase tracking-tighter mt-4 mb-5 text-gradient">Väiksem kui PS5.</h2>
+                <p data-key="size-sub" class="text-zinc-500 text-sm max-w-md mx-auto leading-relaxed">Mahub teleri kõrval riiulile. Käivitab kogu Steami raamatukogu.</p>
+            </div>
+            <div class="flex items-end justify-center gap-6 md:gap-14 mb-6 reveal">
+                <div class="flex flex-col items-center gap-4">
+                    <div class="size-bar w-14 md:w-20 bg-zinc-900 border border-white/8" style="height:210px">
+                        <span class="text-zinc-700 text-[8px] font-black uppercase" style="writing-mode:vertical-rl;transform:rotate(180deg);letter-spacing:0.15em">Tower</span>
+                    </div>
+                    <div class="text-center">
+                        <p class="text-zinc-600 text-[10px] font-black uppercase tracking-widest">ATX Tower</p>
+                        <p class="text-zinc-700 text-[9px] uppercase tracking-widest mt-1">~50 L</p>
+                    </div>
+                </div>
+                <div class="flex flex-col items-center gap-4">
+                    <div class="size-bar w-20 md:w-28 bg-zinc-800/50 border border-white/10" style="height:84px"></div>
+                    <div class="text-center">
+                        <p class="text-zinc-400 text-[10px] font-black uppercase tracking-widest">PlayStation 5</p>
+                        <p class="text-zinc-600 text-[9px] uppercase tracking-widest mt-1">~10 L</p>
+                    </div>
+                </div>
+                <div class="flex flex-col items-center gap-4">
+                    <div class="size-bar w-14 md:w-20 bg-blue-600/15 border border-blue-600/35" style="height:76px"></div>
+                    <div class="text-center">
+                        <p class="text-blue-400 text-[10px] font-black uppercase tracking-widest">SFF Lab PC</p>
+                        <p class="text-blue-600/60 text-[9px] uppercase tracking-widest mt-1">~9 L</p>
+                    </div>
+                </div>
+            </div>
+            <div class="grid grid-cols-3 gap-4 max-w-xl mx-auto mt-10 reveal">
+                <div class="glass-panel p-5 rounded-3xl text-center">
+                    <div class="text-xl font-black text-white mb-1">~9 L</div>
+                    <div data-key="size-stat1" class="text-zinc-500 text-[9px] uppercase tracking-widest">Maht</div>
+                </div>
+                <div class="glass-panel p-5 rounded-3xl text-center">
+                    <div class="text-xl font-black text-white mb-1">&lt;25 dB</div>
+                    <div data-key="size-stat2" class="text-zinc-500 text-[9px] uppercase tracking-widest">Müratase</div>
+                </div>
+                <div class="glass-panel p-5 rounded-3xl text-center">
+                    <div class="text-xl font-black text-white mb-1">4K</div>
+                    <div data-key="size-stat3" class="text-zinc-500 text-[9px] uppercase tracking-widest">Max resolutsioon</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ── Pricing ── -->
+    <section id="pricing" class="pt-4 pb-24 px-6 bg-transparent relative z-20">
         <div class="max-w-6xl mx-auto">
-            <div class="flex justify-center space-x-4 mb-20">
+
+            <!-- Scenario filters -->
+            <div class="reveal flex justify-start md:justify-center gap-2 mb-8 overflow-x-auto pb-2">
+                <button onclick="filterScenario('steamos',this)" data-scenario="steamos" class="scenario-btn active" data-key="filter-steamos">🎮 Gaming SteamOS</button>
+                <button onclick="filterScenario('windows',this)" data-scenario="windows" class="scenario-btn" data-key="filter-windows">🪟 Gaming Windows</button>
+                <button onclick="filterScenario('office',this)"  data-scenario="office"  class="scenario-btn" data-key="filter-office">💼 Vaikne kontor</button>
+                <button onclick="filterScenario('dualboot',this)" data-scenario="dualboot" class="scenario-btn" data-key="filter-dualboot">🔄 Dual Boot</button>
+                <button onclick="filterScenario('travel',this)"  data-scenario="travel"  class="scenario-btn" data-key="filter-travel">✈️ Reisi-PC</button>
+            </div>
+
+            <!-- OS toggle -->
+            <div class="reveal reveal-delay-1 flex justify-center space-x-4 mb-16">
                 <button onclick="switchOS('steamos')" id="btn-steamos" class="os-switch-btn active px-10 py-3 rounded-full text-[11px] font-black uppercase tracking-widest shadow-xl">SteamOS</button>
                 <button onclick="switchOS('windows')" id="btn-windows" class="os-switch-btn px-10 py-3 rounded-full text-[11px] font-black uppercase tracking-widest shadow-xl">Windows 11</button>
             </div>
 
-            <div id="grid-steamos" class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
-                <div class="flex">
-                    <div class="glass-card p-10 rounded-[40px] flex flex-col justify-between w-full border-white/5">
-                        <div>
-                            <span class="text-blue-600 text-[11px] font-black uppercase tracking-[0.2em]">Core Edition</span>
-                            <h3 data-key="p1-title" class="text-3xl font-extrabold mt-3 mb-10 text-white uppercase">Baas</h3>
-                            <ul class="space-y-5 text-zinc-400 text-sm">
-                                <li>✓ Ryzen 5 7500F + RX 9060 XT</li>
-                                <li>✓ 16GB DDR5 + 1TB</li>
-                                <li>✓ 650W SFX Gold (Quiet Edition)</li>
-                                <li data-key="p1-custom">✓ Vali korpuse disain</li>
-                            </ul>
+            <div class="relative">
+                <!-- SteamOS grid (includes dual boot) -->
+                <div id="grid-steamos" class="os-grid os-grid-visible">
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
+
+                        <!-- Core -->
+                        <div class="flex reveal reveal-delay-1" data-card="core" data-scenarios="steamos office travel">
+                            <div class="glass-card p-10 rounded-[40px] flex flex-col justify-between w-full">
+                                <div>
+                                    <span class="text-blue-600 text-[11px] font-black uppercase tracking-[0.2em]">Core Edition</span>
+                                    <h3 data-key="p1-title" class="text-3xl font-extrabold mt-3 mb-8 text-white uppercase">Baas</h3>
+                                    <ul class="space-y-4 text-zinc-400 text-sm mb-8">
+                                        <li>✓ Ryzen 5 7500F + RX 9060 XT</li>
+                                        <li>✓ 16GB DDR5 + 1TB</li>
+                                        <li>✓ 650W SFX Gold (Quiet Edition)</li>
+                                        <li data-key="p1-custom">✓ Vali korpuse disain</li>
+                                    </ul>
+                                    <div class="card-specs pt-5 border-t border-white/5">
+                                        <span class="spec-label" data-key="spec-noise-lbl">Müra</span><span class="spec-val">~24 dB / ~36 dB</span>
+                                        <span class="spec-label" data-key="spec-power-lbl">Tarbimine</span><span class="spec-val">~55W / ~250W</span>
+                                        <span class="spec-label" data-key="spec-vol-lbl">Maht</span><span class="spec-val">~8 L</span>
+                                        <span class="spec-label" data-key="spec-tv-lbl">TV alla</span><span class="spec-val text-green-600">✓</span>
+                                        <span class="spec-label">SteamOS</span><span class="spec-val text-green-600">✓</span>
+                                        <span class="spec-label" data-key="spec-upg-lbl">Upg.</span><span class="spec-val">RAM ✓ SSD ✓ GPU ✗</span>
+                                    </div>
+                                </div>
+                                <div class="mt-8">
+                                    <div class="text-4xl font-black mb-6 tracking-tighter text-white">1845 €</div>
+                                    <a href="configurator.html?base=1845&mode=core&os=steamos" class="btn-ripple block text-center bg-blue-600 text-white py-4 rounded-2xl hover:bg-blue-500 transition-all font-bold text-xs uppercase tracking-widest shadow-lg shadow-blue-600/20" data-key="p1-btn">Vali disain</a>
+                                </div>
+                            </div>
                         </div>
-                        <div class="mt-12">
-                            <div class="text-4xl font-black mb-8 tracking-tighter text-white">1845 €</div>
-                            <a href="/configurator?base=1845&mode=core&os=steamos" class="block text-center bg-blue-600 text-white py-5 rounded-2xl hover:bg-blue-500 transition-all font-bold text-xs uppercase tracking-widest shadow-lg shadow-blue-600/20">Vali disain</a>
+
+                        <!-- Baas+ -->
+                        <div class="flex reveal reveal-delay-2" data-card="plus" data-scenarios="steamos travel">
+                            <div class="featured-card p-10 rounded-[40px] flex flex-col justify-between relative overflow-hidden w-full">
+                                <div data-key="popular-badge" class="absolute top-6 right-6 bg-blue-600/90 text-[10px] font-black px-4 py-1.5 rounded-full uppercase tracking-widest text-white shadow-lg">Populaarne</div>
+                                <div>
+                                    <span class="text-blue-600 text-[11px] font-black uppercase tracking-[0.2em]">Ultimate Kit</span>
+                                    <h3 data-key="p2-title" class="text-3xl font-extrabold mt-3 mb-8 text-white uppercase">Baas+</h3>
+                                    <ul class="space-y-4 text-zinc-400 text-sm mb-8">
+                                        <li data-key="p2-feature-1">✓ Ryzen 5 7500F / 7500X3D</li>
+                                        <li data-key="p2-feature-2">✓ Xbox / DualSense kontroller</li>
+                                        <li data-key="p2-feature-3">✓ 4K HDMI 2.1 Ultra High Speed</li>
+                                        <li data-key="p2-feature-4">✓ SFF Lab premium pakend</li>
+                                    </ul>
+                                    <div class="card-specs pt-5 border-t border-white/5">
+                                        <span class="spec-label" data-key="spec-noise-lbl">Müra</span><span class="spec-val">~24 dB / ~38 dB</span>
+                                        <span class="spec-label" data-key="spec-power-lbl">Tarbimine</span><span class="spec-val">~55W / ~280W</span>
+                                        <span class="spec-label" data-key="spec-vol-lbl">Maht</span><span class="spec-val">~8 L</span>
+                                        <span class="spec-label" data-key="spec-tv-lbl">TV alla</span><span class="spec-val text-green-600">✓</span>
+                                        <span class="spec-label">SteamOS</span><span class="spec-val text-green-600">✓</span>
+                                        <span class="spec-label" data-key="spec-upg-lbl">Upg.</span><span class="spec-val">RAM ✓ SSD ✓ GPU ✗</span>
+                                    </div>
+                                </div>
+                                <div class="mt-8">
+                                    <div class="text-4xl font-black mb-6 tracking-tighter text-white">1999 €</div>
+                                    <a href="configurator.html?base=1999&mode=plus&os=steamos" class="btn-ripple block text-center bg-blue-600 text-white py-4 rounded-2xl hover:bg-blue-500 transition-all font-bold text-xs uppercase tracking-widest shadow-lg shadow-blue-600/20" data-key="p2-btn">Telli komplekt</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Enthusiast -->
+                        <div class="flex reveal reveal-delay-3" data-card="enthusiast" data-scenarios="steamos">
+                            <div class="glass-card p-10 rounded-[40px] flex flex-col justify-between w-full">
+                                <div>
+                                    <span class="text-blue-600 text-[11px] font-black uppercase tracking-[0.2em]">Enthusiast</span>
+                                    <h3 data-key="p3-title" class="text-3xl font-extrabold mt-3 mb-8 text-white uppercase">Pane kokku</h3>
+                                    <p data-key="p3-desc" class="text-zinc-400 text-sm leading-relaxed mb-8">
+                                        Koosta oma unistuste SFF süsteem: vali 7500X3D, RX 9070 XT ja kuni 4TB Samsung SSD.
+                                    </p>
+                                    <div class="card-specs pt-5 border-t border-white/5">
+                                        <span class="spec-label" data-key="spec-noise-lbl">Müra</span><span class="spec-val">~26 dB / ~42 dB</span>
+                                        <span class="spec-label" data-key="spec-power-lbl">Tarbimine</span><span class="spec-val">~65W / ~320W</span>
+                                        <span class="spec-label" data-key="spec-vol-lbl">Maht</span><span class="spec-val">~9 L</span>
+                                        <span class="spec-label" data-key="spec-tv-lbl">TV alla</span><span class="spec-val text-green-600">✓</span>
+                                        <span class="spec-label">SteamOS</span><span class="spec-val text-green-600">✓</span>
+                                        <span class="spec-label" data-key="spec-upg-lbl">Upg.</span><span class="spec-val">RAM ✓ SSD ✓ GPU ✗</span>
+                                    </div>
+                                </div>
+                                <div class="mt-8">
+                                    <div class="text-4xl font-black mb-6 tracking-tighter text-white">1845 € +</div>
+                                    <a href="configurator.html?base=1845&mode=enthusiast&os=steamos" class="btn-ripple block text-center bg-blue-600 text-white py-4 rounded-2xl hover:bg-blue-500 transition-all font-bold text-xs uppercase tracking-widest shadow-lg shadow-blue-600/20" data-key="p3-btn">Alusta koostamist</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Dual Boot card (full width) -->
+                    <div class="dual-boot-card p-8 mt-6 reveal" data-card="dualboot" data-scenarios="dualboot">
+                        <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8">
+                            <div class="flex-1">
+                                <div class="flex items-center gap-3 mb-5">
+                                    <span class="text-[10px] font-black uppercase tracking-widest bg-violet-600/20 text-violet-400 px-3 py-1 rounded-full" data-key="db-badge">Mõlema maailma parim</span>
+                                </div>
+                                <div class="flex flex-wrap items-center gap-3 mb-4">
+                                    <span class="text-lg">🪟</span>
+                                    <span class="text-zinc-600 font-black">+</span>
+                                    <span class="text-lg">🎮</span>
+                                    <h3 class="text-2xl md:text-3xl font-extrabold uppercase tracking-tighter text-white">Dual Boot Edition</h3>
+                                </div>
+                                <p data-key="db-desc" class="text-zinc-400 text-sm leading-relaxed max-w-xl mb-5">
+                                    Gaming SteamOS-iga, töö Windowsiga. Vaheta ühe taaskäivitusega. Ilma kompromissideta.
+                                </p>
+                                <div class="flex flex-wrap gap-2">
+                                    <span class="text-[10px] font-black text-blue-400 bg-blue-600/10 px-3 py-1 rounded-full uppercase tracking-widest">Windows 11 Pro</span>
+                                    <span class="text-[10px] font-black text-blue-400 bg-blue-600/10 px-3 py-1 rounded-full uppercase tracking-widest">SteamOS</span>
+                                    <span class="text-[10px] font-black text-green-500 bg-green-600/10 px-3 py-1 rounded-full uppercase tracking-widest" data-key="db-allgames">Kõik mängud ✓</span>
+                                </div>
+                            </div>
+                            <div class="flex flex-col items-start lg:items-end gap-4 shrink-0">
+                                <div>
+                                    <div class="text-zinc-500 text-[10px] uppercase tracking-widest mb-1" data-key="db-from">Alates</div>
+                                    <div class="text-4xl font-black tracking-tighter text-white">1924 €</div>
+                                    <div class="text-violet-400 text-[10px] uppercase tracking-widest mt-1">+79€ Windows 11 Pro</div>
+                                </div>
+                                <a href="configurator.html?base=1845&mode=enthusiast&os=dualboot" data-key="db-btn" class="btn-ripple bg-violet-600 text-white px-8 py-4 rounded-2xl hover:bg-violet-500 transition-all font-bold text-xs uppercase tracking-widest shadow-lg" style="border:none;cursor:pointer;display:inline-block">Konfigureeri</a>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="flex">
-                    <div class="glass-card p-10 rounded-[40px] flex flex-col justify-between relative overflow-hidden group w-full border-white/5">
-                        <div data-key="popular-badge" class="absolute top-6 right-6 bg-blue-600/90 text-[10px] font-black px-4 py-1.5 rounded-full uppercase tracking-widest text-white shadow-lg shadow-blue-600/10">Populaarne</div>
-                        <div>
-                            <span class="text-blue-600 text-[11px] font-black uppercase tracking-[0.2em]">Ultimate Kit</span>
-                            <h3 data-key="p2-title" class="text-3xl font-extrabold mt-3 mb-10 text-white uppercase">Baas+</h3>
-                            <ul class="space-y-5 text-zinc-400 text-sm">
-                                <li data-key="p2-feature-1">✓ Ryzen 5 7500F / 7500X3D</li>
-                                <li data-key="p2-feature-2">✓ Xbox / DualSense kontroller</li>
-                                <li data-key="p2-feature-3">✓ 4K HDMI 2.1 Ultra High Speed kaabel</li>
-                                <li data-key="p2-feature-4">✓ SFF Lab premium pakend</li>
-                            </ul>
-                        </div>
-                        <div class="mt-12">
-                            <div class="text-4xl font-black mb-8 tracking-tighter text-white">1999 €</div>
-                            <a href="/configurator?base=1999&mode=plus&os=steamos" class="block text-center bg-blue-600 text-white py-5 rounded-2xl hover:bg-blue-500 transition-all font-bold text-xs uppercase tracking-widest shadow-lg shadow-blue-600/20">Telli komplekt</a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="flex">
-                    <div class="glass-card p-10 rounded-[40px] flex flex-col justify-between w-full border-white/5">
-                        <div>
-                            <span class="text-blue-600 text-[11px] font-black uppercase tracking-[0.2em]">Enthusiast</span>
-                            <h3 data-key="p3-title" class="text-3xl font-extrabold mt-3 mb-10 text-white uppercase">Pane kokku</h3>
-                            <p data-key="p3-desc" class="text-zinc-400 text-sm leading-relaxed">
-                                Koosta oma unistuste SFF süsteem: vali 7500X3D, RX 9070 XT и до 4ТБ Samsung SSD.
-                            </p>
-                        </div>
-                        <div class="mt-12">
-                            <div class="text-4xl font-black mb-8 tracking-tighter text-white">1845 € +</div>
-                            <a href="/configurator?base=1845&mode=enthusiast&os=steamos" class="block text-center bg-blue-600 text-white py-5 rounded-2xl hover:bg-blue-500 transition-all font-bold text-xs uppercase tracking-widest shadow-lg shadow-blue-600/20">Alusta koostamist</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div id="grid-windows" class="hidden grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
-                <div class="flex">
-                    <div class="glass-card p-10 rounded-[40px] w-full border-white/5 opacity-50 flex items-center justify-center italic text-zinc-600 uppercase tracking-widest text-[10px]">Windows Core Coming Soon</div>
-                </div>
-                <div class="flex">
-                    <div class="glass-card p-10 rounded-[40px] w-full border-white/5 opacity-50 flex items-center justify-center italic text-zinc-600 uppercase tracking-widest text-[10px]">Windows Pro Coming Soon</div>
-                </div>
-                <div class="flex">
-                    <div class="glass-card p-10 rounded-[40px] w-full border-white/5 opacity-50 flex items-center justify-center italic text-zinc-600 uppercase tracking-widest text-[10px]">Enthusiast Coming Soon</div>
+                <!-- Windows grid -->
+                <div id="grid-windows" class="os-grid os-grid-hidden grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
+                    <div class="flex" data-card="win-core" data-scenarios="windows"><div class="glass-card p-10 rounded-[40px] w-full opacity-50 flex items-center justify-center italic text-zinc-600 uppercase tracking-widest text-[10px]">Windows Core — Coming Soon</div></div>
+                    <div class="flex" data-card="win-pro" data-scenarios="windows"><div class="glass-card p-10 rounded-[40px] w-full opacity-50 flex items-center justify-center italic text-zinc-600 uppercase tracking-widest text-[10px]">Windows Pro — Coming Soon</div></div>
+                    <div class="flex" data-card="win-enthusiast" data-scenarios="windows"><div class="glass-card p-10 rounded-[40px] w-full opacity-50 flex items-center justify-center italic text-zinc-600 uppercase tracking-widest text-[10px]">Enthusiast — Coming Soon</div></div>
                 </div>
             </div>
         </div>
     </section>
 
-    <footer class="py-20 border-t border-white/5 px-6 text-zinc-600 text-[10px] uppercase tracking-[0.3em]">
-        <div class="max-w-[1400px] mx-auto flex flex-col md:flex-row justify-between items-center space-y-6 md:space-y-0 text-center md:text-left">
-            <div>SFF LAB</div>
-            <div class="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-12">
-                <span class="italic uppercase" data-key="footer-slogan">Designed for living rooms</span>
-                <span data-key="footer-power" class="hidden md:block">Powered by SteamOS & Windows</span>
+    <!-- ── Compatibility (tabbed) ── -->
+    <section id="compatibility" class="py-20 px-6 relative z-20 border-t border-white/5">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-12 reveal">
+                <span class="text-blue-600 text-[11px] font-black uppercase tracking-[0.3em]">SteamOS</span>
+                <h2 data-key="compat-title" class="text-4xl md:text-5xl font-extrabold uppercase tracking-tighter mt-4 mb-4 text-gradient">Ühilduvus</h2>
+                <p data-key="compat-sub" class="text-zinc-500 text-sm max-w-md mx-auto">SteamOS toetab 90%+ Steami mängudest tänu Proton ühilduvuskihile.</p>
+            </div>
+
+            <!-- Tab buttons -->
+            <div class="flex gap-3 justify-center mb-10 reveal">
+                <button onclick="switchCompatTab('games')" id="tab-games" class="compat-tab active" data-key="tab-games">Mängud</button>
+                <button onclick="switchCompatTab('controllers')" id="tab-controllers" class="compat-tab" data-key="tab-controllers">Kontrollerid</button>
+                <button onclick="switchCompatTab('launchers')" id="tab-launchers" class="compat-tab" data-key="tab-launchers">Platvormid</button>
+            </div>
+
+            <!-- Games tab -->
+            <div id="compat-games" class="compat-content active">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 reveal">
+                    <div class="glass-panel p-8 rounded-[40px]">
+                        <div class="flex items-center gap-3 mb-7">
+                            <div class="w-2 h-2 rounded-full bg-green-400" style="box-shadow:0 0 8px rgba(74,222,128,0.6)"></div>
+                            <h3 data-key="games-works-title" class="text-[11px] font-black uppercase tracking-[0.2em] text-green-400">Töötab</h3>
+                        </div>
+                        <div>
+                            <div class="game-row"><span class="text-zinc-300">Cyberpunk 2077</span><span class="text-green-500 text-[10px] font-black tracking-widest">✓ Verified</span></div>
+                            <div class="game-row"><span class="text-zinc-300">Elden Ring</span><span class="text-green-500 text-[10px] font-black tracking-widest">✓ Verified</span></div>
+                            <div class="game-row"><span class="text-zinc-300">God of War</span><span class="text-green-500 text-[10px] font-black tracking-widest">✓ Verified</span></div>
+                            <div class="game-row"><span class="text-zinc-300">Red Dead Redemption 2</span><span class="text-green-500 text-[10px] font-black tracking-widest">✓ Verified</span></div>
+                            <div class="game-row"><span class="text-zinc-300">GTA V</span><span class="text-green-500 text-[10px] font-black tracking-widest">✓ Verified</span></div>
+                            <div class="game-row"><span class="text-zinc-300">Baldur's Gate 3</span><span class="text-green-500 text-[10px] font-black tracking-widest">✓ Verified</span></div>
+                            <div class="game-row"><span class="text-zinc-300">Hogwarts Legacy</span><span class="text-green-500 text-[10px] font-black tracking-widest">✓ Verified</span></div>
+                            <div class="game-row"><span class="text-zinc-300">The Witcher 3</span><span class="text-green-500 text-[10px] font-black tracking-widest">✓ Verified</span></div>
+                            <div class="game-row"><span class="text-zinc-300">Death Stranding</span><span class="text-green-500 text-[10px] font-black tracking-widest">✓ Verified</span></div>
+                            <div class="game-row"><span class="text-zinc-300">Hades</span><span class="text-green-500 text-[10px] font-black tracking-widest">✓ Verified</span></div>
+                            <div class="game-row"><span class="text-zinc-300">Sekiro: Shadows Die Twice</span><span class="text-green-500 text-[10px] font-black tracking-widest">✓ Verified</span></div>
+                            <div class="game-row"><span class="text-zinc-300">Horizon Zero Dawn</span><span class="text-green-500 text-[10px] font-black tracking-widest">✓ Verified</span></div>
+                            <div class="game-row"><span class="text-zinc-300">Deep Rock Galactic</span><span class="text-green-500 text-[10px] font-black tracking-widest">✓ Verified</span></div>
+                            <div class="game-row"><span class="text-zinc-300">Monster Hunter: World</span><span class="text-green-500 text-[10px] font-black tracking-widest">✓ Verified</span></div>
+                            <div class="game-row"><span class="text-zinc-300">Disco Elysium</span><span class="text-green-500 text-[10px] font-black tracking-widest">✓ Verified</span></div>
+                        </div>
+                    </div>
+                    <div class="glass-panel p-8 rounded-[40px] flex flex-col">
+                        <div class="flex items-center gap-3 mb-7">
+                            <div class="w-2 h-2 rounded-full bg-zinc-600"></div>
+                            <h3 data-key="games-broken-title" class="text-[11px] font-black uppercase tracking-[0.2em] text-zinc-500">Anti-cheat piirang</h3>
+                        </div>
+                        <div>
+                            <div class="game-row"><span class="text-zinc-500">Valorant</span><span class="text-zinc-600 text-[10px] font-black tracking-widest">✗ Vanguard</span></div>
+                            <div class="game-row"><span class="text-zinc-500">Fortnite</span><span class="text-zinc-600 text-[10px] font-black tracking-widest">✗ EAC</span></div>
+                            <div class="game-row"><span class="text-zinc-500">Call of Duty: Warzone</span><span class="text-zinc-600 text-[10px] font-black tracking-widest">✗ Ricochet</span></div>
+                            <div class="game-row"><span class="text-zinc-500">Escape from Tarkov</span><span class="text-zinc-600 text-[10px] font-black tracking-widest">✗ BattlEye</span></div>
+                            <div class="game-row"><span class="text-zinc-500">The Finals</span><span class="text-zinc-600 text-[10px] font-black tracking-widest">✗ EAC</span></div>
+                        </div>
+                        <div class="mt-auto pt-6 border-t border-white/5">
+                            <p data-key="games-broken-note" class="text-zinc-600 text-[11px] leading-relaxed">Need mängud kasutavad kernel-tasemel anti-cheat tarkvara, mis nõuab Windows-i. Vali Dual Boot või Windows versioon.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Controllers tab -->
+            <div id="compat-controllers" class="compat-content">
+                <div class="glass-panel p-8 rounded-[40px] max-w-2xl mx-auto reveal">
+                    <div class="compat-row"><span class="text-zinc-300">DualSense (PS5)</span><span class="text-green-500 text-[10px] font-black tracking-widest">✓ <span data-key="compat-works">Töötab</span></span></div>
+                    <div class="compat-row"><span class="text-zinc-300">Xbox Wireless Controller</span><span class="text-green-500 text-[10px] font-black tracking-widest">✓ <span data-key="compat-works">Töötab</span></span></div>
+                    <div class="compat-row"><span class="text-zinc-300">8BitDo Ultimate</span><span class="text-green-500 text-[10px] font-black tracking-widest">✓ <span data-key="compat-works">Töötab</span></span></div>
+                    <div class="compat-row"><span class="text-zinc-300">Nintendo Switch Pro</span><span class="text-green-500 text-[10px] font-black tracking-widest">✓ <span data-key="compat-works">Töötab</span></span></div>
+                    <div class="compat-row"><span class="text-zinc-300">Steam Controller</span><span class="text-green-500 text-[10px] font-black tracking-widest">✓ <span data-key="compat-works">Töötab</span></span></div>
+                </div>
+            </div>
+
+            <!-- Launchers tab -->
+            <div id="compat-launchers" class="compat-content">
+                <div class="glass-panel p-8 rounded-[40px] max-w-2xl mx-auto reveal">
+                    <div class="compat-row"><span class="text-zinc-300">Steam</span><span class="text-green-500 text-[10px] font-black tracking-widest">✓ <span data-key="compat-native">Native</span></span></div>
+                    <div class="compat-row"><span class="text-zinc-300">Heroic (Epic / GOG)</span><span class="text-green-500 text-[10px] font-black tracking-widest">✓ <span data-key="compat-works">Töötab</span></span></div>
+                    <div class="compat-row"><span class="text-zinc-300">Lutris</span><span class="text-green-500 text-[10px] font-black tracking-widest">✓ <span data-key="compat-works">Töötab</span></span></div>
+                    <div class="compat-row"><span class="text-zinc-300">Battle.net</span><span class="text-amber-500 text-[10px] font-black tracking-widest">⚠ <span data-key="compat-partial">Osaliselt</span></span></div>
+                    <div class="compat-row"><span class="text-zinc-500">EA App</span><span class="text-zinc-600 text-[10px] font-black tracking-widest">✗ <span data-key="compat-no">Ei tööta</span></span></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ── Honest disclaimer ── -->
+    <section class="px-6 pb-20 relative z-20">
+        <div class="max-w-3xl mx-auto reveal">
+            <div class="disclaimer-box p-8 rounded-[28px]">
+                <div class="flex gap-5">
+                    <div class="text-amber-500 text-2xl shrink-0 mt-0.5">⚠</div>
+                    <div>
+                        <h4 data-key="disc-title" class="text-sm font-black uppercase tracking-widest text-amber-500 mb-3">Aus hoiatus</h4>
+                        <p data-key="disc-text" class="text-zinc-400 text-sm leading-relaxed">
+                            Testame iga arvuti enne saatmist SteamOS-iga. Mõned mängud kernel-tasemel anti-cheatiga (Valorant, Fortnite, EA FC) ei tööta SteamOS-iga. Nende jaoks vali Windows või Dual Boot versioon.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="py-16 border-t border-white/5 px-6 text-zinc-600 text-[9px] uppercase tracking-[0.25em]">
+        <div class="max-w-[1400px] mx-auto flex flex-col md:flex-row justify-between items-center gap-4 text-center md:text-left">
+            <div class="font-black">SFF Lab OÜ © 2026</div>
+            <div class="flex flex-col md:flex-row gap-3 md:gap-8 items-center">
+                <span class="italic" data-key="footer-slogan">Designed for living rooms</span>
+                <span data-key="footer-cookies" class="text-zinc-700">Jälgimisküpsiseid ei kasutata</span>
+                <span data-key="footer-built" class="text-zinc-700">Ehitatud Eestis</span>
             </div>
         </div>
     </footer>
 
+    <script src="nav.js"></script>
     <script>
-        function switchOS(os) {
-            const gridSteam = document.getElementById('grid-steamos');
-            const gridWin = document.getElementById('grid-windows');
-            const btnSteam = document.getElementById('btn-steamos');
-            const btnWin = document.getElementById('btn-windows');
-            if (os === 'steamos') {
-                gridSteam.classList.remove('hidden');
-                gridWin.classList.add('hidden');
-                btnSteam.classList.add('active');
-                btnWin.classList.remove('active');
-            } else {
-                gridSteam.classList.add('hidden');
-                gridWin.classList.remove('hidden');
-                btnSteam.classList.remove('active');
-                btnWin.classList.add('active');
-            }
-        }
-
-        const translations = {
-            'et': {
-                'nav-pricing': 'Paketid',
-                'p1-title': 'Baas', 'p1-btn': 'Vali disain', 'p1-custom': '✓ Vali korpuse disain',
-                'popular-badge': 'Populaarne', 'p2-title': 'Baas+', 'p2-btn': 'Telli komplekt',
-                'p3-title': 'Pane kokku', 'p3-desc': 'Koosta oma unistuste SFF süsteem: vali 7500X3D, RX 9070 XT ja kuni 4TB Samsung SSD.',
-                'p3-btn': 'Alusta koostamist', 'footer-slogan': 'Designed for living rooms'
+        window.pageTranslations = {
+            et: {
+                'trust-1':'Euroopa mini-PC turg kasvab 7% aastas','trust-2':'18 000+ Steami mängu SteamOS-ühilduvad','trust-3':'Koostatud ja testitud Eestis',
+                'hero-l1':'4K mängimine diivanilt.','hero-l2':'Ilma mürarika tornita.','hero-l3':'Ilma konsoolipiiranguteta.',
+                'hero-sub':'Täisvõimsus. Konsooli suurus. Vaikne töö.','hero-btn-boxes':'Korpused','hero-btn-pricing':'Paketid ↓',
+                'size-title':'Väiksem kui PS5.','size-sub':'Mahub teleri kõrval riiulile. Käivitab kogu Steami raamatukogu.',
+                'size-stat1':'Maht','size-stat2':'Müratase','size-stat3':'Max resolutsioon',
+                'filter-steamos':'🎮 Gaming SteamOS','filter-windows':'🪟 Gaming Windows','filter-office':'💼 Vaikne kontor','filter-dualboot':'🔄 Dual Boot','filter-travel':'✈️ Reisi-PC',
+                'spec-noise-lbl':'Müra','spec-power-lbl':'Tarbimine','spec-vol-lbl':'Maht','spec-tv-lbl':'TV alla','spec-upg-lbl':'Upg.',
+                'p1-title':'Baas','p1-custom':'✓ Vali korpuse disain','p1-btn':'Vali disain',
+                'popular-badge':'Populaarne','p2-title':'Baas+','p2-btn':'Telli komplekt',
+                'p2-feature-1':'✓ Ryzen 5 7500F / 7500X3D','p2-feature-2':'✓ Xbox / DualSense kontroller','p2-feature-3':'✓ 4K HDMI 2.1 Ultra High Speed','p2-feature-4':'✓ SFF Lab premium pakend',
+                'p3-title':'Pane kokku','p3-btn':'Alusta koostamist','p3-desc':'Koosta oma unistuste SFF süsteem: vali 7500X3D, RX 9070 XT ja kuni 4TB Samsung SSD.',
+                'db-badge':'Mõlema maailma parim','db-desc':'Gaming SteamOS-iga, töö Windowsiga. Vaheta ühe taaskäivitusega. Ilma kompromissideta.','db-allgames':'Kõik mängud ✓','db-from':'Alates','db-btn':'Konfigureeri',
+                'compat-title':'Ühilduvus','compat-sub':'SteamOS toetab 90%+ Steami mängudest tänu Proton ühilduvuskihile.',
+                'tab-games':'Mängud','tab-controllers':'Kontrollerid','tab-launchers':'Platvormid',
+                'games-works-title':'Töötab','games-broken-title':'Anti-cheat piirang',
+                'games-broken-note':'Need mängud kasutavad kernel-tasemel anti-cheat tarkvara, mis nõuab Windows-i. Vali Dual Boot või Windows versioon.',
+                'compat-works':'Töötab','compat-native':'Native','compat-partial':'Osaliselt','compat-no':'Ei tööta',
+                'disc-title':'Aus hoiatus','disc-text':'Testame iga arvuti enne saatmist SteamOS-iga. Mõned mängud kernel-tasemel anti-cheatiga (Valorant, Fortnite, EA FC) ei tööta SteamOS-iga. Nende jaoks vali Windows või Dual Boot versioon.',
+                'footer-slogan':'Designed for living rooms','footer-cookies':'Jälgimisküpsiseid ei kasutata','footer-built':'Ehitatud Eestis'
             },
-            'ru': {
-                'nav-pricing': 'Цены',
-                'p1-title': 'База', 'p1-btn': 'Выбрать дизайн', 'p1-custom': '✓ Выбор дизайна корпуса',
-                'popular-badge': 'Популярно', 'p2-title': 'База+', 'p2-btn': 'Заказать набор',
-                'p3-title': 'Собери сам', 'p3-desc': 'Собери систему своей мечты: выбери 7500X3D, RX 9070 XT и до 4ТБ Samsung SSD.',
-                'p3-btn': 'Начать сборку', 'footer-slogan': 'Создано для гостиной'
+            ru: {
+                'trust-1':'Европейский рынок мини-ПК растёт на 7% в год','trust-2':'18 000+ игр Steam совместимы с SteamOS','trust-3':'Собрано и протестировано в Эстонии',
+                'hero-l1':'4K игры с дивана.','hero-l2':'Без шумного системника.','hero-l3':'Без ограничений консоли.',
+                'hero-sub':'Максимальная мощность. Размер консоли. Тихая работа.','hero-btn-boxes':'Корпуса','hero-btn-pricing':'Цены ↓',
+                'size-title':'Меньше, чем PS5.','size-sub':'Помещается на полке рядом с телевизором. Запускает всю библиотеку Steam.',
+                'size-stat1':'Объём','size-stat2':'Уровень шума','size-stat3':'Макс. разрешение',
+                'filter-steamos':'🎮 Gaming SteamOS','filter-windows':'🪟 Gaming Windows','filter-office':'💼 Тихий офис','filter-dualboot':'🔄 Dual Boot','filter-travel':'✈️ Travel PC',
+                'spec-noise-lbl':'Шум','spec-power-lbl':'Потребление','spec-vol-lbl':'Объём','spec-tv-lbl':'Под TV','spec-upg-lbl':'Апгр.',
+                'p1-title':'База','p1-custom':'✓ Выбор дизайна корпуса','p1-btn':'Выбрать дизайн',
+                'popular-badge':'Популярно','p2-title':'База+','p2-btn':'Заказать набор',
+                'p2-feature-1':'✓ Ryzen 5 7500F / 7500X3D','p2-feature-2':'✓ Xbox / DualSense контроллер','p2-feature-3':'✓ 4K HDMI 2.1 Ultra High Speed','p2-feature-4':'✓ SFF Lab премиум упаковка',
+                'p3-title':'Собери сам','p3-btn':'Начать сборку','p3-desc':'Собери систему своей мечты: выбери 7500X3D, RX 9070 XT и до 4ТБ Samsung SSD.',
+                'db-badge':'Лучшее из обоих миров','db-desc':'Игры на SteamOS, работа на Windows. Переключение одной перезагрузкой. Без компромиссов.','db-allgames':'Все игры ✓','db-from':'От','db-btn':'Настроить',
+                'compat-title':'Совместимость','compat-sub':'SteamOS поддерживает 90%+ игр Steam благодаря слою совместимости Proton.',
+                'tab-games':'Игры','tab-controllers':'Контроллеры','tab-launchers':'Платформы',
+                'games-works-title':'Работает','games-broken-title':'Ограничение anti-cheat',
+                'games-broken-note':'Эти игры используют античит уровня ядра Windows. Выбери Dual Boot или Windows версию.',
+                'compat-works':'Работает','compat-native':'Нативно','compat-partial':'Частично','compat-no':'Не работает',
+                'disc-title':'Честное предупреждение','disc-text':'Мы тестируем каждую сборку под SteamOS перед отправкой. Некоторые игры с античитом (Valorant, Fortnite, EA FC) не работают на SteamOS. Для них выбери Windows или Dual Boot.',
+                'footer-slogan':'Создано для гостиной','footer-cookies':'Без куки-трекинга','footer-built':'Собрано в Эстонии'
             }
         };
 
-        function setLanguage(lang) {
-            localStorage.setItem('selectedLanguage', lang);
-            document.querySelectorAll('[data-key]').forEach(el => {
-                const key = el.getAttribute('data-key');
-                if (translations[lang][key]) el.innerText = translations[lang][key];
-            });
-            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active', 'text-white'));
-            document.getElementById('lang-' + lang).classList.add('active', 'text-white');
+        /* ── Scenario config ── */
+        var scenarioMap = {
+            steamos:  { os: 'steamos',  cards: ['core','plus','enthusiast'] },
+            windows:  { os: 'windows',  cards: ['win-core','win-pro','win-enthusiast'] },
+            office:   { os: 'steamos',  cards: ['core'] },
+            dualboot: { os: 'steamos',  cards: ['dualboot'] },
+            travel:   { os: 'steamos',  cards: ['core','enthusiast'] }
+        };
+        var activeScenario = null;
+
+        function filterScenario(scenario, btn) {
+            document.querySelectorAll('.scenario-btn').forEach(function(b) { b.classList.remove('active'); });
+            if (activeScenario === scenario) { activeScenario = null; clearDim(); return; }
+            activeScenario = scenario;
+            btn.classList.add('active');
+            var cfg = scenarioMap[scenario];
+            if (!cfg) return;
+            switchOS(cfg.os);
+            setTimeout(function() {
+                document.querySelectorAll('[data-card]').forEach(function(c) {
+                    c.classList.toggle('scenario-dim', !cfg.cards.includes(c.getAttribute('data-card')));
+                });
+            }, 80);
+        }
+        function clearDim() { document.querySelectorAll('[data-card]').forEach(function(c) { c.classList.remove('scenario-dim'); }); }
+
+        /* ── OS switch ── */
+        var currentOS = 'steamos';
+        function switchOS(os) {
+            if (os === currentOS) return;
+            currentOS = os;
+            var gs = document.getElementById('grid-steamos'), gw = document.getElementById('grid-windows');
+            var bs = document.getElementById('btn-steamos'), bw = document.getElementById('btn-windows');
+            if (os === 'steamos') {
+                gw.classList.replace('os-grid-visible','os-grid-hidden');
+                setTimeout(function() { gs.classList.replace('os-grid-hidden','os-grid-visible'); }, 50);
+                bs.classList.add('active'); bw.classList.remove('active');
+            } else {
+                gs.classList.replace('os-grid-visible','os-grid-hidden');
+                setTimeout(function() { gw.classList.replace('os-grid-hidden','os-grid-visible'); }, 50);
+                bs.classList.remove('active'); bw.classList.add('active');
+            }
         }
 
-        window.onload = () => {
-            setLanguage(localStorage.getItem('selectedLanguage') || 'et');
-        };
+        /* ── Compatibility tabs ── */
+        function switchCompatTab(tab) {
+            document.querySelectorAll('.compat-tab').forEach(function(b) { b.classList.remove('active'); });
+            document.querySelectorAll('.compat-content').forEach(function(c) { c.classList.remove('active'); });
+            document.getElementById('tab-' + tab).classList.add('active');
+            document.getElementById('compat-' + tab).classList.add('active');
+        }
+
+        /* ── Scroll reveal ── */
+        var observer = new IntersectionObserver(function(entries) {
+            entries.forEach(function(e) { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+        }, { threshold: 0.08 });
+        document.querySelectorAll('.reveal').forEach(function(el) { observer.observe(el); });
     </script>
 </body>
 </html>

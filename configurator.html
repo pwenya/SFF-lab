@@ -10,25 +10,142 @@
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #050505; color: white; }
         .glass-panel { background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); }
         select {
-            background-color: #111 !important;
-            border: 1px solid #333 !important;
-            color: white !important;
+            background-color: #111 !important; border: 1px solid #333 !important; color: white !important;
             appearance: none;
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='white'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 1rem center;
-            background-size: 1em;
+            background-repeat: no-repeat; background-position: right 1rem center; background-size: 1em;
         }
         select:disabled { opacity: 0.6; cursor: not-allowed; border-color: #222 !important; color: #888 !important; }
+        .os-btn { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); color: #71717a; cursor: pointer; transition: all 0.2s; font-family: inherit; }
+        .os-btn:hover { border-color: rgba(255,255,255,0.3); color: white; }
+        .os-btn.active { border-color: #2563eb; color: white; background: rgba(37,99,235,0.15); }
+        .os-btn.active-green { border-color: #16a34a; color: white; background: rgba(22,163,74,0.12); }
+        .preset-btn { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); color: #71717a; cursor: pointer; transition: all 0.2s; font-family: inherit; }
+        .preset-btn:hover { border-color: rgba(255,255,255,0.25); color: white; background: rgba(255,255,255,0.05); }
+        .preset-btn.active { border-color: #2563eb; color: white; background: rgba(37,99,235,0.12); }
+        .os-note { display: none; font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; margin-top: 8px; padding: 8px 12px; border-radius: 10px; }
+        .os-note.show { display: block; }
+        .os-note-green  { color: #4ade80; background: rgba(22,163,74,0.1);   border: 1px solid rgba(22,163,74,0.2); }
+        .os-note-blue   { color: #93c5fd; background: rgba(37,99,235,0.08);  border: 1px solid rgba(37,99,235,0.2); }
+        .os-note-violet { color: #c4b5fd; background: rgba(124,58,237,0.1); border: 1px solid rgba(124,58,237,0.2); }
+
+        /* ── Order Modal ── */
+        @keyframes _omSpin { to { transform: rotate(360deg); } }
+        .om-overlay {
+            position: fixed; inset: 0; z-index: 10000;
+            background: rgba(0,0,0,0.82); backdrop-filter: blur(10px);
+            display: flex; align-items: center; justify-content: center; padding: 16px;
+            opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
+        }
+        .om-overlay.open { opacity: 1; pointer-events: all; }
+        .om-box {
+            position: relative; background: #0a0a0a;
+            border: 1px solid rgba(255,255,255,0.09); border-radius: 36px;
+            padding: 40px; width: 100%; max-width: 520px; max-height: 90vh; overflow-y: auto;
+            transform: translateY(20px) scale(0.97);
+            transition: transform 0.35s cubic-bezier(0.16,1,0.3,1), opacity 0.35s ease;
+            opacity: 0;
+        }
+        .om-overlay.open .om-box { transform: translateY(0) scale(1); opacity: 1; }
+        .om-input {
+            width: 100%; background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.1); border-radius: 14px;
+            color: white; padding: 14px 18px; font-size: 14px; font-family: inherit;
+            outline: none; transition: border-color 0.2s; box-sizing: border-box;
+        }
+        .om-input:focus { border-color: rgba(59,130,246,0.6); }
+        .om-input::placeholder { color: #3f3f46; }
+        .om-input.err { border-color: rgba(239,68,68,0.6) !important; }
+        .om-row {
+            display: flex; justify-content: space-between; align-items: baseline;
+            font-size: 9px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+            padding: 7px 0; border-bottom: 1px solid rgba(255,255,255,0.04);
+        }
+        .om-row:last-child { border-bottom: none; }
+        .om-row .om-lbl { color: #52525b; white-space: nowrap; padding-right: 12px; }
+        .om-row .om-val { color: white; text-align: right; }
     </style>
 </head>
 <body class="p-6 md:p-20 antialiased text-zinc-100">
-    <div class="max-w-4xl mx-auto">
-        <a href="/" data-key="back-link" class="text-zinc-500 hover:text-white text-[10px] uppercase tracking-[0.2em] mb-10 inline-block transition">← Tagasi pealehele</a>
+
+    <!-- ── Order Modal ── -->
+    <div id="om-overlay" class="om-overlay" onclick="_omBackdrop(event)">
+        <div class="om-box" id="om-box">
+            <button onclick="closeOrderModal()" style="position:absolute;top:18px;right:22px;background:none;border:none;cursor:pointer;color:#71717a;font-size:20px;line-height:1;font-family:inherit" onmouseover="this.style.color='white'" onmouseout="this.style.color='#71717a'">✕</button>
+            <p style="color:#2563eb;font-size:10px;font-weight:800;letter-spacing:0.25em;text-transform:uppercase;margin-bottom:10px">SFF Lab</p>
+            <h2 data-key="om-title" style="font-size:22px;font-weight:800;color:white;text-transform:uppercase;letter-spacing:-0.02em;margin-bottom:24px">Vormista tellimus</h2>
+
+            <!-- Config summary -->
+            <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.07);border-radius:20px;padding:14px 18px;margin-bottom:14px">
+                <div id="om-summary-rows"></div>
+            </div>
+
+            <!-- Price + delivery -->
+            <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:22px">
+                <span id="om-price" style="font-size:32px;font-weight:900;letter-spacing:-0.03em;color:white"></span>
+                <span id="om-delivery" style="font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#52525b"></span>
+            </div>
+
+            <!-- Form -->
+            <div id="om-form">
+                <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px">
+                    <div>
+                        <label data-key="om-name-label" style="display:block;font-size:9px;font-weight:800;letter-spacing:0.2em;text-transform:uppercase;color:#2563eb;margin-bottom:6px">Täisnimi</label>
+                        <input id="om-name" type="text" class="om-input" autocomplete="name">
+                    </div>
+                    <div>
+                        <label data-key="om-email-label" style="display:block;font-size:9px;font-weight:800;letter-spacing:0.2em;text-transform:uppercase;color:#2563eb;margin-bottom:6px">E-posti aadress</label>
+                        <input id="om-email" type="email" class="om-input" autocomplete="email">
+                    </div>
+                    <div>
+                        <label data-key="om-phone-label" style="display:block;font-size:9px;font-weight:800;letter-spacing:0.2em;text-transform:uppercase;color:#2563eb;margin-bottom:6px">Telefon</label>
+                        <input id="om-phone" type="tel" class="om-input" autocomplete="tel">
+                    </div>
+                </div>
+                <div id="om-err" style="display:none;font-size:10px;font-weight:700;color:#f87171;background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.2);border-radius:10px;padding:10px 14px;margin-bottom:12px;text-align:center" data-key="om-err-msg">Midagi läks valesti. Palun proovi uuesti.</div>
+                <button id="om-submit" onclick="submitOrderForm()" data-key="om-submit" class="btn-ripple w-full bg-blue-600 hover:bg-blue-500 text-white py-4 rounded-2xl font-black uppercase tracking-widest transition" style="font-size:10px;border:none;cursor:pointer">Saada tellimus</button>
+                <p data-key="legal-info" style="font-size:8px;color:#3f3f46;text-transform:uppercase;letter-spacing:0.1em;margin-top:18px;text-align:center;line-height:1.6">* Eritellimusel valmiv toode.<br>VÕS § 53 lg 4 kohaselt tagastamisõigus puudub.</p>
+            </div>
+
+            <!-- Success -->
+            <div id="om-success" style="display:none;text-align:center;padding:36px 0">
+                <div style="font-size:48px;margin-bottom:18px">✓</div>
+                <p id="om-success-msg" data-key="om-success-msg" style="color:white;font-weight:700;font-size:14px;line-height:1.6">Tellimus vastu võetud!<br>Võtame ühendust 24 tunni jooksul.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="max-w-4xl mx-auto pt-24">
+        <a href="index.html" data-key="back-link" class="text-zinc-500 hover:text-white text-[10px] uppercase tracking-[0.2em] mb-10 inline-block transition">← Tagasi pealehele</a>
         <h1 data-key="config-title" class="text-4xl font-black mb-2 uppercase tracking-tighter">Konfigureeri oma süsteem</h1>
-        <p class="text-blue-500 mb-12 uppercase text-[10px] tracking-[0.3em] font-bold">SFF Lab Build Tool v1.5</p>
+        <p class="text-blue-500 mb-8 uppercase text-[10px] tracking-[0.3em] font-bold">SFF Lab Build Tool v1.5</p>
+
+        <!-- Scenario Presets -->
+        <div class="mb-10">
+            <p data-key="preset-label" class="text-[9px] font-black uppercase tracking-[0.3em] text-zinc-600 mb-3">Kiirvalik / Быстрый выбор</p>
+            <div class="flex flex-wrap gap-2">
+                <button onclick="applyPreset('silent')"   id="preset-silent"   class="preset-btn px-4 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest">Silent 1440p</button>
+                <button onclick="applyPreset('living')"   id="preset-living"   class="preset-btn px-4 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest">4K Living Room</button>
+                <button onclick="applyPreset('dualboot')" id="preset-dualboot" class="preset-btn px-4 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest">Dual Boot Power</button>
+            </div>
+        </div>
+
         <div class="grid md:grid-cols-2 gap-12">
             <div id="selectors-container" class="space-y-8">
+
+                <!-- OS Selector -->
+                <div>
+                    <label data-key="os-label" class="block text-[10px] font-black uppercase tracking-widest text-blue-500 mb-3">Operatsioonisüsteem (OS)</label>
+                    <div class="flex gap-2">
+                        <button onclick="selectOS('steamos')" id="os-steamos" class="os-btn active-green flex-1 py-3 px-2 rounded-xl text-[9px] font-black uppercase tracking-wider text-center">SteamOS</button>
+                        <button onclick="selectOS('windows')" id="os-windows" class="os-btn flex-1 py-3 px-2 rounded-xl text-[9px] font-black uppercase tracking-wider text-center">Windows 11<br><span class="text-[8px] opacity-60">+79€</span></button>
+                        <button onclick="selectOS('dualboot')" id="os-dualboot" class="os-btn flex-1 py-3 px-2 rounded-xl text-[9px] font-black uppercase tracking-wider text-center">Dual Boot<br><span class="text-[8px] opacity-60">+79€</span></button>
+                    </div>
+                    <div id="os-note-steamos" class="os-note os-note-green show" data-key="os-note-steamos">✓ 18 000+ mängu ühilduv · Parim SFF kogemus</div>
+                    <div id="os-note-windows" class="os-note os-note-blue"        data-key="os-note-windows">✓ Maksimaalne mänguühilduvus · Windows litsents kaasas</div>
+                    <div id="os-note-dualboot" class="os-note os-note-violet"    data-key="os-note-dualboot">✓ SteamOS + Windows 11 · Parim mõlemast maailmast</div>
+                </div>
+
                 <div>
                     <label data-key="case-label" class="block text-[10px] font-black uppercase tracking-widest text-blue-500 mb-3">Korpuse disain (Case Color)</label>
                     <select id="case-select" class="w-full p-4 rounded-xl outline-none focus:border-blue-600 transition uppercase text-[10px] font-bold tracking-widest cursor-pointer">
@@ -51,10 +168,10 @@
                         <option value="175">AMD Radeon RX 9070 XT 20GB (+175€)</option>
                     </select>
                 </div>
-                <div id="psu-block" style="display:none;">
+                <div id="psu-block" style="display:none">
                     <label data-key="psu-label" class="block text-[10px] font-black uppercase tracking-widest text-blue-500 mb-3">Toiteplokk (PSU)</label>
                     <select id="psu-select" onchange="updatePrice()" class="w-full p-4 rounded-xl outline-none transition uppercase text-[10px] font-bold tracking-widest cursor-pointer">
-                        <option value="0" id="psu-650">650W SFX Gold Quiet Edition</option>
+                        <option value="0"  id="psu-650">650W SFX Gold Quiet Edition</option>
                         <option value="45" id="psu-850">850W SFX Platinum (+45€)</option>
                     </select>
                     <p id="psu-warning" class="text-[9px] text-amber-500 uppercase mt-2 hidden" data-key="psu-req">9070 XT jaoks on vajalik 850W toiteplokk</p>
@@ -72,10 +189,10 @@
                     <select id="ssd-select" onchange="updatePrice()" class="w-full p-4 rounded-xl outline-none transition uppercase text-[10px] font-bold tracking-widest cursor-pointer">
                         <option value="0">1TB Samsung 990 PRO</option>
                         <option value="120">2TB Samsung 990 PRO (+120€)</option>
-                        <option value="425" id="ssd-4tb" style="display:none;">4TB Samsung 990 PRO (+425€)</option>
+                        <option value="425" id="ssd-4tb" style="display:none">4TB Samsung 990 PRO (+425€)</option>
                     </select>
                 </div>
-                <div id="ctrl-block" style="display:none;">
+                <div id="ctrl-block" style="display:none">
                     <label data-key="ctrl-label" class="block text-[10px] font-black uppercase tracking-widest text-blue-500 mb-3">Kontroller (Controller)</label>
                     <select id="ctrl-select" onchange="updatePrice()" class="w-full p-4 rounded-xl outline-none transition uppercase text-[10px] font-bold tracking-widest cursor-pointer">
                         <option value="0">Xbox Wireless Controller</option>
@@ -84,19 +201,20 @@
                         <option value="-80">Ilma kontrollerita (-80€)</option>
                     </select>
                 </div>
-                <div id="hdmi-block" style="display:none;">
+                <div id="hdmi-block" style="display:none">
                     <label data-key="hdmi-label" class="block text-[10px] font-black uppercase tracking-widest text-blue-500 mb-3">Kaabel (Cable)</label>
                     <select disabled class="w-full p-4 rounded-xl outline-none uppercase text-[10px] font-bold tracking-widest">
                         <option>✓ 4K HDMI 2.1 Ultra High Speed</option>
                     </select>
                 </div>
-                <div id="pkg-block" style="display:none;">
+                <div id="pkg-block" style="display:none">
                     <label data-key="pkg-label" class="block text-[10px] font-black uppercase tracking-widest text-blue-500 mb-3">Pakend (Packaging)</label>
                     <select disabled class="w-full p-4 rounded-xl outline-none uppercase text-[10px] font-bold tracking-widest">
                         <option>✓ SFF Lab Premium Packaging</option>
                     </select>
                 </div>
             </div>
+
             <div class="glass-panel p-10 rounded-[40px] h-fit sticky top-10">
                 <h2 data-key="summary-title" class="text-xl font-bold mb-6 uppercase tracking-widest">Sinu valik</h2>
                 <div class="space-y-4 border-b border-white/5 pb-6 mb-6 text-[10px] uppercase tracking-widest text-zinc-400">
@@ -105,76 +223,341 @@
                         <span id="model-display" class="text-white font-bold uppercase">BAAS</span>
                     </div>
                     <div class="flex justify-between">
+                        <span data-key="sum-os">OS:</span>
+                        <span id="os-display" class="font-bold uppercase tracking-widest" style="color:#4ade80">SteamOS</span>
+                    </div>
+                    <div class="flex justify-between">
                         <span data-key="sum-build">Tüüp:</span>
                         <span class="text-blue-400 font-bold uppercase tracking-widest">Eritellimus</span>
                     </div>
                 </div>
                 <div id="total-price" class="text-4xl font-black mb-8 tracking-tighter">1845 €</div>
-                <button data-key="send-btn" class="w-full bg-blue-600 py-4 rounded-2xl font-black uppercase text-[10px] tracking-widest hover:bg-blue-500 transition shadow-lg shadow-blue-600/20">Saada päring</button>
+                <button onclick="openOrderModal()" data-key="order-open-btn" class="btn-ripple w-full bg-blue-600 py-4 rounded-2xl font-black uppercase text-[10px] tracking-widest hover:bg-blue-500 transition shadow-lg shadow-blue-600/20" style="border:none;cursor:pointer">Vormista tellimus</button>
                 <p data-key="legal-info" class="text-[8px] text-zinc-600 uppercase tracking-widest mt-6 text-center leading-relaxed">
                     * Eritellimusel valmiv toode.<br>VÕS § 53 lg 4 kohaselt tagastamisõigus puudub.
                 </p>
             </div>
         </div>
     </div>
+
+    <footer class="mt-24 border-t border-white/5 py-12 px-6">
+        <div class="max-w-4xl mx-auto flex flex-col md:flex-row justify-between items-start gap-6">
+            <div>
+                <p class="text-xl font-extrabold tracking-tighter uppercase mb-1">SFF LAB<span class="text-blue-600">.</span></p>
+                <p class="text-zinc-600 text-[10px] uppercase tracking-widest">SFF Lab OÜ © 2026</p>
+                <p class="text-zinc-700 text-[9px] uppercase tracking-widest mt-1" data-key="footer-estonia">Toodetud Eestis · Сделано в Эстонии</p>
+            </div>
+            <div class="text-right">
+                <p class="text-zinc-600 text-[9px] uppercase tracking-widest" data-key="footer-cookies">Küpsiseid ei kasutata · Saidil pole jälgijaid</p>
+                <p class="text-zinc-700 text-[9px] uppercase tracking-widest mt-1"><a href="mailto:info@sfflab.ee" class="hover:text-zinc-400 transition">info@sfflab.ee</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="nav.js"></script>
     <script>
-        const urlParams = new URLSearchParams(window.location.search);
-        const BASE_PRICE = parseInt(urlParams.get('base')) || 1845;
-        const MODE = urlParams.get('mode');
+        window.pageTranslations = {
+            et: {
+                'back-link': '← Tagasi pealehele', 'config-title': 'Konfigureeri oma süsteem',
+                'preset-label': 'Kiirvalik',
+                'os-label': 'Operatsioonisüsteem',
+                'os-note-steamos': '✓ 18 000+ mängu ühilduv · Parim SFF kogemus',
+                'os-note-windows': '✓ Maksimaalne mänguühilduvus · Windows litsents kaasas',
+                'os-note-dualboot': '✓ SteamOS + Windows 11 · Parim mõlemast maailmast',
+                'case-label': 'Korpuse disain', 'ctrl-label': 'Kontroller', 'cpu-label': 'Protsessor',
+                'gpu-label': 'Videokaart', 'psu-label': 'Toiteplokk', 'ram-label': 'Operatiivmälu',
+                'ssd-label': 'Salvestusruum', 'hdmi-label': 'Kaabel', 'pkg-label': 'Pakend',
+                'psu-req': '9070 XT jaoks on vajalik 850W toiteplokk',
+                'summary-title': 'Sinu valik', 'sum-model': 'Mudel:', 'sum-os': 'OS:', 'sum-build': 'Tüüp:',
+                'order-open-btn': 'Vormista tellimus',
+                'legal-info': '* Eritellimusel valmiv toode.\nVÕS § 53 lg 4 kohaselt tagastamisõigus puudub.',
+                'footer-estonia': 'Toodetud Eestis', 'footer-cookies': 'Küpsiseid ei kasutata · Saidil pole jälgijaid',
+                'om-title': 'Vormista tellimus',
+                'om-name-label': 'Täisnimi', 'om-email-label': 'E-posti aadress', 'om-phone-label': 'Telefon',
+                'om-submit': 'Saada tellimus',
+                'om-success-msg': 'Tellimus vastu võetud!\nVõtame ühendust 24 tunni jooksul.',
+                'om-err-msg': 'Midagi läks valesti. Palun proovi uuesti.',
+                'om-delivery-label': 'Eeldatav valmimine:'
+            },
+            ru: {
+                'back-link': '← На главную', 'config-title': 'Настрой свою систему',
+                'preset-label': 'Быстрый выбор',
+                'os-label': 'Операционная система',
+                'os-note-steamos': '✓ 18 000+ совместимых игр · Лучший SFF опыт',
+                'os-note-windows': '✓ Максимальная совместимость · Лицензия Windows включена',
+                'os-note-dualboot': '✓ SteamOS + Windows 11 · Лучшее из двух миров',
+                'case-label': 'Дизайн корпуса', 'ctrl-label': 'Контроллер', 'cpu-label': 'Процессор',
+                'gpu-label': 'Видеокарта', 'psu-label': 'Блок питания', 'ram-label': 'Оперативная память',
+                'ssd-label': 'Накопитель', 'hdmi-label': 'Кабель', 'pkg-label': 'Упаковка',
+                'psu-req': 'Для 9070 XT необходим блок 850W',
+                'summary-title': 'Ваш выбор', 'sum-model': 'Модель:', 'sum-os': 'ОС:', 'sum-build': 'Тип:',
+                'order-open-btn': 'Оформить заказ',
+                'legal-info': '* Товар под заказ.\nСогласно VÕS § 53 lg 4, возврат невозможен.',
+                'footer-estonia': 'Произведено в Эстонии', 'footer-cookies': 'Cookie не используются · Без трекеров',
+                'om-title': 'Оформить заказ',
+                'om-name-label': 'Полное имя', 'om-email-label': 'Электронная почта', 'om-phone-label': 'Номер телефона',
+                'om-submit': 'Отправить заказ',
+                'om-success-msg': 'Заказ получен!\nСвяжемся с вами в течение 24 часов.',
+                'om-err-msg': 'Что-то пошло не так. Пожалуйста, попробуйте снова.',
+                'om-delivery-label': 'Ориентировочная готовность:'
+            }
+        };
+
+        /* ── State ── */
+        var urlParams   = new URLSearchParams(window.location.search);
+        var BASE_PRICE  = parseInt(urlParams.get('base')) || 1845;
+        var MODE        = urlParams.get('mode');
+        var selectedOS  = 'steamos';
+        var selectedPreset = null;
+        var OS_PRICES   = { steamos: 0, windows: 79, dualboot: 79 };
+
+        /* ── OS selector ── */
+        function selectOS(os) {
+            selectedOS = os;
+            document.querySelectorAll('.os-btn').forEach(function (b) { b.classList.remove('active', 'active-green'); });
+            document.getElementById('os-' + os).classList.add(os === 'steamos' ? 'active-green' : 'active');
+            document.querySelectorAll('.os-note').forEach(function (n) { n.classList.remove('show'); });
+            document.getElementById('os-note-' + os).classList.add('show');
+            var disp   = document.getElementById('os-display');
+            var labels = { steamos: 'SteamOS', windows: 'Windows 11', dualboot: 'Dual Boot' };
+            var colors = { steamos: '#4ade80', windows: '#93c5fd',   dualboot: '#c4b5fd' };
+            disp.innerText   = labels[os];
+            disp.style.color = colors[os];
+            updatePrice();
+        }
+
+        /* ── Scenario presets ── */
+        function applyPreset(preset) {
+            selectedPreset = preset;
+            document.querySelectorAll('.preset-btn').forEach(function (b) { b.classList.remove('active'); });
+            document.getElementById('preset-' + preset).classList.add('active');
+            var cpu = document.getElementById('cpu-select');
+            var gpu = document.getElementById('gpu-select');
+            var ram = document.getElementById('ram-select');
+            if (preset === 'silent') {
+                selectOS('steamos'); cpu.value = '0'; gpu.value = '0'; ram.value = '0';
+            } else if (preset === 'living') {
+                selectOS('steamos'); cpu.value = '79'; gpu.value = '175'; ram.value = '139';
+                document.getElementById('hdmi-block').style.display = 'block';
+            } else if (preset === 'dualboot') {
+                selectOS('dualboot'); cpu.value = '79'; gpu.value = '175'; ram.value = '139';
+            }
+            handleGpuChange();
+        }
+
+        /* ── Mode init (from URL param) ── */
         function initMode() {
-            const cpu = document.getElementById('cpu-select');
-            const gpu = document.getElementById('gpu-select');
-            const ram = document.getElementById('ram-select');
-            const ssd = document.getElementById('ssd-select');
-            const modelDisp = document.getElementById('model-display');
+            var cpu      = document.getElementById('cpu-select');
+            var gpu      = document.getElementById('gpu-select');
+            var ram      = document.getElementById('ram-select');
+            var ssd      = document.getElementById('ssd-select');
+            var modelDisp = document.getElementById('model-display');
             if (MODE === 'core') {
                 cpu.disabled = true; gpu.disabled = true; ram.disabled = true; ssd.disabled = true;
                 modelDisp.innerText = 'BAAS';
             } else if (MODE === 'plus') {
-                cpu.disabled = false; gpu.disabled = true; ram.disabled = true; ssd.disabled = true;
+                gpu.disabled = true; ram.disabled = true; ssd.disabled = true;
                 document.getElementById('ctrl-block').style.display = 'block';
                 document.getElementById('hdmi-block').style.display = 'block';
-                document.getElementById('pkg-block').style.display = 'block';
+                document.getElementById('pkg-block').style.display  = 'block';
                 modelDisp.innerText = 'BAAS+';
             } else if (MODE === 'enthusiast') {
-                cpu.disabled = false; gpu.disabled = false; ram.disabled = false; ssd.disabled = false;
-                document.getElementById('ssd-4tb').style.display = 'block';
+                document.getElementById('ssd-4tb').style.display  = 'block';
                 document.getElementById('psu-block').style.display = 'block';
                 modelDisp.innerText = 'ENTHUSIAST';
             }
         }
+
+        /* ── GPU / PSU coupling ── */
         function handleGpuChange() {
-            const gpuVal = document.getElementById('gpu-select').value;
-            const psuSel = document.getElementById('psu-select');
-            const psu650 = document.getElementById('psu-650');
-            const psuWarning = document.getElementById('psu-warning');
-            if (gpuVal === "175") {
-                psuSel.value = "45"; psu650.disabled = true;
+            var gpuVal     = document.getElementById('gpu-select').value;
+            var psuSel     = document.getElementById('psu-select');
+            var psu650     = document.getElementById('psu-650');
+            var psuWarning = document.getElementById('psu-warning');
+            if (gpuVal === '175') {
+                psuSel.value = '45'; psu650.disabled = true;
                 psuWarning.classList.remove('hidden');
-            } else { psu650.disabled = false; psuWarning.classList.add('hidden'); }
+            } else {
+                psu650.disabled = false; psuWarning.classList.add('hidden');
+            }
             updatePrice();
         }
+
+        /* ── Price calculation ── */
         function updatePrice() {
-            const cpu = parseInt(document.getElementById('cpu-select').value) || 0;
-            const gpu = parseInt(document.getElementById('gpu-select').value) || 0;
-            const ram = parseInt(document.getElementById('ram-select').value) || 0;
-            const ssd = parseInt(document.getElementById('ssd-select').value) || 0;
-            const psu = (document.getElementById('psu-block').style.display !== 'none') ? parseInt(document.getElementById('psu-select').value) || 0 : 0;
-            const ctrl = (document.getElementById('ctrl-block').style.display !== 'none') ? parseInt(document.getElementById('ctrl-select').value) || 0 : 0;
-            document.getElementById('total-price').innerText = (BASE_PRICE + cpu + gpu + ram + ssd + psu + ctrl) + ' €';
+            var cpu  = parseInt(document.getElementById('cpu-select').value) || 0;
+            var gpu  = parseInt(document.getElementById('gpu-select').value) || 0;
+            var ram  = parseInt(document.getElementById('ram-select').value) || 0;
+            var ssd  = parseInt(document.getElementById('ssd-select').value) || 0;
+            var psu  = document.getElementById('psu-block').style.display  !== 'none' ? parseInt(document.getElementById('psu-select').value)  || 0 : 0;
+            var ctrl = document.getElementById('ctrl-block').style.display !== 'none' ? parseInt(document.getElementById('ctrl-select').value) || 0 : 0;
+            var os   = OS_PRICES[selectedOS] || 0;
+            document.getElementById('total-price').innerText = (BASE_PRICE + cpu + gpu + ram + ssd + psu + ctrl + os) + ' €';
         }
-        const translations = {
-            'et': { 'back-link': '← Tagasi pealehele', 'config-title': 'Konfigureeri oma süsteem', 'case-label': 'Korpuse disain', 'ctrl-label': 'Kontroller', 'cpu-label': 'Protsessor', 'gpu-label': 'Videokaart', 'psu-label': 'Toiteplokk', 'ram-label': 'Operatiivmälu', 'ssd-label': 'Salvestusruum', 'hdmi-label': 'Kaabel', 'pkg-label': 'Pakend', 'psu-req': '9070 XT jaoks on vajalik 850W toiteplokk', 'summary-title': 'Sinu valik', 'sum-model': 'Mudel:', 'sum-build': 'Tüüp:', 'send-btn': 'Saada päring', 'legal-info': '* Eritellimusel valmiv toode.\nVÕS § 53 lg 4 kohaselt tagastamisõigus puudub.' },
-            'ru': { 'back-link': '← На главную', 'config-title': 'Настрой свою систему', 'case-label': 'Дизайн корпуса', 'ctrl-label': 'Контроллер', 'cpu-label': 'Процессор', 'gpu-label': 'Видеокарта', 'psu-label': 'Блок питания', 'ram-label': 'Оперативная память', 'ssd-label': 'Накопитель', 'hdmi-label': 'Кабель', 'pkg-label': 'Упаковка', 'psu-req': 'Для 9070 XT необходим блок 850W', 'summary-title': 'Ваш выбор', 'sum-model': 'Модель:', 'sum-build': 'Тип:', 'send-btn': 'Отправить запрос', 'legal-info': '* Товар под заказ.\nСогласно VÕS § 53 lg 4, возврат невозможен.' }
-        };
-        function applyLanguage() {
-            const lang = localStorage.getItem('selectedLanguage') || 'et';
-            document.querySelectorAll('[data-key]').forEach(el => {
-                const key = el.getAttribute('data-key');
-                if (translations[lang][key]) el.innerText = translations[lang][key];
+
+        /* ── Order Modal ── */
+        function _getConfigSnapshot() {
+            var lang  = localStorage.getItem('selectedLanguage') || 'et';
+            var isRu  = lang === 'ru';
+            var caseEl = document.getElementById('case-select');
+            var cpuEl  = document.getElementById('cpu-select');
+            var gpuEl  = document.getElementById('gpu-select');
+            var ramEl  = document.getElementById('ram-select');
+            var ssdEl  = document.getElementById('ssd-select');
+            var osLabels = { steamos: 'SteamOS', windows: 'Windows 11', dualboot: 'Dual Boot' };
+            return {
+                lang:     lang,
+                isRu:     isRu,
+                model:    document.getElementById('model-display').innerText,
+                os:       osLabels[selectedOS],
+                caseTxt:  caseEl.options[caseEl.selectedIndex].text,
+                cpu:      cpuEl.options[cpuEl.selectedIndex].text,
+                gpu:      gpuEl.options[gpuEl.selectedIndex].text,
+                ram:      ramEl.options[ramEl.selectedIndex].text,
+                ssd:      ssdEl.options[ssdEl.selectedIndex].text,
+                psu:      document.getElementById('psu-block').style.display !== 'none'
+                              ? document.getElementById('psu-select').options[document.getElementById('psu-select').selectedIndex].text : null,
+                ctrl:     document.getElementById('ctrl-block').style.display !== 'none'
+                              ? document.getElementById('ctrl-select').options[document.getElementById('ctrl-select').selectedIndex].text : null,
+                price:    document.getElementById('total-price').innerText,
+                preset:   selectedPreset
+            };
+        }
+
+        window.openOrderModal = function () {
+            var lang = localStorage.getItem('selectedLanguage') || 'et';
+            var isRu = lang === 'ru';
+            var tr   = (window.pageTranslations || {})[lang] || {};
+            var snap = _getConfigSnapshot();
+
+            /* Populate summary rows */
+            var rows = [
+                [isRu ? 'Модель' : 'Mudel',  snap.model],
+                ['OS',                         snap.os],
+                [isRu ? 'Корпус' : 'Korpus',  snap.caseTxt],
+                ['CPU',                        snap.cpu],
+                ['GPU',                        snap.gpu],
+                ['RAM',                        snap.ram],
+                ['SSD',                        snap.ssd]
+            ];
+            if (snap.psu)  rows.push([isRu ? 'Питание'    : 'PSU',       snap.psu]);
+            if (snap.ctrl) rows.push([isRu ? 'Контроллер' : 'Kontroller', snap.ctrl]);
+
+            document.getElementById('om-summary-rows').innerHTML = rows.map(function (r) {
+                return '<div class="om-row"><span class="om-lbl">' + r[0] + '</span><span class="om-val">' + r[1] + '</span></div>';
+            }).join('');
+
+            /* Price */
+            document.getElementById('om-price').innerText = snap.price;
+
+            /* Delivery date */
+            var readyDate = new Date(Date.now() + 14 * 24 * 60 * 60 * 1000);
+            var readyStr  = readyDate.toLocaleDateString(isRu ? 'ru-RU' : 'et-EE', { day: '2-digit', month: '2-digit', year: 'numeric' });
+            var delivLabel = tr['om-delivery-label'] || (isRu ? 'Ориентировочная готовность:' : 'Eeldatav valmimine:');
+            document.getElementById('om-delivery').innerText = delivLabel + ' ' + readyStr;
+
+            /* Reset form state */
+            document.getElementById('om-form').style.display    = '';
+            document.getElementById('om-success').style.display  = 'none';
+            document.getElementById('om-err').style.display      = 'none';
+            document.getElementById('om-name').value  = '';
+            document.getElementById('om-email').value = '';
+            document.getElementById('om-phone').value = '';
+            ['om-name','om-email','om-phone'].forEach(function (id) {
+                document.getElementById(id).classList.remove('err');
             });
-        }
-        window.onload = () => { initMode(); applyLanguage(); updatePrice(); };
+            var btn = document.getElementById('om-submit');
+            btn.disabled   = false;
+            btn.innerText  = tr['om-submit'] || (isRu ? 'Отправить заказ' : 'Saada tellimus');
+
+            /* Translate modal labels via setLanguage */
+            window.setLanguage(lang);
+
+            /* Show overlay */
+            document.getElementById('om-overlay').classList.add('open');
+            document.body.style.overflow = 'hidden';
+        };
+
+        window.closeOrderModal = function () {
+            document.getElementById('om-overlay').classList.remove('open');
+            document.body.style.overflow = '';
+        };
+
+        window._omBackdrop = function (e) {
+            if (e.target === document.getElementById('om-overlay')) window.closeOrderModal();
+        };
+
+        window.submitOrderForm = function () {
+            var lang  = localStorage.getItem('selectedLanguage') || 'et';
+            var isRu  = lang === 'ru';
+            var tr    = (window.pageTranslations || {})[lang] || {};
+            var nameEl  = document.getElementById('om-name');
+            var emailEl = document.getElementById('om-email');
+            var phoneEl = document.getElementById('om-phone');
+            var errEl   = document.getElementById('om-err');
+            var btn     = document.getElementById('om-submit');
+
+            /* Validate */
+            var valid = true;
+            [nameEl, emailEl].forEach(function (el) { el.classList.remove('err'); });
+            if (!nameEl.value.trim())  { nameEl.classList.add('err');  valid = false; }
+            if (!emailEl.value.trim() || !emailEl.value.includes('@')) {
+                emailEl.classList.add('err'); valid = false;
+            }
+            if (!valid) return;
+
+            /* Loading state */
+            btn.disabled = true;
+            btn.innerHTML = '<span style="display:inline-block;width:15px;height:15px;border:2px solid rgba(255,255,255,0.25);border-top-color:white;border-radius:50%;animation:_omSpin 0.7s linear infinite;vertical-align:middle"></span>';
+
+            var snap = _getConfigSnapshot();
+            var readyDate = new Date(Date.now() + 14 * 24 * 60 * 60 * 1000);
+            var readyStr  = readyDate.toLocaleDateString(isRu ? 'ru-RU' : 'et-EE', { day: '2-digit', month: '2-digit', year: 'numeric' });
+
+            var payload = {
+                name:               nameEl.value.trim(),
+                email:              emailEl.value.trim(),
+                phone:              phoneEl.value.trim(),
+                model:              snap.model,
+                os:                 snap.os,
+                'case':             snap.caseTxt,
+                cpu:                snap.cpu,
+                gpu:                snap.gpu,
+                ram:                snap.ram,
+                ssd:                snap.ssd,
+                price:              snap.price,
+                estimated_delivery: readyStr,
+                language:           lang
+            };
+            if (snap.psu)    payload.psu        = snap.psu;
+            if (snap.ctrl)   payload.controller = snap.ctrl;
+            if (snap.preset) payload.scenario   = snap.preset;
+
+            fetch('https://formspree.io/f/mrejwjnj', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                body: JSON.stringify(payload)
+            })
+            .then(function (res) {
+                if (!res.ok) throw new Error('http ' + res.status);
+                document.getElementById('om-form').style.display   = 'none';
+                document.getElementById('om-success').style.display = 'block';
+                errEl.style.display = 'none';
+            })
+            .catch(function () {
+                errEl.style.display = 'block';
+                errEl.innerText = tr['om-err-msg'] || (isRu ? 'Что-то пошло не так. Попробуйте снова.' : 'Midagi läks valesti. Palun proovi uuesti.');
+                btn.disabled  = false;
+                btn.innerText = tr['om-submit'] || (isRu ? 'Отправить заказ' : 'Saada tellimus');
+            });
+        };
+
+        /* ESC closes order modal */
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') window.closeOrderModal();
+        });
+
+        window.addEventListener('load', function () { initMode(); updatePrice(); });
     </script>
 </body>
 </html>

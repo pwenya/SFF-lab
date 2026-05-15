@@ -39,15 +39,31 @@
         }
         .btn-left { left: 15px; }
         .btn-right { right: 15px; }
+        .panel-badge {
+            position: absolute; z-index: 10; backdrop-filter: blur(8px);
+            font-size: 9px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase;
+            padding: 5px 11px; border-radius: 10px;
+        }
+        .badge-volume {
+            bottom: 14px; left: 14px;
+            background: rgba(0,0,0,0.72); border: 1px solid rgba(255,255,255,0.14); color: white;
+        }
+        .badge-airflow {
+            bottom: 14px; right: 14px;
+            background: rgba(0,0,0,0.65); border: 1px solid rgba(255,255,255,0.08); color: #71717a;
+        }
+        .badge-ps5 {
+            top: 14px; left: 14px;
+            background: rgba(37,99,235,0.14); border: 1px solid rgba(37,99,235,0.28); color: #93c5fd;
+        }
+        .ps5-tag {
+            display: inline-block; font-size: 8px; font-weight: 800; letter-spacing: 0.12em;
+            text-transform: uppercase; color: #60a5fa; background: rgba(37,99,235,0.1);
+            border: 1px solid rgba(37,99,235,0.25); border-radius: 6px; padding: 3px 8px; margin-top: 6px;
+        }
     </style>
 </head>
 <body class="antialiased">
-    <nav class="fixed w-full z-50 border-b border-white/5 bg-black/70 backdrop-blur-md">
-        <div class="max-w-[1400px] mx-auto flex justify-between items-center py-4 md:py-6 px-6 md:px-10">
-            <a href="/" class="text-2xl font-extrabold tracking-tighter uppercase">SFF LAB<span class="text-blue-600">.</span></a>
-            <a href="#" class="bg-white text-black px-6 md:px-8 py-2 md:py-3 rounded-full hover:bg-zinc-200 transition uppercase tracking-widest text-[14px] font-black text-center text-[12px] md:text-[14px]">Статус заказа</a>
-        </div>
-    </nav>
     <main class="pt-20">
         <!-- MOOD -->
         <section class="product-section flex items-center justify-center px-6" data-model="mood">
@@ -57,6 +73,9 @@
                         <button onclick="nav('mood', -1)" class="nav-btn-inside btn-left hidden md:flex">←</button>
                         <img id="img-mood-black" src="IMG/MoodBlack.1.png" class="case-stack-img active">
                         <img id="img-mood-white" src="IMG/MoodLight.1.png" class="case-stack-img mood-white-fix">
+                        <div class="panel-badge badge-ps5">Smaller than PS5 ✓</div>
+                        <div class="panel-badge badge-volume">~8 L</div>
+                        <div class="panel-badge badge-airflow">Front → Rear</div>
                         <button onclick="nav('mood', 1)" class="nav-btn-inside btn-right hidden md:flex">→</button>
                     </div>
                 </div>
@@ -68,6 +87,7 @@
                     <div class="text-center md:text-left order-1 md:order-1">
                         <h2 class="text-3xl md:text-5xl font-black uppercase tracking-tighter mb-2 md:mb-4">Mood <span id="title-mood">Black</span></h2>
                         <p class="text-zinc-500 uppercase text-[10px] md:text-[11px] tracking-[0.4em] font-bold">Premium SFF Design</p>
+                        <span class="ps5-tag">Väiksem kui PS5 ✓</span>
                     </div>
                 </div>
             </div>
@@ -81,6 +101,8 @@
                         <img id="img-terra-graphite" src="IMG/TerraGraphite.1.png" class="case-stack-img active">
                         <img id="img-terra-jade" src="IMG/TerraJade.1.png" class="case-stack-img">
                         <img id="img-terra-silver" src="IMG/TerraSilver.1.png" class="case-stack-img">
+                        <div class="panel-badge badge-volume">~9.5 L</div>
+                        <div class="panel-badge badge-airflow">Bottom → Top</div>
                         <button onclick="nav('terra', 1)" class="nav-btn-inside btn-right hidden md:flex">→</button>
                     </div>
                 </div>
@@ -105,6 +127,9 @@
                         <button onclick="nav('ridge', -1)" class="nav-btn-inside btn-left hidden md:flex">←</button>
                         <img id="img-ridge-black" src="IMG/RidgeBlack.1.png" class="case-stack-img active">
                         <img id="img-ridge-white" src="IMG/RidgeWhite.1.png" class="case-stack-img">
+                        <div class="panel-badge badge-ps5">Smaller than PS5 ✓</div>
+                        <div class="panel-badge badge-volume">~7 L</div>
+                        <div class="panel-badge badge-airflow">Side → Top</div>
                         <button onclick="nav('ridge', 1)" class="nav-btn-inside btn-right hidden md:flex">→</button>
                     </div>
                 </div>
@@ -116,61 +141,93 @@
                     <div class="text-center md:text-left order-1 md:order-1">
                         <h2 class="text-3xl md:text-5xl font-black uppercase tracking-tighter mb-2 md:mb-4">Ridge <span id="title-ridge">Black</span></h2>
                         <p class="text-zinc-500 uppercase text-[10px] md:text-[11px] tracking-[0.4em] font-bold">Slim Console Format</p>
+                        <span class="ps5-tag">Väiksem kui PS5 ✓</span>
                     </div>
                 </div>
             </div>
         </section>
     </main>
+
+    <footer class="border-t border-white/5 py-12 px-6">
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-start gap-6">
+            <div>
+                <p class="text-xl font-extrabold tracking-tighter uppercase mb-1">SFF LAB<span class="text-blue-600">.</span></p>
+                <p class="text-zinc-600 text-[10px] uppercase tracking-widest">SFF Lab OÜ © 2026</p>
+                <p class="text-zinc-700 text-[9px] uppercase tracking-widest mt-1" data-key="footer-estonia">Toodetud Eestis · Сделано в Эстонии</p>
+            </div>
+            <div class="text-right">
+                <p class="text-zinc-600 text-[9px] uppercase tracking-widest" data-key="footer-cookies">Küpsiseid ei kasutata · Saidil pole jälgijaid</p>
+                <p class="text-zinc-700 text-[9px] uppercase tracking-widest mt-1"><a href="mailto:info@sfflab.ee" class="hover:text-zinc-400 transition">info@sfflab.ee</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="nav.js"></script>
     <script>
-        const config = {
-            mood: { current: 'black', idx: 0, black: ['IMG/MoodBlack.1.png', 'IMG/MoodBlack.2.png', 'IMG/MoodBlack.3.png'], white: ['IMG/MoodLight.1.png', 'IMG/MoodLight.2.png', 'IMG/MoodLight.3.png'] },
-            terra: { current: 'graphite', idx: 0, graphite: ['IMG/TerraGraphite.1.png', 'IMG/TerraGraphite.2.png', 'IMG/TerraGraphite.3.png'], jade: ['IMG/TerraJade.1.png', 'IMG/TerraJade.2.png', 'IMG/TerraJade.3.png'], silver: ['IMG/TerraSilver.1.png', 'IMG/TerraSilver.2.png', 'IMG/TerraSilver.3.png'] },
-            ridge: { current: 'black', idx: 0, black: ['IMG/RidgeBlack.1.png', 'IMG/RidgeBlack.2.png'], white: ['IMG/RidgeWhite.1.png', 'IMG/RidgeWhite.2.png'] }
+        window.pageTranslations = {
+            et: {
+                'footer-estonia': 'Toodetud Eestis',
+                'footer-cookies': 'Küpsiseid ei kasutata · Saidil pole jälgijaid'
+            },
+            ru: {
+                'footer-estonia': 'Произведено в Эстонии',
+                'footer-cookies': 'Cookie не используются · Без трекеров'
+            }
         };
-        const colorNames = { 'black': 'Black', 'white': 'Light', 'graphite': 'Graphite', 'jade': 'Jade', 'silver': 'Silver' };
-        let lastCall = 0;
+
+        var config = {
+            mood:  { current: 'black',    idx: 0, black:    ['IMG/MoodBlack.1.png','IMG/MoodBlack.2.png','IMG/MoodBlack.3.png'],       white:    ['IMG/MoodLight.1.png','IMG/MoodLight.2.png','IMG/MoodLight.3.png'] },
+            terra: { current: 'graphite', idx: 0, graphite: ['IMG/TerraGraphite.1.png','IMG/TerraGraphite.2.png','IMG/TerraGraphite.3.png'], jade: ['IMG/TerraJade.1.png','IMG/TerraJade.2.png','IMG/TerraJade.3.png'], silver: ['IMG/TerraSilver.1.png','IMG/TerraSilver.2.png','IMG/TerraSilver.3.png'] },
+            ridge: { current: 'black',    idx: 0, black:    ['IMG/RidgeBlack.1.png','IMG/RidgeBlack.2.png'],                             white:    ['IMG/RidgeWhite.1.png','IMG/RidgeWhite.2.png'] }
+        };
+        var colorNames = { black: 'Black', white: 'Light', graphite: 'Graphite', jade: 'Jade', silver: 'Silver' };
+        var lastCall = 0;
+
         function setColor(model, color) {
-            const now = Date.now();
+            var now = Date.now();
             if (now - lastCall < 300) return;
             lastCall = now;
-            const m = config[model];
+            var m = config[model];
             m.current = color;
-            document.querySelectorAll(`[id^="${model}-"]`).forEach(c => c.classList.remove('active'));
-            document.getElementById(`${model}-${color}`).classList.add('active');
-            document.getElementById(`title-${model}`).innerText = colorNames[color];
-            document.querySelectorAll(`[id^="img-${model}-"]`).forEach(img => img.classList.remove('active'));
-            document.getElementById(`img-${model}-${color}`).classList.add('active');
+            document.querySelectorAll('[id^="' + model + '-"]').forEach(function (c) { c.classList.remove('active'); });
+            document.getElementById(model + '-' + color).classList.add('active');
+            document.getElementById('title-' + model).innerText = colorNames[color];
+            document.querySelectorAll('[id^="img-' + model + '-"]').forEach(function (img) { img.classList.remove('active'); });
+            document.getElementById('img-' + model + '-' + color).classList.add('active');
         }
+
         function nav(model, dir) {
-            const m = config[model];
-            const colors = Object.keys(m).filter(k => Array.isArray(m[k]));
-            const len = m[m.current].length;
+            var m = config[model];
+            var colors = Object.keys(m).filter(function (k) { return Array.isArray(m[k]); });
+            var len = m[m.current].length;
             m.idx = (m.idx + dir + len) % len;
-            colors.forEach(color => {
-                const img = document.getElementById(`img-${model}-${color}`);
+            colors.forEach(function (color) {
+                var img = document.getElementById('img-' + model + '-' + color);
                 if (img) img.src = m[color][m.idx];
             });
         }
-        ['mood', 'terra', 'ridge'].forEach(model => {
-            const container = document.getElementById(`container-${model}`);
-            let startX = 0;
-            container.addEventListener('touchstart', e => { startX = e.changedTouches[0].screenX; }, { passive: true });
-            container.addEventListener('touchend', e => {
-                const endX = e.changedTouches[0].screenX;
+
+        ['mood', 'terra', 'ridge'].forEach(function (model) {
+            var container = document.getElementById('container-' + model);
+            var startX = 0;
+            container.addEventListener('touchstart', function (e) { startX = e.changedTouches[0].screenX; }, { passive: true });
+            container.addEventListener('touchend', function (e) {
+                var endX = e.changedTouches[0].screenX;
                 if (startX - endX > 40) nav(model, 1);
                 else if (endX - startX > 40) nav(model, -1);
             }, { passive: true });
-            document.querySelectorAll(`[id^="${model}-"]`).forEach(circle => {
-                const color = circle.id.split('-')[1];
-                const trigger = (e) => { e.preventDefault(); setColor(model, color); };
+            document.querySelectorAll('[id^="' + model + '-"]').forEach(function (circle) {
+                var color = circle.id.split('-')[1];
+                var trigger = function (e) { e.preventDefault(); setColor(model, color); };
                 circle.addEventListener('click', trigger);
                 circle.addEventListener('touchend', trigger);
             });
         });
-        window.onload = () => {
-            Object.values(config).forEach(m => {
-                Object.values(m).forEach(arr => {
-                    if (Array.isArray(arr)) arr.forEach(src => { const i = new Image(); i.src = src; });
+
+        window.onload = function () {
+            Object.values(config).forEach(function (m) {
+                Object.values(m).forEach(function (arr) {
+                    if (Array.isArray(arr)) arr.forEach(function (src) { var i = new Image(); i.src = src; });
                 });
             });
         };
