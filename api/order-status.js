@@ -7,11 +7,18 @@ function createRedis() {
     });
 }
 
-module.exports = async function handler(req, res) {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+function setCors(req, res) {
+    var origin = req.headers.origin || '';
+    if (origin === 'https://sfflab.ee') {
+        res.setHeader('Access-Control-Allow-Origin', 'https://sfflab.ee');
+    }
+    res.setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    res.setHeader('Vary', 'Origin');
+}
 
+module.exports = async function handler(req, res) {
+    setCors(req, res);
     if (req.method === 'OPTIONS') return res.status(200).end();
     if (req.method !== 'GET')    return res.status(405).json({ error: 'Method not allowed' });
 

@@ -15,6 +15,66 @@ function createRedis() {
     });
 }
 
+/* ── CORS ── */
+function setCors(req, res) {
+    var origin = req.headers.origin || '';
+    if (origin === 'https://sfflab.ee') {
+        res.setHeader('Access-Control-Allow-Origin', 'https://sfflab.ee');
+    }
+    res.setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    res.setHeader('Vary', 'Origin');
+}
+
+/* ── Rate limiting ── */
+function getClientIp(req) {
+    var forwarded = req.headers['x-forwarded-for'];
+    if (forwarded) return forwarded.split(',')[0].trim();
+    return (req.socket && req.socket.remoteAddress) || 'unknown';
+}
+
+async function checkRateLimit(redis, ip) {
+    var key   = 'ratelimit:ORDER:' + ip;
+    var count = await redis.incr(key);
+    if (count === 1) await redis.expire(key, 3600);
+    return count;
+}
+
+/* ── Input sanitisation & validation ── */
+function stripHtml(str) {
+    return String(str).replace(/<[^>]*>/g, '').trim();
+}
+
+function isValidEmail(email) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+function isValidPhone(phone) {
+    return /^[0-9+\-() ]{6,20}$/.test(phone);
+}
+
+function validateInputs(body) {
+    var name  = stripHtml(body.name  || '');
+    var email = stripHtml(body.email || '');
+    var phone = stripHtml(body.phone || '');
+    var priceRaw = String(body.price || '');
+    var priceNum = parseFloat(priceRaw.replace(/[^0-9.]/g, ''));
+
+    if (!name || name.length < 2 || name.length > 100) {
+        return { error: 'Name must be 2–100 characters.' };
+    }
+    if (!email || !isValidEmail(email)) {
+        return { error: 'Valid email address required.' };
+    }
+    if (!phone || !isValidPhone(phone)) {
+        return { error: 'Phone must be 6–20 characters (digits, +, -, spaces, parentheses).' };
+    }
+    if (isNaN(priceNum) || priceNum < 1000 || priceNum > 10000) {
+        return { error: 'Price must be a number between 1000 and 10000.' };
+    }
+    return null;
+}
+
 /* ── Order number ── */
 function generateOrderNumber() {
     var now  = new Date();
@@ -141,31 +201,46 @@ function buildConfirmationHtml(d) {
 
 /* ── Handler ── */
 module.exports = async function handler(req, res) {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-
+    setCors(req, res);
     if (req.method === 'OPTIONS') return res.status(200).end();
     if (req.method !== 'POST')   return res.status(405).json({ error: 'Method not allowed' });
 
-    var body              = req.body || {};
-    var name              = body.name;
-    var email             = body.email;
-    var phone             = body.phone             || '';
-    var model             = body.model;
-    var os                = body.os;
-    var caseTxt           = body['case'];
-    var cpu               = body.cpu;
-    var gpu               = body.gpu;
-    var ram               = body.ram;
-    var ssd               = body.ssd;
-    var psu               = body.psu               || '';
-    var controller        = body.controller        || '';
-    var scenario          = body.scenario          || '';
-    var price             = body.price;
-    var estimatedDelivery = body.estimated_delivery || '';
+    var redis = createRedis();
 
-    if (!name || !email || !model || !price) {
+    /* Rate limiting */
+    var ip = getClientIp(req);
+    try {
+        var rlCount = await checkRateLimit(redis, ip);
+        if (rlCount > 5) {
+            return res.status(429).json({ error: 'Too many requests. Try again later.' });
+        }
+    } catch (rlErr) {
+        console.error('Rate limit error:', rlErr.message);
+    }
+
+    /* Validate inputs */
+    var body = req.body || {};
+    var validationError = validateInputs(body);
+    if (validationError) return res.status(400).json(validationError);
+
+    /* Sanitize all fields */
+    var name              = stripHtml(body.name);
+    var email             = stripHtml(body.email);
+    var phone             = stripHtml(body.phone);
+    var model             = stripHtml(body.model             || '');
+    var os                = stripHtml(body.os                || '');
+    var caseTxt           = stripHtml(body['case']           || '');
+    var cpu               = stripHtml(body.cpu               || '');
+    var gpu               = stripHtml(body.gpu               || '');
+    var ram               = stripHtml(body.ram               || '');
+    var ssd               = stripHtml(body.ssd               || '');
+    var psu               = stripHtml(body.psu               || '');
+    var controller        = stripHtml(body.controller        || '');
+    var scenario          = stripHtml(body.scenario          || '');
+    var price             = stripHtml(String(body.price      || ''));
+    var estimatedDelivery = stripHtml(body.estimated_delivery || '');
+
+    if (!model) {
         return res.status(400).json({ error: 'Missing required fields' });
     }
 
@@ -174,7 +249,6 @@ module.exports = async function handler(req, res) {
 
     /* Save to Redis first — this is the order of record */
     try {
-        var redis = createRedis();
         var orderRecord = {
             orderNumber, name, email, phone,
             model, cpu, gpu, ram, ssd,
