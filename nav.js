@@ -91,9 +91,12 @@
 
     /* ── i18n ── */
     var _NAV_TR = {
-        et: { 'nav-pricing': 'Paketid',   'nav-status': 'Tellimuse staatus' },
-        ru: { 'nav-pricing': 'Цены',      'nav-status': 'Статус заказа'     },
-        en: { 'nav-pricing': 'Packages',  'nav-status': 'Order Status'      }
+        et: { 'nav-pricing': 'Paketid',  'nav-status': 'Tellimuse staatus',
+              'legal-terms': 'Müügitingimused', 'legal-privacy': 'Privaatsuspoliitika', 'legal-returns': 'Tagastuspoliitika' },
+        ru: { 'nav-pricing': 'Цены',     'nav-status': 'Статус заказа',
+              'legal-terms': 'Условия продажи', 'legal-privacy': 'Конфиденциальность',  'legal-returns': 'Возврат' },
+        en: { 'nav-pricing': 'Packages', 'nav-status': 'Order Status',
+              'legal-terms': 'Terms of Sale',   'legal-privacy': 'Privacy Policy',      'legal-returns': 'Returns' }
     };
 
     window.setLanguage = function (lang) {

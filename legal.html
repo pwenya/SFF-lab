@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="et">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SFF Lab — Õiguslik teave / Правовая информация</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  body { font-family: 'Plus Jakarta Sans', sans-serif; background: #050505; color: #e4e4e7; }
+  .glass { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.07); }
+  h2 { font-size: 1.25rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: white; margin-top: 2rem; margin-bottom: 0.75rem; }
+  h3 { font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #2563eb; margin-top: 1.5rem; margin-bottom: 0.5rem; }
+  p, li { font-size: 0.9rem; line-height: 1.8; color: #a1a1aa; }
+  ul { list-style: disc; padding-left: 1.5rem; }
+  .tab-btn { transition: all 0.2s; }
+  .tab-btn.active { background: white; color: black; }
+  .lang-btn.active { border-bottom: 2px solid #2563eb; color: white; }
+  .section { display: none; }
+  .section.active { display: block; }
+</style>
+</head>
+<body class="min-h-screen p-6 md:p-16">
+
+<div class="max-w-4xl mx-auto">
+
+  <!-- Header -->
+  <a href="index.html" class="text-zinc-600 hover:text-white text-[10px] uppercase tracking-[0.2em] mb-10 inline-block transition">← Tagasi / Назад</a>
+  <div class="flex justify-between items-start mb-10">
+    <div>
+      <p class="text-blue-500 text-[10px] uppercase tracking-[0.3em] font-black mb-2">SFF Lab OÜ</p>
+      <h1 class="text-4xl font-extrabold uppercase tracking-tighter text-white">Õiguslik teave<br><span class="text-zinc-500">Правовая информация</span></h1>
+    </div>
+    <div class="flex gap-3 text-[11px] font-black uppercase tracking-widest mt-2">
+      <button onclick="setLang('et')" id="lang-et" class="lang-btn active text-zinc-400 pb-1 transition">ET</button>
+      <span class="text-zinc-700">|</span>
+      <button onclick="setLang('ru')" id="lang-ru" class="lang-btn text-zinc-400 pb-1 transition">RU</button>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="flex gap-3 mb-10 flex-wrap">
+    <button onclick="showTab('terms')" id="tab-terms" class="tab-btn active px-6 py-2.5 rounded-full text-[11px] font-black uppercase tracking-widest border border-white/20">
+      <span class="et">Müügitingimused</span><span class="ru hidden">Условия продажи</span>
+    </button>
+    <button onclick="showTab('privacy')" id="tab-privacy" class="tab-btn px-6 py-2.5 rounded-full text-[11px] font-black uppercase tracking-widest border border-white/20 text-zinc-400">
+      <span class="et">Privaatsuspoliitika</span><span class="ru hidden">Политика конфиденциальности</span>
+    </button>
+    <button onclick="showTab('returns')" id="tab-returns" class="tab-btn px-6 py-2.5 rounded-full text-[11px] font-black uppercase tracking-widest border border-white/20 text-zinc-400">
+      <span class="et">Tagastuspoliitika</span><span class="ru hidden">Политика возврата</span>
+    </button>
+  </div>
+
+  <!-- TERMS -->
+  <div id="section-terms" class="section active glass rounded-[28px] p-8 md:p-12">
+
+    <!-- ET -->
+    <div class="et">
+      <h2>Müügitingimused</h2>
+      <p class="text-zinc-600 text-xs uppercase tracking-widest mb-6">Kehtib alates 15.05.2026 · SFF Lab OÜ</p>
+
+      <h3>1. Müüja andmed</h3>
+      <p>SFF Lab OÜ<br>
+      Registrikood: 17506407<br>
+      KMKR number: EE102985942<br>
+      Aadress: Harju maakond, Tallinn, Lasnamäe linnaosa, Sinimäe tn 16-30, 13816<br>
+      E-post: info@sfflab.ee<br>
+      Veebileht: sfflab.ee</p>
+
+      <h3>2. Tooted ja tellimine</h3>
+      <p>SFF Lab OÜ valmistab eritellimusel kompaktseid mängu-arvuteid (Small Form Factor PC). Kõik tooted valmistatakse pärast tellimuse kinnitamist ja ettemaksu laekumist. Toote täpne konfiguratsioon lepitakse kokku tellimuse esitamisel.</p>
+
+      <h3>3. Hinnad</h3>
+      <p>Kõik veebilehel näidatud hinnad sisaldavad käibemaksu (KM 22%). Hinnad on eurodes (€). SFF Lab OÜ jätab endale õiguse hindu muuta, kuid kinnitatud tellimuse hind jääb muutumatuks.</p>
+
+      <h3>4. Tasumine</h3>
+      <p>Kõik tellimused nõuavad 100% ettemaksu enne tootmise alustamist. Pärast tellimuse kinnitamist saadetakse ostjale makselink. Makse tuleb teostada 48 tunni jooksul, vastasel juhul tühistatakse tellimus automaatselt. Aktsepteerime: pangaülekanne (kõik Eesti pangad), kaardimakse (Visa, Mastercard), Apple Pay, Google Pay.</p>
+
+      <h3>5. Tarneaeg</h3>
+      <p>Standardne tarneaeg on 10–14 tööpäeva alates makse laekumisest. Eriolukordades (komponentide tarne viivitus jne) teavitatakse ostjat esimesel võimalusel. Tarneaeg on ligikaudne ega ole lepinguline kohustus täpse kuupäeva osas.</p>
+
+      <h3>6. Kohaletoimetamine</h3>
+      <p>Tooted tarnitakse Eestisse ja teistesse EL riikidesse. Tarnekulud sõltuvad sihtkohast ja lepitakse kokku eraldi. Toode on kindlustatud transpordi ajal. Ostja on kohustatud toote kättesaamisel üle vaatama ja kahjustusest koheselt teavitama.</p>
+
+      <h3>7. Garantii</h3>
+      <p>Kõikidele SFF Lab OÜ poolt müüdavatele toodetele kehtib 2-aastane seadusjärgne garantii vastavalt VÕS §-le 218. Garantii ei kata: mehaanilisi kahjustusi, vedelikahjustusi, volitamata muudatusi, normaalsest kulumisest tingitud rikked.</p>
+
+      <h3>8. Vaidluste lahendamine</h3>
+      <p>Vaidlused lahendatakse esmalt läbirääkimiste teel. Kui kokkuleppele ei jõuta, on ostjal õigus pöörduda Tarbijakaitse ja Tehnilise Järelevalve Ameti (TTJA) poole: ttja.ee. Kohtualluvus: Harju Maakohus.</p>
+    </div>
+
+    <!-- RU -->
+    <div class="ru hidden">
+      <h2>Условия продажи</h2>
+      <p class="text-zinc-600 text-xs uppercase tracking-widest mb-6">Действует с 15.05.2026 · SFF Lab OÜ</p>
+
+      <h3>1. Данные продавца</h3>
+      <p>SFF Lab OÜ<br>
+      Регистрационный номер: 17506407<br>
+      Номер НДС: EE102985942<br>
+      Адрес: Harju maakond, Tallinn, Lasnamäe linnaosa, Sinimäe tn 16-30, 13816<br>
+      E-mail: info@sfflab.ee<br>
+      Сайт: sfflab.ee</p>
+
+      <h3>2. Товары и заказы</h3>
+      <p>SFF Lab OÜ изготавливает компактные игровые ПК (Small Form Factor PC) под заказ. Все товары производятся после подтверждения заказа и поступления предоплаты. Точная конфигурация согласовывается при оформлении заказа.</p>
+
+      <h3>3. Цены</h3>
+      <p>Все цены на сайте указаны с учётом НДС (22%). Цены в евро (€). SFF Lab OÜ оставляет за собой право изменять цены, однако цена подтверждённого заказа остаётся неизменной.</p>
+
+      <h3>4. Оплата</h3>
+      <p>Все заказы требуют 100% предоплаты до начала производства. После подтверждения заказа покупателю отправляется ссылка на оплату. Оплата должна быть произведена в течение 48 часов, иначе заказ отменяется автоматически. Принимаем: банковский перевод (все эстонские банки), картой (Visa, Mastercard), Apple Pay, Google Pay.</p>
+
+      <h3>5. Срок изготовления</h3>
+      <p>Стандартный срок — 10–14 рабочих дней с момента поступления оплаты. В случае задержки поставки комплектующих покупатель будет уведомлён как можно скорее. Срок является ориентировочным и не является договорным обязательством по точной дате.</p>
+
+      <h3>6. Доставка</h3>
+      <p>Товары доставляются в Эстонию и другие страны ЕС. Стоимость доставки зависит от места назначения и согласовывается отдельно. Товар застрахован во время транспортировки. Покупатель обязан осмотреть товар при получении и немедленно сообщить о повреждениях.</p>
+
+      <h3>7. Гарантия</h3>
+      <p>На все товары SFF Lab OÜ распространяется 2-летняя законная гарантия согласно VÕS § 218. Гарантия не распространяется на: механические повреждения, повреждения жидкостью, несанкционированные модификации, неисправности вследствие нормального износа.</p>
+
+      <h3>8. Разрешение споров</h3>
+      <p>Споры решаются в первую очередь путём переговоров. Если соглашение не достигнуто, покупатель вправе обратиться в Департамент защиты прав потребителей: ttja.ee. Юрисдикция: Харьюский уездный суд.</p>
+    </div>
+  </div>
+
+  <!-- PRIVACY -->
+  <div id="section-privacy" class="section glass rounded-[28px] p-8 md:p-12">
+
+    <!-- ET -->
+    <div class="et">
+      <h2>Privaatsuspoliitika</h2>
+      <p class="text-zinc-600 text-xs uppercase tracking-widest mb-6">Kehtib alates 15.05.2026 · Vastavalt GDPR-ile</p>
+
+      <h3>1. Vastutav töötleja</h3>
+      <p>SFF Lab OÜ (registrikood 17506407), info@sfflab.ee</p>
+
+      <h3>2. Milliseid andmeid kogume</h3>
+      <p>Kogume järgmisi isikuandmeid:</p>
+      <ul>
+        <li>Nimi, e-posti aadress, telefoninumber (tellimuse esitamisel)</li>
+        <li>Tarneaadress (kohaletoimetamiseks)</li>
+        <li>Tellimuse andmed ja konfiguratsioon</li>
+        <li>Suhtlusajalugu (e-kirjad)</li>
+      </ul>
+
+      <h3>3. Miks kogume</h3>
+      <ul>
+        <li>Tellimuse töötlemiseks ja täitmiseks</li>
+        <li>Teiega ühenduse võtmiseks tellimuse osas</li>
+        <li>Garantii- ja tugiteenuse osutamiseks</li>
+        <li>Seadusest tulenevate kohustuste täitmiseks</li>
+      </ul>
+
+      <h3>4. Andmete säilitamine</h3>
+      <p>Säilitame andmeid 7 aastat vastavalt Eesti raamatupidamisseadusele. Turundusandmed kustutatakse teie nõudmisel viivitamata.</p>
+
+      <h3>5. Teie õigused</h3>
+      <ul>
+        <li>Õigus tutvuda oma andmetega</li>
+        <li>Õigus andmete parandamisele</li>
+        <li>Õigus andmete kustutamisele ("õigus olla unustatud")</li>
+        <li>Õigus esitada kaebus Andmekaitse Inspektsioonile: aki.ee</li>
+      </ul>
+
+      <h3>6. Kolmandad osapooled</h3>
+      <p>Andmeid ei müüda ega edastata kolmandatele osapooltele, välja arvatud: tarneettevõtted (tarneaadress), raamatupidamine (arveandmed), seadusest tulenevad nõuded.</p>
+
+      <h3>7. Küpsised</h3>
+      <p>Meie veebileht ei kasuta reklaamiküpsiseid ega jälgimisküpsiseid. Kasutatakse ainult tehniliselt vajalikke küpsiseid (sessioon, keeleeelistus).</p>
+    </div>
+
+    <!-- RU -->
+    <div class="ru hidden">
+      <h2>Политика конфиденциальности</h2>
+      <p class="text-zinc-600 text-xs uppercase tracking-widest mb-6">Действует с 15.05.2026 · Согласно GDPR</p>
+
+      <h3>1. Ответственный оператор</h3>
+      <p>SFF Lab OÜ (рег. номер 17506407), info@sfflab.ee</p>
+
+      <h3>2. Какие данные собираем</h3>
+      <ul>
+        <li>Имя, e-mail, номер телефона (при оформлении заказа)</li>
+        <li>Адрес доставки</li>
+        <li>Данные заказа и конфигурация</li>
+        <li>История переписки (e-mail)</li>
+      </ul>
+
+      <h3>3. Для чего собираем</h3>
+      <ul>
+        <li>Обработка и выполнение заказов</li>
+        <li>Связь с вами по вопросам заказа</li>
+        <li>Гарантийное и техническое обслуживание</li>
+        <li>Выполнение законодательных обязательств</li>
+      </ul>
+
+      <h3>4. Хранение данных</h3>
+      <p>Данные хранятся 7 лет согласно эстонскому закону о бухгалтерском учёте. Маркетинговые данные удаляются по вашему запросу немедленно.</p>
+
+      <h3>5. Ваши права</h3>
+      <ul>
+        <li>Право на доступ к своим данным</li>
+        <li>Право на исправление данных</li>
+        <li>Право на удаление данных ("право быть забытым")</li>
+        <li>Право подать жалобу в Инспекцию по защите данных: aki.ee</li>
+      </ul>
+
+      <h3>6. Третьи стороны</h3>
+      <p>Данные не продаются и не передаются третьим сторонам, кроме: транспортных компаний (адрес доставки), бухгалтерии (данные счёта), требований законодательства.</p>
+
+      <h3>7. Cookies</h3>
+      <p>Наш сайт не использует рекламные или отслеживающие cookies. Используются только технически необходимые (сессия, языковые настройки).</p>
+    </div>
+  </div>
+
+  <!-- RETURNS -->
+  <div id="section-returns" class="section glass rounded-[28px] p-8 md:p-12">
+
+    <!-- ET -->
+    <div class="et">
+      <h2>Tagastuspoliitika</h2>
+      <p class="text-zinc-600 text-xs uppercase tracking-widest mb-6">Vastavalt VÕS §-le 53 lg 4</p>
+
+      <h3>1. Eritellimustooted</h3>
+      <p>Kuna kõik SFF Lab OÜ tooted valmistatakse eritellimusel vastavalt ostja soovitud konfiguratsioonile, ei kohaldata neile VÕS § 53 lg 1 alusel 14-päevast taganemisõigust. See on kooskõlas Euroopa Liidu direktiiviga 2011/83/EL.</p>
+
+      <h3>2. Defektiga tooted</h3>
+      <p>Kui toode on defektne või ei vasta tellimuse kirjeldusele, on ostjal õigus:</p>
+      <ul>
+        <li>Nõuda tasuta remonti</li>
+        <li>Nõuda asendust samaväärse tootega</li>
+        <li>Nõuda hinna alandamist</li>
+        <li>Lepingust taganeda ja raha tagasi saada</li>
+      </ul>
+      <p>Defektist tuleb teavitada 14 päeva jooksul alates avastamisest e-posti teel: info@sfflab.ee</p>
+
+      <h3>3. Transport</h3>
+      <p>Transpordil tekkinud kahjustused tuleb fikseerida koheselt kättesaamisel ja teavitada nii tarneettevõtet kui SFF Lab OÜ-d 24 tunni jooksul. Toode on kindlustatud.</p>
+
+      <h3>4. Garantiiremont</h3>
+      <p>Garantiiremondiga seotud saatmiskulud kannab SFF Lab OÜ. Klient vastutab toote ohutu pakendamise eest tagastamisel.</p>
+    </div>
+
+    <!-- RU -->
+    <div class="ru hidden">
+      <h2>Политика возврата</h2>
+      <p class="text-zinc-600 text-xs uppercase tracking-widest mb-6">Согласно VÕS § 53 lg 4</p>
+
+      <h3>1. Товары под заказ</h3>
+      <p>Поскольку все товары SFF Lab OÜ изготавливаются под заказ согласно конфигурации покупателя, на них не распространяется 14-дневное право отказа согласно VÕS § 53 lg 1. Это соответствует Директиве ЕС 2011/83/EU.</p>
+
+      <h3>2. Дефектные товары</h3>
+      <p>Если товар дефектный или не соответствует описанию заказа, покупатель вправе:</p>
+      <ul>
+        <li>Требовать бесплатного ремонта</li>
+        <li>Требовать замены на аналогичный товар</li>
+        <li>Требовать снижения цены</li>
+        <li>Расторгнуть договор и получить возврат средств</li>
+      </ul>
+      <p>О дефекте необходимо сообщить в течение 14 дней с момента обнаружения по e-mail: info@sfflab.ee</p>
+
+      <h3>3. Транспортные повреждения</h3>
+      <p>Повреждения при транспортировке необходимо зафиксировать немедленно при получении и уведомить транспортную компанию и SFF Lab OÜ в течение 24 часов. Товар застрахован.</p>
+
+      <h3>4. Гарантийный ремонт</h3>
+      <p>Расходы на пересылку при гарантийном ремонте несёт SFF Lab OÜ. Клиент отвечает за надёжную упаковку товара при возврате.</p>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <p class="text-zinc-700 text-[10px] uppercase tracking-widest text-center mt-10">
+    SFF Lab OÜ · 17506407 · KMKR EE102985942 · Tallinn, Estonia · info@sfflab.ee
+  </p>
+</div>
+
+<script>
+function setLang(lang) {
+  localStorage.setItem('selectedLanguage', lang);
+  document.querySelectorAll('.et, .ru').forEach(el => el.classList.add('hidden'));
+  document.querySelectorAll('.' + lang).forEach(el => el.classList.remove('hidden'));
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('lang-' + lang).classList.add('active');
+}
+
+function showTab(tab) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => {
+    b.classList.remove('active');
+    b.classList.add('text-zinc-400');
+  });
+  document.getElementById('section-' + tab).classList.add('active');
+  document.getElementById('tab-' + tab).classList.add('active');
+  document.getElementById('tab-' + tab).classList.remove('text-zinc-400');
+}
+
+window.onload = () => {
+  setLang(localStorage.getItem('selectedLanguage') || 'et');
+};
+</script>
+</body>
+</html>
