@@ -541,9 +541,21 @@
             })
             .then(function (res) {
                 if (!res.ok) throw new Error('http ' + res.status);
-                document.getElementById('om-form').style.display   = 'none';
-                document.getElementById('om-success').style.display = 'block';
+                return res.json();
+            })
+            .then(function (data) {
+                document.getElementById('om-form').style.display    = 'none';
+                document.getElementById('om-success').style.display  = 'block';
                 errEl.style.display = 'none';
+                var orderNum = (data && data.orderNumber) ? data.orderNumber : '';
+                var isRu = (localStorage.getItem('selectedLanguage') || 'et') === 'ru';
+                var msg = orderNum
+                    ? '<span style="display:block;font-size:11px;letter-spacing:0.2em;font-weight:800;color:#2563eb;text-transform:uppercase;margin-bottom:10px">' + orderNum + '</span>'
+                      + (isRu
+                          ? 'Заказ получен! Письмо с подтверждением<br>отправлено на вашу почту.'
+                          : 'Tellimus vastu võetud! Kinnitusmeil<br>on saadetud teie postkasti.')
+                    : (isRu ? 'Заказ получен! Свяжемся в течение 24 часов.' : 'Tellimus vastu võetud! Võtame ühendust 24 tunni jooksul.');
+                document.getElementById('om-success-msg').innerHTML = msg;
             })
             .catch(function () {
                 errEl.style.display = 'block';
