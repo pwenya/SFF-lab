@@ -302,6 +302,28 @@
                 'om-success-msg': 'Заказ получен!\nСвяжемся с вами в течение 24 часов.',
                 'om-err-msg': 'Что-то пошло не так. Пожалуйста, попробуйте снова.',
                 'om-delivery-label': 'Ориентировочная готовность:'
+            },
+            en: {
+                'back-link': '← Back to home', 'config-title': 'Configure your system',
+                'preset-label': 'Quick select',
+                'os-label': 'Operating System',
+                'os-note-steamos': '✓ 18,000+ compatible games · Best SFF experience',
+                'os-note-windows': '✓ Maximum game compatibility · Windows licence included',
+                'os-note-dualboot': '✓ SteamOS + Windows 11 · Best of both worlds',
+                'case-label': 'Case design', 'ctrl-label': 'Controller', 'cpu-label': 'Processor (CPU)',
+                'gpu-label': 'Graphics Card (GPU)', 'psu-label': 'Power Supply (PSU)', 'ram-label': 'Memory (RAM)',
+                'ssd-label': 'Storage (SSD)', 'hdmi-label': 'Cable', 'pkg-label': 'Packaging',
+                'psu-req': '850W PSU required for RX 9070 XT',
+                'summary-title': 'Your build', 'sum-model': 'Model:', 'sum-os': 'OS:', 'sum-build': 'Type:',
+                'order-open-btn': 'Place order',
+                'legal-info': '* Made to order.\nNo return right per VÕS § 53 lg 4.',
+                'footer-estonia': 'Made in Estonia', 'footer-cookies': 'No cookies · No trackers',
+                'om-title': 'Place order',
+                'om-name-label': 'Full name', 'om-email-label': 'Email address', 'om-phone-label': 'Phone number',
+                'om-submit': 'Send order',
+                'om-success-msg': 'Order received!\nWe will contact you within 24 hours.',
+                'om-err-msg': 'Something went wrong. Please try again.',
+                'om-delivery-label': 'Estimated ready by:'
             }
         };
 
@@ -429,21 +451,22 @@
         window.openOrderModal = function () {
             var lang = localStorage.getItem('selectedLanguage') || 'et';
             var isRu = lang === 'ru';
+            var isEn = lang === 'en';
             var tr   = (window.pageTranslations || {})[lang] || {};
             var snap = _getConfigSnapshot();
 
             /* Populate summary rows */
             var rows = [
-                [isRu ? 'Модель' : 'Mudel',  snap.model],
-                ['OS',                         snap.os],
-                [isRu ? 'Корпус' : 'Korpus',  snap.caseTxt],
-                ['CPU',                        snap.cpu],
-                ['GPU',                        snap.gpu],
-                ['RAM',                        snap.ram],
-                ['SSD',                        snap.ssd]
+                [isRu ? 'Модель'  : (isEn ? 'Model'      : 'Mudel'),      snap.model],
+                ['OS',                                                       snap.os],
+                [isRu ? 'Корпус'  : (isEn ? 'Case'        : 'Korpus'),     snap.caseTxt],
+                ['CPU',                                                      snap.cpu],
+                ['GPU',                                                      snap.gpu],
+                ['RAM',                                                      snap.ram],
+                ['SSD',                                                      snap.ssd]
             ];
-            if (snap.psu)  rows.push([isRu ? 'Питание'    : 'PSU',       snap.psu]);
-            if (snap.ctrl) rows.push([isRu ? 'Контроллер' : 'Kontroller', snap.ctrl]);
+            if (snap.psu)  rows.push([isRu ? 'Питание'     : 'PSU',                             snap.psu]);
+            if (snap.ctrl) rows.push([isRu ? 'Контроллер'  : (isEn ? 'Controller' : 'Kontroller'), snap.ctrl]);
 
             document.getElementById('om-summary-rows').innerHTML = rows.map(function (r) {
                 return '<div class="om-row"><span class="om-lbl">' + r[0] + '</span><span class="om-val">' + r[1] + '</span></div>';
@@ -454,8 +477,9 @@
 
             /* Delivery date */
             var readyDate = new Date(Date.now() + 14 * 24 * 60 * 60 * 1000);
-            var readyStr  = readyDate.toLocaleDateString(isRu ? 'ru-RU' : 'et-EE', { day: '2-digit', month: '2-digit', year: 'numeric' });
-            var delivLabel = tr['om-delivery-label'] || (isRu ? 'Ориентировочная готовность:' : 'Eeldatav valmimine:');
+            var locale    = isRu ? 'ru-RU' : (isEn ? 'en-GB' : 'et-EE');
+            var readyStr  = readyDate.toLocaleDateString(locale, { day: '2-digit', month: '2-digit', year: 'numeric' });
+            var delivLabel = tr['om-delivery-label'] || (isRu ? 'Ориентировочная готовность:' : (isEn ? 'Estimated ready by:' : 'Eeldatav valmimine:'));
             document.getElementById('om-delivery').innerText = delivLabel + ' ' + readyStr;
 
             /* Reset form state */
@@ -492,6 +516,7 @@
         window.submitOrderForm = function () {
             var lang  = localStorage.getItem('selectedLanguage') || 'et';
             var isRu  = lang === 'ru';
+            var isEn  = lang === 'en';
             var tr    = (window.pageTranslations || {})[lang] || {};
             var nameEl  = document.getElementById('om-name');
             var emailEl = document.getElementById('om-email');
@@ -514,7 +539,8 @@
 
             var snap = _getConfigSnapshot();
             var readyDate = new Date(Date.now() + 14 * 24 * 60 * 60 * 1000);
-            var readyStr  = readyDate.toLocaleDateString(isRu ? 'ru-RU' : 'et-EE', { day: '2-digit', month: '2-digit', year: 'numeric' });
+            var locale2   = isRu ? 'ru-RU' : (isEn ? 'en-GB' : 'et-EE');
+            var readyStr  = readyDate.toLocaleDateString(locale2, { day: '2-digit', month: '2-digit', year: 'numeric' });
 
             var payload = {
                 _subject:           'New Order — ' + snap.model + ' — ' + snap.price + ' — ' + nameEl.value.trim(),
@@ -550,20 +576,23 @@
                 document.getElementById('om-success').style.display  = 'block';
                 errEl.style.display = 'none';
                 var orderNum = (data && data.orderNumber) ? data.orderNumber : '';
-                var isRu = (localStorage.getItem('selectedLanguage') || 'et') === 'ru';
+                var lang2 = localStorage.getItem('selectedLanguage') || 'et';
+                var isRu2 = lang2 === 'ru'; var isEn2 = lang2 === 'en';
                 var msg = orderNum
                     ? '<span style="display:block;font-size:11px;letter-spacing:0.2em;font-weight:800;color:#2563eb;text-transform:uppercase;margin-bottom:10px">' + orderNum + '</span>'
-                      + (isRu
-                          ? 'Заказ получен! Письмо с подтверждением<br>отправлено на вашу почту.'
-                          : 'Tellimus vastu võetud! Kinnitusmeil<br>on saadetud teie postkasti.')
-                    : (isRu ? 'Заказ получен! Свяжемся в течение 24 часов.' : 'Tellimus vastu võetud! Võtame ühendust 24 tunni jooksul.');
+                      + (isRu2 ? 'Заказ получен! Письмо с подтверждением<br>отправлено на вашу почту.'
+                               : (isEn2 ? 'Order received! Confirmation email<br>sent to your inbox.'
+                                        : 'Tellimus vastu võetud! Kinnitusmeil<br>on saadetud teie postkasti.'))
+                    : (isRu2 ? 'Заказ получен! Свяжемся в течение 24 часов.'
+                             : (isEn2 ? 'Order received! We will contact you within 24 hours.'
+                                      : 'Tellimus vastu võetud! Võtame ühendust 24 tunni jooksul.'));
                 document.getElementById('om-success-msg').innerHTML = msg;
             })
             .catch(function () {
                 errEl.style.display = 'block';
-                errEl.innerText = tr['om-err-msg'] || (isRu ? 'Что-то пошло не так. Попробуйте снова.' : 'Midagi läks valesti. Palun proovi uuesti.');
+                errEl.innerText = tr['om-err-msg'] || (isRu ? 'Что-то пошло не так. Попробуйте снова.' : (isEn ? 'Something went wrong. Please try again.' : 'Midagi läks valesti. Palun proovi uuesti.'));
                 btn.disabled  = false;
-                btn.innerText = tr['om-submit'] || (isRu ? 'Отправить заказ' : 'Saada tellimus');
+                btn.innerText = tr['om-submit'] || (isRu ? 'Отправить заказ' : (isEn ? 'Send order' : 'Saada tellimus'));
             });
         };
 

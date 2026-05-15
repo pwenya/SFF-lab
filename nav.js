@@ -2,6 +2,7 @@
     /* ── Inject shared CSS ── */
     var s = document.createElement('style');
     s.textContent = [
+        '.lang-btn{color:#71717a}',
         '.lang-btn.active{color:white;border-bottom:2px solid #2563eb;padding-bottom:2px}',
         '.nav-scrolled{background:rgba(0,0,0,0.92)!important;border-color:rgba(255,255,255,0.08)!important}',
         '@keyframes _navFadeIn{from{opacity:0}to{opacity:1}}',
@@ -31,7 +32,7 @@
         + '<input id="order-id" type="text" class="modal-input" placeholder="SFF-2026-0515-1234">'
         + '<p id="modal-error" style="display:none;color:#ef4444;font-size:12px;font-weight:600;margin-top:8px;text-align:left"></p>'
         + '</div>'
-        + '<button onclick="window.submitOrder()" id="modal-submit-btn" class="btn-ripple w-full bg-blue-600 hover:bg-blue-500 text-white py-4 rounded-2xl font-black text-xs uppercase tracking-widest" style="border:none;cursor:pointer;transition:background 0.2s">Kontrolli / Проверить</button>'
+        + '<button onclick="window.submitOrder()" id="modal-submit-btn" class="btn-ripple w-full bg-blue-600 hover:bg-blue-500 text-white py-4 rounded-2xl font-black text-xs uppercase tracking-widest" style="border:none;cursor:pointer;transition:background 0.2s">Kontrolli</button>'
         + '</div>'
         + '<div id="modal-success" style="display:none;text-align:center;padding:8px 0">'
         + '</div>'
@@ -47,7 +48,9 @@
         + '<div class="flex items-center space-x-3 border-l border-white/10 pl-4 lg:pl-12 text-sm font-bold tracking-widest">'
         + '<button onclick="setLanguage(\'et\')" id="lang-et" class="lang-btn active transition hover:text-white" style="background:none;border:none;cursor:pointer;font-weight:700;letter-spacing:0.15em">ET</button>'
         + '<span class="text-zinc-800">|</span>'
-        + '<button onclick="setLanguage(\'ru\')" id="lang-ru" class="lang-btn transition hover:text-white text-zinc-500" style="background:none;border:none;cursor:pointer;font-weight:700;letter-spacing:0.15em">RU</button>'
+        + '<button onclick="setLanguage(\'ru\')" id="lang-ru" class="lang-btn transition hover:text-white" style="background:none;border:none;cursor:pointer;font-weight:700;letter-spacing:0.15em">RU</button>'
+        + '<span class="text-zinc-800">|</span>'
+        + '<button onclick="setLanguage(\'en\')" id="lang-en" class="lang-btn transition hover:text-white" style="background:none;border:none;cursor:pointer;font-weight:700;letter-spacing:0.15em">EN</button>'
         + '</div>'
         + '<button onclick="openModal()" data-key="nav-status" class="hidden lg:block btn-ripple bg-white text-black px-8 py-3 rounded-full hover:bg-zinc-200 transition uppercase tracking-widest text-[14px] font-black" style="border:none;cursor:pointer">Tellimuse staatus</button>'
         + '</div>'
@@ -61,7 +64,6 @@
     });
 
     function _init() {
-        /* Nav scroll opacity */
         window.addEventListener('scroll', function () {
             var nav = document.getElementById('main-nav');
             if (!nav) return;
@@ -70,7 +72,6 @@
             nav.style.borderColor = scrolled ? 'rgba(255,255,255,0.08)' : 'rgba(255,255,255,0.05)';
         }, { passive: true });
 
-        /* Ripple on .btn-ripple clicks */
         document.addEventListener('click', function (e) {
             var btn = e.target.closest('.btn-ripple');
             if (!btn) return;
@@ -83,7 +84,6 @@
             c.addEventListener('animationend', function () { c.remove(); });
         });
 
-        /* ESC closes modal */
         document.addEventListener('keydown', function (e) {
             if (e.key === 'Escape') window.closeModal();
         });
@@ -91,8 +91,9 @@
 
     /* ── i18n ── */
     var _NAV_TR = {
-        et: { 'nav-pricing': 'Paketid', 'nav-status': 'Tellimuse staatus' },
-        ru: { 'nav-pricing': 'Цены', 'nav-status': 'Статус заказа' }
+        et: { 'nav-pricing': 'Paketid',   'nav-status': 'Tellimuse staatus' },
+        ru: { 'nav-pricing': 'Цены',      'nav-status': 'Статус заказа'     },
+        en: { 'nav-pricing': 'Packages',  'nav-status': 'Order Status'      }
     };
 
     window.setLanguage = function (lang) {
@@ -100,7 +101,8 @@
         var pg = window.pageTranslations || {};
         var tr = {
             et: Object.assign({}, _NAV_TR.et, pg.et || {}),
-            ru: Object.assign({}, _NAV_TR.ru, pg.ru || {})
+            ru: Object.assign({}, _NAV_TR.ru, pg.ru || {}),
+            en: Object.assign({}, _NAV_TR.en, pg.en || {})
         };
         document.querySelectorAll('[data-key]').forEach(function (el) {
             var k = el.getAttribute('data-key');
@@ -111,14 +113,15 @@
         if (ab) ab.classList.add('active');
 
         var isRu = lang === 'ru';
+        var isEn = lang === 'en';
         var mt = document.getElementById('modal-title');
         var ms = document.getElementById('modal-sub');
         var mb = document.getElementById('modal-submit-btn');
-        if (mt) mt.innerText = isRu ? 'Статус заказа' : 'Tellimuse staatus';
-        if (ms) ms.innerText = isRu
-            ? 'Введи номер заказа, чтобы проверить его статус.'
-            : 'Sisesta oma tellimuse number, et kontrollida selle staatust.';
-        if (mb && !mb.disabled) mb.innerText = isRu ? 'Проверить' : 'Kontrolli';
+        if (mt) mt.innerText = isRu ? 'Статус заказа'    : (isEn ? 'Order Status'                          : 'Tellimuse staatus');
+        if (ms) ms.innerText = isRu ? 'Введи номер заказа, чтобы проверить его статус.'
+                                    : (isEn ? 'Enter your order number to check its status.'
+                                            : 'Sisesta oma tellimuse number, et kontrollida selle staatust.');
+        if (mb && !mb.disabled) mb.innerText = isRu ? 'Проверить' : (isEn ? 'Check' : 'Kontrolli');
     };
 
     /* ── Modal ── */
@@ -134,27 +137,36 @@
     window._navBackdrop = function (e) {
         if (e.target === document.getElementById('modal-overlay')) window.closeModal();
     };
+
     var STATUS_ET = { pending: 'Ootel', pending_payment: 'Ootel makset', in_progress: 'Töös', ready: 'Valmis', shipped: 'Saadetud' };
     var STATUS_RU = { pending: 'Ожидает', pending_payment: 'Ожидает оплаты', in_progress: 'В работе', ready: 'Готово', shipped: 'Отправлено' };
+    var STATUS_EN = { pending: 'Pending', pending_payment: 'Awaiting payment', in_progress: 'In progress', ready: 'Ready', shipped: 'Shipped' };
     var STATUS_COLOR = { pending: '#a1a1aa', pending_payment: '#f59e0b', in_progress: '#3b82f6', ready: '#22c55e', shipped: '#a78bfa' };
 
-    function _statusBackBtn(isRu) {
+    function _statusBackBtn(lang) {
+        var label = lang === 'ru' ? 'Назад' : (lang === 'en' ? 'Back' : 'Tagasi');
         return '<button onclick="window._navStatusBack()" style="background:none;border:1px solid rgba(255,255,255,0.1);border-radius:14px;color:#71717a;font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;padding:10px 24px;margin-top:8px">'
-            + (isRu ? 'Назад' : 'Tagasi') + '</button>';
+            + label + '</button>';
     }
 
     window.submitOrder = function () {
         var idEl  = document.getElementById('order-id');
         var errEl = document.getElementById('modal-error');
         var btn   = document.getElementById('modal-submit-btn');
-        var isRu  = (localStorage.getItem('selectedLanguage') || 'et') === 'ru';
+        var lang  = localStorage.getItem('selectedLanguage') || 'et';
+        var isRu  = lang === 'ru';
+        var isEn  = lang === 'en';
         var orderNumber = idEl ? idEl.value.trim().toUpperCase() : '';
 
         if (errEl) errEl.style.display = 'none';
 
         if (!orderNumber || !/^SFF-\d{4}-\d{4}-\d{4}$/.test(orderNumber)) {
             if (idEl) { idEl.style.borderColor = 'rgba(239,68,68,0.6)'; setTimeout(function () { idEl.style.borderColor = ''; }, 1500); }
-            if (errEl) { errEl.innerText = isRu ? 'Неверный формат: SFF-2026-0515-1234' : 'Vale vorming: SFF-2026-0515-1234'; errEl.style.display = 'block'; }
+            if (errEl) {
+                errEl.innerText = isRu ? 'Неверный формат: SFF-2026-0515-1234'
+                                       : (isEn ? 'Invalid format: SFF-2026-0515-1234' : 'Vale vorming: SFF-2026-0515-1234');
+                errEl.style.display = 'block';
+            }
             return;
         }
 
@@ -163,7 +175,7 @@
         fetch('/api/order-status?orderNumber=' + encodeURIComponent(orderNumber))
             .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, status: r.status, data: d }; }); })
             .then(function (res) {
-                if (btn) { btn.disabled = false; btn.style.opacity = ''; btn.innerText = isRu ? 'Проверить' : 'Kontrolli'; }
+                if (btn) { btn.disabled = false; btn.style.opacity = ''; btn.innerText = isRu ? 'Проверить' : (isEn ? 'Check' : 'Kontrolli'); }
 
                 var f  = document.getElementById('modal-form');
                 var sc = document.getElementById('modal-success');
@@ -171,9 +183,10 @@
                 if (res.status === 404) {
                     if (sc) {
                         sc.innerHTML = '<div style="font-size:32px;margin-bottom:16px">⚠</div>'
-                            + '<p style="color:#fff;font-weight:700;font-size:15px;margin-bottom:8px">' + (isRu ? 'Заказ не найден' : 'Tellimust ei leitud') + '</p>'
+                            + '<p style="color:#fff;font-weight:700;font-size:15px;margin-bottom:8px">'
+                            + (isRu ? 'Заказ не найден' : (isEn ? 'Order not found' : 'Tellimust ei leitud')) + '</p>'
                             + '<p style="color:#71717a;font-size:13px;margin-bottom:24px">' + orderNumber + '</p>'
-                            + _statusBackBtn(isRu);
+                            + _statusBackBtn(lang);
                         sc.style.display = 'block';
                     }
                     if (f) f.style.display = 'none';
@@ -184,11 +197,12 @@
 
                 var d = res.data;
                 var color = STATUS_COLOR[d.status] || '#a1a1aa';
-                var etLabel = STATUS_ET[d.status] || d.status;
-                var ruLabel = STATUS_RU[d.status] || d.status;
+                var STATUS_MAP = isRu ? STATUS_RU : (isEn ? STATUS_EN : STATUS_ET);
+                var statusLabel = STATUS_MAP[d.status] || d.status;
+                var delivLabel = isRu ? 'Готовность' : (isEn ? 'Ready by' : 'Eeldatav');
                 var deliveryHtml = d.estimatedDelivery
                     ? '<div style="font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#52525b;margin-bottom:4px">'
-                      + (isRu ? 'Готовность' : 'Eeldatav') + '</div>'
+                      + delivLabel + '</div>'
                       + '<div style="font-size:13px;color:#a1a1aa;margin-bottom:24px">' + d.estimatedDelivery + '</div>'
                     : '<div style="margin-bottom:24px"></div>';
 
@@ -196,18 +210,22 @@
                     sc.innerHTML = '<div style="font-size:10px;font-weight:800;letter-spacing:0.2em;text-transform:uppercase;color:#52525b;margin-bottom:6px">ORDER</div>'
                         + '<div style="font-size:18px;font-weight:900;letter-spacing:0.04em;color:#fff;margin-bottom:20px">' + d.orderNumber + '</div>'
                         + '<div style="display:inline-block;padding:8px 24px;border-radius:100px;background:' + color + '1a;border:1px solid ' + color + '55;margin-bottom:20px">'
-                        + '<span style="font-size:12px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:' + color + '">' + etLabel + ' / ' + ruLabel + '</span>'
+                        + '<span style="font-size:12px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:' + color + '">' + statusLabel + '</span>'
                         + '</div>'
                         + (d.model ? '<div style="font-size:13px;font-weight:700;color:#e4e4e7;margin-bottom:16px">' + d.model + '</div>' : '')
                         + deliveryHtml
-                        + _statusBackBtn(isRu);
+                        + _statusBackBtn(lang);
                     sc.style.display = 'block';
                 }
                 if (f) f.style.display = 'none';
             })
             .catch(function () {
-                if (btn) { btn.disabled = false; btn.style.opacity = ''; btn.innerText = isRu ? 'Проверить' : 'Kontrolli'; }
-                if (errEl) { errEl.innerText = isRu ? 'Ühenduse viga. Proovi uuesti.' : 'Ошибка соединения. Попробуй ещё раз.'; errEl.style.display = 'block'; }
+                if (btn) { btn.disabled = false; btn.style.opacity = ''; btn.innerText = isRu ? 'Проверить' : (isEn ? 'Check' : 'Kontrolli'); }
+                if (errEl) {
+                    errEl.innerText = isRu ? 'Ошибка соединения. Попробуй ещё раз.'
+                                           : (isEn ? 'Connection error. Please try again.' : 'Ühenduse viga. Proovi uuesti.');
+                    errEl.style.display = 'block';
+                }
             });
     };
 

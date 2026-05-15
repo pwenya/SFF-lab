@@ -541,6 +541,27 @@
                 'compat-works':'Работает','compat-native':'Нативно','compat-partial':'Частично','compat-no':'Не работает',
                 'disc-title':'Честное предупреждение','disc-text':'Мы тестируем каждую сборку под SteamOS перед отправкой. Некоторые игры с античитом (Valorant, Fortnite, EA FC) не работают на SteamOS. Для них выбери Windows или Dual Boot.',
                 'footer-slogan':'Создано для гостиной','footer-cookies':'Без куки-трекинга','footer-built':'Собрано в Эстонии'
+            },
+            en: {
+                'trust-1':'European mini-PC market growing 7% per year','trust-2':'18,000+ Steam games compatible with SteamOS','trust-3':'Assembled and tested in Estonia',
+                'hero-l1':'QUIETER.','hero-l2':'SMALLER.','hero-l3':'STRONGER.',
+                'hero-img-caption':'Smaller than PS5 →',
+                'hero-sub':'Full power. Console size. Silent operation.','hero-btn-boxes':'Cases','hero-btn-pricing':'Packages ↓',
+                'size-title':'Console or PC?','size-sub':'Same size. Endless possibilities.',
+                'filter-steamos':'🎮 Gaming SteamOS','filter-windows':'🪟 Gaming Windows','filter-office':'💼 Silent Office','filter-dualboot':'🔄 Dual Boot','filter-travel':'✈️ Travel PC',
+                'spec-noise-lbl':'Noise','spec-power-lbl':'Power','spec-vol-lbl':'Volume','spec-tv-lbl':'Under TV','spec-upg-lbl':'Upgr.',
+                'p1-title':'Core','p1-custom':'✓ Choose case design','p1-btn':'Choose design',
+                'popular-badge':'Popular','p2-title':'Core+','p2-btn':'Order kit',
+                'p2-feature-1':'✓ Ryzen 5 7500F / 7500X3D','p2-feature-2':'✓ Xbox / DualSense controller','p2-feature-3':'✓ 4K HDMI 2.1 Ultra High Speed','p2-feature-4':'✓ SFF Lab premium packaging',
+                'p3-title':'Build your own','p3-btn':'Start building','p3-desc':'Build your dream SFF system: choose 7500X3D, RX 9070 XT and up to 4TB Samsung SSD.',
+                'db-badge':'Best of both worlds','db-desc':'Gaming on SteamOS, work on Windows. Switch with one reboot. No compromises.','db-allgames':'All games ✓','db-from':'From','db-btn':'Configure',
+                'compat-title':'Compatibility','compat-sub':'SteamOS supports 90%+ of Steam games via the Proton compatibility layer.',
+                'tab-games':'Games','tab-controllers':'Controllers','tab-launchers':'Platforms',
+                'games-works-title':'Works','games-broken-title':'Anti-cheat restriction',
+                'games-broken-note':'These games use kernel-level anti-cheat software that requires Windows. Choose Dual Boot or Windows version.',
+                'compat-works':'Works','compat-native':'Native','compat-partial':'Partial','compat-no':'Doesn\'t work',
+                'disc-title':'Honest disclaimer','disc-text':'We test every PC with SteamOS before shipping. Some games with kernel-level anti-cheat (Valorant, Fortnite, EA FC) don\'t work on SteamOS. Choose Windows or Dual Boot for those.',
+                'footer-slogan':'Designed for living rooms','footer-cookies':'No tracking cookies','footer-built':'Built in Estonia'
             }
         };
 
@@ -595,14 +616,14 @@
 
         /* ── Comparison table ── */
         (function buildCmpTable() {
-            var isRu = (localStorage.getItem('selectedLanguage') || 'et') === 'ru';
+            var lang = localStorage.getItem('selectedLanguage') || 'et';
             var rows = [
-                { et: 'Täiendatav riistvara', ru: 'Апгрейд железа',      ps5: '✗', sff: '✓', atx: '✓' },
-                { et: 'Täis Steam raamatukogu', ru: 'Вся библиотека Steam', ps5: '✗', sff: '✓', atx: '✓' },
-                { et: 'Modid & emulaatorid',  ru: 'Моды и эмуляторы',    ps5: '✗', sff: '✓', atx: '✓' },
-                { et: 'SteamOS',              ru: 'SteamOS',              ps5: '✗', sff: '✓', atx: '✗' },
-                { et: 'Elutuppa sobiv',       ru: 'Для гостиной',         ps5: '✓', sff: '✓', atx: '✗' },
-                { et: 'Vaikne töö',           ru: 'Тихая работа',         ps5: '~', sff: '✓', atx: '✗' },
+                { et: 'Täiendatav riistvara',   ru: 'Апгрейд железа',        en: 'Upgradeable hardware',   ps5: '✗', sff: '✓', atx: '✓' },
+                { et: 'Täis Steam raamatukogu', ru: 'Вся библиотека Steam',   en: 'Full Steam library',     ps5: '✗', sff: '✓', atx: '✓' },
+                { et: 'Modid & emulaatorid',    ru: 'Моды и эмуляторы',       en: 'Mods & emulators',       ps5: '✗', sff: '✓', atx: '✓' },
+                { et: 'SteamOS',                ru: 'SteamOS',                en: 'SteamOS',                ps5: '✗', sff: '✓', atx: '✗' },
+                { et: 'Elutuppa sobiv',         ru: 'Для гостиной',           en: 'Living room friendly',   ps5: '✓', sff: '✓', atx: '✗' },
+                { et: 'Vaikne töö',             ru: 'Тихая работа',           en: 'Silent operation',       ps5: '~', sff: '✓', atx: '✗' },
             ];
             var COLOR = { '✓': '#4ade80', '✗': '#3f3f46', '~': '#f59e0b' };
             var ROW_STYLE = '';
@@ -610,29 +631,11 @@
             var LABEL = 'padding:12px 0;font-size:11px;font-weight:700;color:#52525b;letter-spacing:0.05em;border-top:1px solid rgba(255,255,255,0.05)';
             var SFF_BG = 'background:rgba(37,99,235,0.07);border-left:1px solid rgba(37,99,235,0.25);border-right:1px solid rgba(37,99,235,0.25)';
 
-            var html = rows.map(function(r, i) {
-                var label = isRu ? r.ru : r.et;
-                var isLast = i === rows.length - 1;
-                var sffExtra = isLast ? 'border-bottom:1px solid rgba(37,99,235,0.25);border-radius:0 0 12px 12px;' : '';
-                return '<tr style="' + ROW_STYLE + '">'
-                    + '<td style="' + LABEL + '">' + label + '</td>'
-                    + '<td style="' + CELL + ';color:' + COLOR[r.ps5] + '">' + r.ps5 + '</td>'
-                    + '<td style="' + CELL + ';color:' + COLOR[r.sff] + ';' + SFF_BG + sffExtra + '">' + r.sff + '</td>'
-                    + '<td style="' + CELL + ';color:' + COLOR[r.atx] + '">' + r.atx + '</td>'
-                    + '</tr>';
-            }).join('');
-            var el = document.getElementById('cmp-body');
-            if (el) el.innerHTML = html;
-
-            /* re-render on language switch */
-            var _orig = window.setLanguage;
-            window.setLanguage = function(lang) {
-                _orig(lang);
-                isRu = lang === 'ru';
-                var h = rows.map(function(r, i) {
-                    var label = isRu ? r.ru : r.et;
+            function renderRows(l) {
+                return rows.map(function(r, i) {
+                    var label = r[l] || r.et;
                     var isLast = i === rows.length - 1;
-                    var sffExtra = isLast ? 'border-bottom:1px solid rgba(37,99,235,0.25);border-radius:0 0 12px 12px;' : '' ;
+                    var sffExtra = isLast ? 'border-bottom:1px solid rgba(37,99,235,0.25);border-radius:0 0 12px 12px;' : '';
                     return '<tr style="' + ROW_STYLE + '">'
                         + '<td style="' + LABEL + '">' + label + '</td>'
                         + '<td style="' + CELL + ';color:' + COLOR[r.ps5] + '">' + r.ps5 + '</td>'
@@ -640,7 +643,15 @@
                         + '<td style="' + CELL + ';color:' + COLOR[r.atx] + '">' + r.atx + '</td>'
                         + '</tr>';
                 }).join('');
-                if (el) el.innerHTML = h;
+            }
+            var el = document.getElementById('cmp-body');
+            if (el) el.innerHTML = renderRows(lang);
+
+            /* re-render on language switch */
+            var _orig = window.setLanguage;
+            window.setLanguage = function(l) {
+                _orig(l);
+                if (el) el.innerHTML = renderRows(l);
             };
         })();
 
