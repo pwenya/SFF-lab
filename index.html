@@ -126,22 +126,38 @@
         </div>
     </div>
 
-    <section id="about" class="relative min-h-[90vh] flex flex-col items-center justify-center px-6 overflow-hidden py-20">
+    <section id="about" class="relative min-h-[90vh] flex flex-col items-center justify-center px-6 overflow-hidden py-24">
         <div class="glow-blob absolute top-[40%] left-1/2 w-[700px] md:w-[1000px] h-[500px] bg-blue-600/10 blur-[130px] rounded-full pointer-events-none"></div>
         <div class="glow-blob absolute top-[55%] left-[45%] w-[300px] h-[300px] bg-indigo-700/8 blur-[100px] rounded-full pointer-events-none" style="animation-delay:-3s"></div>
-        <div class="relative z-10 max-w-4xl text-center w-full">
-            <span class="anim-hero-badge text-blue-600 text-[11px] font-black uppercase tracking-[0.35em] mb-8 inline-block">SFF Lab</span>
-            <h1 class="anim-hero-title text-5xl sm:text-7xl md:text-[88px] font-extrabold tracking-tighter leading-[0.92] mb-8 uppercase">
-                <span data-key="hero-l1" class="text-gradient block">4K couch gaming.</span>
-                <span data-key="hero-l2" class="text-white block">No noisy tower.</span>
-                <span data-key="hero-l3" class="text-zinc-600 block">No console limits.</span>
-            </h1>
-            <p data-key="hero-sub" class="anim-hero-sub text-zinc-400 text-sm md:text-lg mb-12 font-medium tracking-wide max-w-lg mx-auto leading-relaxed">
-                Full PC power. Console size. Silent operation.
-            </p>
-            <div class="anim-hero-cta flex flex-col sm:flex-row items-center justify-center gap-4">
-                <a href="boxes.html" data-key="hero-btn-boxes" class="btn-ripple inline-block bg-white text-black px-10 py-4 rounded-full hover:bg-zinc-200 hover:scale-105 transition-all duration-300 uppercase tracking-[0.25em] text-[14px] font-black">Korpused</a>
-                <a href="#pricing" data-key="hero-btn-pricing" class="inline-block border border-white/20 text-white px-10 py-4 rounded-full hover:border-white/40 hover:bg-white/5 transition-all duration-300 uppercase tracking-[0.25em] text-[14px] font-black">Paketid ↓</a>
+        <div class="relative z-10 max-w-6xl w-full mx-auto">
+            <div class="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
+
+                <!-- Left: text (60%) -->
+                <div class="flex-[3] text-center lg:text-left">
+                    <h1 class="anim-hero-title text-6xl sm:text-7xl md:text-[84px] font-extrabold tracking-tighter leading-[0.9] mb-8 uppercase">
+                        <span data-key="hero-l1" class="text-gradient block">VAIKSEM.</span>
+                        <span data-key="hero-l2" class="text-white block">VÄIKSEM.</span>
+                        <span data-key="hero-l3" class="text-blue-500 block">VÕIMSAM.</span>
+                    </h1>
+                    <p data-key="hero-sub" class="anim-hero-sub text-zinc-400 text-sm md:text-lg mb-12 font-medium tracking-wide max-w-lg mx-auto lg:mx-0 leading-relaxed">
+                        Full PC power. Console size. Silent operation.
+                    </p>
+                    <div class="anim-hero-cta flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
+                        <a href="boxes.html" data-key="hero-btn-boxes" class="btn-ripple inline-block bg-white text-black px-10 py-4 rounded-full hover:bg-zinc-200 hover:scale-105 transition-all duration-300 uppercase tracking-[0.25em] text-[14px] font-black">Korpused</a>
+                        <a href="#pricing" data-key="hero-btn-pricing" class="inline-block border border-white/20 text-white px-10 py-4 rounded-full hover:border-white/40 hover:bg-white/5 transition-all duration-300 uppercase tracking-[0.25em] text-[14px] font-black">Paketid ↓</a>
+                    </div>
+                </div>
+
+                <!-- Right: product image (40%) -->
+                <div class="flex-[2] flex flex-col items-center anim-hero-cta w-full">
+                    <img
+                        src="https://images.unsplash.com/photo-1587202372775-e229f172b9d7?w=600"
+                        alt="SFF PC"
+                        style="transform:rotate(-3deg);border-radius:24px;box-shadow:0 32px 80px rgba(0,0,0,0.85),0 0 0 1px rgba(255,255,255,0.05);width:100%;max-width:420px;display:block"
+                    >
+                    <p data-key="hero-img-caption" class="text-zinc-600 text-[10px] font-black uppercase tracking-[0.2em] mt-7">Väiksem kui PS5 →</p>
+                </div>
+
             </div>
         </div>
     </section>
@@ -449,7 +465,8 @@
         window.pageTranslations = {
             et: {
                 'trust-1':'Euroopa mini-PC turg kasvab 7% aastas','trust-2':'18 000+ Steami mängu SteamOS-ühilduvad','trust-3':'Koostatud ja testitud Eestis',
-                'hero-l1':'Mänguarvuti diivanile ja TV-le.','hero-l2':'Ilma müra ja üleliigse suuruseta.','hero-l3':'',
+                'hero-l1':'VAIKSEM.','hero-l2':'VÄIKSEM.','hero-l3':'VÕIMSAM.',
+                'hero-img-caption':'Väiksem kui PS5 →',
                 'hero-sub':'Täisvõimsus. Konsooli suurus. Vaikne töö.','hero-btn-boxes':'Korpused','hero-btn-pricing':'Paketid ↓',
                 'size-title':'Väiksem kui PS5.','size-sub':'Mahub teleri kõrval riiulile. Käivitab kogu Steami raamatukogu.',
                 'size-stat1':'Maht','size-stat2':'Müratase','size-stat3':'Max resolutsioon',
@@ -470,7 +487,8 @@
             },
             ru: {
                 'trust-1':'Европейский рынок мини-ПК растёт на 7% в год','trust-2':'18 000+ игр Steam совместимы с SteamOS','trust-3':'Собрано и протестировано в Эстонии',
-                'hero-l1':'Игровой ПК для дивана и TV.','hero-l2':'Без шума и лишнего размера.','hero-l3':'',
+                'hero-l1':'ТИШЕ.','hero-l2':'МЕНЬШЕ.','hero-l3':'МОЩНЕЕ.',
+                'hero-img-caption':'Меньше, чем PS5 →',
                 'hero-sub':'Максимальная мощность. Размер консоли. Тихая работа.','hero-btn-boxes':'Корпуса','hero-btn-pricing':'Цены ↓',
                 'size-title':'Меньше, чем PS5.','size-sub':'Помещается на полке рядом с телевизором. Запускает всю библиотеку Steam.',
                 'size-stat1':'Объём','size-stat2':'Уровень шума','size-stat3':'Макс. разрешение',
