@@ -128,7 +128,6 @@
             <div class="flex flex-wrap gap-2">
                 <button onclick="applyPreset('silent')"   id="preset-silent"   class="preset-btn px-4 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest">Silent 1440p</button>
                 <button onclick="applyPreset('living')"   id="preset-living"   class="preset-btn px-4 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest">4K Living Room</button>
-                <button onclick="applyPreset('dualboot')" id="preset-dualboot" class="preset-btn px-4 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest">Dual Boot Power</button>
             </div>
         </div>
 
@@ -151,9 +150,13 @@
                 <div>
                     <label data-key="case-label" class="block text-[10px] font-black uppercase tracking-widest text-blue-500 mb-3">Korpuse disain (Case Color)</label>
                     <select id="case-select" class="w-full p-4 rounded-xl outline-none focus:border-blue-600 transition uppercase text-[10px] font-bold tracking-widest cursor-pointer">
-                        <option>Obsidian Black</option>
-                        <option>Titanium Gray</option>
-                        <option>Frost White</option>
+                        <option>Fractal Design Mood — Black</option>
+                        <option>Fractal Design Mood — Light</option>
+                        <option>Fractal Design Terra — Jade</option>
+                        <option>Fractal Design Terra — Graphite</option>
+                        <option>Fractal Design Terra — Silver</option>
+                        <option>Fractal Design Ridge — Black</option>
+                        <option>Fractal Design Ridge — Light</option>
                     </select>
                 </div>
                 <div>
@@ -189,9 +192,10 @@
                 <div>
                     <label data-key="ssd-label" class="block text-[10px] font-black uppercase tracking-widest text-blue-500 mb-3">Salvestusruum (SSD)</label>
                     <select id="ssd-select" onchange="updatePrice()" class="w-full p-4 rounded-xl outline-none transition uppercase text-[10px] font-bold tracking-widest cursor-pointer">
-                        <option value="0">1TB Samsung 990 PRO</option>
-                        <option value="120">2TB Samsung 990 PRO (+120€)</option>
-                        <option value="425" id="ssd-4tb" style="display:none">4TB Samsung 990 PRO (+425€)</option>
+                        <option value="0" data-name="WD Black SN850X 1TB">WD Black SN850X 1TB</option>
+                        <option value="10" data-name="Samsung 990 PRO 1TB">Samsung 990 PRO 1TB (+10€)</option>
+                        <option value="120" data-name="Samsung 990 PRO 2TB">Samsung 990 PRO 2TB (+120€)</option>
+                        <option value="425" id="ssd-4tb" data-name="Samsung 990 PRO 4TB" style="display:none">Samsung 990 PRO 4TB (+425€)</option>
                     </select>
                 </div>
                 <div id="ctrl-block" style="display:none">
@@ -217,7 +221,7 @@
                 </div>
             </div>
 
-            <div class="glass-panel p-10 rounded-[40px] h-fit sticky top-10">
+            <div class="glass-panel p-10 rounded-[40px] h-fit sticky top-[100px]">
                 <h2 data-key="summary-title" class="text-xl font-bold mb-6 uppercase tracking-widest">Sinu valik</h2>
                 <div class="space-y-4 border-b border-white/5 pb-6 mb-6 text-[10px] uppercase tracking-widest text-zinc-400">
                     <div class="flex justify-between">
@@ -233,7 +237,8 @@
                         <span class="text-blue-400 font-bold uppercase tracking-widest">Eritellimus</span>
                     </div>
                 </div>
-                <div id="total-price" class="text-4xl font-black mb-8 tracking-tighter">1845 €</div>
+                <div id="total-price" class="text-4xl font-black mb-2 tracking-tighter">2350 €</div>
+                <p data-key="vat-note" class="text-[9px] text-zinc-600 uppercase tracking-widest mb-6">Hind sisaldab käibemaksu (24%)</p>
                 <button onclick="openOrderModal()" data-key="order-open-btn" class="btn-ripple w-full bg-blue-600 py-4 rounded-2xl font-black uppercase text-[10px] tracking-widest hover:bg-blue-500 transition shadow-lg shadow-blue-600/20" style="border:none;cursor:pointer">Vormista tellimus</button>
                 <p data-key="legal-info" class="text-[8px] text-zinc-600 uppercase tracking-widest mt-6 text-center leading-relaxed">
                     * Eritellimusel valmiv toode.<br>VÕS § 53 lg 4 kohaselt tagastamisõigus puudub.
@@ -260,6 +265,7 @@
                     <span class="text-zinc-800 mx-1">·</span>
                     <a href="legal.html#returns" class="hover:text-zinc-400 transition"><span data-key="legal-returns">Tagastuspoliitika</span></a>
                 </p>
+                <p class="mt-3"><a href="https://www.cloudflare.com" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 text-zinc-700 hover:text-zinc-500 transition text-[9px] font-bold uppercase tracking-widest" style="text-decoration:none"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>Secured by Cloudflare</a></p>
             </div>
         </div>
     </footer>
@@ -287,6 +293,7 @@
                 'om-submit': 'Saada tellimus',
                 'om-success-msg': 'Tellimus vastu võetud!\nVõtame ühendust 24 tunni jooksul.',
                 'om-err-msg': 'Midagi läks valesti. Palun proovi uuesti.',
+                'vat-note': 'Hind sisaldab käibemaksu (24%)',
                 'om-delivery-label': 'Eeldatav valmimine:'
             },
             ru: {
@@ -309,6 +316,7 @@
                 'om-submit': 'Отправить заказ',
                 'om-success-msg': 'Заказ получен!\nСвяжемся с вами в течение 24 часов.',
                 'om-err-msg': 'Что-то пошло не так. Пожалуйста, попробуйте снова.',
+                'vat-note': 'Цена включает НДС (24%)',
                 'om-delivery-label': 'Ориентировочная готовность:'
             },
             en: {
@@ -331,13 +339,14 @@
                 'om-submit': 'Send order',
                 'om-success-msg': 'Order received!\nWe will contact you within 24 hours.',
                 'om-err-msg': 'Something went wrong. Please try again.',
+                'vat-note': 'Price includes VAT (24%)',
                 'om-delivery-label': 'Estimated ready by:'
             }
         };
 
         /* ── State ── */
         var urlParams   = new URLSearchParams(window.location.search);
-        var BASE_PRICE  = parseInt(urlParams.get('base')) || 1845;
+        var BASE_PRICE  = parseInt(urlParams.get('base')) || 2350;
         var MODE        = urlParams.get('mode');
         var selectedOS  = 'steamos';
         var selectedPreset = null;
@@ -371,8 +380,6 @@
             } else if (preset === 'living') {
                 selectOS('steamos'); cpu.value = '79'; gpu.value = '175'; ram.value = '139';
                 document.getElementById('hdmi-block').style.display = 'block';
-            } else if (preset === 'dualboot') {
-                selectOS('dualboot'); cpu.value = '79'; gpu.value = '175'; ram.value = '139';
             }
             handleGpuChange();
         }
@@ -387,6 +394,8 @@
             if (MODE === 'core') {
                 cpu.disabled = true; gpu.disabled = true; ram.disabled = true; ssd.disabled = true;
                 modelDisp.innerText = 'BAAS';
+                document.getElementById('os-dualboot').style.display = 'none';
+                document.getElementById('os-note-dualboot').style.display = 'none';
             } else if (MODE === 'plus') {
                 gpu.disabled = true; ram.disabled = true; ssd.disabled = true;
                 document.getElementById('ctrl-block').style.display = 'block';

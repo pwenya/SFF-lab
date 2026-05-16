@@ -16,7 +16,9 @@
         '.modal-overlay.open .modal-box{transform:translateY(0) scale(1);opacity:1}',
         '.modal-input{width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:14px;color:white;padding:14px 18px;font-size:14px;font-family:inherit;outline:none;transition:border-color 0.2s;box-sizing:border-box}',
         '.modal-input:focus{border-color:rgba(59,130,246,0.6)}',
-        '.modal-input::placeholder{color:#52525b}'
+        '.modal-input::placeholder{color:#52525b}',
+        '.nav-status-btn{display:block;flex-shrink:0;white-space:nowrap}',
+        '@media (max-width:1279px){.nav-status-btn{display:none!important}}'
     ].join('');
     document.head.appendChild(s);
 
@@ -38,21 +40,21 @@
         + '</div>'
         + '</div>'
         + '</div>'
-        + '<nav id="main-nav" class="anim-nav fixed w-full z-50 border-b border-white/5 bg-black/70 backdrop-blur-md" style="transition:background 0.3s,border-color 0.3s">'
+        + '<nav id="main-nav" class="anim-nav fixed w-full border-b border-white/5 bg-black/70 backdrop-blur-md" style="top:0;left:0;right:0;z-index:100;transition:background 0.3s,border-color 0.3s;overflow-x:hidden">'
         + '<div class="max-w-[1400px] mx-auto flex justify-between items-center py-4 md:py-6 px-6 md:px-10">'
         + '<a href="index.html" class="text-2xl md:text-3xl font-extrabold tracking-tighter uppercase text-white hover:opacity-80 transition">SFF LAB<span class="text-blue-600">.</span></a>'
-        + '<div class="flex items-center space-x-4 lg:space-x-12">'
+        + '<div class="flex items-center space-x-4 lg:space-x-8 min-w-0 overflow-hidden">'
         + '<div class="hidden lg:flex items-center space-x-12 text-[16px] font-bold uppercase tracking-[0.2em] text-zinc-500">'
         + '<a href="index.html#pricing" data-key="nav-pricing" class="hover:text-white transition">Paketid</a>'
         + '</div>'
-        + '<div class="flex items-center space-x-3 border-l border-white/10 pl-4 lg:pl-12 text-sm font-bold tracking-widest">'
+        + '<div class="flex items-center space-x-3 border-l border-white/10 pl-4 lg:pl-8 text-sm font-bold tracking-widest shrink-0 whitespace-nowrap">'
         + '<button onclick="setLanguage(\'et\')" id="lang-et" class="lang-btn active transition hover:text-white" style="background:none;border:none;cursor:pointer;font-weight:700;letter-spacing:0.15em">ET</button>'
         + '<span class="text-zinc-800">|</span>'
         + '<button onclick="setLanguage(\'ru\')" id="lang-ru" class="lang-btn transition hover:text-white" style="background:none;border:none;cursor:pointer;font-weight:700;letter-spacing:0.15em">RU</button>'
         + '<span class="text-zinc-800">|</span>'
         + '<button onclick="setLanguage(\'en\')" id="lang-en" class="lang-btn transition hover:text-white" style="background:none;border:none;cursor:pointer;font-weight:700;letter-spacing:0.15em">EN</button>'
         + '</div>'
-        + '<button onclick="openModal()" data-key="nav-status" class="hidden lg:block btn-ripple bg-white text-black px-8 py-3 rounded-full hover:bg-zinc-200 transition uppercase tracking-widest text-[14px] font-black" style="border:none;cursor:pointer">Tellimuse staatus</button>'
+        + '<button onclick="openModal()" data-key="nav-status" class="nav-status-btn btn-ripple bg-white text-black px-6 py-2.5 rounded-full hover:bg-zinc-200 transition uppercase tracking-widest text-[11px] font-black" style="border:none;cursor:pointer">Tellimuse staatus</button>'
         + '</div>'
         + '</div>'
         + '</nav>';
