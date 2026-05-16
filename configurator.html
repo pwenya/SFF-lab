@@ -66,6 +66,49 @@
         .om-row:last-child { border-bottom: none; }
         .om-row .om-lbl { color: #52525b; white-space: nowrap; padding-right: 12px; }
         .om-row .om-val { color: white; text-align: right; }
+
+        /* ── Custom Dropdowns ── */
+        .cdd-wrap { position: relative; width: 100%; }
+        .cdd-trigger {
+            display: flex; justify-content: space-between; align-items: center;
+            background: #111; border: 1px solid #333; border-radius: 12px;
+            color: white; padding: 16px; cursor: pointer;
+            font-size: 10px; font-weight: 700; font-family: inherit;
+            text-transform: uppercase; letter-spacing: 0.1em;
+            transition: border-color 0.2s; user-select: none;
+        }
+        .cdd-trigger:hover:not(.disabled) { border-color: #555; }
+        .cdd-trigger.open { border-color: #2563eb; }
+        .cdd-trigger.disabled { opacity: 0.6; cursor: not-allowed; border-color: #222; color: #888; }
+        .cdd-chevron { transition: transform 0.2s cubic-bezier(0.4,0,0.2,1); flex-shrink: 0; margin-left: 8px; }
+        .cdd-trigger.open .cdd-chevron { transform: rotate(180deg); }
+        .cdd-list {
+            position: absolute; top: calc(100% + 6px); left: 0; right: 0;
+            background: #111; border: 1px solid #333; border-radius: 12px;
+            z-index: 500; max-height: 260px; overflow-y: auto;
+            transform: translateY(-8px); opacity: 0; pointer-events: none;
+            transition: transform 0.15s cubic-bezier(0.4,0,0.2,1), opacity 0.15s cubic-bezier(0.4,0,0.2,1);
+        }
+        .cdd-list::-webkit-scrollbar { width: 4px; }
+        .cdd-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
+        .cdd-list.open {
+            transform: translateY(0); opacity: 1; pointer-events: all;
+            transition: transform 0.2s cubic-bezier(0.4,0,0.2,1), opacity 0.2s cubic-bezier(0.4,0,0.2,1);
+        }
+        .cdd-opt {
+            padding: 11px 16px; font-size: 10px; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 0.1em; color: #71717a;
+            cursor: pointer; display: flex; justify-content: space-between; align-items: center;
+            transition: background 0.15s, color 0.15s, padding-left 0.15s;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+        }
+        .cdd-opt:last-child { border-bottom: none; }
+        .cdd-opt:not(.cdd-opt-dis):hover { background: rgba(37,99,235,0.1); color: white; padding-left: 20px; }
+        .cdd-opt.selected { color: white; }
+        .cdd-opt.focused:not(.cdd-opt-dis) { background: rgba(37,99,235,0.07); color: white; }
+        .cdd-check { color: #2563eb; font-size: 11px; flex-shrink: 0; }
+        .cdd-opt:not(.selected) .cdd-check { visibility: hidden; }
+        .cdd-opt-dis { opacity: 0.4; cursor: not-allowed; }
     </style>
 </head>
 <body class="p-6 md:p-20 antialiased text-zinc-100">
@@ -117,9 +160,8 @@
         </div>
     </div>
 
-    <div class="max-w-4xl mx-auto pt-24">
-        <a href="index.html" data-key="back-link" class="text-zinc-500 hover:text-white text-[10px] uppercase tracking-[0.2em] mb-10 inline-block transition">← Tagasi pealehele</a>
-        <h1 data-key="config-title" class="text-4xl font-black mb-2 uppercase tracking-tighter">Konfigureeri oma süsteem</h1>
+    <div class="max-w-4xl mx-auto pt-[85px] md:pt-[53px]">
+<h1 data-key="config-title" class="text-4xl font-black mb-2 uppercase tracking-tighter">Konfigureeri oma süsteem</h1>
         <p class="text-blue-500 mb-8 uppercase text-[10px] tracking-[0.3em] font-bold">SFF Lab Build Tool v1.5</p>
 
         <!-- Scenario Presets -->
@@ -149,14 +191,14 @@
 
                 <div>
                     <label data-key="case-label" class="block text-[10px] font-black uppercase tracking-widest text-blue-500 mb-3">Korpuse disain (Case Color)</label>
-                    <select id="case-select" class="w-full p-4 rounded-xl outline-none focus:border-blue-600 transition uppercase text-[10px] font-bold tracking-widest cursor-pointer">
-                        <option>Fractal Design Mood — Black</option>
-                        <option>Fractal Design Mood — Light</option>
-                        <option>Fractal Design Terra — Jade</option>
-                        <option>Fractal Design Terra — Graphite</option>
-                        <option>Fractal Design Terra — Silver</option>
-                        <option>Fractal Design Ridge — Black</option>
-                        <option>Fractal Design Ridge — Light</option>
+                    <select id="case-select" onchange="updateCaseImage()" class="w-full p-4 rounded-xl outline-none focus:border-blue-600 transition uppercase text-[10px] font-bold tracking-widest cursor-pointer">
+                        <option value="Mood — Black">Mood — Black</option>
+                        <option value="Mood — Light">Mood — Light</option>
+                        <option value="Terra — Graphite">Terra — Graphite</option>
+                        <option value="Terra — Jade">Terra — Jade</option>
+                        <option value="Terra — Silver">Terra — Silver</option>
+                        <option value="Ridge — Black">Ridge — Black</option>
+                        <option value="Ridge — White">Ridge — White</option>
                     </select>
                 </div>
                 <div>
@@ -209,18 +251,19 @@
                 </div>
                 <div id="hdmi-block" style="display:none">
                     <label data-key="hdmi-label" class="block text-[10px] font-black uppercase tracking-widest text-blue-500 mb-3">Kaabel (Cable)</label>
-                    <select disabled class="w-full p-4 rounded-xl outline-none uppercase text-[10px] font-bold tracking-widest">
+                    <select id="hdmi-display" disabled class="w-full p-4 rounded-xl outline-none uppercase text-[10px] font-bold tracking-widest">
                         <option>✓ 4K HDMI 2.1 Ultra High Speed</option>
                     </select>
                 </div>
                 <div id="pkg-block" style="display:none">
                     <label data-key="pkg-label" class="block text-[10px] font-black uppercase tracking-widest text-blue-500 mb-3">Pakend (Packaging)</label>
-                    <select disabled class="w-full p-4 rounded-xl outline-none uppercase text-[10px] font-bold tracking-widest">
+                    <select id="pkg-display" disabled class="w-full p-4 rounded-xl outline-none uppercase text-[10px] font-bold tracking-widest">
                         <option>✓ SFF Lab Premium Packaging</option>
                     </select>
                 </div>
             </div>
 
+            <div style="display:flex;flex-direction:column;gap:16px;height:100%;margin-top:-49px">
             <div class="glass-panel p-10 rounded-[40px] h-fit sticky top-[100px]">
                 <h2 data-key="summary-title" class="text-xl font-bold mb-6 uppercase tracking-widest">Sinu valik</h2>
                 <div class="space-y-4 border-b border-white/5 pb-6 mb-6 text-[10px] uppercase tracking-widest text-zinc-400">
@@ -243,6 +286,15 @@
                 <p data-key="legal-info" class="text-[8px] text-zinc-600 uppercase tracking-widest mt-6 text-center leading-relaxed">
                     * Eritellimusel valmiv toode.<br>VÕS § 53 lg 4 kohaselt tagastamisõigus puudub.
                 </p>
+            </div>
+            <!-- Case image panel -->
+            <div id="case-image-panel" style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.07);border-radius:40px;padding:14px 16px 42px;text-align:center;flex:1;display:flex;flex-direction:column;justify-content:center;min-height:0;overflow:hidden">
+                <div style="position:relative;width:100%;min-height:0;overflow:hidden;display:flex;align-items:center">
+                    <button onclick="switchCasePhoto(currentPhotoNum<=1?3:currentPhotoNum-1)" style="position:absolute;left:4px;z-index:1;width:30px;height:30px;border-radius:50%;border:1px solid rgba(255,255,255,0.12);background:rgba(0,0,0,0.5);color:white;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.2s,border-color 0.2s;font-family:inherit;flex-shrink:0" onmouseover="this.style.background='rgba(37,99,235,0.4)';this.style.borderColor='#2563eb'" onmouseout="this.style.background='rgba(0,0,0,0.5)';this.style.borderColor='rgba(255,255,255,0.12)'"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
+                    <img id="case-img" src="IMG/MoodBlack.1.png" alt="Case preview" style="max-height:200px;object-fit:contain;width:100%;transition:opacity 0.3s ease;display:block;margin:0 auto;min-height:0;flex-shrink:1">
+                    <button onclick="switchCasePhoto(currentPhotoNum>=3?1:currentPhotoNum+1)" style="position:absolute;right:4px;z-index:1;width:30px;height:30px;border-radius:50%;border:1px solid rgba(255,255,255,0.12);background:rgba(0,0,0,0.5);color:white;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.2s,border-color 0.2s;font-family:inherit;flex-shrink:0" onmouseover="this.style.background='rgba(37,99,235,0.4)';this.style.borderColor='#2563eb'" onmouseout="this.style.background='rgba(0,0,0,0.5)';this.style.borderColor='rgba(255,255,255,0.12)'"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button>
+                </div>
+            </div>
             </div>
         </div>
     </div>
@@ -351,6 +403,16 @@
         var selectedOS  = 'steamos';
         var selectedPreset = null;
         var OS_PRICES   = { steamos: 0, windows: 79, dualboot: 79 };
+        var CASE_IMAGES = {
+            'Mood — Black':     'IMG/MoodBlack',
+            'Mood — Light':     'IMG/MoodLight',
+            'Ridge — Black':    'IMG/RidgeBlack',
+            'Ridge — White':    'IMG/RidgeWhite',
+            'Terra — Graphite': 'IMG/TerraGraphite',
+            'Terra — Jade':     'IMG/TerraJade',
+            'Terra — Silver':   'IMG/TerraSilver'
+        };
+        var currentPhotoNum = 1;
 
         /* ── OS selector ── */
         function selectOS(os) {
@@ -407,6 +469,7 @@
                 document.getElementById('psu-block').style.display = 'block';
                 modelDisp.innerText = 'ENTHUSIAST';
             }
+            syncDropdowns();
         }
 
         /* ── GPU / PSU coupling ── */
@@ -421,6 +484,7 @@
             } else {
                 psu650.disabled = false; psuWarning.classList.add('hidden');
             }
+            syncDropdowns();
             updatePrice();
         }
 
@@ -435,6 +499,31 @@
             var os   = OS_PRICES[selectedOS] || 0;
             document.getElementById('total-price').innerText = (BASE_PRICE + cpu + gpu + ram + ssd + psu + ctrl + os) + ' €';
         }
+
+        /* ── Case image ── */
+        function _setCasePhoto(caseName, num) {
+            var base = CASE_IMAGES[caseName];
+            if (!base) return;
+            var img = document.getElementById('case-img');
+            img.style.opacity = '0';
+            setTimeout(function () { img.src = base + '.' + num + '.png'; img.style.opacity = '1'; }, 300);
+            document.getElementById('case-caption').innerText = caseName;
+            [1, 2, 3].forEach(function (n) {
+                var btn = document.getElementById('photo-btn-' + n);
+                if (!btn) return;
+                btn.style.borderColor = n === num ? '#2563eb' : 'rgba(255,255,255,0.1)';
+                btn.style.background  = n === num ? 'rgba(37,99,235,0.15)' : 'transparent';
+                btn.style.color       = n === num ? 'white' : '#71717a';
+            });
+        }
+        window.updateCaseImage = function () {
+            currentPhotoNum = 1;
+            _setCasePhoto(document.getElementById('case-select').value, 1);
+        };
+        window.switchCasePhoto = function (num) {
+            currentPhotoNum = num;
+            _setCasePhoto(document.getElementById('case-select').value, num);
+        };
 
         /* ── Order Modal ── */
         function _getConfigSnapshot() {
@@ -613,12 +702,129 @@
             });
         };
 
-        /* ESC closes order modal */
-        document.addEventListener('keydown', function (e) {
-            if (e.key === 'Escape') window.closeOrderModal();
+        /* ── Custom Dropdown Engine ── */
+        var _cdds = {};
+
+        function _buildCDD(sel) {
+            var wrap = document.createElement('div');
+            wrap.className = 'cdd-wrap';
+            sel.parentNode.insertBefore(wrap, sel);
+            wrap.appendChild(sel);
+            sel.style.display = 'none';
+
+            var trigger = document.createElement('div');
+            trigger.className = 'cdd-trigger';
+            trigger.setAttribute('tabindex', '0');
+            trigger.innerHTML = '<span class="cdd-label"></span>'
+                + '<svg class="cdd-chevron" width="12" height="8" viewBox="0 0 12 8" fill="none"><path d="M1 1L6 7L11 1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+            var list = document.createElement('div');
+            list.className = 'cdd-list';
+
+            wrap.appendChild(trigger);
+            wrap.appendChild(list);
+
+            var cdd = { sel: sel, wrap: wrap, trigger: trigger, list: list, open: false };
+            if (sel.id) _cdds[sel.id] = cdd;
+
+            _syncCDD(cdd);
+
+            trigger.addEventListener('click', function () {
+                if (sel.disabled) return;
+                if (cdd.open) _closeCDD(cdd); else _openCDD(cdd);
+            });
+            trigger.addEventListener('keydown', function (e) {
+                if (sel.disabled) return;
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    if (cdd.open) { var f = list.querySelector('.cdd-opt.focused'); if (f) f.click(); else _closeCDD(cdd); }
+                    else _openCDD(cdd);
+                } else if (e.key === 'Escape') {
+                    _closeCDD(cdd);
+                } else if (e.key === 'ArrowDown') {
+                    e.preventDefault(); if (!cdd.open) _openCDD(cdd); _moveFocus(cdd, 1);
+                } else if (e.key === 'ArrowUp') {
+                    e.preventDefault(); if (!cdd.open) _openCDD(cdd); _moveFocus(cdd, -1);
+                }
+            });
+        }
+
+        function _syncCDD(cdd) {
+            var sel = cdd.sel;
+            if (sel.disabled) {
+                cdd.trigger.classList.add('disabled');
+                cdd.trigger.removeAttribute('tabindex');
+            } else {
+                cdd.trigger.classList.remove('disabled');
+                cdd.trigger.setAttribute('tabindex', '0');
+            }
+            cdd.list.innerHTML = '';
+            var selText = '';
+            Array.from(sel.options).forEach(function (opt) {
+                if (opt.style.display === 'none') return;
+                var div = document.createElement('div');
+                div.className = 'cdd-opt' + (opt.selected ? ' selected' : '') + (opt.disabled ? ' cdd-opt-dis' : '');
+                var txt = document.createElement('span');
+                txt.textContent = opt.text;
+                var chk = document.createElement('span');
+                chk.className = 'cdd-check'; chk.textContent = '✓';
+                div.appendChild(txt); div.appendChild(chk);
+                if (!opt.disabled) {
+                    div.addEventListener('click', function () {
+                        sel.value = opt.value;
+                        sel.dispatchEvent(new Event('change', { bubbles: true }));
+                        _closeCDD(cdd); _syncCDD(cdd);
+                    });
+                }
+                div.addEventListener('mouseenter', function () {
+                    cdd.list.querySelectorAll('.cdd-opt').forEach(function (o) { o.classList.remove('focused'); });
+                    div.classList.add('focused');
+                });
+                if (opt.selected) selText = opt.text;
+                cdd.list.appendChild(div);
+            });
+            cdd.trigger.querySelector('.cdd-label').textContent = selText;
+        }
+
+        function _openCDD(cdd) {
+            Object.keys(_cdds).forEach(function (k) { if (_cdds[k] !== cdd) _closeCDD(_cdds[k]); });
+            cdd.open = true; cdd.list.classList.add('open'); cdd.trigger.classList.add('open');
+        }
+        function _closeCDD(cdd) {
+            cdd.open = false; cdd.list.classList.remove('open'); cdd.trigger.classList.remove('open');
+        }
+        function _moveFocus(cdd, dir) {
+            var opts = Array.from(cdd.list.querySelectorAll('.cdd-opt:not(.cdd-opt-dis)'));
+            if (!opts.length) return;
+            var curr = cdd.list.querySelector('.cdd-opt.focused');
+            var idx = curr ? opts.indexOf(curr) : (dir > 0 ? -1 : opts.length);
+            opts.forEach(function (o) { o.classList.remove('focused'); });
+            var next = opts[Math.max(0, Math.min(opts.length - 1, idx + dir))];
+            if (next) { next.classList.add('focused'); next.scrollIntoView({ block: 'nearest' }); }
+        }
+        function syncDropdowns() {
+            Object.keys(_cdds).forEach(function (k) { _syncCDD(_cdds[k]); });
+        }
+
+        document.addEventListener('click', function (e) {
+            Object.keys(_cdds).forEach(function (k) { if (!_cdds[k].wrap.contains(e.target)) _closeCDD(_cdds[k]); });
         });
 
-        window.addEventListener('load', function () { initMode(); updatePrice(); });
+        /* ESC closes order modal */
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') {
+                window.closeOrderModal();
+                Object.keys(_cdds).forEach(function (k) { _closeCDD(_cdds[k]); });
+            }
+        });
+
+        window.addEventListener('load', function () {
+            ['case-select','cpu-select','gpu-select','psu-select','ram-select','ssd-select','ctrl-select','hdmi-display','pkg-display'].forEach(function (id) {
+                var el = document.getElementById(id);
+                if (el) _buildCDD(el);
+            });
+            initMode(); updatePrice(); window.updateCaseImage();
+        });
     </script>
 </body>
 </html>
