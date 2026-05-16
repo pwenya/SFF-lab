@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SFF Lab | Konfiguraator</title>
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link class="icon" type="image/svg+xml" href="/favicon.svg">
     <link rel="apple-touch-icon" href="/favicon.svg">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
@@ -113,25 +113,21 @@
 </head>
 <body class="p-6 md:p-20 antialiased text-zinc-100">
 
-    <!-- ── Order Modal ── -->
     <div id="om-overlay" class="om-overlay" onclick="_omBackdrop(event)">
         <div class="om-box" id="om-box">
             <button onclick="closeOrderModal()" style="position:absolute;top:18px;right:22px;background:none;border:none;cursor:pointer;color:#71717a;font-size:20px;line-height:1;font-family:inherit" onmouseover="this.style.color='white'" onmouseout="this.style.color='#71717a'">✕</button>
             <p style="color:#2563eb;font-size:10px;font-weight:800;letter-spacing:0.25em;text-transform:uppercase;margin-bottom:10px">SFF Lab</p>
             <h2 data-key="om-title" style="font-size:22px;font-weight:800;color:white;text-transform:uppercase;letter-spacing:-0.02em;margin-bottom:24px">Vormista tellimus</h2>
 
-            <!-- Config summary -->
             <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.07);border-radius:20px;padding:14px 18px;margin-bottom:14px">
                 <div id="om-summary-rows"></div>
             </div>
 
-            <!-- Price + delivery -->
             <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:22px">
                 <span id="om-price" style="font-size:32px;font-weight:900;letter-spacing:-0.03em;color:white"></span>
                 <span id="om-delivery" style="font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#52525b"></span>
             </div>
 
-            <!-- Form -->
             <div id="om-form">
                 <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px">
                     <div>
@@ -152,7 +148,6 @@
                 <p data-key="legal-info" style="font-size:8px;color:#3f3f46;text-transform:uppercase;letter-spacing:0.1em;margin-top:18px;text-align:center;line-height:1.6">* Eritellimusel valmiv toode.<br>VÕS § 53 lg 4 kohaselt tagastamisõigus puudub.</p>
             </div>
 
-            <!-- Success -->
             <div id="om-success" style="display:none;text-align:center;padding:36px 0">
                 <div style="font-size:48px;margin-bottom:18px">✓</div>
                 <p id="om-success-msg" data-key="om-success-msg" style="color:white;font-weight:700;font-size:14px;line-height:1.6">Tellimus vastu võetud!<br>Võtame ühendust 24 tunni jooksul.</p>
@@ -161,10 +156,9 @@
     </div>
 
     <div class="max-w-4xl mx-auto pt-[85px] md:pt-[53px]">
-<h1 data-key="config-title" class="text-4xl font-black mb-2 uppercase tracking-tighter">Konfigureeri oma süsteem</h1>
+        <h1 data-key="config-title" class="text-4xl font-black mb-2 uppercase tracking-tighter">Konfigureeri oma süsteem</h1>
         <p class="text-blue-500 mb-8 uppercase text-[10px] tracking-[0.3em] font-bold">SFF Lab Build Tool v1.5</p>
 
-        <!-- Scenario Presets -->
         <div class="mb-10">
             <p data-key="preset-label" class="text-[9px] font-black uppercase tracking-[0.3em] text-zinc-600 mb-3">Kiirvalik / Быстрый выбор</p>
             <div class="flex flex-wrap gap-2">
@@ -176,7 +170,6 @@
         <div class="grid md:grid-cols-2 gap-12">
             <div id="selectors-container" class="space-y-8">
 
-                <!-- OS Selector -->
                 <div>
                     <label data-key="os-label" class="block text-[10px] font-black uppercase tracking-widest text-blue-500 mb-3">Operatsioonisüsteem (OS)</label>
                     <div class="flex gap-2">
@@ -264,37 +257,36 @@
             </div>
 
             <div style="display:flex;flex-direction:column;gap:16px;height:100%;margin-top:-49px">
-            <div class="glass-panel p-10 rounded-[40px] h-fit sticky top-[100px]">
-                <h2 data-key="summary-title" class="text-xl font-bold mb-6 uppercase tracking-widest">Sinu valik</h2>
-                <div class="space-y-4 border-b border-white/5 pb-6 mb-6 text-[10px] uppercase tracking-widest text-zinc-400">
-                    <div class="flex justify-between">
-                        <span data-key="sum-model">Mudel:</span>
-                        <span id="model-display" class="text-white font-bold uppercase">BAAS</span>
+                <div class="glass-panel p-10 rounded-[40px] h-fit sticky top-[100px]">
+                    <h2 data-key="summary-title" class="text-xl font-bold mb-6 uppercase tracking-widest">Sinu valik</h2>
+                    <div class="space-y-4 border-b border-white/5 pb-6 mb-6 text-[10px] uppercase tracking-widest text-zinc-400">
+                        <div class="flex justify-between">
+                            <span data-key="sum-model">Mudel:</span>
+                            <span id="model-display" class="text-white font-bold uppercase">BAAS</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span data-key="sum-os">OS:</span>
+                            <span id="os-display" class="font-bold uppercase tracking-widest" style="color:#4ade80">SteamOS</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span data-key="sum-build">Tüüp:</span>
+                            <span class="text-blue-400 font-bold uppercase tracking-widest">Eritellimus</span>
+                        </div>
                     </div>
-                    <div class="flex justify-between">
-                        <span data-key="sum-os">OS:</span>
-                        <span id="os-display" class="font-bold uppercase tracking-widest" style="color:#4ade80">SteamOS</span>
-                    </div>
-                    <div class="flex justify-between">
-                        <span data-key="sum-build">Tüüp:</span>
-                        <span class="text-blue-400 font-bold uppercase tracking-widest">Eritellimus</span>
+                    <div id="total-price" class="text-4xl font-black mb-2 tracking-tighter">2350 €</div>
+                    <p data-key="vat-note" class="text-[9px] text-zinc-600 uppercase tracking-widest mb-6">Hind sisaldab käibemaksu (24%)</p>
+                    <button onclick="openOrderModal()" data-key="order-open-btn" class="btn-ripple w-full bg-blue-600 py-4 rounded-2xl font-black uppercase text-[10px] tracking-widest hover:bg-blue-500 transition shadow-lg shadow-blue-600/20" style="border:none;cursor:pointer">Vormista tellimus</button>
+                    <p data-key="legal-info" class="text-[8px] text-zinc-600 uppercase tracking-widest mt-6 text-center leading-relaxed">
+                        * Eritellimusel valmiv toode.<br>VÕS § 53 lg 4 kohaselt tagastamisõigus puudub.
+                    </p>
+                </div>
+                <div id="case-image-panel" style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.07);border-radius:40px;padding:14px 16px 83px;text-align:center;flex:1;display:flex;flex-direction:column;justify-content:center;min-height:0;overflow:hidden">
+                    <div style="position:relative;width:100%;min-height:0;overflow:hidden;display:flex;align-items:center">
+                        <button onclick="switchCasePhoto(currentPhotoNum&lt;=1?3:currentPhotoNum-1)" style="position:absolute;left:4px;z-index:1;width:30px;height:30px;border-radius:50%;border:1px solid rgba(255,255,255,0.12);background:rgba(0,0,0,0.5);color:white;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.2s,border-color 0.2s;font-family:inherit;flex-shrink:0" onmouseover="this.style.background='rgba(37,99,235,0.4)';this.style.borderColor='#2563eb'" onmouseout="this.style.background='rgba(0,0,0,0.5)';this.style.borderColor='rgba(255,255,255,0.12)'"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
+                        <img id="case-img" src="IMG/MoodBlack.1.png" alt="Case preview" style="max-height:200px;object-fit:contain;width:100%;transition:opacity 0.3s ease;display:block;margin:0 auto;min-height:0;flex-shrink:1">
+                        <button onclick="switchCasePhoto(currentPhotoNum&gt;=3?1:currentPhotoNum+1)" style="position:absolute;right:4px;z-index:1;width:30px;height:30px;border-radius:50%;border:1px solid rgba(255,255,255,0.12);background:rgba(0,0,0,0.5);color:white;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.2s,border-color 0.2s;font-family:inherit;flex-shrink:0" onmouseover="this.style.background='rgba(37,99,235,0.4)';this.style.borderColor='#2563eb'" onmouseout="this.style.background='rgba(0,0,0,0.5)';this.style.borderColor='rgba(255,255,255,0.12)'"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button>
                     </div>
                 </div>
-                <div id="total-price" class="text-4xl font-black mb-2 tracking-tighter">2350 €</div>
-                <p data-key="vat-note" class="text-[9px] text-zinc-600 uppercase tracking-widest mb-6">Hind sisaldab käibemaksu (24%)</p>
-                <button onclick="openOrderModal()" data-key="order-open-btn" class="btn-ripple w-full bg-blue-600 py-4 rounded-2xl font-black uppercase text-[10px] tracking-widest hover:bg-blue-500 transition shadow-lg shadow-blue-600/20" style="border:none;cursor:pointer">Vormista tellimus</button>
-                <p data-key="legal-info" class="text-[8px] text-zinc-600 uppercase tracking-widest mt-6 text-center leading-relaxed">
-                    * Eritellimusel valmiv toode.<br>VÕS § 53 lg 4 kohaselt tagastamisõigus puudub.
-                </p>
-            </div>
-            <!-- Case image panel -->
-            <div id="case-image-panel" style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.07);border-radius:40px;padding:14px 16px 42px;text-align:center;flex:1;display:flex;flex-direction:column;justify-content:center;min-height:0;overflow:hidden">
-                <div style="position:relative;width:100%;min-height:0;overflow:hidden;display:flex;align-items:center">
-                    <button onclick="switchCasePhoto(currentPhotoNum<=1?3:currentPhotoNum-1)" style="position:absolute;left:4px;z-index:1;width:30px;height:30px;border-radius:50%;border:1px solid rgba(255,255,255,0.12);background:rgba(0,0,0,0.5);color:white;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.2s,border-color 0.2s;font-family:inherit;flex-shrink:0" onmouseover="this.style.background='rgba(37,99,235,0.4)';this.style.borderColor='#2563eb'" onmouseout="this.style.background='rgba(0,0,0,0.5)';this.style.borderColor='rgba(255,255,255,0.12)'"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
-                    <img id="case-img" src="IMG/MoodBlack.1.png" alt="Case preview" style="max-height:200px;object-fit:contain;width:100%;transition:opacity 0.3s ease;display:block;margin:0 auto;min-height:0;flex-shrink:1">
-                    <button onclick="switchCasePhoto(currentPhotoNum>=3?1:currentPhotoNum+1)" style="position:absolute;right:4px;z-index:1;width:30px;height:30px;border-radius:50%;border:1px solid rgba(255,255,255,0.12);background:rgba(0,0,0,0.5);color:white;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.2s,border-color 0.2s;font-family:inherit;flex-shrink:0" onmouseover="this.style.background='rgba(37,99,235,0.4)';this.style.borderColor='#2563eb'" onmouseout="this.style.background='rgba(0,0,0,0.5)';this.style.borderColor='rgba(255,255,255,0.12)'"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button>
-                </div>
-            </div>
             </div>
         </div>
     </div>
