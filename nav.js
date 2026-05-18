@@ -19,11 +19,12 @@
         '.modal-input::placeholder{color:#52525b}',
         '.nav-status-btn{display:block;flex-shrink:0;white-space:nowrap}',
         '@media (max-width:767px){.nav-status-btn{display:none!important}}',
+        'html{height:100%}body{min-height:100%;display:flex;flex-direction:column}body>div:not(#main-footer){width:100%}#main-footer{margin-top:auto}',
     ].join('');
     document.head.appendChild(s);
 
     /* ── Footer HTML ── */
-    var FOOTER_HTML = '<footer id="main-footer" class="mt-16 border-t border-white/5 py-12 px-6" style="background:#050505">'
+    var FOOTER_HTML = '<footer id="main-footer" class="border-t border-white/5 py-12 px-6" style="background:#050505">'
         + '<div class="max-w-[1400px] mx-auto flex flex-col md:flex-row justify-between items-start gap-6">'
         + '<div>'
         + '<div class="text-[9px] font-extrabold uppercase tracking-[0.2em] text-zinc-600">SFF Lab OÜ · 17506407 · EE102985942</div>'

@@ -109,9 +109,11 @@
         .cdd-check { color: #2563eb; font-size: 11px; flex-shrink: 0; }
         .cdd-opt:not(.selected) .cdd-check { visibility: hidden; }
         .cdd-opt-dis { opacity: 0.4; cursor: not-allowed; }
+        #main-footer { margin-left: -24px; margin-right: -24px; }
+        @media (min-width: 768px) { #main-footer { margin-left: -80px; margin-right: -80px; } }
     </style>
 </head>
-<body class="p-6 md:p-20 antialiased text-zinc-100">
+<body class="p-6 md:p-20 pb-6 md:pb-0 antialiased text-zinc-100">
 
     <div id="om-overlay" class="om-overlay" onclick="_omBackdrop(event)">
         <div class="om-box" id="om-box">
