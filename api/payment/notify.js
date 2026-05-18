@@ -3,8 +3,8 @@
 // We then GET /v4/payments/{payment_reference} to verify the payment_state
 // server-side before updating the order — never trust the callback body alone.
 //
-// TODO: switch to https://payment.lhv.ee/api/v4 for production
-const LHV_BASE_URL = 'https://payment.sandbox.lhv.ee/api/v4';
+// TODO: revert to https://payment.sandbox.lhv.ee/api/v4 for testing
+const LHV_BASE_URL = 'https://payment.lhv.ee/api/v4';
 
 const fetch  = require('node-fetch');
 const { Redis } = require('@upstash/redis');

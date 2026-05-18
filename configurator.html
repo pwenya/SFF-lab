@@ -1001,6 +1001,25 @@
             }
             renderCaseColors(); initMode(); updatePrice(); window.updateCaseImage();
         });
+
+        /* ══ TEST MODE — delete this block after testing ══════════════════════
+           Access via: /configurator.html?test=1
+           Sets price to 1.00 € and labels to TEST for payment flow testing.   */
+        if (urlParams.get('test') === '1') {
+            BASE_PRICE = 1;
+            window.addEventListener('load', function () {
+                ['et','ru','en'].forEach(function (l) {
+                    if ((window.pageTranslations || {})[l]) window.pageTranslations[l]['config-sub'] = 'TEST';
+                });
+                var modelEl = document.getElementById('model-display');
+                var subEl   = document.querySelector('[data-key="config-sub"]');
+                if (modelEl) modelEl.innerText = 'TEST';
+                if (subEl)   subEl.innerText   = 'TEST';
+                document.title = 'SFF Lab | TEST MODE';
+                updatePrice();
+            });
+        }
+        /* ════════════════════════════════════════════════════════════════════ */
     </script>
 </body>
 </html>
