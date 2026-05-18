@@ -254,7 +254,7 @@ module.exports = async function handler(req, res) {
             model, cpu, gpu, ram, ssd,
             'case': caseTxt, os, price,
             estimatedDelivery,
-            status: 'pending',
+            status: 'pending_payment',
             createdAt: new Date().toISOString()
         };
         await redis.set('order:' + orderNumber, orderRecord);

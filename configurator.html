@@ -823,27 +823,47 @@
                 body: JSON.stringify(payload)
             })
             .then(function (res) {
-                if (!res.ok) throw new Error('http ' + res.status);
+                if (!res.ok) throw new Error('api/order HTTP ' + res.status);
                 return res.json();
             })
-            .then(function (data) {
-                document.getElementById('om-form').style.display    = 'none';
-                document.getElementById('om-success').style.display  = 'block';
-                errEl.style.display = 'none';
-                var orderNum = (data && data.orderNumber) ? data.orderNumber : '';
-                var lang2 = localStorage.getItem('selectedLanguage') || 'et';
-                var isRu2 = lang2 === 'ru'; var isEn2 = lang2 === 'en';
-                var msg = orderNum
-                    ? '<span style="display:block;font-size:11px;letter-spacing:0.2em;font-weight:800;color:#2563eb;text-transform:uppercase;margin-bottom:10px">' + orderNum + '</span>'
-                      + (isRu2 ? 'Заказ получен! Письмо с подтверждением<br>отправлено на вашу почту.'
-                               : (isEn2 ? 'Order received! Confirmation email<br>sent to your inbox.'
-                                        : 'Tellimus vastu võetud! Kinnitusmeil<br>on saadetud teie postkasti.'))
-                    : (isRu2 ? 'Заказ получен! Свяжемся в течение 24 часов.'
-                             : (isEn2 ? 'Order received! We will contact you within 24 hours.'
-                                      : 'Tellimus vastu võetud! Võtame ühendust 24 tunni jooksul.'));
-                document.getElementById('om-success-msg').innerHTML = msg;
+            .then(function (orderData) {
+                console.log('Order created:', orderData);
+
+                /* Order saved — now create LHV payment session */
+                var orderNumber = (orderData && orderData.orderNumber) ? orderData.orderNumber : '';
+                var amountEur   = parseFloat(snap.price.replace(/[^0-9.]/g, '')) || 0;
+                var amountCents = Math.round(amountEur * 100);
+
+                console.log('Calling payment create...', { orderId: orderNumber, amountCents: amountCents });
+
+                return fetch('/api/payment/create', {
+                    method:  'POST',
+                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                    body:    JSON.stringify({
+                        amount:        amountCents,
+                        currency:      'EUR',
+                        orderId:       orderNumber,
+                        customerEmail: emailEl.value.trim(),
+                        description:   'SFF Lab ' + snap.model + ' — ' + orderNumber
+                    })
+                });
             })
-            .catch(function () {
+            .then(function (res) {
+                if (!res.ok) throw new Error('api/payment/create HTTP ' + res.status);
+                return res.json();
+            })
+            .then(function (paymentData) {
+                console.log('Payment response:', paymentData);
+
+                if (paymentData && paymentData.paymentUrl) {
+                    console.log('Redirecting to:', paymentData.paymentUrl);
+                    window.location.href = paymentData.paymentUrl;
+                } else {
+                    throw new Error('api/payment/create returned no paymentUrl — full response: ' + JSON.stringify(paymentData));
+                }
+            })
+            .catch(function (err) {
+                console.error('Payment flow error:', err && err.message ? err.message : err);
                 document.getElementById('om-err').style.display = 'block';
                 document.getElementById('om-err').innerText = tr['om-err-msg'] || (isRu ? 'Что-то пошло не так. Попробуйте снова.' : (isEn ? 'Something went wrong. Please try again.' : 'Midagi läks valesti. Palun proovi uuesti.'));
                 btn.disabled  = false;
