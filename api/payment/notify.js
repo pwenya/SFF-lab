@@ -1,17 +1,13 @@
-// LHV Paytech payment notification handler
-// Receives POST callbacks when payment status changes.
+// EveryPay API v4 payment notification handler
+// LHV POSTs a callback with payment_reference + order_reference + event_name.
+// We then GET /v4/payments/{payment_reference} to verify the payment_state
+// server-side before updating the order — never trust the callback body alone.
 //
-// Signature verification:
-//   LHV signs notifications with HMAC-SHA256 of the raw JSON body using LHV_API_SECRET.
-//   The MAC is sent in the X-Signature request header (base64-encoded).
-//   Verify this before trusting any data — reject if signature is missing or invalid.
-//   Confirm exact header name and signing scheme in the LHV Paytech API docs.
+// TODO: switch to https://payment.lhv.ee/api/v4 for production
+const LHV_BASE_URL = 'https://payment.sandbox.lhv.ee/api/v4';
 
-const crypto = require('crypto');
+const fetch  = require('node-fetch');
 const { Redis } = require('@upstash/redis');
-
-// bodyParser disabled so we can read the raw body for signature verification
-module.exports.config = { api: { bodyParser: false } };
 
 function createRedis() {
     return new Redis({
@@ -20,108 +16,103 @@ function createRedis() {
     });
 }
 
-function readRawBody(req) {
-    return new Promise(function (resolve, reject) {
-        var chunks = [];
-        req.on('data', function (chunk) { chunks.push(chunk); });
-        req.on('end',  function ()      { resolve(Buffer.concat(chunks)); });
-        req.on('error', reject);
-    });
-}
+async function fetchPaymentStatus(paymentReference, credentials) {
+    var url = LHV_BASE_URL + '/payments/' + encodeURIComponent(paymentReference);
+    console.log('[LHV notify] GET', url);
 
-function verifySignature(rawBody, receivedSig, secret) {
-    if (!receivedSig) return false;
-    var expected = crypto
-        .createHmac('sha256', secret)
-        .update(rawBody)
-        .digest('base64');
-    // Constant-time comparison to prevent timing attacks
-    try {
-        return crypto.timingSafeEqual(
-            Buffer.from(expected),
-            Buffer.from(receivedSig)
-        );
-    } catch (_) {
-        return false;
+    var r    = await fetch(url, {
+        method:  'GET',
+        headers: {
+            'Authorization': 'Basic ' + credentials,
+            'Accept':        'application/json'
+        }
+    });
+    var text = await r.text();
+    console.log('[LHV notify] payment status response:', r.status, text);
+
+    if (!r.ok) {
+        throw new Error('payment status fetch failed: HTTP ' + r.status + ' ' + text);
     }
+    return JSON.parse(text);
 }
 
 module.exports = async function handler(req, res) {
     if (req.method !== 'POST') return res.status(405).end();
 
-    var rawBody;
-    try {
-        rawBody = await readRawBody(req);
-    } catch (err) {
-        console.error('notify: body read error', err.message);
-        return res.status(400).end();
+    var payload = req.body || {};
+    console.log('[LHV notify] callback received:', JSON.stringify(payload));
+
+    var paymentReference = payload.payment_reference;
+    var orderReference   = payload.order_reference;
+    var eventName        = payload.event_name;
+
+    if (!paymentReference || !orderReference) {
+        console.error('[LHV notify] missing payment_reference or order_reference');
+        return res.status(400).json({ error: 'Missing payment_reference or order_reference' });
     }
 
-    var secret = process.env.LHV_API_SECRET;
-    if (!secret) {
-        console.error('notify: LHV_API_SECRET not configured');
+    console.log('[LHV notify] payment_reference:', paymentReference, 'order_reference:', orderReference, 'event_name:', eventName);
+
+    var username = process.env.LHV_API_USERNAME;
+    var secret   = process.env.LHV_API_SECRET;
+    if (!username || !secret) {
+        console.error('[LHV notify] credentials not configured');
         return res.status(500).end();
     }
+    var credentials = Buffer.from(username + ':' + secret).toString('base64');
 
-    // Verify HMAC-SHA256 signature
-    // TODO: confirm exact header name with LHV Paytech docs (may be X-Mac, X-Signature, etc.)
-    var receivedSig = req.headers['x-signature'] || req.headers['x-mac'] || '';
-    if (!verifySignature(rawBody, receivedSig, secret)) {
-        console.warn('notify: invalid signature');
-        return res.status(401).json({ error: 'Invalid signature' });
-    }
-
-    var payload;
+    // Verify payment state server-side — never trust callback body alone
+    var paymentData;
     try {
-        payload = JSON.parse(rawBody.toString('utf8'));
+        paymentData = await fetchPaymentStatus(paymentReference, credentials);
     } catch (err) {
-        console.error('notify: JSON parse error', err.message);
-        return res.status(400).json({ error: 'Invalid JSON' });
+        console.error('[LHV notify] could not verify payment status:', err.message);
+        // Return 500 so LHV retries the notification
+        return res.status(500).json({ error: 'Could not verify payment status' });
     }
 
-    // TODO: confirm exact field names with LHV Paytech docs
-    var paymentStatus = payload.status;          // e.g. 'PAID', 'CANCELLED', 'FAILED'
-    var orderId       = payload.reference || payload.orderId;
-    var paymentId     = payload.paymentId || payload.id || '';
-
-    if (!orderId) {
-        console.error('notify: missing reference/orderId in payload', JSON.stringify(payload));
-        return res.status(400).json({ error: 'Missing order reference' });
-    }
+    var paymentState = paymentData.payment_state;
+    console.log('[LHV notify] verified payment_state:', paymentState, 'for order:', orderReference);
 
     var redis = createRedis();
 
     try {
-        var orderKey = 'order:' + orderId;
+        var orderKey = 'order:' + orderReference;
         var order    = await redis.get(orderKey);
 
         if (!order) {
-            console.warn('notify: order not found:', orderId);
-            // Return 200 so LHV does not keep retrying for unknown orders
+            console.warn('[LHV notify] order not found in Redis:', orderReference);
+            // Return 200 — LHV should not keep retrying for unknown orders
             return res.status(200).json({ received: true });
         }
 
-        // TODO: confirm exact success status string from LHV Paytech docs (may be 'PAID', 'SUCCESS', etc.)
-        if (paymentStatus === 'PAID' || paymentStatus === 'SUCCESS') {
+        if (paymentState === 'settled') {
             await redis.set(orderKey, Object.assign({}, order, {
-                status:    'in_progress',
-                paymentId: paymentId,
-                paidAt:    new Date().toISOString()
+                status:           'in_progress',
+                paymentReference: paymentReference,
+                paymentState:     paymentState,
+                paidAt:           new Date().toISOString()
             }));
-            console.log('notify: order', orderId, 'marked in_progress, paymentId', paymentId);
-        } else if (paymentStatus === 'CANCELLED' || paymentStatus === 'FAILED') {
+            console.log('[LHV notify] order', orderReference, 'marked in_progress');
+
+        } else if (paymentState === 'cancelled' || paymentState === 'failed' || paymentState === 'abandoned') {
             await redis.set(orderKey, Object.assign({}, order, {
-                status:           'payment_failed',
-                paymentStatus:    paymentStatus,
-                paymentFailedAt:  new Date().toISOString()
+                status:          'payment_failed',
+                paymentReference: paymentReference,
+                paymentState:    paymentState,
+                failedAt:        new Date().toISOString()
             }));
-            console.log('notify: order', orderId, 'payment failed, status', paymentStatus);
+            console.log('[LHV notify] order', orderReference, 'payment failed, state:', paymentState);
+
         } else {
-            console.log('notify: unhandled status', paymentStatus, 'for order', orderId);
+            // Intermediate states: 'initial', 'waiting_for_3ds', 'processing' etc.
+            // Just log — no Redis update needed for transient states
+            console.log('[LHV notify] intermediate state', paymentState, '— no action taken');
         }
+
     } catch (err) {
-        console.error('notify: Redis error for order', orderId, err.message);
-        // Return 500 so LHV retries the notification
+        console.error('[LHV notify] Redis error for order', orderReference, ':', err.message);
+        // Return 500 so LHV retries
         return res.status(500).json({ error: 'Database error' });
     }
 
