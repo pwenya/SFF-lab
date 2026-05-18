@@ -272,6 +272,7 @@
                     </div>
                     <div id="total-price" class="text-4xl font-black mb-2 tracking-tighter">2350 €</div>
                     <p data-key="vat-note" class="text-[9px] text-zinc-600 uppercase tracking-widest mb-6">Hind sisaldab käibemaksu (24%)</p>
+                    <p id="test-warning" style="display:none;font-size:9px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:#f87171;background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.2);border-radius:10px;padding:10px 14px;margin-bottom:12px;text-align:center">&#9888; This is a test configuration and will not be fulfilled</p>
                     <button onclick="openOrderModal()" data-key="order-open-btn" class="btn-ripple w-full bg-blue-600 py-4 rounded-2xl font-black uppercase text-[10px] tracking-widest hover:bg-blue-500 transition shadow-lg shadow-blue-600/20" style="border:none;cursor:pointer">Vormista tellimus</button>
                     <p data-key="legal-info" class="text-[8px] text-zinc-600 uppercase tracking-widest mt-6 text-center leading-relaxed">
                         * Eritellimusel valmiv toode.<br>VÕS § 53 lg 4 kohaselt tagastamisõigus puudub.
@@ -1013,8 +1014,10 @@
                 });
                 var modelEl = document.getElementById('model-display');
                 var subEl   = document.querySelector('[data-key="config-sub"]');
-                if (modelEl) modelEl.innerText = 'TEST';
+                var warnEl  = document.getElementById('test-warning');
+                if (modelEl) modelEl.innerText = '[INTERNAL TEST - NOT FOR SALE]';
                 if (subEl)   subEl.innerText   = 'TEST';
+                if (warnEl)  warnEl.style.display = 'block';
                 document.title = 'SFF Lab | TEST MODE';
                 updatePrice();
             });
