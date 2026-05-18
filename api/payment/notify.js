@@ -37,9 +37,6 @@ async function fetchPaymentStatus(paymentReference, credentials) {
 }
 
 module.exports = async function handler(req, res) {
-    if (req.method === 'GET') return res.status(200).json({ ok: true });
-    if (req.method !== 'POST') return res.status(405).end();
-
     var payload = (req.method === 'POST') ? (req.body || {}) : (req.query || {});
     console.log('[LHV notify] callback received:', JSON.stringify(payload));
 
