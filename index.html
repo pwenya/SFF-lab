@@ -653,11 +653,11 @@
             var bs = document.getElementById('btn-steamos'), bw = document.getElementById('btn-windows');
             if (os === 'steamos') {
                 gw.classList.replace('os-grid-visible','os-grid-hidden');
-                setTimeout(function() { gs.classList.replace('os-grid-hidden','os-grid-visible'); }, 50);
+                gs.classList.replace('os-grid-hidden','os-grid-visible');
                 bs.classList.add('active'); bw.classList.remove('active');
             } else {
                 gs.classList.replace('os-grid-visible','os-grid-hidden');
-                setTimeout(function() { gw.classList.replace('os-grid-hidden','os-grid-visible'); }, 50);
+                gw.classList.replace('os-grid-hidden','os-grid-visible');
                 bs.classList.remove('active'); bw.classList.add('active');
             }
         }
