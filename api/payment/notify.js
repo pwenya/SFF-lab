@@ -40,7 +40,7 @@ module.exports = async function handler(req, res) {
     if (req.method === 'GET') return res.status(200).json({ ok: true });
     if (req.method !== 'POST') return res.status(405).end();
 
-    var payload = req.body || {};
+    var payload = (req.method === 'POST') ? (req.body || {}) : (req.query || {});
     console.log('[LHV notify] callback received:', JSON.stringify(payload));
 
     var paymentReference = payload.payment_reference;
