@@ -484,8 +484,29 @@
                 document.getElementById('psu-container').style.pointerEvents = 'none';
                 document.getElementById('psu-850').style.opacity = '0.35';
             } else if (MODE === 'plus') {
+                // CPU: force 7500x3d
+                selectedCpu = '7500x3d';
+                document.getElementById('cpu-7500f').classList.remove('active');
+                document.getElementById('cpu-7500f').style.opacity = '0.35';
+                document.getElementById('cpu-7500x3d').classList.add('active');
+                document.getElementById('cpu-7500x3d').style.opacity = '';
+                // GPU: force 9070xt16
+                selectedGpu = '9070xt16';
+                document.getElementById('gpu-9060xt').classList.remove('active');
+                document.getElementById('gpu-9060xt').style.opacity = '0.35';
+                document.getElementById('gpu-9070xt16').classList.add('active');
+                document.getElementById('gpu-9070xt16').style.opacity = '';
+                // RAM: force 32GB
+                selectedRam = '32';
+                document.getElementById('ram-16').classList.remove('active');
+                document.getElementById('ram-32').classList.add('active');
+                document.getElementById('ram-32').style.opacity = '';
+                // SSD: force 2TB then lock
+                selectedSsd = '2';
+                document.getElementById('ssd-1tb').classList.remove('active');
+                document.getElementById('ssd-2tb').classList.add('active');
+                document.getElementById('ssd-2tb').style.opacity = '';
                 _disableRamSsd();
-                document.getElementById('ctrl-block').style.display = 'block';
                 document.getElementById('os-dualboot').style.display = 'none';
                 document.getElementById('os-note-dualboot').style.display = 'none';
                 document.getElementById('os-windows').style.display = 'none';
