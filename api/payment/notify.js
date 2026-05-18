@@ -17,8 +17,9 @@ function createRedis() {
 }
 
 async function fetchPaymentStatus(paymentReference, credentials) {
-    var url = LHV_BASE_URL + '/payments/oneoff/' + encodeURIComponent(paymentReference);
+    var url = LHV_BASE_URL + '/payments/' + encodeURIComponent(paymentReference);
     console.log('[LHV notify] GET', url);
+    console.log('[LHV notify] credentials prefix:', credentials.substring(0, 10));
 
     var r    = await fetch(url, {
         method:  'GET',
