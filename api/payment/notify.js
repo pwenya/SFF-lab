@@ -16,8 +16,8 @@ function createRedis() {
     });
 }
 
-async function fetchPaymentStatus(paymentReference, credentials) {
-    var url = LHV_BASE_URL + '/payments/' + encodeURIComponent(paymentReference);
+async function fetchPaymentStatus(paymentReference, credentials, username) {
+    var url = LHV_BASE_URL + '/payments/' + encodeURIComponent(paymentReference) + '?api_username=' + encodeURIComponent(username);
     console.log('[LHV notify] GET', url);
     console.log('[LHV notify] credentials prefix:', credentials.substring(0, 10));
 
@@ -63,7 +63,7 @@ module.exports = async function handler(req, res) {
     // Verify payment state server-side — never trust callback body alone
     var paymentData;
     try {
-        paymentData = await fetchPaymentStatus(paymentReference, credentials);
+        paymentData = await fetchPaymentStatus(paymentReference, credentials, username);
     } catch (err) {
         console.error('[LHV notify] could not verify payment status:', err.message);
         // Return 500 so LHV retries the notification
