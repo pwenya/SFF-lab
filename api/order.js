@@ -207,15 +207,21 @@ module.exports = async function handler(req, res) {
 
     var redis = createRedis();
 
-    /* Rate limiting */
-    var ip = getClientIp(req);
-    try {
-        var rlCount = await checkRateLimit(redis, ip);
-        if (rlCount > 5) {
-            return res.status(429).json({ error: 'Too many requests. Try again later.' });
+    /* Rate limiting — whitelisted emails bypass the limit */
+    var RATE_LIMIT_WHITELIST = ['ruslanm652@gmail.com'];
+    var requestEmail = String((req.body || {}).email || '').toLowerCase().trim();
+    var isWhitelisted = RATE_LIMIT_WHITELIST.indexOf(requestEmail) !== -1;
+
+    if (!isWhitelisted) {
+        var ip = getClientIp(req);
+        try {
+            var rlCount = await checkRateLimit(redis, ip);
+            if (rlCount > 5) {
+                return res.status(429).json({ error: 'Too many requests. Try again later.' });
+            }
+        } catch (rlErr) {
+            console.error('Rate limit error:', rlErr.message);
         }
-    } catch (rlErr) {
-        console.error('Rate limit error:', rlErr.message);
     }
 
     /* Validate inputs */
