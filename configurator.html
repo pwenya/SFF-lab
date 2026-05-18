@@ -387,6 +387,8 @@
         var urlParams   = new URLSearchParams(window.location.search);
         var BASE_PRICE  = parseInt(urlParams.get('base')) || 2350;
         var MODE        = urlParams.get('mode');
+        var CASE_PARAM  = urlParams.get('case');
+        var COLOR_PARAM = urlParams.get('color');
         var selectedOS  = 'steamos';
         var selectedPreset = null;
         var OS_PRICES   = { steamos: 0, windows: 79, dualboot: 79 };
@@ -895,6 +897,13 @@
                 var el = document.getElementById(id);
                 if (el) _buildCDD(el);
             });
+            if (CASE_PARAM && CASE_COLORS[CASE_PARAM]) {
+                selectedCaseModel = CASE_PARAM;
+                var colors = CASE_COLORS[CASE_PARAM];
+                selectedCaseColor = (COLOR_PARAM && colors.indexOf(COLOR_PARAM) !== -1) ? COLOR_PARAM : colors[0];
+                document.querySelectorAll('[id^="case-model-"]').forEach(function (b) { b.classList.remove('active'); });
+                document.getElementById('case-model-' + CASE_PARAM).classList.add('active');
+            }
             renderCaseColors(); initMode(); updatePrice(); window.updateCaseImage();
         });
     </script>

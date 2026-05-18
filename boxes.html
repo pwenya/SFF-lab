@@ -59,6 +59,13 @@
             text-transform: uppercase; color: #60a5fa; background: rgba(37,99,235,0.1);
             border: 1px solid rgba(37,99,235,0.25); border-radius: 6px; padding: 3px 8px; margin-top: 6px;
         }
+        .order-btn {
+            background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px;
+            color: #71717a; padding: 10px 14px; font-size: 9px; font-weight: 800;
+            text-transform: uppercase; letter-spacing: 0.12em; text-decoration: none;
+            display: inline-block; transition: all 0.2s; white-space: nowrap; font-family: inherit;
+        }
+        .order-btn:hover { border-color: rgba(37,99,235,0.5); color: white; background: rgba(37,99,235,0.1); }
     </style>
 </head>
 <body class="antialiased">
@@ -75,15 +82,23 @@
                         <button onclick="nav('terra', 1)" class="nav-btn-inside btn-right hidden md:flex">→</button>
                     </div>
                 </div>
-                <div class="flex flex-col items-center md:items-start gap-6 md:gap-12 w-full md:w-[300px]">
-                    <div class="flex flex-row md:flex-col gap-6 order-2 md:order-2">
+                <div class="flex flex-col items-center md:items-start gap-5 w-full md:w-[300px]">
+                    <div class="text-center md:text-left">
+                        <h2 class="text-3xl md:text-5xl font-black uppercase tracking-tighter mb-2">Terra <span id="title-terra">Graphite</span></h2>
+                        <p class="text-zinc-500 uppercase text-[10px] md:text-[11px] tracking-[0.4em] font-bold">Crafted for Gamers</p>
+                    </div>
+                    <div class="flex flex-row gap-4">
                         <div id="terra-graphite" class="color-circle active w-10 h-10 md:w-12 md:h-12 rounded-full bg-[#1c1c1c]"></div>
                         <div id="terra-jade" class="color-circle w-10 h-10 md:w-12 md:h-12 rounded-full bg-[#4d5d53]"></div>
                         <div id="terra-silver" class="color-circle w-10 h-10 md:w-12 md:h-12 rounded-full bg-[#d1d5db]"></div>
                     </div>
-                    <div class="text-center md:text-left order-1 md:order-1">
-                        <h2 class="text-3xl md:text-5xl font-black uppercase tracking-tighter mb-2 md:mb-4">Terra <span id="title-terra">Graphite</span></h2>
-                        <p class="text-zinc-500 uppercase text-[10px] md:text-[11px] tracking-[0.4em] font-bold">Crafted for Gamers</p>
+                    <div>
+                        <p class="text-[9px] font-black uppercase tracking-[0.25em] text-zinc-600 mb-3">Mine tellima</p>
+                        <div class="flex gap-2">
+                            <a id="btn-core-terra" href="configurator.html?base=2350&mode=core&os=steamos&case=Terra&color=Graphite" class="order-btn">Baas</a>
+                            <a id="btn-plus-terra" href="configurator.html?base=1999&mode=plus&os=steamos&case=Terra&color=Graphite" class="order-btn">Baas+</a>
+                            <a id="btn-enthusiast-terra" href="configurator.html?base=2350&mode=enthusiast&os=steamos&case=Terra&color=Graphite" class="order-btn">Собери сам</a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -100,14 +115,22 @@
                         <button onclick="nav('ridge', 1)" class="nav-btn-inside btn-right hidden md:flex">→</button>
                     </div>
                 </div>
-                <div class="flex flex-col items-center md:items-start gap-6 md:gap-12 w-full md:w-[300px]">
-                    <div class="flex flex-row md:flex-col gap-6 order-2 md:order-2">
+                <div class="flex flex-col items-center md:items-start gap-5 w-full md:w-[300px]">
+                    <div class="text-center md:text-left">
+                        <h2 class="text-3xl md:text-5xl font-black uppercase tracking-tighter mb-2">Ridge <span id="title-ridge">Black</span></h2>
+                        <p class="text-zinc-500 uppercase text-[10px] md:text-[11px] tracking-[0.4em] font-bold">Slim Console Format</p>
+                    </div>
+                    <div class="flex flex-row gap-4">
                         <div id="ridge-black" class="color-circle active w-10 h-10 md:w-12 md:h-12 rounded-full bg-black"></div>
                         <div id="ridge-white" class="color-circle w-10 h-10 md:w-12 md:h-12 rounded-full bg-white"></div>
                     </div>
-                    <div class="text-center md:text-left order-1 md:order-1">
-                        <h2 class="text-3xl md:text-5xl font-black uppercase tracking-tighter mb-2 md:mb-4">Ridge <span id="title-ridge">Black</span></h2>
-                        <p class="text-zinc-500 uppercase text-[10px] md:text-[11px] tracking-[0.4em] font-bold">Slim Console Format</p>
+                    <div>
+                        <p class="text-[9px] font-black uppercase tracking-[0.25em] text-zinc-600 mb-3">Mine tellima</p>
+                        <div class="flex gap-2">
+                            <a id="btn-core-ridge" href="configurator.html?base=2350&mode=core&os=steamos&case=Ridge&color=Black" class="order-btn">Baas</a>
+                            <a id="btn-plus-ridge" href="configurator.html?base=1999&mode=plus&os=steamos&case=Ridge&color=Black" class="order-btn">Baas+</a>
+                            <a id="btn-enthusiast-ridge" href="configurator.html?base=2350&mode=enthusiast&os=steamos&case=Ridge&color=Black" class="order-btn">Собери сам</a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -124,14 +147,22 @@
                         <button onclick="nav('mood', 1)" class="nav-btn-inside btn-right hidden md:flex">→</button>
                     </div>
                 </div>
-                <div class="flex flex-col items-center md:items-start gap-6 md:gap-12 w-full md:w-[300px]">
-                    <div class="flex flex-row md:flex-col gap-6 order-2 md:order-2">
+                <div class="flex flex-col items-center md:items-start gap-5 w-full md:w-[300px]">
+                    <div class="text-center md:text-left">
+                        <h2 class="text-3xl md:text-5xl font-black uppercase tracking-tighter mb-2">Mood <span id="title-mood">Black</span></h2>
+                        <p class="text-zinc-500 uppercase text-[10px] md:text-[11px] tracking-[0.4em] font-bold">Premium SFF Design</p>
+                    </div>
+                    <div class="flex flex-row gap-4">
                         <div id="mood-black" class="color-circle active w-10 h-10 md:w-12 md:h-12 rounded-full bg-black"></div>
                         <div id="mood-white" class="color-circle w-10 h-10 md:w-12 md:h-12 rounded-full bg-white"></div>
                     </div>
-                    <div class="text-center md:text-left order-1 md:order-1">
-                        <h2 class="text-3xl md:text-5xl font-black uppercase tracking-tighter mb-2 md:mb-4">Mood <span id="title-mood">Black</span></h2>
-                        <p class="text-zinc-500 uppercase text-[10px] md:text-[11px] tracking-[0.4em] font-bold">Premium SFF Design</p>
+                    <div>
+                        <p class="text-[9px] font-black uppercase tracking-[0.25em] text-zinc-600 mb-3">Mine tellima</p>
+                        <div class="flex gap-2">
+                            <a id="btn-core-mood" href="configurator.html?base=2350&mode=core&os=steamos&case=Mood&color=Black" class="order-btn">Baas</a>
+                            <a id="btn-plus-mood" href="configurator.html?base=1999&mode=plus&os=steamos&case=Mood&color=Black" class="order-btn">Baas+</a>
+                            <a id="btn-enthusiast-mood" href="configurator.html?base=2350&mode=enthusiast&os=steamos&case=Mood&color=Black" class="order-btn">Собери сам</a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -178,6 +209,21 @@
             }
         };
 
+        var caseColorNames = {
+            mood:  { black: 'Black', white: 'Light' },
+            terra: { graphite: 'Graphite', jade: 'Jade', silver: 'Silver' },
+            ridge: { black: 'Black', white: 'White' }
+        };
+        function updateOrderLinks(model) {
+            var colorKey  = config[model].current;
+            var colorName = caseColorNames[model][colorKey] || colorKey;
+            var modelName = model.charAt(0).toUpperCase() + model.slice(1);
+            var base = 'configurator.html?os=steamos&case=' + modelName + '&color=' + colorName;
+            document.getElementById('btn-core-' + model).href        = base + '&base=2350&mode=core';
+            document.getElementById('btn-plus-' + model).href        = base + '&base=1999&mode=plus';
+            document.getElementById('btn-enthusiast-' + model).href  = base + '&base=2350&mode=enthusiast';
+        }
+
         var config = {
             mood:  { current: 'black',    idx: 0, black:    ['IMG/MoodBlack.1.png','IMG/MoodBlack.2.png','IMG/MoodBlack.3.png'],       white:    ['IMG/MoodLight.1.png','IMG/MoodLight.2.png','IMG/MoodLight.3.png'] },
             terra: { current: 'graphite', idx: 0, graphite: ['IMG/TerraGraphite.1.png','IMG/TerraGraphite.2.png','IMG/TerraGraphite.3.png'], jade: ['IMG/TerraJade.1.png','IMG/TerraJade.2.png','IMG/TerraJade.3.png'], silver: ['IMG/TerraSilver.1.png','IMG/TerraSilver.2.png','IMG/TerraSilver.3.png'] },
@@ -197,6 +243,7 @@
             document.getElementById('title-' + model).innerText = colorNames[color];
             document.querySelectorAll('[id^="img-' + model + '-"]').forEach(function (img) { img.classList.remove('active'); });
             document.getElementById('img-' + model + '-' + color).classList.add('active');
+            updateOrderLinks(model);
         }
 
         function nav(model, dir) {
@@ -233,6 +280,7 @@
                     if (Array.isArray(arr)) arr.forEach(function (src) { var i = new Image(); i.src = src; });
                 });
             });
+            ['terra','ridge','mood'].forEach(updateOrderLinks);
         };
     </script>
 </body>
