@@ -54,7 +54,9 @@ module.exports = async function handler(req, res) {
         nonce:               crypto.randomUUID(),
         timestamp:           new Date().toISOString(),
         customer_url:        'https://sfflab.ee/payment/success?order=' + encodeURIComponent(orderId),
-        merchant_cancel_url: 'https://sfflab.ee/payment/cancel?order='  + encodeURIComponent(orderId)
+        merchant_cancel_url:      'https://sfflab.ee/payment/cancel?order='  + encodeURIComponent(orderId),
+        payment_notification_url: 'https://sfflab.ee/api/payment/notify',
+        payment_description:      description || ('SFF Lab order ' + orderId)
     };
 
     var fullUrl = LHV_BASE_URL + '/payments/oneoff';
