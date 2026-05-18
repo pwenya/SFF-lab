@@ -18,7 +18,7 @@
         '.modal-input:focus{border-color:rgba(59,130,246,0.6)}',
         '.modal-input::placeholder{color:#52525b}',
         '.nav-status-btn{display:block;flex-shrink:0;white-space:nowrap}',
-        '@media (max-width:1279px){.nav-status-btn{display:none!important}}'
+        '@media (max-width:767px){.nav-status-btn{display:none!important}}'
     ].join('');
     document.head.appendChild(s);
 
