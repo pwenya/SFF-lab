@@ -19,8 +19,8 @@
         '.modal-input::placeholder{color:#52525b}',
         '.nav-status-btn{display:block;flex-shrink:0;white-space:nowrap}',
         '@media (max-width:767px){.nav-status-btn{display:none!important}}',
-        '.nav-icon-btn{display:flex;align-items:center;justify-content:center;flex-shrink:0;width:36px;height:36px;border-radius:10px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.15);cursor:pointer;color:#fff;padding:0}',
-        '@media(min-width:768px){.nav-icon-btn{display:none}}'
+        '.nav-icon-btn{display:none}',
+        '@media(max-width:767px){.nav-icon-btn{display:flex;position:fixed;right:16px;top:14px;z-index:200;align-items:center;justify-content:center;width:36px;height:36px;border-radius:10px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.15);cursor:pointer;color:#fff;padding:0}}'
     ].join('');
     document.head.appendChild(s);
 
