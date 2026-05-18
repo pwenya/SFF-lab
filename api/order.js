@@ -261,7 +261,11 @@ module.exports = async function handler(req, res) {
             'case': caseTxt, os, price,
             estimatedDelivery,
             status: 'pending_payment',
-            createdAt: new Date().toISOString()
+            createdAt: new Date().toISOString(),
+            customerIp: req.headers['x-forwarded-for']?.split(',')[0]?.trim()
+                        || req.headers['x-real-ip']
+                        || req.socket?.remoteAddress
+                        || 'unknown'
         };
         await redis.set('order:' + orderNumber, orderRecord);
         await redis.lpush('orders:all', orderNumber);
