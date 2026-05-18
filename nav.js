@@ -19,14 +19,11 @@
         '.modal-input::placeholder{color:#52525b}',
         '.nav-status-btn{display:block;flex-shrink:0;white-space:nowrap}',
         '@media (max-width:767px){.nav-status-btn{display:none!important}}',
-        '.nav-fab{display:none;position:fixed;bottom:24px;right:20px;z-index:9998;align-items:center;gap:8px;background:#fff;color:#000;border:none;border-radius:100px;padding:12px 18px;font-family:inherit;font-size:10px;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;box-shadow:0 4px 24px rgba(0,0,0,0.5)}',
-        '@media(max-width:767px){.nav-fab{display:flex}}'
     ].join('');
     document.head.appendChild(s);
 
     /* ── Nav + Modal HTML ── */
-    var NAV_HTML = '<button onclick="openModal()" data-key="nav-status" class="nav-fab"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="13" y2="16"/></svg>Tellimuse staatus</button>'
-        + '<div id="modal-overlay" class="modal-overlay" onclick="window._navBackdrop(event)">'
+    var NAV_HTML = '<div id="modal-overlay" class="modal-overlay" onclick="window._navBackdrop(event)">'
         + '<div class="modal-box">'
         + '<button onclick="window.closeModal()" style="position:absolute;top:20px;right:24px;background:none;border:none;cursor:pointer;color:#71717a;font-size:20px;line-height:1" onmouseover="this.style.color=\'white\'" onmouseout="this.style.color=\'#71717a\'">✕</button>'
         + '<p class="text-blue-500 text-[11px] font-black uppercase tracking-[0.25em] mb-3">SFF Lab</p>'
