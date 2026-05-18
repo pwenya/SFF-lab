@@ -22,6 +22,21 @@
     ].join('');
     document.head.appendChild(s);
 
+    /* ── Footer HTML ── */
+    var FOOTER_HTML = '<footer id="main-footer" class="border-t border-white/5 py-12 px-6" style="background:#050505">'
+        + '<div class="max-w-[1400px] mx-auto flex flex-col md:flex-row justify-between items-start gap-6">'
+        + '<div>'
+        + '<div class="text-[9px] font-extrabold uppercase tracking-[0.2em] text-zinc-600">SFF Lab OÜ · 17506407 · EE102985942</div>'
+        + '<div class="text-[9px] font-semibold uppercase tracking-[0.15em] text-zinc-700 mt-1"><a href="mailto:info@sfflab.ee" class="hover:text-zinc-400 transition" style="text-decoration:none">info@sfflab.ee</a></div>'
+        + '</div>'
+        + '<div class="md:text-right">'
+        + '<div class="text-[9px] font-bold uppercase tracking-[0.2em] text-zinc-600" data-key="footer-built">Ehitatud Eestis</div>'
+        + '<div class="text-[9px] font-bold uppercase tracking-[0.15em] text-zinc-700 mt-1"><a href="https://www.cloudflare.com" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 hover:text-zinc-400 transition" style="text-decoration:none"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>Secured by Cloudflare</a></div>'
+        + '<div class="text-[9px] font-bold uppercase tracking-[0.15em] text-zinc-600 mt-1"><a href="legal.html#terms" data-key="legal-terms" class="hover:text-zinc-400 transition" style="text-decoration:none">Müügitingimused</a><span class="text-zinc-800 mx-1">·</span><a href="legal.html#privacy" data-key="legal-privacy" class="hover:text-zinc-400 transition" style="text-decoration:none">Privaatsuspoliitika</a><span class="text-zinc-800 mx-1">·</span><a href="legal.html#returns" data-key="legal-returns" class="hover:text-zinc-400 transition" style="text-decoration:none">Tagastuspoliitika</a></div>'
+        + '</div>'
+        + '</div>'
+        + '</footer>';
+
     /* ── Nav + Modal HTML ── */
     var NAV_HTML = '<div id="modal-overlay" class="modal-overlay" onclick="window._navBackdrop(event)">'
         + '<div class="modal-box">'
@@ -62,6 +77,7 @@
     /* ── Inject on DOMContentLoaded ── */
     document.addEventListener('DOMContentLoaded', function () {
         document.body.insertAdjacentHTML('afterbegin', NAV_HTML);
+        document.body.insertAdjacentHTML('beforeend', FOOTER_HTML);
         _init();
     });
 
@@ -94,11 +110,14 @@
     /* ── i18n ── */
     var _NAV_TR = {
         et: { 'nav-pricing': 'Paketid',  'nav-status': 'Tellimuse staatus',
-              'legal-terms': 'Müügitingimused', 'legal-privacy': 'Privaatsuspoliitika', 'legal-returns': 'Tagastuspoliitika' },
+              'legal-terms': 'Müügitingimused', 'legal-privacy': 'Privaatsuspoliitika', 'legal-returns': 'Tagastuspoliitika',
+              'footer-built': 'Ehitatud Eestis' },
         ru: { 'nav-pricing': 'Цены',     'nav-status': 'Статус заказа',
-              'legal-terms': 'Условия продажи', 'legal-privacy': 'Конфиденциальность',  'legal-returns': 'Возврат' },
+              'legal-terms': 'Условия продажи', 'legal-privacy': 'Конфиденциальность',  'legal-returns': 'Возврат',
+              'footer-built': 'Собрано в Эстонии' },
         en: { 'nav-pricing': 'Packages', 'nav-status': 'Order Status',
-              'legal-terms': 'Terms of Sale',   'legal-privacy': 'Privacy Policy',      'legal-returns': 'Returns' }
+              'legal-terms': 'Terms of Sale',   'legal-privacy': 'Privacy Policy',      'legal-returns': 'Returns',
+              'footer-built': 'Built in Estonia' }
     };
 
     window.setLanguage = function (lang) {
