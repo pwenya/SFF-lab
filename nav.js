@@ -54,7 +54,6 @@
         + '<span class="text-zinc-800">|</span>'
         + '<button onclick="setLanguage(\'en\')" id="lang-en" class="lang-btn transition hover:text-white" style="background:none;border:none;cursor:pointer;font-weight:700;letter-spacing:0.15em">EN</button>'
         + '</div>'
-        + '<button onclick="openModal()" class="nav-icon-btn" aria-label="Order status"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="13" y2="16"/></svg></button>'
         + '<button onclick="openModal()" data-key="nav-status" class="nav-status-btn btn-ripple bg-white text-black px-6 py-2.5 rounded-full hover:bg-zinc-200 transition uppercase tracking-widest text-[11px] font-black" style="flex-shrink:0;white-space:nowrap;border:none;cursor:pointer">Tellimuse staatus</button>'
         + '</div>'
         + '</div>'
