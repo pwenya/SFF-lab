@@ -1,8 +1,17 @@
 // TODO: switch to production URLs before go-live
 // Production base: https://merchant.lhv.ee
-const LHV_BASE_URL = 'https://merchant.sandbox.lhv.ee';
 
 const fetch = require('node-fetch');
+
+// All candidate base URLs to probe — first one that responds (even 401/403) wins.
+// 404 on /shops means the base URL itself is wrong; 401/403 means URL is right, auth is wrong.
+var BASE_URL_CANDIDATES = [
+    'https://payment.sandbox.lhv.ee',
+    'https://sandbox.lhv.ee',
+    'https://gateway.sandbox.lhv.ee',
+    'https://merchant.sandbox.lhv.ee/api',   // /api prefix variant
+    'https://merchant.sandbox.lhv.ee',        // original (returned 404)
+];
 
 function setCors(req, res) {
     var origin = req.headers.origin || '';
@@ -18,41 +27,34 @@ function stripHtml(str) {
     return String(str).replace(/<[^>]*>/g, '').trim();
 }
 
-// Verify credentials and log shop/account info for debugging.
-// Remove this function once auth is confirmed working.
-async function debugVerifyCredentials(credentials) {
-    try {
-        var shopsRes = await fetch(LHV_BASE_URL + '/shops', {
-            method:  'GET',
-            headers: {
-                'Authorization': 'Basic ' + credentials,
-                'Accept':        'application/json'
-            }
-        });
-        var shopsText = await shopsRes.text();
-        console.log('[LHV debug] GET /shops status:', shopsRes.status);
-        console.log('[LHV debug] GET /shops body:', shopsText);
+// Probe each candidate base URL with GET /shops.
+// Returns the first base URL that gives something other than 404/network error,
+// or null if all fail. Logs every attempt regardless.
+async function probeBaseUrl(credentials) {
+    for (var i = 0; i < BASE_URL_CANDIDATES.length; i++) {
+        var base = BASE_URL_CANDIDATES[i];
+        var url  = base + '/shops';
+        try {
+            var r    = await fetch(url, {
+                method:  'GET',
+                headers: { 'Authorization': 'Basic ' + credentials, 'Accept': 'application/json' },
+                timeout: 5000
+            });
+            var body = await r.text();
+            console.log('[LHV probe] GET', url, '→', r.status, body.substring(0, 200));
 
-        if (shopsRes.ok) {
-            // If shops returned, also fetch processing account details
-            try {
-                var accountRes = await fetch(LHV_BASE_URL + '/processing_accounts/' + (process.env.LHV_PROCESSING_ACCOUNT || 'EUR3D1'), {
-                    method:  'GET',
-                    headers: {
-                        'Authorization': 'Basic ' + credentials,
-                        'Accept':        'application/json'
-                    }
-                });
-                var accountText = await accountRes.text();
-                console.log('[LHV debug] GET /processing_accounts/EUR3D1 status:', accountRes.status);
-                console.log('[LHV debug] GET /processing_accounts/EUR3D1 body:', accountText);
-            } catch (e) {
-                console.log('[LHV debug] processing_accounts fetch error:', e.message);
+            // 401/403 = URL exists, credentials issue.  200/422 = fully working.
+            // Only skip on hard 404 (path not found) or 405 (method not allowed for this path).
+            if (r.status !== 404 && r.status !== 405) {
+                console.log('[LHV probe] found working base URL:', base);
+                return { base: base, shopsStatus: r.status, shopsBody: body };
             }
+        } catch (err) {
+            console.log('[LHV probe] GET', url, '→ network error:', err.message);
         }
-    } catch (err) {
-        console.log('[LHV debug] /shops fetch error:', err.message);
     }
+    console.error('[LHV probe] all base URL candidates failed');
+    return null;
 }
 
 module.exports = async function handler(req, res) {
@@ -81,8 +83,16 @@ module.exports = async function handler(req, res) {
 
     var credentials = Buffer.from(username + ':' + secret).toString('base64');
 
-    // Verify credentials and log diagnostic info before attempting payment
-    await debugVerifyCredentials(credentials);
+    // Probe all candidates to find the working base URL
+    var probe = await probeBaseUrl(credentials);
+    if (!probe) {
+        return res.status(502).json({
+            error:      'Could not reach LHV API — all base URL candidates returned 404 or network error',
+            candidates: BASE_URL_CANDIDATES
+        });
+    }
+
+    var activeBase = probe.base;
 
     var payload = {
         merchantId:        process.env.LHV_MERCHANT_ID,
@@ -96,8 +106,7 @@ module.exports = async function handler(req, res) {
         notificationUrl:   'https://sfflab.ee/api/payment/notify'
     };
 
-    var fullUrl = LHV_BASE_URL + '/payments';
-
+    var fullUrl = activeBase + '/payments';
     console.log('[LHV] POST', fullUrl);
     console.log('[LHV] auth: Basic ' + credentials.substring(0, 6) + '...');
     console.log('[LHV] payload:', JSON.stringify(payload));
@@ -122,7 +131,8 @@ module.exports = async function handler(req, res) {
             return res.status(502).json({
                 error:     'Payment gateway error',
                 lhvStatus: lhvRes.status,
-                lhvBody:   responseText
+                lhvBody:   responseText,
+                endpoint:  fullUrl
             });
         }
 
@@ -137,10 +147,9 @@ module.exports = async function handler(req, res) {
         console.log('[LHV] parsed response keys:', Object.keys(data));
         console.log('[LHV] parsed response:', JSON.stringify(data));
 
-        // Check all plausible field names — log them all so we know which one LHV uses
         var paymentUrl = data.paymentUrl || data.redirectUrl || data.url || data.redirect || data.href || data.link;
         if (!paymentUrl) {
-            console.error('[LHV] no payment URL found — full response:', JSON.stringify(data));
+            console.error('[LHV] no payment URL in response — keys:', Object.keys(data));
             return res.status(502).json({
                 error:        'No payment URL in gateway response',
                 responseKeys: Object.keys(data),
