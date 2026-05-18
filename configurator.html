@@ -157,13 +157,13 @@
 
     <div class="max-w-4xl mx-auto pt-[85px] md:pt-[53px]">
         <h1 data-key="config-title" class="text-4xl font-black mb-2 uppercase tracking-tighter">Konfigureeri oma süsteem</h1>
-        <p class="text-blue-500 mb-8 uppercase text-[10px] tracking-[0.3em] font-bold">SFF Lab Build Tool v1.5</p>
+        <p class="text-blue-500 mb-8 uppercase text-[10px] tracking-[0.3em] font-bold">БАЗА</p>
 
         <div class="mb-10">
-            <p data-key="preset-label" class="text-[9px] font-black uppercase tracking-[0.3em] text-zinc-600 mb-3">Kiirvalik / Быстрый выбор</p>
+            <p class="text-[9px] font-black uppercase tracking-[0.3em] text-zinc-600 mb-3">Võimalused</p>
             <div class="flex flex-wrap gap-2">
-                <button onclick="applyPreset('silent')"   id="preset-silent"   class="preset-btn px-4 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest">Silent 1440p</button>
-                <button onclick="applyPreset('living')"   id="preset-living"   class="preset-btn px-4 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest">4K Living Room</button>
+                <span class="preset-btn px-4 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest" style="cursor:default">Silent 1440p</span>
+                <span class="preset-btn px-4 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest" style="cursor:default">4K Living Room</span>
             </div>
         </div>
 
@@ -173,40 +173,53 @@
                 <div>
                     <label data-key="os-label" class="block text-[10px] font-black uppercase tracking-widest text-blue-500 mb-3">Operatsioonisüsteem (OS)</label>
                     <div class="flex gap-2">
-                        <button onclick="selectOS('steamos')" id="os-steamos" class="os-btn active-green flex-1 py-3 px-2 rounded-xl text-[9px] font-black uppercase tracking-wider text-center">SteamOS</button>
+                        <button onclick="selectOS('steamos')" id="os-steamos" class="os-btn active-green flex-1 py-3 px-2 rounded-xl text-[9px] font-black uppercase tracking-wider text-center">SteamOS<br><span class="text-[8px] opacity-60 normal-case" data-key="os-note-steamos-short">18 000+ mängu</span></button>
                         <button onclick="selectOS('windows')" id="os-windows" class="os-btn flex-1 py-3 px-2 rounded-xl text-[9px] font-black uppercase tracking-wider text-center">Windows 11<br><span class="text-[8px] opacity-60">+79€</span></button>
                         <button onclick="selectOS('dualboot')" id="os-dualboot" class="os-btn flex-1 py-3 px-2 rounded-xl text-[9px] font-black uppercase tracking-wider text-center">Dual Boot<br><span class="text-[8px] opacity-60">+79€</span></button>
                     </div>
-                    <div id="os-note-steamos" class="os-note os-note-green show" data-key="os-note-steamos">✓ 18 000+ mängu ühilduv · Parim SFF kogemus</div>
                     <div id="os-note-windows" class="os-note os-note-blue"        data-key="os-note-windows">✓ Maksimaalne mänguühilduvus · Windows litsents kaasas</div>
                     <div id="os-note-dualboot" class="os-note os-note-violet"    data-key="os-note-dualboot">✓ SteamOS + Windows 11 · Parim mõlemast maailmast</div>
                 </div>
 
                 <div>
                     <label data-key="case-label" class="block text-[10px] font-black uppercase tracking-widest text-blue-500 mb-3">Korpuse disain (Case Color)</label>
-                    <select id="case-select" onchange="updateCaseImage()" class="w-full p-4 rounded-xl outline-none focus:border-blue-600 transition uppercase text-[10px] font-bold tracking-widest cursor-pointer">
-                        <option value="Mood — Black">Mood — Black</option>
-                        <option value="Mood — Light">Mood — Light</option>
-                        <option value="Terra — Graphite">Terra — Graphite</option>
-                        <option value="Terra — Jade">Terra — Jade</option>
-                        <option value="Terra — Silver">Terra — Silver</option>
-                        <option value="Ridge — Black">Ridge — Black</option>
-                        <option value="Ridge — White">Ridge — White</option>
-                    </select>
+                    <div class="flex gap-2 mb-3">
+                        <button onclick="selectCaseModel('Mood')"  id="case-model-Mood"  class="os-btn active flex-1 py-3 px-2 rounded-xl text-[9px] font-black uppercase tracking-wider text-center">Mood</button>
+                        <button onclick="selectCaseModel('Terra')" id="case-model-Terra" class="os-btn flex-1 py-3 px-2 rounded-xl text-[9px] font-black uppercase tracking-wider text-center">Terra</button>
+                        <button onclick="selectCaseModel('Ridge')" id="case-model-Ridge" class="os-btn flex-1 py-3 px-2 rounded-xl text-[9px] font-black uppercase tracking-wider text-center">Ridge</button>
+                    </div>
+                    <div id="case-colors" class="flex gap-2"></div>
                 </div>
                 <div>
                     <label data-key="cpu-label" class="block text-[10px] font-black uppercase tracking-widest text-blue-500 mb-3">Protsessor (CPU)</label>
-                    <select id="cpu-select" onchange="updatePrice()" class="w-full p-4 rounded-xl outline-none transition uppercase text-[10px] font-bold tracking-widest cursor-pointer">
-                        <option value="0">AMD Ryzen 5 7500F</option>
-                        <option value="79">AMD Ryzen 5 7500X3D (+79€)</option>
-                    </select>
+                    <div class="flex gap-2" style="pointer-events:none">
+                        <button id="cpu-7500f"   class="os-btn active flex-1 py-3 px-2 rounded-xl text-[9px] font-black uppercase tracking-wider text-center">Ryzen 5 7500F</button>
+                        <button id="cpu-7500x3d" class="os-btn flex-1 py-3 px-2 rounded-xl text-[9px] font-black uppercase tracking-wider text-center" style="opacity:0.35">Ryzen 5 7500X3D</button>
+                    </div>
                 </div>
                 <div>
                     <label data-key="gpu-label" class="block text-[10px] font-black uppercase tracking-widest text-blue-500 mb-3">Videokaart (GPU)</label>
-                    <select id="gpu-select" onchange="handleGpuChange()" class="w-full p-4 rounded-xl outline-none transition uppercase text-[10px] font-bold tracking-widest cursor-pointer">
-                        <option value="0">AMD Radeon RX 9060 XT 16GB</option>
-                        <option value="175">AMD Radeon RX 9070 XT 20GB (+175€)</option>
-                    </select>
+                    <div class="flex gap-2" style="pointer-events:none">
+                        <button id="gpu-9060xt"   class="os-btn active flex-1 py-3 px-2 rounded-xl text-[9px] font-black uppercase tracking-wider text-center">RX 9060 XT 16GB</button>
+                        <button id="gpu-9070xt16" class="os-btn flex-1 py-3 px-2 rounded-xl text-[9px] font-black uppercase tracking-wider text-center" style="opacity:0.35">RX 9070 XT 16GB</button>
+                        <button id="gpu-9070xt20" class="os-btn flex-1 py-3 px-2 rounded-xl text-[9px] font-black uppercase tracking-wider text-center" style="opacity:0.35">RX 9070 XT 20GB</button>
+                    </div>
+                </div>
+                <div>
+                    <label data-key="ram-label" class="block text-[10px] font-black uppercase tracking-widest text-blue-500 mb-3">Operatiivmälu (RAM)</label>
+                    <div class="flex gap-2">
+                        <button onclick="selectRam('16')" id="ram-16" class="os-btn active flex-1 py-3 px-2 rounded-xl text-[9px] font-black uppercase tracking-wider text-center">16 GB</button>
+                        <button onclick="selectRam('32')" id="ram-32" class="os-btn flex-1 py-3 px-2 rounded-xl text-[9px] font-black uppercase tracking-wider text-center" style="opacity:0.35">32 GB</button>
+                        <button onclick="selectRam('64')" id="ram-64" class="os-btn flex-1 py-3 px-2 rounded-xl text-[9px] font-black uppercase tracking-wider text-center" style="opacity:0.35">64 GB</button>
+                    </div>
+                </div>
+                <div>
+                    <label data-key="ssd-label" class="block text-[10px] font-black uppercase tracking-widest text-blue-500 mb-3">Salvestusruum (SSD)</label>
+                    <div class="flex gap-2">
+                        <button onclick="selectSsd('1')" id="ssd-1tb" class="os-btn active flex-1 py-3 px-2 rounded-xl text-[9px] font-black uppercase tracking-wider text-center">1 TB</button>
+                        <button onclick="selectSsd('2')" id="ssd-2tb" class="os-btn flex-1 py-3 px-2 rounded-xl text-[9px] font-black uppercase tracking-wider text-center" style="opacity:0.35">2 TB</button>
+                        <button onclick="selectSsd('4')" id="ssd-4tb" class="os-btn flex-1 py-3 px-2 rounded-xl text-[9px] font-black uppercase tracking-wider text-center" style="display:none;opacity:0.35">4 TB</button>
+                    </div>
                 </div>
                 <div id="psu-block" style="display:none">
                     <label data-key="psu-label" class="block text-[10px] font-black uppercase tracking-widest text-blue-500 mb-3">Toiteplokk (PSU)</label>
@@ -215,23 +228,6 @@
                         <option value="45" id="psu-850">850W SFX Platinum (+45€)</option>
                     </select>
                     <p id="psu-warning" class="text-[9px] text-amber-500 uppercase mt-2 hidden" data-key="psu-req">9070 XT jaoks on vajalik 850W toiteplokk</p>
-                </div>
-                <div>
-                    <label data-key="ram-label" class="block text-[10px] font-black uppercase tracking-widest text-blue-500 mb-3">Operatiivmälu (RAM)</label>
-                    <select id="ram-select" onchange="updatePrice()" class="w-full p-4 rounded-xl outline-none transition uppercase text-[10px] font-bold tracking-widest cursor-pointer">
-                        <option value="0">16GB DDR5 Corsair Vengeance</option>
-                        <option value="139">32GB DDR5 Corsair Vengeance (+139€)</option>
-                        <option value="606">64GB DDR5 Corsair Vengeance (+606€)</option>
-                    </select>
-                </div>
-                <div>
-                    <label data-key="ssd-label" class="block text-[10px] font-black uppercase tracking-widest text-blue-500 mb-3">Salvestusruum (SSD)</label>
-                    <select id="ssd-select" onchange="updatePrice()" class="w-full p-4 rounded-xl outline-none transition uppercase text-[10px] font-bold tracking-widest cursor-pointer">
-                        <option value="0" data-name="WD Black SN850X 1TB">WD Black SN850X 1TB</option>
-                        <option value="10" data-name="Samsung 990 PRO 1TB">Samsung 990 PRO 1TB (+10€)</option>
-                        <option value="120" data-name="Samsung 990 PRO 2TB">Samsung 990 PRO 2TB (+120€)</option>
-                        <option value="425" id="ssd-4tb" data-name="Samsung 990 PRO 4TB" style="display:none">Samsung 990 PRO 4TB (+425€)</option>
-                    </select>
                 </div>
                 <div id="ctrl-block" style="display:none">
                     <label data-key="ctrl-label" class="block text-[10px] font-black uppercase tracking-widest text-blue-500 mb-3">Kontroller (Controller)</label>
@@ -404,7 +400,26 @@
             'Terra — Jade':     'IMG/TerraJade',
             'Terra — Silver':   'IMG/TerraSilver'
         };
+        var CASE_COLORS = {
+            'Mood':  ['Black', 'Light'],
+            'Terra': ['Graphite', 'Jade', 'Silver'],
+            'Ridge': ['Black', 'White']
+        };
+        var selectedCaseModel = 'Mood';
+        var selectedCaseColor = 'Black';
         var currentPhotoNum = 1;
+        var RAM_PRICES  = { '16': 0, '32': 139, '64': 606 };
+        var SSD_PRICES  = { '1': 0, '2': 120, '4': 425 };
+        var CPU_PRICES  = { '7500f': 0, '7500x3d': 79 };
+        var GPU_PRICES  = { '9060xt': 0, '9070xt16': 100, '9070xt20': 175 };
+        var RAM_LABELS  = { '16': '16GB DDR5 Corsair Vengeance', '32': '32GB DDR5 Corsair Vengeance', '64': '64GB DDR5 Corsair Vengeance' };
+        var SSD_LABELS  = { '1': 'WD Black SN850X 1TB', '2': 'Samsung 990 PRO 2TB', '4': 'Samsung 990 PRO 4TB' };
+        var CPU_LABELS  = { '7500f': 'AMD Ryzen 5 7500F', '7500x3d': 'AMD Ryzen 5 7500X3D' };
+        var GPU_LABELS  = { '9060xt': 'AMD Radeon RX 9060 XT 16GB', '9070xt16': 'AMD Radeon RX 9070 XT 16GB', '9070xt20': 'AMD Radeon RX 9070 XT 20GB' };
+        var selectedRam = '16';
+        var selectedSsd = '1';
+        var selectedCpu = '7500f';
+        var selectedGpu = '9060xt';
 
         /* ── OS selector ── */
         function selectOS(os) {
@@ -412,7 +427,8 @@
             document.querySelectorAll('.os-btn').forEach(function (b) { b.classList.remove('active', 'active-green'); });
             document.getElementById('os-' + os).classList.add(os === 'steamos' ? 'active-green' : 'active');
             document.querySelectorAll('.os-note').forEach(function (n) { n.classList.remove('show'); });
-            document.getElementById('os-note-' + os).classList.add('show');
+            var osNote = document.getElementById('os-note-' + os);
+            if (osNote) osNote.classList.add('show');
             var disp   = document.getElementById('os-display');
             var labels = { steamos: 'SteamOS', windows: 'Windows 11', dualboot: 'Dual Boot' };
             var colors = { steamos: '#4ade80', windows: '#93c5fd',   dualboot: '#c4b5fd' };
@@ -421,43 +437,76 @@
             updatePrice();
         }
 
+        /* ── RAM / SSD selectors ── */
+        function selectRam(size) {
+            selectedRam = size;
+            ['16','32','64'].forEach(function (s) {
+                var b = document.getElementById('ram-' + s);
+                if (!b) return;
+                b.classList.remove('active');
+                b.style.opacity = '0.35';
+            });
+            var btn = document.getElementById('ram-' + size);
+            if (btn) { btn.classList.add('active'); btn.style.opacity = ''; }
+            updatePrice();
+        }
+        function selectSsd(size) {
+            selectedSsd = size;
+            ['1tb','2tb','4tb'].forEach(function (s) {
+                var b = document.getElementById('ssd-' + s);
+                if (!b) return;
+                b.classList.remove('active');
+                b.style.opacity = '0.35';
+            });
+            var btn = document.getElementById('ssd-' + size + 'tb');
+            if (btn) { btn.classList.add('active'); btn.style.opacity = ''; }
+            updatePrice();
+        }
+
         /* ── Scenario presets ── */
         function applyPreset(preset) {
             selectedPreset = preset;
             document.querySelectorAll('.preset-btn').forEach(function (b) { b.classList.remove('active'); });
             document.getElementById('preset-' + preset).classList.add('active');
-            var cpu = document.getElementById('cpu-select');
-            var gpu = document.getElementById('gpu-select');
-            var ram = document.getElementById('ram-select');
             if (preset === 'silent') {
-                selectOS('steamos'); cpu.value = '0'; gpu.value = '0'; ram.value = '0';
+                selectOS('steamos'); selectRam('16');
             } else if (preset === 'living') {
-                selectOS('steamos'); cpu.value = '79'; gpu.value = '175'; ram.value = '139';
+                selectOS('steamos'); selectRam('32');
                 document.getElementById('hdmi-block').style.display = 'block';
             }
             handleGpuChange();
         }
 
         /* ── Mode init (from URL param) ── */
+        function _disableRamSsd() {
+            ['ram-16','ram-32','ram-64','ssd-1tb','ssd-2tb','ssd-4tb'].forEach(function (id) {
+                var b = document.getElementById(id);
+                if (!b) return;
+                b.style.pointerEvents = 'none';
+                b.style.cursor = 'default';
+                if (!b.classList.contains('active')) b.style.opacity = '0.35';
+            });
+        }
         function initMode() {
-            var cpu      = document.getElementById('cpu-select');
-            var gpu      = document.getElementById('gpu-select');
-            var ram      = document.getElementById('ram-select');
-            var ssd      = document.getElementById('ssd-select');
             var modelDisp = document.getElementById('model-display');
             if (MODE === 'core') {
-                cpu.disabled = true; gpu.disabled = true; ram.disabled = true; ssd.disabled = true;
+                _disableRamSsd();
                 modelDisp.innerText = 'BAAS';
                 document.getElementById('os-dualboot').style.display = 'none';
                 document.getElementById('os-note-dualboot').style.display = 'none';
+                document.getElementById('os-windows').style.display = 'none';
+                var steamBtn = document.getElementById('os-steamos');
+                steamBtn.removeAttribute('onclick');
+                steamBtn.style.cursor = 'default';
+                steamBtn.style.pointerEvents = 'none';
             } else if (MODE === 'plus') {
-                gpu.disabled = true; ram.disabled = true; ssd.disabled = true;
+                _disableRamSsd();
                 document.getElementById('ctrl-block').style.display = 'block';
                 document.getElementById('hdmi-block').style.display = 'block';
                 document.getElementById('pkg-block').style.display  = 'block';
                 modelDisp.innerText = 'BAAS+';
             } else if (MODE === 'enthusiast') {
-                document.getElementById('ssd-4tb').style.display  = 'block';
+                document.getElementById('ssd-4tb').style.display  = 'flex';
                 document.getElementById('psu-block').style.display = 'block';
                 modelDisp.innerText = 'ENTHUSIAST';
             }
@@ -466,11 +515,10 @@
 
         /* ── GPU / PSU coupling ── */
         function handleGpuChange() {
-            var gpuVal     = document.getElementById('gpu-select').value;
             var psuSel     = document.getElementById('psu-select');
             var psu650     = document.getElementById('psu-650');
             var psuWarning = document.getElementById('psu-warning');
-            if (gpuVal === '175') {
+            if (selectedGpu === '9070xt20') {
                 psuSel.value = '45'; psu650.disabled = true;
                 psuWarning.classList.remove('hidden');
             } else {
@@ -482,14 +530,64 @@
 
         /* ── Price calculation ── */
         function updatePrice() {
-            var cpu  = parseInt(document.getElementById('cpu-select').value) || 0;
-            var gpu  = parseInt(document.getElementById('gpu-select').value) || 0;
-            var ram  = parseInt(document.getElementById('ram-select').value) || 0;
-            var ssd  = parseInt(document.getElementById('ssd-select').value) || 0;
+            var cpu  = CPU_PRICES[selectedCpu] || 0;
+            var gpu  = GPU_PRICES[selectedGpu] || 0;
+            var ram  = RAM_PRICES[selectedRam] || 0;
+            var ssd  = SSD_PRICES[selectedSsd] || 0;
             var psu  = document.getElementById('psu-block').style.display  !== 'none' ? parseInt(document.getElementById('psu-select').value)  || 0 : 0;
             var ctrl = document.getElementById('ctrl-block').style.display !== 'none' ? parseInt(document.getElementById('ctrl-select').value) || 0 : 0;
             var os   = OS_PRICES[selectedOS] || 0;
             document.getElementById('total-price').innerText = (BASE_PRICE + cpu + gpu + ram + ssd + psu + ctrl + os) + ' €';
+        }
+
+        /* ── Case selector ── */
+        var CASE_COLOR_STYLES = {
+            'Black':    { bg: '#111111', border: 'rgba(255,255,255,0.3)',  text: '#ffffff' },
+            'Light':    { bg: '#e4e4e7', border: '#b4b4b8',               text: '#0a0a0a' },
+            'Graphite': { bg: '#1c1c1c', border: 'rgba(255,255,255,0.25)', text: '#ffffff' },
+            'Jade':     { bg: '#4d5d53', border: '#4d5d53',               text: '#ffffff' },
+            'Silver':   { bg: '#d1d5db', border: '#adb5bd',               text: '#0a0a0a' },
+            'White':    { bg: '#e4e4e7', border: '#b4b4b8',               text: '#0a0a0a' }
+        };
+        function _applyCaseColorStyle(btn, color) {
+            var s = CASE_COLOR_STYLES[color];
+            if (!s) return;
+            btn.style.background = s.bg;
+            btn.style.borderColor = s.border;
+            btn.style.color = s.text;
+        }
+        function _resetCaseColorStyle(btn) {
+            btn.style.background = '';
+            btn.style.borderColor = '';
+            btn.style.color = '';
+        }
+        function selectCaseModel(model) {
+            selectedCaseModel = model;
+            selectedCaseColor = CASE_COLORS[model][0];
+            document.querySelectorAll('[id^="case-model-"]').forEach(function (b) { b.classList.remove('active'); });
+            document.getElementById('case-model-' + model).classList.add('active');
+            renderCaseColors();
+            window.updateCaseImage();
+        }
+        function selectCaseColor(color) {
+            selectedCaseColor = color;
+            CASE_COLORS[selectedCaseModel].forEach(function (c) {
+                var btn = document.getElementById('case-color-' + c);
+                if (!btn) return;
+                btn.classList.remove('active');
+                _resetCaseColorStyle(btn);
+            });
+            var active = document.getElementById('case-color-' + color);
+            if (active) { active.classList.add('active'); _applyCaseColorStyle(active, color); }
+            window.updateCaseImage();
+        }
+        function renderCaseColors() {
+            var container = document.getElementById('case-colors');
+            container.innerHTML = CASE_COLORS[selectedCaseModel].map(function (c) {
+                var isActive = c === selectedCaseColor;
+                var s = isActive && CASE_COLOR_STYLES[c] ? ' style="background:' + CASE_COLOR_STYLES[c].bg + ';border-color:' + CASE_COLOR_STYLES[c].border + ';color:' + CASE_COLOR_STYLES[c].text + '"' : '';
+                return '<button onclick="selectCaseColor(\'' + c + '\')" id="case-color-' + c + '" class="os-btn' + (isActive ? ' active' : '') + ' flex-1 py-2 px-2 rounded-xl text-[9px] font-black uppercase tracking-wider text-center"' + s + '>' + c + '</button>';
+            }).join('');
         }
 
         /* ── Case image ── */
@@ -501,34 +599,28 @@
             setTimeout(function () { img.src = base + '.' + num + '.png'; img.style.opacity = '1'; }, 300);
         }
         window.updateCaseImage = function () {
-            currentPhotoNum = 1;
-            _setCasePhoto(document.getElementById('case-select').value, 1);
+            _setCasePhoto(selectedCaseModel + ' — ' + selectedCaseColor, currentPhotoNum);
         };
         window.switchCasePhoto = function (num) {
             currentPhotoNum = num;
-            _setCasePhoto(document.getElementById('case-select').value, num);
+            _setCasePhoto(selectedCaseModel + ' — ' + selectedCaseColor, num);
         };
 
         /* ── Order Modal ── */
         function _getConfigSnapshot() {
             var lang  = localStorage.getItem('selectedLanguage') || 'et';
             var isRu  = lang === 'ru';
-            var caseEl = document.getElementById('case-select');
-            var cpuEl  = document.getElementById('cpu-select');
-            var gpuEl  = document.getElementById('gpu-select');
-            var ramEl  = document.getElementById('ram-select');
-            var ssdEl  = document.getElementById('ssd-select');
             var osLabels = { steamos: 'SteamOS', windows: 'Windows 11', dualboot: 'Dual Boot' };
             return {
                 lang:     lang,
                 isRu:     isRu,
                 model:    document.getElementById('model-display').innerText,
                 os:       osLabels[selectedOS],
-                caseTxt:  caseEl.options[caseEl.selectedIndex].text,
-                cpu:      cpuEl.options[cpuEl.selectedIndex].text,
-                gpu:      gpuEl.options[gpuEl.selectedIndex].text,
-                ram:      ramEl.options[ramEl.selectedIndex].text,
-                ssd:      ssdEl.options[ssdEl.selectedIndex].text,
+                caseTxt:  selectedCaseModel + ' — ' + selectedCaseColor,
+                cpu:      CPU_LABELS[selectedCpu],
+                gpu:      GPU_LABELS[selectedGpu],
+                ram:      RAM_LABELS[selectedRam],
+                ssd:      SSD_LABELS[selectedSsd],
                 psu:      document.getElementById('psu-block').style.display !== 'none'
                               ? document.getElementById('psu-select').options[document.getElementById('psu-select').selectedIndex].text : null,
                 ctrl:     document.getElementById('ctrl-block').style.display !== 'none'
@@ -800,11 +892,11 @@
         });
 
         window.addEventListener('load', function () {
-            ['case-select','cpu-select','gpu-select','psu-select','ram-select','ssd-select','ctrl-select','hdmi-display','pkg-display'].forEach(function (id) {
+            ['psu-select','ctrl-select','hdmi-display','pkg-display'].forEach(function (id) {
                 var el = document.getElementById(id);
                 if (el) _buildCDD(el);
             });
-            initMode(); updatePrice(); window.updateCaseImage();
+            renderCaseColors(); initMode(); updatePrice(); window.updateCaseImage();
         });
     </script>
 </body>
