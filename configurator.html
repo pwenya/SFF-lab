@@ -194,16 +194,16 @@
                 </div>
                 <div>
                     <label data-key="cpu-label" class="block text-[10px] font-black uppercase tracking-widest text-blue-500 mb-3">Protsessor (CPU)</label>
-                    <div class="flex gap-2" style="pointer-events:none">
-                        <button id="cpu-7500f"   class="os-btn active flex-1 py-3 px-2 rounded-xl text-[9px] font-black uppercase tracking-wider text-center">Ryzen 5 7500F</button>
-                        <button id="cpu-7500x3d" class="os-btn flex-1 py-3 px-2 rounded-xl text-[9px] font-black uppercase tracking-wider text-center" style="opacity:0.35">Ryzen 5 7500X3D</button>
+                    <div id="cpu-container" class="flex gap-2" style="pointer-events:none">
+                        <button onclick="selectCpu('7500f')"   id="cpu-7500f"   class="os-btn active flex-1 py-3 px-2 rounded-xl text-[9px] font-black uppercase tracking-wider text-center">Ryzen 5 7500F</button>
+                        <button onclick="selectCpu('7500x3d')" id="cpu-7500x3d" class="os-btn flex-1 py-3 px-2 rounded-xl text-[9px] font-black uppercase tracking-wider text-center" style="opacity:0.35">Ryzen 5 7500X3D</button>
                     </div>
                 </div>
                 <div>
                     <label data-key="gpu-label" class="block text-[10px] font-black uppercase tracking-widest text-blue-500 mb-3">Videokaart (GPU)</label>
-                    <div class="flex gap-2" style="pointer-events:none">
-                        <button id="gpu-9060xt"   class="os-btn active flex-1 py-3 px-2 rounded-xl text-[9px] font-black uppercase tracking-wider text-center">RX 9060 XT 16GB</button>
-                        <button id="gpu-9070xt16" class="os-btn flex-1 py-3 px-2 rounded-xl text-[9px] font-black uppercase tracking-wider text-center" style="opacity:0.35">RX 9070 XT 16GB</button>
+                    <div id="gpu-container" class="flex gap-2" style="pointer-events:none">
+                        <button onclick="selectGpu('9060xt')"   id="gpu-9060xt"   class="os-btn active flex-1 py-3 px-2 rounded-xl text-[9px] font-black uppercase tracking-wider text-center">RX 9060 XT 16GB</button>
+                        <button onclick="selectGpu('9070xt16')" id="gpu-9070xt16" class="os-btn flex-1 py-3 px-2 rounded-xl text-[9px] font-black uppercase tracking-wider text-center" style="opacity:0.35">RX 9070 XT 16GB</button>
                     </div>
                 </div>
                 <div>
@@ -224,10 +224,10 @@
                 </div>
                 <div id="psu-block" style="display:none">
                     <label data-key="psu-label" class="block text-[10px] font-black uppercase tracking-widest text-blue-500 mb-3">Toiteplokk (PSU)</label>
-                    <select id="psu-select" onchange="updatePrice()" class="w-full p-4 rounded-xl outline-none transition uppercase text-[10px] font-bold tracking-widest cursor-pointer">
-                        <option value="0"  id="psu-650">650W SFX Gold Quiet Edition</option>
-                        <option value="45" id="psu-850">850W SFX Platinum (+45€)</option>
-                    </select>
+                    <div id="psu-container" class="flex gap-2">
+                        <button onclick="selectPsu('650')" id="psu-650" class="os-btn active flex-1 py-3 px-2 rounded-xl text-[9px] font-black uppercase tracking-wider text-center">650W<br><span class="text-[8px] opacity-60 normal-case">SFX Gold</span></button>
+                        <button onclick="selectPsu('850')" id="psu-850" class="os-btn flex-1 py-3 px-2 rounded-xl text-[9px] font-black uppercase tracking-wider text-center">850W<br><span class="text-[8px] opacity-60 normal-case">SFX Platinum +45€</span></button>
+                    </div>
                     <p id="psu-warning" class="text-[9px] text-amber-500 uppercase mt-2 hidden" data-key="psu-req">9070 XT jaoks on vajalik 850W toiteplokk</p>
                 </div>
                 <div id="ctrl-block" style="display:none">
@@ -400,6 +400,7 @@
         var selectedSsd = '1';
         var selectedCpu = '7500f';
         var selectedGpu = '9060xt';
+        var selectedPsu = 0;
 
         /* ── OS selector ── */
         function selectOS(os) {
@@ -424,7 +425,7 @@
                 var b = document.getElementById('ram-' + s);
                 if (!b) return;
                 b.classList.remove('active');
-                b.style.opacity = '0.35';
+                if (MODE !== 'enthusiast') b.style.opacity = '0.35';
             });
             var btn = document.getElementById('ram-' + size);
             if (btn) { btn.classList.add('active'); btn.style.opacity = ''; }
@@ -436,7 +437,7 @@
                 var b = document.getElementById('ssd-' + s);
                 if (!b) return;
                 b.classList.remove('active');
-                b.style.opacity = '0.35';
+                if (MODE !== 'enthusiast') b.style.opacity = '0.35';
             });
             var btn = document.getElementById('ssd-' + size + 'tb');
             if (btn) { btn.classList.add('active'); btn.style.opacity = ''; }
@@ -479,30 +480,104 @@
                 steamBtn.removeAttribute('onclick');
                 steamBtn.style.cursor = 'default';
                 steamBtn.style.pointerEvents = 'none';
+                document.getElementById('psu-block').style.display = 'block';
+                document.getElementById('psu-container').style.pointerEvents = 'none';
+                document.getElementById('psu-850').style.opacity = '0.35';
             } else if (MODE === 'plus') {
                 _disableRamSsd();
                 document.getElementById('ctrl-block').style.display = 'block';
-                document.getElementById('hdmi-block').style.display = 'block';
-                document.getElementById('pkg-block').style.display  = 'block';
+                document.getElementById('os-dualboot').style.display = 'none';
+                document.getElementById('os-note-dualboot').style.display = 'none';
+                document.getElementById('os-windows').style.display = 'none';
+                document.getElementById('os-note-windows').style.display = 'none';
+                document.getElementById('psu-block').style.display = 'block';
+                document.getElementById('psu-container').style.pointerEvents = 'none';
+                selectPsu('850');
+                document.getElementById('psu-650').style.opacity = '0.35';
+                if (window.pageTranslations) {
+                    if (window.pageTranslations.et) window.pageTranslations.et['config-sub'] = 'BAAS+';
+                    if (window.pageTranslations.ru) window.pageTranslations.ru['config-sub'] = 'БАЗА+';
+                    if (window.pageTranslations.en) window.pageTranslations.en['config-sub'] = 'BASE+';
+                }
+                var _lang = localStorage.getItem('selectedLanguage') || 'et';
+                var _subEl = document.querySelector('[data-key="config-sub"]');
+                if (_subEl) _subEl.innerText = _lang === 'ru' ? 'БАЗА+' : (_lang === 'en' ? 'BASE+' : 'BAAS+');
                 modelDisp.innerText = 'BAAS+';
             } else if (MODE === 'enthusiast') {
+                document.getElementById('cpu-container').style.pointerEvents = '';
+                document.getElementById('gpu-container').style.pointerEvents = '';
+                ['cpu-7500x3d','gpu-9070xt16','ram-32','ram-64','ssd-2tb','ssd-4tb'].forEach(function(id) {
+                    var b = document.getElementById(id); if (b) b.style.opacity = '';
+                });
                 document.getElementById('ssd-4tb').style.display  = 'flex';
                 document.getElementById('psu-block').style.display = 'block';
-                modelDisp.innerText = 'ENTHUSIAST';
+                document.getElementById('os-dualboot').style.display = 'none';
+                document.getElementById('os-note-dualboot').style.display = 'none';
+                document.getElementById('os-windows').style.display = 'none';
+                document.getElementById('os-note-windows').style.display = 'none';
+                if (window.pageTranslations) {
+                    if (window.pageTranslations.et) window.pageTranslations.et['config-sub'] = 'CUSTOM';
+                    if (window.pageTranslations.ru) window.pageTranslations.ru['config-sub'] = 'CUSTOM';
+                    if (window.pageTranslations.en) window.pageTranslations.en['config-sub'] = 'CUSTOM';
+                }
+                var _subEl2 = document.querySelector('[data-key="config-sub"]');
+                if (_subEl2) _subEl2.innerText = 'CUSTOM';
+                modelDisp.innerText = 'CUSTOM';
             }
             syncDropdowns();
         }
 
+        /* ── CPU / GPU selectors ── */
+        function selectCpu(cpu) {
+            selectedCpu = cpu;
+            ['7500f','7500x3d'].forEach(function(id) {
+                var b = document.getElementById('cpu-' + id);
+                if (b) b.classList.remove('active');
+            });
+            var active = document.getElementById('cpu-' + cpu);
+            if (active) active.classList.add('active');
+            updatePrice();
+        }
+        function selectGpu(gpu) {
+            selectedGpu = gpu;
+            ['9060xt','9070xt16'].forEach(function(id) {
+                var b = document.getElementById('gpu-' + id);
+                if (b) b.classList.remove('active');
+            });
+            var active = document.getElementById('gpu-' + gpu);
+            if (active) active.classList.add('active');
+            handleGpuChange();
+        }
+        function selectPsu(watts) {
+            selectedPsu = watts === '850' ? 45 : 0;
+            ['650','850'].forEach(function(w) {
+                var b = document.getElementById('psu-' + w);
+                if (b) b.classList.remove('active');
+            });
+            var btn = document.getElementById('psu-' + watts);
+            if (btn) btn.classList.add('active');
+            updatePrice();
+        }
+
         /* ── GPU / PSU coupling ── */
         function handleGpuChange() {
-            var psuSel     = document.getElementById('psu-select');
-            var psu650     = document.getElementById('psu-650');
-            var psuWarning = document.getElementById('psu-warning');
-            if (selectedGpu === '9070xt20') {
-                psuSel.value = '45'; psu650.disabled = true;
-                psuWarning.classList.remove('hidden');
+            var psuWarning  = document.getElementById('psu-warning');
+            var psuContainer = document.getElementById('psu-container');
+            if (selectedGpu === '9070xt16' || selectedGpu === '9070xt20') {
+                if (MODE === 'enthusiast') {
+                    selectPsu('850');
+                    var b650 = document.getElementById('psu-650');
+                    if (b650) b650.style.opacity = '0.35';
+                    if (psuContainer) psuContainer.style.pointerEvents = 'none';
+                }
+                if (psuWarning) psuWarning.classList.remove('hidden');
             } else {
-                psu650.disabled = false; psuWarning.classList.add('hidden');
+                if (MODE === 'enthusiast') {
+                    if (psuContainer) psuContainer.style.pointerEvents = '';
+                    var b650 = document.getElementById('psu-650');
+                    if (b650) b650.style.opacity = '';
+                }
+                if (psuWarning) psuWarning.classList.add('hidden');
             }
             syncDropdowns();
             updatePrice();
@@ -514,7 +589,7 @@
             var gpu  = GPU_PRICES[selectedGpu] || 0;
             var ram  = RAM_PRICES[selectedRam] || 0;
             var ssd  = SSD_PRICES[selectedSsd] || 0;
-            var psu  = document.getElementById('psu-block').style.display  !== 'none' ? parseInt(document.getElementById('psu-select').value)  || 0 : 0;
+            var psu  = document.getElementById('psu-block').style.display !== 'none' ? selectedPsu : 0;
             var ctrl = document.getElementById('ctrl-block').style.display !== 'none' ? parseInt(document.getElementById('ctrl-select').value) || 0 : 0;
             var os   = OS_PRICES[selectedOS] || 0;
             document.getElementById('total-price').innerText = (BASE_PRICE + cpu + gpu + ram + ssd + psu + ctrl + os) + ' €';
@@ -602,7 +677,7 @@
                 ram:      RAM_LABELS[selectedRam],
                 ssd:      SSD_LABELS[selectedSsd],
                 psu:      document.getElementById('psu-block').style.display !== 'none'
-                              ? document.getElementById('psu-select').options[document.getElementById('psu-select').selectedIndex].text : null,
+                              ? (selectedPsu === 45 ? '850W SFX Platinum' : '650W SFX Gold Quiet Edition') : null,
                 ctrl:     document.getElementById('ctrl-block').style.display !== 'none'
                               ? document.getElementById('ctrl-select').options[document.getElementById('ctrl-select').selectedIndex].text : null,
                 price:    document.getElementById('total-price').innerText,
@@ -872,7 +947,7 @@
         });
 
         window.addEventListener('load', function () {
-            ['psu-select','ctrl-select','hdmi-display','pkg-display'].forEach(function (id) {
+            ['ctrl-select','hdmi-display','pkg-display'].forEach(function (id) {
                 var el = document.getElementById(id);
                 if (el) _buildCDD(el);
             });
