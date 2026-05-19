@@ -18,6 +18,8 @@
         .s-in_progress     { background: rgba(59,130,246,0.12);  color: #60a5fa; border: 1px solid rgba(59,130,246,0.25); }
         .s-ready           { background: rgba(34,197,94,0.12);   color: #4ade80; border: 1px solid rgba(34,197,94,0.25); }
         .s-shipped         { background: rgba(167,139,250,0.12); color: #a78bfa; border: 1px solid rgba(167,139,250,0.25); }
+        .s-cancelled       { background: rgba(239,68,68,0.12);   color: #f87171; border: 1px solid rgba(239,68,68,0.25); }
+        .s-completed       { background: rgba(34,197,94,0.12);   color: #4ade80; border: 1px solid rgba(34,197,94,0.25); }
         .order-row { border-bottom: 1px solid rgba(255,255,255,0.04); transition: background 0.2s; cursor: pointer; }
         .order-row:hover { background: rgba(255,255,255,0.03); }
         .order-row:last-child { border-bottom: none; }
@@ -42,8 +44,8 @@
         #toast.show { opacity: 1; transform: translateY(0); }
 
         /* Определение сетки в одном месте для удобства */
-        .admin-grid { display: grid; grid-template-columns: 160px 100px 1.2fr 130px 90px 130px 130px; gap: 12px; align-items: center; padding: 14px 20px; }
-        .header-grid { display: grid; grid-template-columns: 160px 100px 1.2fr 130px 90px 130px 130px; gap: 12px; padding: 12px 20px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+        .admin-grid { display: grid; grid-template-columns: 32px 160px 100px 1.2fr 130px 90px 130px 130px; gap: 12px; align-items: center; padding: 14px 20px; }
+        .header-grid { display: grid; grid-template-columns: 32px 160px 100px 1.2fr 130px 90px 130px 130px; gap: 12px; padding: 12px 20px; border-bottom: 1px solid rgba(255,255,255,0.06); }
 
         /* ── Mobile ── */
         @media (max-width: 768px) {
@@ -114,18 +116,18 @@
                 pointer-events: none;
             }
 
-            /* Hide: Customer (3), Config (4), Price (5), Update (7) */
-            .admin-grid > *:nth-child(3),
+            /* Hide: Customer (4), Config (5), Price (6), Update (8) */
             .admin-grid > *:nth-child(4),
             .admin-grid > *:nth-child(5),
-            .admin-grid > *:nth-child(7),
-            .header-grid > *:nth-child(3),
+            .admin-grid > *:nth-child(6),
+            .admin-grid > *:nth-child(8),
             .header-grid > *:nth-child(4),
             .header-grid > *:nth-child(5),
-            .header-grid > *:nth-child(7) { display: none !important; }
+            .header-grid > *:nth-child(6),
+            .header-grid > *:nth-child(8) { display: none !important; }
 
             /* Order number: 13px, truncate with ellipsis */
-            .admin-grid > *:nth-child(1) {
+            .admin-grid > *:nth-child(2) {
                 font-size: 13px !important;
                 letter-spacing: 0.02em !important;
                 white-space: nowrap;
@@ -134,7 +136,7 @@
             }
 
             /* Date column */
-            .admin-grid > *:nth-child(2) { font-size: 13px !important; }
+            .admin-grid > *:nth-child(3) { font-size: 13px !important; }
 
             /* Status badge */
             .status-badge { font-size: 11px !important; padding: 5px 10px !important; }
@@ -149,6 +151,22 @@
 <body class="antialiased min-h-screen">
 
 <div id="toast"></div>
+
+<div id="bulk-bar" style="display:none;position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:9998;background:#0a0a0a;border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:12px 20px;align-items:center;gap:12px;box-shadow:0 8px 32px rgba(0,0,0,0.6)">
+    <span id="bulk-count" style="font-size:11px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:#a1a1aa"></span>
+    <select id="bulk-status-select" class="status-select" style="font-size:11px;padding:6px 10px">
+        <option value="">— Change status —</option>
+        <option value="pending">New</option>
+        <option value="pending_payment">Pending Payment</option>
+        <option value="in_progress">In Progress</option>
+        <option value="ready">Ready</option>
+        <option value="shipped">Shipped</option>
+        <option value="completed">Order Complete</option>
+        <option value="cancelled">Cancelled</option>
+    </select>
+    <button onclick="applyBulkStatus()" style="background:#2563eb;border:none;color:white;font-size:10px;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;padding:8px 16px;border-radius:8px;cursor:pointer">Apply</button>
+    <button onclick="clearSelection()" style="background:none;border:1px solid rgba(255,255,255,0.1);color:#71717a;font-size:10px;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;padding:8px 16px;border-radius:8px;cursor:pointer">Clear</button>
+</div>
 
 <div id="detail-modal" class="om-overlay" onclick="_modalBackdrop(event)">
     <div class="om-box" id="detail-box">
@@ -261,6 +279,7 @@
 
         <div class="glass rounded-[24px] overflow-hidden">
             <div class="header-grid">
+                <input type="checkbox" id="select-all-cb" onclick="toggleSelectAll(this)" style="width:16px;height:16px;cursor:pointer;accent-color:#2563eb">
                 <span style="font-size:9px;font-weight:800;letter-spacing:0.18em;text-transform:uppercase;color:#3f3f46">Order #</span>
                 <span style="font-size:9px;font-weight:800;letter-spacing:0.18em;text-transform:uppercase;color:#3f3f46">Date</span>
                 <span style="font-size:9px;font-weight:800;letter-spacing:0.18em;text-transform:uppercase;color:#3f3f46">Customer</span>
@@ -304,7 +323,9 @@
         pending_payment: 'Pending Payment',
         in_progress:     'In Progress',
         ready:           'Ready',
-        shipped:         'Shipped'
+        shipped:         'Shipped',
+        cancelled:       'Cancelled',
+        completed:       'Order Complete'
     };
 
     function showLoginScreen(errorKey) {
@@ -407,16 +428,17 @@
                 + '<br><span style="font-size:10px;color:#52525b">'
                 + String(date.getHours()).padStart(2,'0') + ':' + String(date.getMinutes()).padStart(2,'0')
                 + '</span>' : '—';
-            return '<div class="order-row admin-grid" onclick="openDetail(\'' + esc(o.orderNumber) + '\')">'
-                + '<span style="font-size:11px;font-weight:800;letter-spacing:0.06em;color:white">' + esc(o.orderNumber) + '</span>'
-                + '<span style="font-size:11px;color:#71717a;font-weight:600;line-height:1.6">' + dateStr + '</span>'
-                + '<div style="min-width:0">'
+            return '<div class="order-row admin-grid" id="row-' + esc(o.orderNumber) + '">'
+                + '<input type="checkbox" class="order-cb" value="' + esc(o.orderNumber) + '" onclick="event.stopPropagation();updateBulkBar()" style="width:16px;height:16px;cursor:pointer;accent-color:#2563eb">'
+                + '<span onclick="openDetail(\'' + esc(o.orderNumber) + '\')" style="cursor:pointer;font-size:11px;font-weight:800;letter-spacing:0.06em;color:white">' + esc(o.orderNumber) + '</span>'
+                + '<span onclick="openDetail(\'' + esc(o.orderNumber) + '\')" style="cursor:pointer;font-size:11px;color:#71717a;font-weight:600;line-height:1.6">' + dateStr + '</span>'
+                + '<div onclick="openDetail(\'' + esc(o.orderNumber) + '\')" style="cursor:pointer;min-width:0">'
                 + '<div style="font-size:12px;color:#e4e4e7;font-weight:600;word-break:break-word">' + esc(o.name) + '</div>'
                 + '<div style="font-size:10px;color:#52525b;word-break:break-all">' + esc(o.email) + '</div>'
                 + '</div>'
-                + '<span style="font-size:10px;color:#71717a;word-break:break-word">' + esc(o.model || '') + '</span>'
-                + '<span style="font-size:12px;font-weight:800;color:white">' + esc(o.price || '') + '</span>'
-                + '<span><span class="status-badge s-' + esc(o.status) + '">' + (STATUS_LABELS[o.status] || o.status) + '</span></span>'
+                + '<span onclick="openDetail(\'' + esc(o.orderNumber) + '\')" style="cursor:pointer;font-size:10px;color:#71717a;word-break:break-word">' + esc(o.model || '') + '</span>'
+                + '<span onclick="openDetail(\'' + esc(o.orderNumber) + '\')" style="cursor:pointer;font-size:12px;font-weight:800;color:white">' + esc(o.price || '') + '</span>'
+                + '<span onclick="openDetail(\'' + esc(o.orderNumber) + '\')" style="cursor:pointer"><span class="status-badge s-' + esc(o.status) + '">' + (STATUS_LABELS[o.status] || o.status) + '</span></span>'
                 + '<span onclick="event.stopPropagation()">'
                 + '<select class="status-select" onchange="quickUpdateStatus(\'' + esc(o.orderNumber) + '\',this)">'
                 + statusOptions(o.status)
@@ -427,9 +449,62 @@
     }
 
     function statusOptions(current) {
-        return ['pending','pending_payment','in_progress','ready','shipped'].map(function (s) {
+        return ['pending','pending_payment','in_progress','ready','shipped','completed','cancelled'].map(function (s) {
             return '<option value="' + s + '"' + (s === current ? ' selected' : '') + '>' + (STATUS_LABELS[s]) + '</option>';
         }).join('');
+    }
+
+    function toggleSelectAll(cb) {
+        document.querySelectorAll('.order-cb').forEach(function (c) { c.checked = cb.checked; });
+        updateBulkBar();
+    }
+
+    function updateBulkBar() {
+        var checked = document.querySelectorAll('.order-cb:checked');
+        var bar = document.getElementById('bulk-bar');
+        var countEl = document.getElementById('bulk-count');
+        if (checked.length > 0) {
+            bar.style.display = 'flex';
+            countEl.innerText = checked.length + ' selected';
+        } else {
+            bar.style.display = 'none';
+        }
+        var allCb = document.getElementById('select-all-cb');
+        var allChecked = document.querySelectorAll('.order-cb');
+        if (allCb) allCb.checked = checked.length === allChecked.length && allChecked.length > 0;
+    }
+
+    function clearSelection() {
+        document.querySelectorAll('.order-cb').forEach(function (c) { c.checked = false; });
+        var allCb = document.getElementById('select-all-cb');
+        if (allCb) allCb.checked = false;
+        document.getElementById('bulk-bar').style.display = 'none';
+    }
+
+    function applyBulkStatus() {
+        var newStatus = document.getElementById('bulk-status-select').value;
+        if (!newStatus) { showToast('Select a status first', '#f59e0b'); return; }
+        var checked = Array.from(document.querySelectorAll('.order-cb:checked')).map(function (c) { return c.value; });
+        if (checked.length === 0) return;
+        var done = 0;
+        var failed = 0;
+        checked.forEach(function (orderNumber) {
+            callUpdateStatus(orderNumber, newStatus, function (ok) {
+                if (ok) {
+                    done++;
+                    var o = ALL_ORDERS.find(function (x) { return x.orderNumber === orderNumber; });
+                    if (o) o.status = newStatus;
+                } else {
+                    failed++;
+                }
+                if (done + failed === checked.length) {
+                    updateStats();
+                    renderTable();
+                    clearSelection();
+                    showToast(done + ' orders updated' + (failed ? ', ' + failed + ' failed' : ''), done > 0 ? '#4ade80' : '#f87171');
+                }
+            });
+        });
     }
 
     function quickUpdateStatus(orderNumber, selectEl) {
