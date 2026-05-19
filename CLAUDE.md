@@ -82,6 +82,15 @@ Never use absolute paths like `/boxes` or `/` — the site is opened via file://
 - `<body class="p-6 md:p-20 pb-6 md:pb-0 ...">` — has horizontal padding (24px mobile / 80px desktop). Bottom padding is 0 on desktop so the footer reaches the page bottom.
 - The shared footer needs negative horizontal margins to escape body padding and reach screen edges. This is handled via `#main-footer { margin-left: -24px; margin-right: -24px; }` / `@media (min-width:768px) { ... -80px }` in the page's `<style>` block.
 - Do NOT add padding back to `pb` on desktop — it breaks the sticky footer.
+- `BASE_PRICE` comes from `?base=` URL param, defaults to 2250.
+- **Pricing logic — IMPORTANT:** Component add-ons (CPU/GPU/RAM/SSD/PSU) are applied **only when `MODE === 'enthusiast'` (Custom)**. For `core` (Baas) and `plus` (Baas+), `BASE_PRICE` is the full fixed price — no add-ons are added. Controller and OS price add-ons apply to all modes.
+- **Current Custom add-on prices:**
+  - CPU: 7500f +0, 7500x3d +65
+  - GPU: 9060xt +0, 9070xt16 +250, 9070xt20 +340
+  - RAM: 16GB +0, 32GB +150, 64GB +640 (diff 64↔32 = 490)
+  - SSD: 1TB +0, 2TB +90, 4TB +330 (diff 4TB↔2TB = 240)
+  - PSU: 650W +0, 850W +45
+- Internal test product: mode=`test`, title `INTERNAL TEST - NOT FOR SALE` (no square brackets).
 
 ### boxes.html
 - `.product-section` has `border-bottom`. Add `border-bottom: none` to `.product-section:last-child` so there's no double line where the last section meets the footer's `border-t`.
@@ -94,6 +103,10 @@ Never use absolute paths like `/boxes` or `/` — the site is opened via file://
 - Compatibility section sits at `margin-top: -6px` relative to the pricing section above it.
 - All `✓ Verified` labels in game rows use `data-key="verified-label"` (translated: `✓ Ühilduv` / `✓ Совместимо` / `✓ Compatible`).
 - Compat-works/native/no: restructured as single `<span data-key="...">` — translations include the `✓`/`✗` symbol so there's no double-symbol.
+- **Current prices (SteamOS):** Baas 2250 €, Baas+ 2850 €, Custom from 2250 €
+- **Windows section buttons are disabled** (`<button disabled>`) for all three cards — Windows ordering not yet available.
+- **Dual Boot Edition button is disabled** — test configuration, shows disclaimer text via `data-key="db-desc"` (red, bold) instead of description.
+- Configurator links use `?base=` param: Baas `base=2250`, Baas+ `base=2850`, Custom/Dual Boot `base=2250`.
 
 ### shop.html
 - GPU / CPU category tabs; NVIDIA / AMD / Intel brand sub-tabs.
@@ -117,12 +130,33 @@ Never use absolute paths like `/boxes` or `/` — the site is opened via file://
 - Google OAuth for admin panel (GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET)
 - Admin email: info@sfflab.ee
 
-### api/payment/notify.js
-- LHV/EveryPay webhook handler. Verifies payment server-side via `GET /v4/payments/{ref}` — never trusts callback body alone.
+### api/payment/create.js + notify.js
+- Both use production URL: `https://payment.lhv.ee/api/v4` (sandbox URL removed).
+- `create.js`: validates `amountCents >= 1` (not 100).
+- `notify.js`: LHV/EveryPay webhook handler. Verifies payment server-side via `GET /v4/payments/{ref}` — never trusts callback body alone.
 - **Idempotency:** before sending emails, checks `order.status === 'in_progress' || order.emailSent`. If true, returns 200 without re-sending. Redis update sets `emailSent: true`.
+- On `settled` and `cancelled/failed/abandoned`: stores `paymentMethod: paymentData.payment_method_name || paymentData.payment_source || 'unknown'` in Redis.
 - Sends two emails on `settled`: internal notification to `info@sfflab.ee` + customer confirmation in ET/RU/EN based on `order.language`.
 - `buildConfirmationHtml`: order number in subtitle, no separate order-number block, no ✓ emoji, single "Track Order / Tellimuse staatus / Статус заказа" button linking to `https://sfflab.ee/?order=<orderNumber>`.
-- TODO comment in file: revert `LHV_BASE_URL` from sandbox to `https://payment.lhv.ee/api/v4` for production.
+
+### api/order.js
+- Validates price: `priceNum >= 1` (minimum 1 €, not 1000).
+
+### api/update-status.js
+- Valid statuses: `pending`, `pending_payment`, `in_progress`, `ready`, `shipped`, `completed`, `cancelled`.
+- `STATUS_ET` and `STATUS_RU` include labels for `completed` and `cancelled`.
+- `COLOR_MAP`: `completed` → `#4ade80`, `cancelled` → `#f87171`.
+- Sends bilingual ET/RU status notification email to customer on every status change.
+
+### admin.html
+- Order table grid: `32px 160px 100px 1.2fr 130px 90px 130px 130px` — first column is checkbox.
+- **Bulk actions:** select-all checkbox in header, per-row checkboxes, floating bulk bar (bottom center) appears when rows selected. `applyBulkStatus()` updates all selected orders in parallel.
+- Filter buttons include: All, New, Pending Payment, In Progress, Ready, Shipped, **Complete, Cancelled**.
+- Status badges: `.s-completed` (green), `.s-cancelled` (red) added alongside existing badges.
+- `statusOptions()` includes all 7 statuses including `completed` and `cancelled`.
+- Date column shows date + time (`HH:MM`) on separate line.
+- Customer detail panel shows `paymentMethod` row if present on the order object.
+- Mobile: hides columns 4,5,6,8 (Customer, Config, Price, Update); shows checkbox(1), Order#(2), Date(3), Status(7).
 
 ## Legal
 - Company: SFF Lab OÜ

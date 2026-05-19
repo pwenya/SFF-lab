@@ -226,7 +226,7 @@
                     <label data-key="psu-label" class="block text-[10px] font-black uppercase tracking-widest text-blue-500 mb-3">Toiteplokk (PSU)</label>
                     <div id="psu-container" class="flex gap-2">
                         <button onclick="selectPsu('650')" id="psu-650" class="os-btn active flex-1 py-3 px-2 rounded-xl text-[9px] font-black uppercase tracking-wider text-center">650W<br><span class="text-[8px] opacity-60 normal-case">SFX Gold</span></button>
-                        <button onclick="selectPsu('850')" id="psu-850" class="os-btn flex-1 py-3 px-2 rounded-xl text-[9px] font-black uppercase tracking-wider text-center">850W<br><span class="text-[8px] opacity-60 normal-case">SFX Platinum +45€</span></button>
+                        <button onclick="selectPsu('850')" id="psu-850" class="os-btn flex-1 py-3 px-2 rounded-xl text-[9px] font-black uppercase tracking-wider text-center">850W<br><span class="text-[8px] opacity-60 normal-case">SFX Gold</span></button>
                     </div>
                     <p id="psu-warning" class="text-[9px] text-amber-500 uppercase mt-2 hidden" data-key="psu-req">9070 XT jaoks on vajalik 850W toiteplokk</p>
                 </div>
@@ -389,10 +389,10 @@
         var selectedCaseModel = 'Mood';
         var selectedCaseColor = 'Black';
         var currentPhotoNum = 1;
-        var RAM_PRICES  = { '16': 0, '32': 139, '64': 606 };
-        var SSD_PRICES  = { '1': 0, '2': 120, '4': 425 };
-        var CPU_PRICES  = { '7500f': 0, '7500x3d': 79 };
-        var GPU_PRICES  = { '9060xt': 0, '9070xt16': 100, '9070xt20': 175 };
+        var RAM_PRICES  = { '16': 0, '32': 150, '64': 640 };
+        var SSD_PRICES  = { '1': 0, '2': 90, '4': 330 };
+        var CPU_PRICES  = { '7500f': 0, '7500x3d': 65 };
+        var GPU_PRICES  = { '9060xt': 0, '9070xt16': 250, '9070xt20': 340 };
         var RAM_LABELS  = { '16': '16GB DDR5 Corsair Vengeance', '32': '32GB DDR5 Corsair Vengeance', '64': '64GB DDR5 Corsair Vengeance' };
         var SSD_LABELS  = { '1': 'WD_BLACK SN7100 1TB', '2': 'WD_BLACK SN7100 2TB', '4': 'WD_BLACK SN7100 4TB' };
         var CPU_LABELS  = { '7500f': 'AMD Ryzen 5 7500F', '7500x3d': 'AMD Ryzen 5 7500X3D' };
@@ -607,11 +607,12 @@
 
         /* ── Price calculation ── */
         function updatePrice() {
-            var cpu  = CPU_PRICES[selectedCpu] || 0;
-            var gpu  = GPU_PRICES[selectedGpu] || 0;
-            var ram  = RAM_PRICES[selectedRam] || 0;
-            var ssd  = SSD_PRICES[selectedSsd] || 0;
-            var psu  = document.getElementById('psu-block').style.display !== 'none' ? selectedPsu : 0;
+            var custom = (MODE === 'enthusiast');
+            var cpu  = custom ? (CPU_PRICES[selectedCpu] || 0) : 0;
+            var gpu  = custom ? (GPU_PRICES[selectedGpu] || 0) : 0;
+            var ram  = custom ? (RAM_PRICES[selectedRam] || 0) : 0;
+            var ssd  = custom ? (SSD_PRICES[selectedSsd] || 0) : 0;
+            var psu  = custom && document.getElementById('psu-block').style.display !== 'none' ? selectedPsu : 0;
             var ctrl = document.getElementById('ctrl-block').style.display !== 'none' ? parseInt(document.getElementById('ctrl-select').value) || 0 : 0;
             var os   = OS_PRICES[selectedOS] || 0;
             document.getElementById('total-price').innerText = (BASE_PRICE + cpu + gpu + ram + ssd + psu + ctrl + os) + ' €';
