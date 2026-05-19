@@ -39,9 +39,19 @@ It also defines these globals used by all pages:
 **Rule: any site-wide UI (footer, banners, etc.) belongs in nav.js — never duplicate it in individual HTML files.**
 
 ### Nav links
-- Desktop: Pricing (`/#pricing`), Shop (DEMO badge), Status button — inside `class="hidden min-[900px]:flex"`
+- Desktop: Pricing (`https://sfflab.ee/#pricing`, absolute URL), Shop (DEMO badge), action button — inside `class="hidden min-[900px]:flex"`
 - Mobile: Shop link added separately with `class="min-[900px]:hidden flex ..."` before the desktop nav div, so it appears only on narrow screens
 - Logo links to `/` (not `index.html`) — Vercel serves index.html at `/` but `index.html` as a path returns 404
+
+### Nav action button (`#nav-action-btn`)
+The status/cart button has `id="nav-action-btn"` and dispatches through `window._navActionClick` if defined, otherwise calls `openModal()`. This lets individual pages override the button behaviour:
+- Default (all pages): opens order-status modal
+- shop.html: sets `window._navActionClick = function() { openCart(); }` and keeps the button blue, showing cart label + item count
+- To restore default on another page: leave `window._navActionClick` undefined
+- **`setLanguage` patching:** shop.html patches `window.setLanguage` inside a `load` event listener so `updateNavCartBtn()` always runs after any language switch, preventing the nav-status translation from overwriting the cart label.
+
+### `body>div` width pitfall
+nav.js injects `body>div:not(#main-footer){width:100%}`. Any `position:fixed` div appended directly to `<body>` (e.g. a toast) inherits this and becomes 100vw wide. Always add `width:auto` to inline styles of such elements.
 
 ### Auto-open order modal
 `_init()` in nav.js checks for `?order=` URL param and auto-opens + submits the order status modal. Guards:
@@ -122,8 +132,15 @@ The site is deployed on Vercel at `https://sfflab.ee`. Use **root-relative paths
 - `brands-cpu` div and hidden grids use `style="display:none"` — **not** Tailwind `hidden` — because Tailwind CDN may generate `.flex` after `.hidden`, making elements always visible.
 - On init, an IIFE applies brand button colors only — it does NOT call `showGrid()`, so the default `grid-gpu-nvidia` (which starts with class `shop-grid-visible` in HTML) stays visible.
 - Products currently listed: PNY RTX 5080 16GB OC (2000 €), PNY RTX 5080 16GB ARGB OC (2000 €). AMD GPU / Intel CPU / AMD CPU show "Coming Soon" placeholders.
-- Each product card has two buttons: `+ Ostukorvi` (ghost blue, calls `addToCart({title,brand,price,priceNum,specs})`) and `Tellida` (blue CTA, calls `openShopModal`).
-- **Cart:** fixed FAB (`#cart-fab`, `.cart-btn`) appears when cart has items. Cart drawer (`#cart-overlay`, `.cart-overlay`) slides up from bottom. `checkoutFromCart()` maps cart item `title/priceNum` to `openShopModal`'s `name/price` fields. Toast notification on add.
+- Each product card has two buttons: `+ Ostukorvi` (ghost blue, calls `addToCart({title,brand,price,priceNum,specs})`) and `Tellida` (blue CTA, calls `openShopModal({name,brand,specs,price,priceDisplay})`).
+- **Order modal:** two-step — step 1 shows product overview; step 2 is customer form (name/email/phone). Submit calls `/api/order` then `/api/payment/create` and redirects to LHV payment page. `shopSubmitOrder` uses `p.name` and `p.price` (number).
+- **Cart (`#cart-overlay`, `.cart-overlay`):** centered overlay (same animation as order modal — `translateY(20px) scale(0.97)` → `(0) scale(1)`). No floating FAB — the nav `#nav-action-btn` is the cart entry point on this page.
+  - Cart items: `{title, brand, price (string "X €"), priceNum (number), specs, qty}`.
+  - `checkoutFromCart()` maps `title→name`, `priceNum→price`, `price→priceDisplay` before calling `openShopModal`.
+  - Cart persists in `localStorage` key `sff_cart` (JSON). Restored and re-rendered on every page load via `updateCartUI()` in the `load` event.
+  - Nav button is always blue on shop page; shows `Ostukorv · N` / `Корзина · N` / `Cart · N` when items present, plain label when empty.
+  - Toast on add: pops below the nav button (reads its `getBoundingClientRect()`), spring animation, language-aware text: ET `Lisatud`, RU `Добавлено`, EN `Added`. Falls back to bottom-right on mobile (button hidden, rect is zero).
+  - All cart overlay static texts use `data-key`: `cart-title`, `cart-total-label`, `cart-checkout`, `cart-empty-text` — translated via `pageTranslations`.
 
 ## Token efficiency rules
 - Work on ONE file at a time unless explicitly told otherwise
