@@ -226,11 +226,18 @@ module.exports = async function handler(req, res) {
         }
 
         if (paymentState === 'settled') {
+            // If already processed — skip to avoid duplicate emails
+            if (order.status === 'in_progress' || order.emailSent) {
+                console.log('[LHV notify] order', orderReference, 'already processed, skipping');
+                return res.status(200).json({ received: true });
+            }
+
             await redis.set(orderKey, Object.assign({}, order, {
                 status:           'in_progress',
                 paymentReference: paymentReference,
                 paymentState:     paymentState,
-                paidAt:           new Date().toISOString()
+                paidAt:           new Date().toISOString(),
+                emailSent:        true
             }));
             console.log('[LHV notify] order', orderReference, 'marked in_progress');
 
