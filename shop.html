@@ -224,19 +224,19 @@
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px">
                 <div>
                     <p style="font-size:11px;font-weight:800;letter-spacing:0.25em;text-transform:uppercase;color:#2563eb;margin-bottom:4px">SFF Lab</p>
-                    <h2 style="font-size:22px;font-weight:900;color:white;margin:0">Ostukorv</h2>
+                    <h2 style="font-size:22px;font-weight:900;color:white;margin:0" data-key="cart-title">Ostukorv</h2>
                 </div>
                 <button onclick="closeCart()" style="background:none;border:none;cursor:pointer;color:#71717a;font-size:20px" onmouseover="this.style.color='white'" onmouseout="this.style.color='#71717a'">✕</button>
             </div>
             <div id="cart-items"></div>
             <div id="cart-footer" style="display:none;margin-top:20px;padding-top:20px;border-top:1px solid rgba(255,255,255,0.06)">
                 <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:20px">
-                    <span style="font-size:11px;font-weight:800;letter-spacing:0.15em;text-transform:uppercase;color:#52525b">Kokku</span>
+                    <span style="font-size:11px;font-weight:800;letter-spacing:0.15em;text-transform:uppercase;color:#52525b" data-key="cart-total-label">Kokku</span>
                     <span id="cart-total" style="font-size:28px;font-weight:900;color:white"></span>
                 </div>
-                <button onclick="checkoutFromCart()" class="btn-ripple w-full bg-blue-600 hover:bg-blue-500 text-white py-4 rounded-2xl font-black text-xs uppercase tracking-widest transition-all" style="border:none;cursor:pointer;width:100%">Vormista tellimus</button>
+                <button onclick="checkoutFromCart()" class="btn-ripple w-full bg-blue-600 hover:bg-blue-500 text-white py-4 rounded-2xl font-black text-xs uppercase tracking-widest transition-all" style="border:none;cursor:pointer;width:100%" data-key="cart-checkout">Vormista tellimus</button>
             </div>
-            <div id="cart-empty" style="text-align:center;padding:40px 0;color:#52525b;font-size:11px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase">Ostukorv on tühi</div>
+            <div id="cart-empty" style="text-align:center;padding:40px 0;color:#52525b;font-size:11px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase" data-key="cart-empty-text">Ostukorv on tühi</div>
         </div>
     </div>
 
@@ -245,34 +245,46 @@
     <script>
         window.pageTranslations = {
             et: {
-                'shop-gpu':       'Videokaardid',
-                'shop-cpu':       'Protsessorid',
-                'shop-order':     'Tellida',
-                'shop-soon':      'Peagi',
-                'shop-proceed':   'Edasi',
-                'shop-back':      'Tagasi',
-                'shop-your-info': 'Teie andmed',
-                'shop-pay':       'Maksa'
+                'shop-gpu':         'Videokaardid',
+                'shop-cpu':         'Protsessorid',
+                'shop-order':       'Tellida',
+                'shop-soon':        'Peagi',
+                'shop-proceed':     'Edasi',
+                'shop-back':        'Tagasi',
+                'shop-your-info':   'Teie andmed',
+                'shop-pay':         'Maksa',
+                'cart-title':       'Ostukorv',
+                'cart-total-label': 'Kokku',
+                'cart-checkout':    'Vormista tellimus',
+                'cart-empty-text':  'Ostukorv on tühi'
             },
             ru: {
-                'shop-gpu':       'Видеокарты',
-                'shop-cpu':       'Процессоры',
-                'shop-order':     'Заказать',
-                'shop-soon':      'Скоро',
-                'shop-proceed':   'Далее',
-                'shop-back':      'Назад',
-                'shop-your-info': 'Ваши данные',
-                'shop-pay':       'Оплатить'
+                'shop-gpu':         'Видеокарты',
+                'shop-cpu':         'Процессоры',
+                'shop-order':       'Заказать',
+                'shop-soon':        'Скоро',
+                'shop-proceed':     'Далее',
+                'shop-back':        'Назад',
+                'shop-your-info':   'Ваши данные',
+                'shop-pay':         'Оплатить',
+                'cart-title':       'Корзина',
+                'cart-total-label': 'Итого',
+                'cart-checkout':    'Оформить заказ',
+                'cart-empty-text':  'Корзина пуста'
             },
             en: {
-                'shop-gpu':       'Graphics Cards',
-                'shop-cpu':       'Processors',
-                'shop-order':     'Order',
-                'shop-soon':      'Coming Soon',
-                'shop-proceed':   'Continue',
-                'shop-back':      'Back',
-                'shop-your-info': 'Your details',
-                'shop-pay':       'Pay'
+                'shop-gpu':         'Graphics Cards',
+                'shop-cpu':         'Processors',
+                'shop-order':       'Order',
+                'shop-soon':        'Coming Soon',
+                'shop-proceed':     'Continue',
+                'shop-back':        'Back',
+                'shop-your-info':   'Your details',
+                'shop-pay':         'Pay',
+                'cart-title':       'Cart',
+                'cart-total-label': 'Total',
+                'cart-checkout':    'Checkout',
+                'cart-empty-text':  'Your cart is empty'
             }
         };
 
@@ -451,7 +463,8 @@
             if (e.key === 'Escape') { closeShopModal(); closeCart(); }
         });
 
-        var _cart = [];
+        var _cart;
+        try { _cart = JSON.parse(localStorage.getItem('sff_cart') || '[]'); } catch(e) { _cart = []; }
 
         function addToCart(product) {
             var existing = _cart.find(function(i) { return i.title === product.title; });
@@ -470,6 +483,7 @@
         }
 
         function updateCartUI() {
+            localStorage.setItem('sff_cart', JSON.stringify(_cart));
             var total = _cart.reduce(function(s, i) { return s + i.priceNum * i.qty; }, 0);
             var count = _cart.reduce(function(s, i) { return s + i.qty; }, 0);
             var countEl = document.getElementById('cart-count');
@@ -538,16 +552,13 @@
         function updateNavCartBtn() {
             var btn = document.getElementById('nav-action-btn');
             if (!btn) return;
-            var count = _cart.reduce(function(s, i) { return s + i.qty; }, 0);
-            if (count > 0) {
-                btn.innerText        = 'Ostukorv · ' + count;
-                btn.style.background = '#2563eb';
-                btn.style.color      = 'white';
-            } else {
-                btn.innerText        = 'Ostukorv';
-                btn.style.background = '';
-                btn.style.color      = '';
-            }
+            var lang   = localStorage.getItem('selectedLanguage') || 'et';
+            var labels = { et: 'Ostukorv', ru: 'Корзина', en: 'Cart' };
+            var label  = labels[lang] || labels.et;
+            var count  = _cart.reduce(function(s, i) { return s + i.qty; }, 0);
+            btn.innerText        = count > 0 ? label + ' · ' + count : label;
+            btn.style.background = '#2563eb';
+            btn.style.color      = 'white';
         }
 
         var _origAddToCart = addToCart;
@@ -555,8 +566,18 @@
         var _origRemoveFromCart = removeFromCart;
         removeFromCart = function(title) { _origRemoveFromCart(title); updateNavCartBtn(); };
 
-        // Init — wait for nav to render
-        setTimeout(updateNavCartBtn, 100);
+        // Patch setLanguage so cart button stays in sync on language switch
+        window.addEventListener('load', function() {
+            if (window.setLanguage) {
+                var _origSetLang = window.setLanguage;
+                window.setLanguage = function(lang) {
+                    _origSetLang(lang);
+                    updateNavCartBtn();
+                };
+            }
+            updateCartUI();
+            updateNavCartBtn();
+        });
 
         function showCartToast() {
             var existing = document.getElementById('cart-toast');
@@ -577,7 +598,9 @@
                     + 'padding:5px 14px;border-radius:100px;font-size:10px;font-weight:800;'
                     + 'letter-spacing:0.12em;text-transform:uppercase;white-space:nowrap;pointer-events:none;'
                     + 'transition:transform 0.3s cubic-bezier(0.16,1,0.3,1),opacity 0.2s ease';
-                t.innerText = '+ Ostukorvi';
+                var toastLang   = localStorage.getItem('selectedLanguage') || 'et';
+                var toastLabels = { et: 'Lisatud', ru: 'Добавлено', en: 'Added' };
+                t.innerText = toastLabels[toastLang] || toastLabels.et;
                 document.body.appendChild(t);
 
                 requestAnimationFrame(function() {
