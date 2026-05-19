@@ -93,7 +93,7 @@ function priceRow(price, estimatedDelivery, labelA, labelB) {
 
 function emailFooter() {
     return '<tr><td style="padding:18px 32px;background:#0a0a0a">'
-        + '<p style="margin:0;font-size:9px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:#3f3f46">SFF Lab OÜ · Estonia · info@sfflab.ee</p>'
+        + '<p style="margin:0;font-size:9px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:#3f3f46">SFF Lab OÜ · 2026 · Estonia · info@sfflab.ee</p>'
         + '</td></tr>';
 }
 
@@ -179,12 +179,9 @@ function buildConfirmationHtml(d) {
         + '<table width="100%" cellpadding="0" cellspacing="0">' + buildSpecRows(d) + '</table></td></tr>'
         + priceRow(d.price, d.estimatedDelivery, t.priceLabel, t.delivLabel)
         + '<tr><td style="padding:18px 32px;text-align:center">'
-        + '<p style="margin:0 0 4px;font-size:11px;color:#52525b">' + t.question + '</p>'
-        + '<a href="https://sfflab.ee/?order=' + d.orderNumber + '" style="display:inline-block;margin-bottom:16px;padding:12px 28px;background:#2563eb;color:#fff;font-size:12px;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;text-decoration:none;border-radius:12px">'
+        + '<a href="https://sfflab.ee/?order=' + d.orderNumber + '" style="display:inline-block;padding:12px 28px;background:#2563eb;color:#fff;font-size:12px;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;text-decoration:none;border-radius:12px">'
         + (lang === 'ru' ? 'Статус заказа' : (lang === 'en' ? 'Track Order' : 'Tellimuse staatus'))
         + '</a>'
-        + '<br>'
-        + '<a href="mailto:info@sfflab.ee" style="font-size:13px;font-weight:700;color:#60a5fa;text-decoration:none">info@sfflab.ee</a>'
         + '</td></tr>'
         + emailFooter();
 
