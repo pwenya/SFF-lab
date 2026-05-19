@@ -43,6 +43,22 @@
             display: flex; align-items: center; justify-content: center; margin-bottom: 20px; overflow: hidden;
         }
         .product-img-wrap img { height: 200px; width: 100%; object-fit: contain; }
+
+        .shop-modal-overlay {
+            position: fixed; inset: 0; z-index: 1000; display: flex; align-items: center; justify-content: center;
+            background: rgba(0,0,0,0.75); backdrop-filter: blur(8px); padding: 16px;
+        }
+        .shop-modal-box {
+            width: 100%; max-width: 460px; background: #111; border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 32px; overflow: hidden; position: relative;
+        }
+        .shop-input {
+            width: 100%; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px; padding: 14px 16px; color: #fff; font-size: 13px; font-family: inherit;
+            outline: none; transition: border-color 0.2s; box-sizing: border-box;
+        }
+        .shop-input:focus { border-color: rgba(59,130,246,0.6); }
+        .shop-input::placeholder { color: #52525b; }
     </style>
     <script defer src="/_vercel/insights/script.js"></script>
 </head>
@@ -102,7 +118,7 @@
                                     </div>
                                     <div class="mt-auto">
                                         <div class="text-3xl font-black tracking-tighter text-white mb-5">1219 €</div>
-                                        <button disabled class="w-full py-4 rounded-2xl text-xs font-bold uppercase tracking-widest cursor-not-allowed" style="background:rgba(255,255,255,0.04);color:#3f3f46;border:1px solid rgba(255,255,255,0.06)" data-key="shop-order">Tellida</button>
+                                        <button onclick="openShopModal({name:'GeForce RTX 5080 16GB OC Triple Fan',brand:'NVIDIA · PNY',specs:[{l:'VRAM',v:'16GB GDDR7'},{l:'TDP',v:'850W'}],price:1219,priceDisplay:'1219 €'})" class="w-full py-4 rounded-2xl text-xs font-black uppercase tracking-widest transition" style="background:#2563eb;color:#fff" data-key="shop-order">Tellida</button>
                                     </div>
                                 </div>
                             </div>
@@ -120,7 +136,7 @@
                                     </div>
                                     <div class="mt-auto">
                                         <div class="text-3xl font-black tracking-tighter text-white mb-5">1288 €</div>
-                                        <button disabled class="w-full py-4 rounded-2xl text-xs font-bold uppercase tracking-widest cursor-not-allowed" style="background:rgba(255,255,255,0.04);color:#3f3f46;border:1px solid rgba(255,255,255,0.06)" data-key="shop-order">Tellida</button>
+                                        <button onclick="openShopModal({name:'GeForce RTX 5080 16GB ARGB OC Triple Fan',brand:'NVIDIA · PNY',specs:[{l:'VRAM',v:'16GB GDDR7'},{l:'TDP',v:'850W'}],price:1288,priceDisplay:'1288 €'})" class="w-full py-4 rounded-2xl text-xs font-black uppercase tracking-widest transition" style="background:#2563eb;color:#fff" data-key="shop-order">Tellida</button>
                                     </div>
                                 </div>
                             </div>
@@ -165,27 +181,66 @@
             </div>
         </section>
 
+    <!-- Shop Order Modal -->
+    <div id="shop-modal" style="display:none" class="shop-modal-overlay" onclick="shopModalBackdrop(event)">
+        <div class="shop-modal-box">
+            <!-- Step 1: Product overview -->
+            <div id="shop-step-1" style="padding:32px">
+                <button onclick="closeShopModal()" style="position:absolute;top:20px;right:20px;background:none;border:none;color:#52525b;cursor:pointer;font-size:24px;line-height:1;padding:4px">×</button>
+                <div id="shop-modal-brand" style="font-size:10px;font-weight:900;letter-spacing:0.2em;text-transform:uppercase;color:#3b82f6;margin-bottom:8px"></div>
+                <h2 id="shop-modal-name" style="font-size:16px;font-weight:800;color:#fff;margin:0 0 20px;line-height:1.35"></h2>
+                <div id="shop-modal-specs" style="margin-bottom:24px"></div>
+                <div id="shop-modal-price" style="font-size:30px;font-weight:900;letter-spacing:-0.03em;color:#fff;margin-bottom:24px"></div>
+                <button onclick="shopGoToForm()" class="w-full py-4 rounded-2xl text-xs font-black uppercase tracking-widest transition" style="background:#2563eb;color:#fff" data-key="shop-proceed">Edasi</button>
+            </div>
+            <!-- Step 2: Customer form -->
+            <div id="shop-step-2" style="display:none;padding:32px">
+                <button onclick="shopBackToProduct()" style="background:none;border:none;color:#52525b;cursor:pointer;font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:0.12em;margin-bottom:20px;padding:0;display:flex;align-items:center;gap:6px">← <span data-key="shop-back">Tagasi</span></button>
+                <h3 style="font-size:14px;font-weight:800;color:#fff;margin:0 0 20px" data-key="shop-your-info">Teie andmed</h3>
+                <div style="display:flex;flex-direction:column;gap:12px">
+                    <input id="shop-name"  class="shop-input" type="text"  placeholder="Nimi" autocomplete="name">
+                    <input id="shop-email" class="shop-input" type="email" placeholder="E-post" autocomplete="email">
+                    <input id="shop-phone" class="shop-input" type="tel"   placeholder="Telefon" autocomplete="tel">
+                </div>
+                <div id="shop-error" style="display:none;margin-top:12px;color:#f87171;font-size:12px;font-weight:700"></div>
+                <button onclick="shopSubmitOrder()" id="shop-submit-btn" class="w-full py-4 rounded-2xl text-xs font-black uppercase tracking-widest transition" style="background:#2563eb;color:#fff;margin-top:20px" data-key="shop-pay">Maksa</button>
+            </div>
+        </div>
+    </div>
+
     </div>
 
     <script>
         window.pageTranslations = {
             et: {
-                'shop-gpu':   'Videokaardid',
-                'shop-cpu':   'Protsessorid',
-                'shop-order': 'Tellida',
-                'shop-soon':  'Peagi'
+                'shop-gpu':       'Videokaardid',
+                'shop-cpu':       'Protsessorid',
+                'shop-order':     'Tellida',
+                'shop-soon':      'Peagi',
+                'shop-proceed':   'Edasi',
+                'shop-back':      'Tagasi',
+                'shop-your-info': 'Teie andmed',
+                'shop-pay':       'Maksa'
             },
             ru: {
-                'shop-gpu':   'Видеокарты',
-                'shop-cpu':   'Процессоры',
-                'shop-order': 'Заказать',
-                'shop-soon':  'Скоро'
+                'shop-gpu':       'Видеокарты',
+                'shop-cpu':       'Процессоры',
+                'shop-order':     'Заказать',
+                'shop-soon':      'Скоро',
+                'shop-proceed':   'Далее',
+                'shop-back':      'Назад',
+                'shop-your-info': 'Ваши данные',
+                'shop-pay':       'Оплатить'
             },
             en: {
-                'shop-gpu':   'Graphics Cards',
-                'shop-cpu':   'Processors',
-                'shop-order': 'Order',
-                'shop-soon':  'Coming Soon'
+                'shop-gpu':       'Graphics Cards',
+                'shop-cpu':       'Processors',
+                'shop-order':     'Order',
+                'shop-soon':      'Coming Soon',
+                'shop-proceed':   'Continue',
+                'shop-back':      'Back',
+                'shop-your-info': 'Your details',
+                'shop-pay':       'Pay'
             }
         };
 
@@ -254,6 +309,115 @@
             entries.forEach(function(e) { if (e.isIntersecting) e.target.classList.add('visible'); });
         }, { threshold: 0.1 });
         document.querySelectorAll('.reveal').forEach(function(el) { observer.observe(el); });
+
+        var _shopCurrentProduct = null;
+
+        function openShopModal(product) {
+            _shopCurrentProduct = product;
+            document.getElementById('shop-modal-brand').textContent = product.brand;
+            document.getElementById('shop-modal-name').textContent  = product.name;
+            document.getElementById('shop-modal-price').textContent = product.priceDisplay;
+            document.getElementById('shop-modal-specs').innerHTML = product.specs.map(function(s) {
+                return '<div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#52525b;margin-bottom:6px">'
+                    + s.l + ' <span style="color:#a1a1aa">' + s.v + '</span></div>';
+            }).join('');
+            document.getElementById('shop-step-1').style.display = 'block';
+            document.getElementById('shop-step-2').style.display = 'none';
+            document.getElementById('shop-error').style.display  = 'none';
+            document.getElementById('shop-modal').style.display  = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeShopModal() {
+            document.getElementById('shop-modal').style.display = 'none';
+            document.body.style.overflow = '';
+        }
+
+        function shopModalBackdrop(e) {
+            if (e.target === document.getElementById('shop-modal')) closeShopModal();
+        }
+
+        function shopGoToForm() {
+            document.getElementById('shop-step-1').style.display = 'none';
+            document.getElementById('shop-step-2').style.display = 'block';
+        }
+
+        function shopBackToProduct() {
+            document.getElementById('shop-step-2').style.display = 'none';
+            document.getElementById('shop-step-1').style.display = 'block';
+        }
+
+        async function shopSubmitOrder() {
+            var btn   = document.getElementById('shop-submit-btn');
+            var errEl = document.getElementById('shop-error');
+            var name  = document.getElementById('shop-name').value.trim();
+            var email = document.getElementById('shop-email').value.trim();
+            var phone = document.getElementById('shop-phone').value.trim();
+
+            if (!name || !email || !phone) {
+                errEl.textContent   = 'Palun täitke kõik väljad.';
+                errEl.style.display = 'block';
+                return;
+            }
+
+            btn.disabled      = true;
+            btn.style.opacity = '0.6';
+            errEl.style.display = 'none';
+
+            var lang = (localStorage.getItem('selectedLanguage')) || 'et';
+            var p    = _shopCurrentProduct;
+
+            try {
+                var orderRes = await fetch('/api/order', {
+                    method:  'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body:    JSON.stringify({
+                        name:  name,  email: email,  phone: phone,
+                        model: p.name,  gpu: p.name,
+                        os: 'N/A',  case: 'N/A',  cpu: 'N/A',  ram: 'N/A',  ssd: 'N/A',
+                        price:    String(p.price),
+                        language: lang
+                    })
+                });
+                var orderData = await orderRes.json();
+                if (!orderRes.ok || !orderData.orderNumber) {
+                    errEl.textContent   = orderData.error || 'Viga tellimuse loomisel.';
+                    errEl.style.display = 'block';
+                    btn.disabled = false;  btn.style.opacity = '';
+                    return;
+                }
+
+                var payRes = await fetch('/api/payment/create', {
+                    method:  'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body:    JSON.stringify({
+                        amount:        p.price * 100,
+                        currency:      'EUR',
+                        orderId:       orderData.orderNumber,
+                        customerEmail: email,
+                        description:   'SFF Lab — ' + p.name
+                    })
+                });
+                var payData = await payRes.json();
+                if (!payRes.ok || !payData.paymentUrl) {
+                    errEl.textContent   = payData.error || 'Viga makse loomisel.';
+                    errEl.style.display = 'block';
+                    btn.disabled = false;  btn.style.opacity = '';
+                    return;
+                }
+
+                window.location.href = payData.paymentUrl;
+
+            } catch (err) {
+                errEl.textContent   = 'Ühenduse viga. Proovige uuesti.';
+                errEl.style.display = 'block';
+                btn.disabled = false;  btn.style.opacity = '';
+            }
+        }
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeShopModal();
+        });
     </script>
     <script src="nav.js"></script>
 </body>
