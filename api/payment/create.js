@@ -1,5 +1,4 @@
-// TODO: revert to https://payment.lhv.ee/api/v4 for prod
-const LHV_BASE_URL = 'https://payment.sandbox.lhv.ee/api/v4';
+const LHV_BASE_URL = 'https://payment.lhv.ee/api/v4';
 
 const fetch  = require('node-fetch');
 const crypto = require('crypto');

@@ -61,6 +61,7 @@
         + '<div class="max-w-[1400px] mx-auto py-4 md:py-6 px-6 md:px-10" style="display:flex;align-items:center;justify-content:space-between;gap:16px">'
         + '<a href="index.html" class="text-2xl md:text-3xl font-extrabold tracking-tighter uppercase text-white hover:opacity-80 transition" style="flex-shrink:0">SFF LAB<span class="text-blue-600">.</span></a>'
         + '<div style="display:flex;align-items:center;gap:16px;flex-shrink:1;min-width:0">'
+        + '<a href="shop.html" class="min-[900px]:hidden flex items-center gap-1.5 hover:text-white transition" style="color:#52525b;font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:0.15em;white-space:nowrap">Shop <span style="font-size:8px;font-weight:800;letter-spacing:0.12em;color:#2563eb;background:rgba(37,99,235,0.15);padding:1px 5px;border-radius:3px;text-transform:uppercase">DEMO</span></a>'
         + '<div class="hidden min-[900px]:flex items-center text-[16px] font-bold uppercase tracking-[0.2em] text-zinc-500" style="flex-shrink:1;min-width:0">'
         + '<a href="shop.html" class="hover:text-white transition whitespace-nowrap flex items-center gap-2" style="color:#52525b;font-size:16px;font-weight:700;text-transform:uppercase;letter-spacing:0.2em">Shop <span style="font-size:9px;font-weight:800;letter-spacing:0.15em;color:#2563eb;background:rgba(37,99,235,0.15);padding:2px 6px;border-radius:4px;text-transform:uppercase">DEMO</span></a>'
         + '<span class="text-zinc-800 mx-2">·</span>'
