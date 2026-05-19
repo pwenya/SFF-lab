@@ -237,7 +237,8 @@ module.exports = async function handler(req, res) {
                 paymentReference: paymentReference,
                 paymentState:     paymentState,
                 paidAt:           new Date().toISOString(),
-                emailSent:        true
+                emailSent:        true,
+                paymentMethod:    paymentData.payment_method_name || paymentData.payment_source || 'unknown'
             }));
             console.log('[LHV notify] order', orderReference, 'marked in_progress');
 
@@ -292,7 +293,8 @@ module.exports = async function handler(req, res) {
                 status:          'payment_failed',
                 paymentReference: paymentReference,
                 paymentState:    paymentState,
-                failedAt:        new Date().toISOString()
+                failedAt:        new Date().toISOString(),
+                paymentMethod:   paymentData.payment_method_name || paymentData.payment_source || 'unknown'
             }));
             console.log('[LHV notify] order', orderReference, 'payment failed, state:', paymentState);
 

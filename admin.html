@@ -568,7 +568,7 @@
         badge.className = 'status-badge s-' + o.status;
         badge.innerText = STATUS_LABELS[o.status] || o.status;
         document.getElementById('detail-status-select').value = o.status;
-        document.getElementById('detail-customer').innerHTML = dRow('Name', esc(o.name || '')) + dRow('Email', '<a href="mailto:' + esc(o.email) + '" style="color:#60a5fa">' + esc(o.email || '') + '</a>') + dRow('Phone', esc(o.phone || '—'));
+        document.getElementById('detail-customer').innerHTML = dRow('Name', esc(o.name || '')) + dRow('Email', '<a href="mailto:' + esc(o.email) + '" style="color:#60a5fa">' + esc(o.email || '') + '</a>') + dRow('Phone', esc(o.phone || '—')) + (o.paymentMethod ? dRow('Payment Method', esc(o.paymentMethod)) : '');
         document.getElementById('detail-config').innerHTML = dRow('Model', esc(o.model || '')) + dRow('OS', esc(o.os || '')) + dRow('Case', esc(o['case']|| '')) + dRow('CPU', esc(o.cpu || '')) + dRow('GPU', esc(o.gpu || '')) + dRow('RAM', esc(o.ram || '')) + dRow('SSD', esc(o.ssd || '')) + (o.psu ? dRow('PSU', esc(o.psu)) : '') + (o.controller ? dRow('Controller', esc(o.controller)) : '') + (o.scenario ? dRow('Scenario', esc(o.scenario)) : '') + '<div style="padding-top:12px;margin-top:4px;border-top:1px solid rgba(255,255,255,0.06)">' + dRow('Price', '<strong style="color:white;font-size:16px">' + esc(o.price || '') + '</strong>') + dRow('Est. Delivery', esc(o.estimatedDelivery || '')) + '</div>';
         document.getElementById('detail-modal').classList.add('open');
         document.body.style.overflow = 'hidden';
