@@ -65,7 +65,7 @@
         + '<div class="hidden min-[900px]:flex items-center text-[16px] font-bold uppercase tracking-[0.2em] text-zinc-500" style="flex-shrink:1;min-width:0">'
         + '<a href="shop.html" class="hover:text-white transition whitespace-nowrap flex items-center gap-2" style="color:#52525b;font-size:16px;font-weight:700;text-transform:uppercase;letter-spacing:0.2em">Shop <span style="font-size:9px;font-weight:800;letter-spacing:0.15em;color:#2563eb;background:rgba(37,99,235,0.15);padding:2px 6px;border-radius:4px;text-transform:uppercase">DEMO</span></a>'
         + '<span class="text-zinc-800 mx-2">·</span>'
-        + '<a href="/#pricing" data-key="nav-pricing" class="hover:text-white transition whitespace-nowrap">Paketid</a>'
+        + '<a href="https://sfflab.ee/#pricing" data-key="nav-pricing" class="hover:text-white transition whitespace-nowrap">Paketid</a>'
         + '</div>'
         + '<div class="flex items-center space-x-3 border-l border-white/10 pl-4 text-sm font-bold tracking-widest" style="flex-shrink:0;white-space:nowrap">'
         + '<button onclick="setLanguage(\'et\')" id="lang-et" class="lang-btn active transition hover:text-white" style="background:none;border:none;cursor:pointer;font-weight:700;letter-spacing:0.15em">ET</button>'
@@ -74,7 +74,7 @@
         + '<span class="text-zinc-800">|</span>'
         + '<button onclick="setLanguage(\'en\')" id="lang-en" class="lang-btn transition hover:text-white" style="background:none;border:none;cursor:pointer;font-weight:700;letter-spacing:0.15em">EN</button>'
         + '</div>'
-        + '<button onclick="openModal()" data-key="nav-status" class="nav-status-btn btn-ripple bg-white text-black px-6 py-2.5 rounded-full hover:bg-zinc-200 transition uppercase tracking-widest text-[11px] font-black" style="flex-shrink:0;white-space:nowrap;border:none;cursor:pointer;min-width:11rem;text-align:center">Tellimuse staatus</button>'
+        + '<button id="nav-action-btn" onclick="window._navActionClick ? window._navActionClick() : openModal()" data-key="nav-status" class="nav-status-btn btn-ripple bg-white text-black px-6 py-2.5 rounded-full hover:bg-zinc-200 transition uppercase tracking-widest text-[11px] font-black" style="flex-shrink:0;white-space:nowrap;border:none;cursor:pointer;min-width:11rem;text-align:center">Tellimuse staatus</button>'
         + '</div>'
         + '</div>'
         + '</nav>';

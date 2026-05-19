@@ -121,7 +121,9 @@ The site is deployed on Vercel at `https://sfflab.ee`. Use **root-relative paths
 - Grid visibility toggle uses CSS classes `shop-grid-visible` / `shop-grid-hidden` (same pattern as `os-grid-*` in index.html). `shop-grid-hidden` uses `position:absolute;width:100%` to keep layout stable.
 - `brands-cpu` div and hidden grids use `style="display:none"` — **not** Tailwind `hidden` — because Tailwind CDN may generate `.flex` after `.hidden`, making elements always visible.
 - On init, an IIFE applies brand button colors only — it does NOT call `showGrid()`, so the default `grid-gpu-nvidia` (which starts with class `shop-grid-visible` in HTML) stays visible.
-- Products currently listed: PNY RTX 5080 16GB OC (1219 €), PNY RTX 5080 16GB ARGB OC (1288 €). AMD GPU / Intel CPU / AMD CPU show "Coming Soon" placeholders.
+- Products currently listed: PNY RTX 5080 16GB OC (2000 €), PNY RTX 5080 16GB ARGB OC (2000 €). AMD GPU / Intel CPU / AMD CPU show "Coming Soon" placeholders.
+- Each product card has two buttons: `+ Ostukorvi` (ghost blue, calls `addToCart({title,brand,price,priceNum,specs})`) and `Tellida` (blue CTA, calls `openShopModal`).
+- **Cart:** fixed FAB (`#cart-fab`, `.cart-btn`) appears when cart has items. Cart drawer (`#cart-overlay`, `.cart-overlay`) slides up from bottom. `checkoutFromCart()` maps cart item `title/priceNum` to `openShopModal`'s `name/price` fields. Toast notification on add.
 
 ## Token efficiency rules
 - Work on ONE file at a time unless explicitly told otherwise
