@@ -62,6 +62,8 @@
         + '<a href="index.html" class="text-2xl md:text-3xl font-extrabold tracking-tighter uppercase text-white hover:opacity-80 transition" style="flex-shrink:0">SFF LAB<span class="text-blue-600">.</span></a>'
         + '<div style="display:flex;align-items:center;gap:16px;flex-shrink:1;min-width:0">'
         + '<div class="hidden min-[900px]:flex items-center text-[16px] font-bold uppercase tracking-[0.2em] text-zinc-500" style="flex-shrink:1;min-width:0">'
+        + '<a href="shop.html" class="hover:text-white transition whitespace-nowrap flex items-center gap-2" style="color:#52525b;font-size:16px;font-weight:700;text-transform:uppercase;letter-spacing:0.2em">Shop <span style="font-size:9px;font-weight:800;letter-spacing:0.15em;color:#2563eb;background:rgba(37,99,235,0.15);padding:2px 6px;border-radius:4px;text-transform:uppercase">DEMO</span></a>'
+        + '<span class="text-zinc-800 mx-2">·</span>'
         + '<a href="index.html#pricing" data-key="nav-pricing" class="hover:text-white transition whitespace-nowrap">Paketid</a>'
         + '</div>'
         + '<div class="flex items-center space-x-3 border-l border-white/10 pl-4 text-sm font-bold tracking-widest" style="flex-shrink:0;white-space:nowrap">'

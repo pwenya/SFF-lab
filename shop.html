@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="et" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SFF Lab — Shop</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="apple-touch-icon" href="/favicon.svg">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #050505; color: white; overflow-x: hidden; }
+
+        .glass-card {
+            background: rgba(255,255,255,0.02); backdrop-filter: blur(12px);
+            border: 1px solid rgba(255,255,255,0.08); height: 100%;
+            transition: border-color 0.5s cubic-bezier(0.4,0,0.2,1), transform 0.5s cubic-bezier(0.4,0,0.2,1),
+                        box-shadow 0.5s cubic-bezier(0.4,0,0.2,1), background 0.5s cubic-bezier(0.4,0,0.2,1);
+        }
+        .glass-card:hover {
+            border-color: rgba(59,130,246,0.45); transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 24px 48px rgba(59,130,246,0.14); background: rgba(255,255,255,0.04);
+        }
+
+        .text-gradient { background: linear-gradient(to right, #fff 30%, #64748b 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(36px); } to { opacity: 1; transform: translateY(0); } }
+        .anim-hero-title { animation: fadeUp 0.9s cubic-bezier(0.16,1,0.3,1) 0.15s both; }
+        .anim-hero-cta   { animation: fadeUp 0.9s cubic-bezier(0.16,1,0.3,1) 0.45s both; }
+
+        .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.7s cubic-bezier(0.16,1,0.3,1), transform 0.7s cubic-bezier(0.16,1,0.3,1); }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+
+        .os-switch-btn { transition: all 0.3s ease; border: 1px solid rgba(255,255,255,0.1); background: transparent; color: #52525b; cursor: pointer; }
+        .os-switch-btn.active { background: white; color: black; border-color: white; }
+
+        .shop-grid { transition: opacity 0.35s ease, transform 0.35s ease; }
+        .shop-grid-hidden { opacity: 0; transform: translateY(12px); pointer-events: none; position: absolute; width: 100%; }
+        .shop-grid-visible { opacity: 1; transform: translateY(0); }
+
+        .product-img-wrap {
+            height: 200px; background: rgba(255,255,255,0.02); border-radius: 16px;
+            display: flex; align-items: center; justify-content: center; margin-bottom: 20px; overflow: hidden;
+        }
+        .product-img-wrap img { height: 200px; width: 100%; object-fit: contain; }
+    </style>
+</head>
+<body class="antialiased text-zinc-100">
+
+    <div class="pt-[73px] md:pt-[88px]">
+
+        <!-- Hero -->
+        <section class="py-16 px-6 text-center relative overflow-hidden">
+            <div class="absolute inset-0 pointer-events-none">
+                <div class="absolute top-1/2 left-1/2 w-[600px] h-[400px] bg-blue-600/8 blur-[120px] rounded-full" style="transform:translate(-50%,-50%)"></div>
+            </div>
+            <div class="relative z-10 max-w-4xl mx-auto anim-hero-title">
+                <h1 class="text-[3rem] sm:text-[5rem] md:text-[7rem] font-extrabold tracking-tighter leading-tight uppercase text-gradient">Shop</h1>
+            </div>
+        </section>
+
+        <!-- Main tabs + grids -->
+        <section class="pb-24 px-6 relative z-10">
+            <div class="max-w-6xl mx-auto">
+
+                <!-- Category tabs -->
+                <div class="anim-hero-cta flex justify-center gap-4 mb-8">
+                    <button onclick="switchCategory('gpu')" id="tab-gpu" class="os-switch-btn active px-10 py-3 rounded-full text-[11px] font-black uppercase tracking-widest" data-key="shop-gpu">Videokaardid</button>
+                    <button onclick="switchCategory('cpu')" id="tab-cpu" class="os-switch-btn px-10 py-3 rounded-full text-[11px] font-black uppercase tracking-widest" data-key="shop-cpu">Protsessorid</button>
+                </div>
+
+                <!-- Brand sub-tabs: GPU (visible by default) -->
+                <div id="brands-gpu" class="flex justify-center gap-3 mb-10">
+                    <button onclick="switchBrand('gpu','nvidia')" id="brand-gpu-nvidia" class="os-switch-btn px-8 py-2.5 rounded-full text-[11px] font-black uppercase tracking-widest">NVIDIA</button>
+                    <button onclick="switchBrand('gpu','amd')"    id="brand-gpu-amd"    class="os-switch-btn px-8 py-2.5 rounded-full text-[11px] font-black uppercase tracking-widest">AMD</button>
+                </div>
+
+                <!-- Brand sub-tabs: CPU (hidden via style, not Tailwind class) -->
+                <div id="brands-cpu" style="display:none" class="flex justify-center gap-3 mb-10">
+                    <button onclick="switchBrand('cpu','intel')" id="brand-cpu-intel" class="os-switch-btn px-8 py-2.5 rounded-full text-[11px] font-black uppercase tracking-widest">Intel</button>
+                    <button onclick="switchBrand('cpu','amd')"   id="brand-cpu-amd"   class="os-switch-btn px-8 py-2.5 rounded-full text-[11px] font-black uppercase tracking-widest">AMD</button>
+                </div>
+
+                <!-- Grids -->
+                <div class="relative">
+
+                    <!-- GPU · NVIDIA -->
+                    <div id="grid-gpu-nvidia" class="shop-grid shop-grid-visible">
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch">
+
+                            <div class="flex reveal">
+                                <div class="glass-card p-8 rounded-[40px] flex flex-col w-full">
+                                    <div class="product-img-wrap">
+                                        <img src="" alt="PNY GeForce RTX 5080 16GB OC Triple Fan">
+                                    </div>
+                                    <span class="text-blue-500 text-[10px] font-black uppercase tracking-[0.2em] mb-2">NVIDIA · PNY</span>
+                                    <h3 class="text-base font-extrabold text-white mb-4 leading-snug">GeForce RTX 5080 16GB OC Triple Fan</h3>
+                                    <div class="space-y-1.5 text-[11px] font-bold uppercase tracking-[0.1em] mb-6">
+                                        <div class="text-zinc-600">VRAM <span class="text-zinc-400">16GB GDDR7</span></div>
+                                        <div class="text-zinc-600">TDP <span class="text-zinc-400">850W</span></div>
+                                    </div>
+                                    <div class="mt-auto">
+                                        <div class="text-3xl font-black tracking-tighter text-white mb-5">1219 €</div>
+                                        <button disabled class="w-full py-4 rounded-2xl text-xs font-bold uppercase tracking-widest cursor-not-allowed" style="background:rgba(255,255,255,0.04);color:#3f3f46;border:1px solid rgba(255,255,255,0.06)" data-key="shop-order">Tellida</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="flex reveal">
+                                <div class="glass-card p-8 rounded-[40px] flex flex-col w-full">
+                                    <div class="product-img-wrap">
+                                        <img src="" alt="PNY GeForce RTX 5080 16GB ARGB OC Triple Fan">
+                                    </div>
+                                    <span class="text-blue-500 text-[10px] font-black uppercase tracking-[0.2em] mb-2">NVIDIA · PNY</span>
+                                    <h3 class="text-base font-extrabold text-white mb-4 leading-snug">GeForce RTX 5080 16GB ARGB OC Triple Fan</h3>
+                                    <div class="space-y-1.5 text-[11px] font-bold uppercase tracking-[0.1em] mb-6">
+                                        <div class="text-zinc-600">VRAM <span class="text-zinc-400">16GB GDDR7</span></div>
+                                        <div class="text-zinc-600">TDP <span class="text-zinc-400">850W</span></div>
+                                    </div>
+                                    <div class="mt-auto">
+                                        <div class="text-3xl font-black tracking-tighter text-white mb-5">1288 €</div>
+                                        <button disabled class="w-full py-4 rounded-2xl text-xs font-bold uppercase tracking-widest cursor-not-allowed" style="background:rgba(255,255,255,0.04);color:#3f3f46;border:1px solid rgba(255,255,255,0.06)" data-key="shop-order">Tellida</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- GPU · AMD -->
+                    <div id="grid-gpu-amd" class="shop-grid shop-grid-hidden">
+                        <div class="flex justify-center py-16">
+                            <div class="glass-card p-12 rounded-[40px] text-center" style="min-height:auto;width:320px">
+                                <div class="text-4xl mb-4">⏳</div>
+                                <p class="text-2xl font-black uppercase tracking-widest text-white mb-2" data-key="shop-soon">Peagi</p>
+                                <p class="text-zinc-600 text-[10px] uppercase tracking-widest font-bold">AMD GPU</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CPU · Intel -->
+                    <div id="grid-cpu-intel" class="shop-grid shop-grid-hidden">
+                        <div class="flex justify-center py-16">
+                            <div class="glass-card p-12 rounded-[40px] text-center" style="min-height:auto;width:320px">
+                                <div class="text-4xl mb-4">⏳</div>
+                                <p class="text-2xl font-black uppercase tracking-widest text-white mb-2" data-key="shop-soon">Peagi</p>
+                                <p class="text-zinc-600 text-[10px] uppercase tracking-widest font-bold">Intel CPU</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CPU · AMD -->
+                    <div id="grid-cpu-amd" class="shop-grid shop-grid-hidden">
+                        <div class="flex justify-center py-16">
+                            <div class="glass-card p-12 rounded-[40px] text-center" style="min-height:auto;width:320px">
+                                <div class="text-4xl mb-4">⏳</div>
+                                <p class="text-2xl font-black uppercase tracking-widest text-white mb-2" data-key="shop-soon">Peagi</p>
+                                <p class="text-zinc-600 text-[10px] uppercase tracking-widest font-bold">AMD CPU</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <script>
+        window.pageTranslations = {
+            et: {
+                'shop-gpu':   'Videokaardid',
+                'shop-cpu':   'Protsessorid',
+                'shop-order': 'Tellida',
+                'shop-soon':  'Peagi'
+            },
+            ru: {
+                'shop-gpu':   'Видеокарты',
+                'shop-cpu':   'Процессоры',
+                'shop-order': 'Заказать',
+                'shop-soon':  'Скоро'
+            },
+            en: {
+                'shop-gpu':   'Graphics Cards',
+                'shop-cpu':   'Processors',
+                'shop-order': 'Order',
+                'shop-soon':  'Coming Soon'
+            }
+        };
+
+        var BRAND_COLORS = {
+            nvidia: { bg: '#76b900', color: '#fff', border: '#76b900' },
+            amd:    { bg: '#ed1c24', color: '#fff', border: '#ed1c24' },
+            intel:  { bg: '#0071c5', color: '#fff', border: '#0071c5' }
+        };
+
+        var currentCategory = 'gpu';
+        var currentBrands = { gpu: 'nvidia', cpu: 'intel' };
+
+        function switchCategory(cat) {
+            currentCategory = cat;
+            document.getElementById('tab-gpu').classList.toggle('active', cat === 'gpu');
+            document.getElementById('tab-cpu').classList.toggle('active', cat === 'cpu');
+            document.getElementById('brands-gpu').style.display = cat === 'gpu' ? 'flex' : 'none';
+            document.getElementById('brands-cpu').style.display = cat === 'cpu' ? 'flex' : 'none';
+            showGrid(cat, currentBrands[cat]);
+        }
+
+        function switchBrand(cat, brand) {
+            currentBrands[cat] = brand;
+            var brandIds = cat === 'gpu' ? ['nvidia', 'amd'] : ['intel', 'amd'];
+            brandIds.forEach(function(b) {
+                var el = document.getElementById('brand-' + cat + '-' + b);
+                if (!el) return;
+                if (b === brand) {
+                    var c = BRAND_COLORS[b];
+                    el.style.background = c.bg;
+                    el.style.color = c.color;
+                    el.style.borderColor = c.border;
+                } else {
+                    el.style.background = '';
+                    el.style.color = '';
+                    el.style.borderColor = '';
+                }
+            });
+            showGrid(cat, brand);
+        }
+
+        function showGrid(cat, brand) {
+            ['grid-gpu-nvidia', 'grid-gpu-amd', 'grid-cpu-intel', 'grid-cpu-amd'].forEach(function(id) {
+                var el = document.getElementById(id);
+                if (!el) return;
+                var active = (id === 'grid-' + cat + '-' + brand);
+                el.classList.toggle('shop-grid-visible', active);
+                el.classList.toggle('shop-grid-hidden', !active);
+            });
+        }
+
+        // Apply initial brand colors without touching grid visibility
+        (function() {
+            [['gpu','nvidia'],['cpu','intel']].forEach(function(pair) {
+                var cat = pair[0], brand = pair[1];
+                var el = document.getElementById('brand-' + cat + '-' + brand);
+                if (!el) return;
+                var c = BRAND_COLORS[brand];
+                el.style.background  = c.bg;
+                el.style.color       = c.color;
+                el.style.borderColor = c.border;
+            });
+        })();
+
+        var observer = new IntersectionObserver(function(entries) {
+            entries.forEach(function(e) { if (e.isIntersecting) e.target.classList.add('visible'); });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.reveal').forEach(function(el) { observer.observe(el); });
+    </script>
+    <script src="nav.js"></script>
+</body>
+</html>
