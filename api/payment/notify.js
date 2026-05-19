@@ -6,8 +6,9 @@
 // TODO: revert to https://payment.lhv.ee/api/v4 for production
 const LHV_BASE_URL = 'https://payment.sandbox.lhv.ee/api/v4';
 
-const fetch  = require('node-fetch');
-const { Redis } = require('@upstash/redis');
+const fetch      = require('node-fetch');
+const nodemailer = require('nodemailer');
+const { Redis }  = require('@upstash/redis');
 
 function createRedis() {
     return new Redis({
@@ -35,6 +36,120 @@ async function fetchPaymentStatus(paymentReference, credentials, username) {
         throw new Error('payment status fetch failed: HTTP ' + r.status + ' ' + text);
     }
     return JSON.parse(text);
+}
+
+/* ── Shared HTML helpers ── */
+function emailWrap(title, inner) {
+    return '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>' + title + '</title></head>'
+        + '<body style="margin:0;padding:0;background:#0a0a0a;font-family:\'Helvetica Neue\',Helvetica,Arial,sans-serif">'
+        + '<table width="100%" cellpadding="0" cellspacing="0" style="background:#0a0a0a;padding:40px 16px"><tr><td align="center">'
+        + '<table width="100%" cellpadding="0" cellspacing="0" style="max-width:540px;background:#111111;border:1px solid #222222;border-radius:16px;overflow:hidden">'
+        + inner
+        + '</table></td></tr></table></body></html>';
+}
+
+function navHeader(subtitle) {
+    return '<tr><td style="background:#0a0a0a;padding:28px 32px;border-bottom:1px solid #1f1f1f">'
+        + '<div style="font-size:22px;font-weight:900;letter-spacing:-0.03em;color:#fff;text-transform:uppercase">SFF LAB<span style="color:#2563eb">.</span></div>'
+        + '<div style="font-size:9px;font-weight:800;letter-spacing:0.25em;text-transform:uppercase;color:#2563eb;margin-top:6px">' + subtitle + '</div>'
+        + '</td></tr>';
+}
+
+function specRow(label, value) {
+    return '<tr>'
+        + '<td style="padding:8px 0;font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#52525b;width:100px;border-bottom:1px solid #1f1f1f;vertical-align:top">' + label + '</td>'
+        + '<td style="padding:8px 0 8px 12px;font-size:12px;color:#e4e4e7;border-bottom:1px solid #1f1f1f;word-break:break-word">' + value + '</td>'
+        + '</tr>';
+}
+
+function buildSpecRows(d) {
+    return [
+        ['Model',       d.model],
+        ['OS',          d.os],
+        ['Case',        d.caseTxt],
+        ['CPU',         d.cpu],
+        ['GPU',         d.gpu],
+        ['RAM',         d.ram],
+        ['SSD',         d.ssd],
+        d.psu        ? ['PSU',        d.psu]        : null,
+        d.controller ? ['Controller', d.controller] : null,
+        d.scenario   ? ['Scenario',   d.scenario]   : null,
+    ].filter(Boolean).map(function (r) { return specRow(r[0], r[1]); }).join('');
+}
+
+function priceRow(price, estimatedDelivery, labelA, labelB) {
+    return '<tr><td style="padding:24px 32px;border-bottom:1px solid #1f1f1f">'
+        + '<table width="100%" cellpadding="0" cellspacing="0"><tr>'
+        + '<td style="vertical-align:bottom">'
+        + '<div style="font-size:9px;font-weight:800;letter-spacing:0.2em;text-transform:uppercase;color:#3f3f46;margin-bottom:8px">' + labelA + '</div>'
+        + '<div style="font-size:30px;font-weight:900;letter-spacing:-0.03em;color:#fff">' + price + '</div>'
+        + '</td>'
+        + '<td align="right" style="vertical-align:bottom">'
+        + '<div style="font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#52525b;margin-bottom:4px">' + labelB + '</div>'
+        + '<div style="font-size:13px;font-weight:700;color:#a1a1aa">' + estimatedDelivery + '</div>'
+        + '</td>'
+        + '</tr></table></td></tr>';
+}
+
+function emailFooter() {
+    return '<tr><td style="padding:18px 32px;background:#0a0a0a">'
+        + '<p style="margin:0;font-size:9px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:#3f3f46">SFF Lab OÜ · Estonia · info@sfflab.ee</p>'
+        + '</td></tr>';
+}
+
+/* ── Internal notification email ── */
+function buildInternalHtml(d) {
+    var customerBlock = '<table width="100%" cellpadding="0" cellspacing="0">'
+        + specRow('Name',  d.name)
+        + specRow('Email', '<a href="mailto:' + d.email + '" style="color:#60a5fa;text-decoration:none;font-weight:600">' + d.email + '</a>')
+        + (d.phone ? specRow('Phone', d.phone) : '')
+        + '</table>';
+
+    var inner = navHeader('New Order Received')
+        + '<tr><td style="padding:20px 32px;background:#0d0d0d;border-bottom:1px solid #1f1f1f">'
+        + '<div style="font-size:9px;font-weight:800;letter-spacing:0.2em;text-transform:uppercase;color:#2563eb;margin-bottom:6px">Order Number</div>'
+        + '<div style="font-size:24px;font-weight:900;letter-spacing:0.05em;color:#fff">' + d.orderNumber + '</div>'
+        + '</td></tr>'
+        + '<tr><td style="padding:24px 32px;border-bottom:1px solid #1f1f1f">'
+        + '<div style="font-size:9px;font-weight:800;letter-spacing:0.2em;text-transform:uppercase;color:#3f3f46;margin-bottom:14px">Customer</div>'
+        + customerBlock + '</td></tr>'
+        + '<tr><td style="padding:24px 32px;border-bottom:1px solid #1f1f1f">'
+        + '<div style="font-size:9px;font-weight:800;letter-spacing:0.2em;text-transform:uppercase;color:#3f3f46;margin-bottom:14px">Configuration</div>'
+        + '<table width="100%" cellpadding="0" cellspacing="0">' + buildSpecRows(d) + '</table></td></tr>'
+        + priceRow(d.price, d.estimatedDelivery, 'Total', 'Est. Ready')
+        + emailFooter();
+
+    return emailWrap('SFF Lab — New Order', inner);
+}
+
+/* ── Customer confirmation email (ET + RU) ── */
+function buildConfirmationHtml(d) {
+    var inner = navHeader('Order Confirmed')
+        + '<tr><td style="padding:28px 32px;background:#0d0d0d;border-bottom:1px solid #1f1f1f;text-align:center">'
+        + '<div style="font-size:9px;font-weight:800;letter-spacing:0.25em;text-transform:uppercase;color:#2563eb;margin-bottom:10px">Order Number / Номер заказа</div>'
+        + '<div style="font-size:26px;font-weight:900;letter-spacing:0.06em;color:#fff">' + d.orderNumber + '</div>'
+        + '</td></tr>'
+        + '<tr><td style="padding:24px 32px 16px 32px">'
+        + '<div style="font-size:9px;font-weight:800;letter-spacing:0.2em;text-transform:uppercase;color:#2563eb;margin-bottom:10px">Eesti keeles</div>'
+        + '<p style="margin:0 0 6px;font-size:14px;color:#fff;font-weight:700">Täname tellimuse eest!</p>'
+        + '<p style="margin:0;font-size:13px;color:#a1a1aa;line-height:1.6">Teie tellimus <strong style="color:#fff">' + d.orderNumber + '</strong> on vastu võetud. Võtame teiega ühendust <strong style="color:#fff">24 tunni jooksul</strong> üksikasjade ja makse täpsustamiseks.</p>'
+        + '</td></tr>'
+        + '<tr><td style="padding:0 32px 24px 32px;border-bottom:1px solid #1f1f1f">'
+        + '<div style="font-size:9px;font-weight:800;letter-spacing:0.2em;text-transform:uppercase;color:#52525b;margin-bottom:10px">По-русски</div>'
+        + '<p style="margin:0 0 6px;font-size:14px;color:#fff;font-weight:700">Спасибо за заказ!</p>'
+        + '<p style="margin:0;font-size:13px;color:#a1a1aa;line-height:1.6">Ваш заказ <strong style="color:#fff">' + d.orderNumber + '</strong> принят. Мы свяжемся с вами в течение <strong style="color:#fff">24 часов</strong> для уточнения деталей и оплаты.</p>'
+        + '</td></tr>'
+        + '<tr><td style="padding:24px 32px;border-bottom:1px solid #1f1f1f">'
+        + '<div style="font-size:9px;font-weight:800;letter-spacing:0.2em;text-transform:uppercase;color:#3f3f46;margin-bottom:14px">Tellimus / Конфигурация</div>'
+        + '<table width="100%" cellpadding="0" cellspacing="0">' + buildSpecRows(d) + '</table></td></tr>'
+        + priceRow(d.price, d.estimatedDelivery, 'Kokku / Итого', 'Eeldatav / Готовность')
+        + '<tr><td style="padding:18px 32px;text-align:center">'
+        + '<p style="margin:0 0 4px;font-size:11px;color:#52525b">Küsimused / Вопросы</p>'
+        + '<a href="mailto:info@sfflab.ee" style="font-size:13px;font-weight:700;color:#60a5fa;text-decoration:none">info@sfflab.ee</a>'
+        + '</td></tr>'
+        + emailFooter();
+
+    return emailWrap('SFF Lab — Order Confirmed', inner);
 }
 
 module.exports = async function handler(req, res) {
@@ -93,6 +208,49 @@ module.exports = async function handler(req, res) {
                 paidAt:           new Date().toISOString()
             }));
             console.log('[LHV notify] order', orderReference, 'marked in_progress');
+
+            try {
+                var transporter = nodemailer.createTransport({
+                    host: 'smtp.gmail.com', port: 465, secure: true,
+                    auth: { user: process.env.GMAIL_USER, pass: process.env.GMAIL_APP_PASSWORD }
+                });
+                var d = {
+                    orderNumber:       order.orderNumber,
+                    name:              order.name,
+                    email:             order.email,
+                    phone:             order.phone,
+                    model:             order.model,
+                    os:                order.os,
+                    caseTxt:           order['case'],
+                    cpu:               order.cpu,
+                    gpu:               order.gpu,
+                    ram:               order.ram,
+                    ssd:               order.ssd,
+                    psu:               order.psu        || '',
+                    controller:        order.controller || '',
+                    scenario:          order.scenario   || '',
+                    price:             order.price,
+                    estimatedDelivery: order.estimatedDelivery
+                };
+                await Promise.all([
+                    transporter.sendMail({
+                        from:    'SFF Lab Orders <info@sfflab.ee>',
+                        to:      'info@sfflab.ee',
+                        replyTo: order.email,
+                        subject: order.orderNumber + ' — ' + order.model + ' — ' + order.price + ' — ' + order.name,
+                        html:    buildInternalHtml(d)
+                    }),
+                    transporter.sendMail({
+                        from:    'SFF Lab <info@sfflab.ee>',
+                        to:      order.email,
+                        subject: 'Your order ' + order.orderNumber + ' has been received — payment confirmed',
+                        html:    buildConfirmationHtml(d)
+                    })
+                ]);
+                console.log('[LHV notify] emails sent for order', orderReference);
+            } catch (mailErr) {
+                console.error('[LHV notify] mail error for order', orderReference, ':', mailErr.message);
+            }
 
         } else if (paymentState === 'cancelled' || paymentState === 'failed' || paymentState === 'abandoned') {
             await redis.set(orderKey, Object.assign({}, order, {

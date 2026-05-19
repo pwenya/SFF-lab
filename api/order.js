@@ -274,30 +274,5 @@ module.exports = async function handler(req, res) {
         return res.status(500).json({ error: 'Database error' });
     }
 
-    /* Send emails best-effort — never fail the order if mail fails */
-    try {
-        var transporter = nodemailer.createTransport({
-            host: 'smtp.gmail.com', port: 465, secure: true,
-            auth: { user: process.env.GMAIL_USER, pass: process.env.GMAIL_APP_PASSWORD }
-        });
-        await Promise.all([
-            transporter.sendMail({
-                from:    'SFF Lab Orders <info@sfflab.ee>',
-                to:      'info@sfflab.ee',
-                replyTo: email,
-                subject: orderNumber + ' — ' + model + ' — ' + price + ' — ' + name,
-                html:    buildInternalHtml(d)
-            }),
-            transporter.sendMail({
-                from:    'SFF Lab <info@sfflab.ee>',
-                to:      email,
-                subject: 'Your order ' + orderNumber + ' has been received',
-                html:    buildConfirmationHtml(d)
-            })
-        ]);
-    } catch (mailErr) {
-        console.error('Mail send error:', mailErr.message);
-    }
-
     return res.status(200).json({ success: true, orderNumber: orderNumber });
 };
