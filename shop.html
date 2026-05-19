@@ -461,7 +461,7 @@
                 _cart.push(Object.assign({}, product, { qty: 1 }));
             }
             updateCartUI();
-            showCartToast(product.title);
+            showCartToast();
         }
 
         function removeFromCart(title) {
@@ -558,15 +558,55 @@
         // Init — wait for nav to render
         setTimeout(updateNavCartBtn, 100);
 
-        function showCartToast(title) {
+        function showCartToast() {
             var existing = document.getElementById('cart-toast');
             if (existing) existing.remove();
-            var t = document.createElement('div');
-            t.id = 'cart-toast';
-            t.style.cssText = 'position:fixed;bottom:80px;right:24px;width:auto;z-index:9997;background:rgba(37,99,235,0.15);border:1px solid rgba(37,99,235,0.4);color:#60a5fa;padding:10px 16px;border-radius:12px;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;transition:opacity 0.3s;white-space:nowrap';
-            t.innerText = '✓ Lisatud ostukorvi';
-            document.body.appendChild(t);
-            setTimeout(function() { t.style.opacity = '0'; setTimeout(function() { t.remove(); }, 300); }, 2000);
+
+            var t   = document.createElement('div');
+            t.id    = 'cart-toast';
+            var btn  = document.getElementById('nav-action-btn');
+            var rect = btn ? btn.getBoundingClientRect() : null;
+            var visible = rect && rect.width > 0 && rect.height > 0;
+
+            if (visible) {
+                var cx = rect.left + rect.width / 2;
+                var ty = rect.bottom + 10;
+                t.style.cssText = 'position:fixed;top:' + ty + 'px;left:' + cx + 'px;'
+                    + 'transform:translateX(-50%) translateY(-6px) scale(0.75);opacity:0;'
+                    + 'width:auto;z-index:9997;background:#2563eb;color:white;'
+                    + 'padding:5px 14px;border-radius:100px;font-size:10px;font-weight:800;'
+                    + 'letter-spacing:0.12em;text-transform:uppercase;white-space:nowrap;pointer-events:none;'
+                    + 'transition:transform 0.3s cubic-bezier(0.16,1,0.3,1),opacity 0.2s ease';
+                t.innerText = '+ Ostukorvi';
+                document.body.appendChild(t);
+
+                requestAnimationFrame(function() {
+                    requestAnimationFrame(function() {
+                        t.style.transform = 'translateX(-50%) translateY(0) scale(1)';
+                        t.style.opacity   = '1';
+                    });
+                });
+
+                btn.style.transform = 'scale(1.1)';
+                setTimeout(function() { btn.style.transform = ''; }, 200);
+
+                setTimeout(function() {
+                    t.style.opacity   = '0';
+                    t.style.transform = 'translateX(-50%) translateY(-8px) scale(0.85)';
+                    setTimeout(function() { if (t.parentNode) t.remove(); }, 300);
+                }, 1500);
+            } else {
+                t.style.cssText = 'position:fixed;bottom:24px;right:24px;width:auto;z-index:9997;'
+                    + 'background:#2563eb;color:white;padding:10px 16px;border-radius:12px;'
+                    + 'font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;'
+                    + 'transition:opacity 0.3s;white-space:nowrap;pointer-events:none';
+                t.innerText = '+ Ostukorvi';
+                document.body.appendChild(t);
+                setTimeout(function() {
+                    t.style.opacity = '0';
+                    setTimeout(function() { if (t.parentNode) t.remove(); }, 300);
+                }, 1500);
+            }
         }
     </script>
     <script src="nav.js"></script>
