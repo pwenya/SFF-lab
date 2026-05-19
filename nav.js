@@ -107,6 +107,17 @@
         document.addEventListener('keydown', function (e) {
             if (e.key === 'Escape') window.closeModal();
         });
+
+        // Auto-open order status popup if ?order= param present in URL
+        (function() {
+            var params = new URLSearchParams(window.location.search);
+            var orderId = params.get('order');
+            if (!orderId) return;
+            var idEl = document.getElementById('order-id');
+            if (idEl) idEl.value = orderId.toUpperCase();
+            window.openModal();
+            setTimeout(function() { window.submitOrder(); }, 300);
+        })();
     }
 
     /* ── i18n ── */
