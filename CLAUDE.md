@@ -12,14 +12,19 @@ Sells custom-built gaming PCs with SteamOS or Windows. Prices are in EUR. No bac
 
 ## File structure
 ```
-index.html        — landing page (hero + pricing cards)
-boxes.html        — product showcase (Mood/Terra/Ridge cases with color switcher)
-configurator.html — build configurator (pricing logic via URL params)
-shop.html         — shop page (GPU/CPU tabs, brand sub-tabs, product cards)
-nav.js            — shared nav + modal + i18n engine (injected into every page)
-api/payment/      — Vercel serverless payment handlers (create.js, notify.js)
-IMG/              — product images (MoodBlack.1.png, TerraJade.2.png, etc.)
-start.bat         — launches local dev server
+index.html           — landing page (hero + pricing cards)
+boxes.html           — product showcase (Mood/Terra/Ridge cases with color switcher)
+configurator.html    — build configurator (pricing logic via URL params)
+shop.html            — shop page (GPU/CPU tabs, brand sub-tabs, product cards)
+admin.html           — order management panel (Google OAuth protected)
+legal.html           — legal pages (terms, privacy, returns)
+nav.js               — shared nav + modal + i18n engine (injected into every page)
+payment/success.html — post-payment success page
+api/payment/         — Vercel serverless payment handlers (create.js, notify.js)
+api/order.js         — order creation endpoint
+api/update-status.js — order status update + customer email notification
+IMG/                 — product images (MoodBlack.1.png, TerraJade.2.png, etc.)
+start.bat            — launches local dev server
 ```
 
 ## nav.js — how the shared nav works
@@ -34,8 +39,9 @@ It also defines these globals used by all pages:
 **Rule: any site-wide UI (footer, banners, etc.) belongs in nav.js — never duplicate it in individual HTML files.**
 
 ### Nav links
-- Desktop: Pricing, Shop (DEMO badge), Status button — inside `class="hidden min-[900px]:flex"`
+- Desktop: Pricing (`/#pricing`), Shop (DEMO badge), Status button — inside `class="hidden min-[900px]:flex"`
 - Mobile: Shop link added separately with `class="min-[900px]:hidden flex ..."` before the desktop nav div, so it appears only on narrow screens
+- Logo links to `/` (not `index.html`) — Vercel serves index.html at `/` but `index.html` as a path returns 404
 
 ### Auto-open order modal
 `_init()` in nav.js checks for `?order=` URL param and auto-opens + submits the order status modal. Guards:
@@ -60,8 +66,9 @@ Injected by nav.js via `insertAdjacentHTML('beforeend', FOOTER_HTML)`. Structure
 - **`pageTranslations` must be defined BEFORE the `<script src="nav.js">` tag** — nav.js reads it at `window.load` time
 
 ## Paths — IMPORTANT
-All internal links must be **relative** (e.g. `boxes.html`, `configurator.html`, `index.html`).
-Never use absolute paths like `/boxes` or `/` — the site is opened via file:// without a server.
+The site is deployed on Vercel at `https://sfflab.ee`. Use **root-relative paths** (`/`, `/#pricing`, `/boxes.html`) for nav links — NOT `index.html` or `../index.html`. Relative file paths (`boxes.html`, `configurator.html`) are fine for same-directory links, but the homepage must always be `/`.
+
+**Do NOT use `index.html` as the homepage link anywhere** — on Vercel this causes a 404. Always use `/`.
 
 ## Design system
 - Background: `#050505`
@@ -148,6 +155,11 @@ Never use absolute paths like `/boxes` or `/` — the site is opened via file://
 - `COLOR_MAP`: `completed` → `#4ade80`, `cancelled` → `#f87171`.
 - Sends bilingual ET/RU status notification email to customer on every status change.
 
+### payment/success.html
+- Shown after successful LHV payment redirect (`?order=` param pre-fills order number display).
+- Uses `../nav.js` for shared nav. All links use root-relative paths (`/`).
+- "Back to home" button: `href="/"`.
+
 ### admin.html
 - Order table grid: `32px 160px 100px 1.2fr 130px 90px 130px 130px` — first column is checkbox.
 - **Bulk actions:** select-all checkbox in header, per-row checkboxes, floating bulk bar (bottom center) appears when rows selected. `applyBulkStatus()` updates all selected orders in parallel.
@@ -157,6 +169,11 @@ Never use absolute paths like `/boxes` or `/` — the site is opened via file://
 - Date column shows date + time (`HH:MM`) on separate line.
 - Customer detail panel shows `paymentMethod` row if present on the order object.
 - Mobile: hides columns 4,5,6,8 (Customer, Config, Price, Update); shows checkbox(1), Order#(2), Date(3), Status(7).
+
+## Vercel Analytics
+All HTML pages include `<script defer src="/_vercel/insights/script.js"></script>` before `</head>`.
+Currently added to: index.html, boxes.html, configurator.html, shop.html, legal.html, admin.html.
+If adding a new page, include this script tag.
 
 ## Legal
 - Company: SFF Lab OÜ

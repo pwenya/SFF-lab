@@ -61,9 +61,32 @@ function setCors(req, res) {
     res.setHeader('Vary', 'Origin');
 }
 
+function specRow(label, value) {
+    return '<tr>'
+        + '<td style="padding:8px 0;font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#52525b;width:100px;border-bottom:1px solid #1f1f1f;vertical-align:top">' + label + '</td>'
+        + '<td style="padding:8px 0 8px 12px;font-size:12px;color:#e4e4e7;border-bottom:1px solid #1f1f1f;word-break:break-word">' + value + '</td>'
+        + '</tr>';
+}
+
+function buildSpecRows(order) {
+    var rows = [
+        ['Model', order.model],
+        ['OS', order.os],
+        ['Case', order['case']],
+        ['CPU', order.cpu],
+        ['GPU', order.gpu],
+        ['RAM', order.ram],
+        ['SSD', order.ssd],
+        order.psu        ? ['PSU', order.psu]               : null,
+        order.controller ? ['Controller', order.controller] : null,
+    ].filter(Boolean);
+    return rows.map(function(r) { return specRow(r[0], r[1]); }).join('');
+}
+
 function buildStatusNotificationHtml(order, newStatus) {
-    var etLabel = STATUS_ET[newStatus] || newStatus;
-    var ruLabel = STATUS_RU[newStatus] || newStatus;
+    var lang = order.language || 'et';
+    var isRu = lang === 'ru';
+    var isEn = lang === 'en';
 
     var COLOR_MAP = {
         pending:         '#a1a1aa',
@@ -76,49 +99,107 @@ function buildStatusNotificationHtml(order, newStatus) {
     };
     var statusColor = COLOR_MAP[newStatus] || '#a1a1aa';
 
+    var STATUS_EN = {
+        pending: 'Pending', pending_payment: 'Awaiting Payment',
+        in_progress: 'In Progress', ready: 'Ready',
+        shipped: 'Shipped', completed: 'Completed', cancelled: 'Cancelled'
+    };
+
+    var statusLabel = isRu ? (STATUS_RU[newStatus] || newStatus)
+                   : isEn ? (STATUS_EN[newStatus] || newStatus)
+                   : (STATUS_ET[newStatus] || newStatus);
+
+    var texts = {
+        et: {
+            subtitle:   'Tellimuse uuendus · ' + order.orderNumber,
+            orderLabel: 'Tellimuse number',
+            heading:    'Tellimuse staatus uuendatud.',
+            body:       'Teie tellimuse <strong style="color:#fff">' + order.orderNumber + '</strong> staatus on muutunud: <strong style="color:' + statusColor + '">' + statusLabel + '</strong>.'
+                + (newStatus === 'shipped'   ? ' Tellimus on teel!' : '')
+                + (newStatus === 'ready'     ? ' Võtame teiega varsti ühendust.' : '')
+                + (newStatus === 'cancelled' ? ' Võtke meiega ühendust küsimuste korral.' : ''),
+            specLabel:  'Tellimus',
+            priceLabel: 'Kokku',
+            delivLabel: 'Eeldatav valmimisaeg',
+            trackBtn:   'Tellimuse staatus',
+            question:   'Küsimused'
+        },
+        ru: {
+            subtitle:   'Обновление заказа · ' + order.orderNumber,
+            orderLabel: 'Номер заказа',
+            heading:    'Статус заказа обновлён.',
+            body:       'Статус вашего заказа <strong style="color:#fff">' + order.orderNumber + '</strong> изменён на: <strong style="color:' + statusColor + '">' + statusLabel + '</strong>.'
+                + (newStatus === 'shipped'   ? ' Заказ в пути!' : '')
+                + (newStatus === 'ready'     ? ' Скоро свяжемся с вами.' : '')
+                + (newStatus === 'cancelled' ? ' Свяжитесь с нами по любым вопросам.' : ''),
+            specLabel:  'Конфигурация',
+            priceLabel: 'Итого',
+            delivLabel: 'Ожидаемая готовность',
+            trackBtn:   'Статус заказа',
+            question:   'Вопросы'
+        },
+        en: {
+            subtitle:   'Order Update · ' + order.orderNumber,
+            orderLabel: 'Order Number',
+            heading:    'Order status updated.',
+            body:       'Your order <strong style="color:#fff">' + order.orderNumber + '</strong> status has changed to: <strong style="color:' + statusColor + '">' + statusLabel + '</strong>.'
+                + (newStatus === 'shipped'   ? ' Your order is on its way!' : '')
+                + (newStatus === 'ready'     ? ' We will contact you shortly.' : '')
+                + (newStatus === 'cancelled' ? ' Please contact us if you have questions.' : ''),
+            specLabel:  'Configuration',
+            priceLabel: 'Total',
+            delivLabel: 'Estimated Ready',
+            trackBtn:   'Track Order',
+            question:   'Questions'
+        }
+    };
+
+    var t = texts[lang] || texts['et'];
+
+    var inner = ''
+        + '<tr><td style="background:#0a0a0a;padding:28px 32px;border-bottom:1px solid #1f1f1f">'
+        + '<div style="font-size:22px;font-weight:900;letter-spacing:-0.03em;color:#fff;text-transform:uppercase">SFF LAB<span style="color:#2563eb">.</span></div>'
+        + '<div style="font-size:9px;font-weight:800;letter-spacing:0.25em;text-transform:uppercase;color:#2563eb;margin-top:6px">' + t.subtitle + '</div>'
+        + '</td></tr>'
+        + '<tr><td style="padding:28px 32px;background:#0d0d0d;border-bottom:1px solid #1f1f1f;text-align:center">'
+        + '<div style="font-size:9px;font-weight:800;letter-spacing:0.25em;text-transform:uppercase;color:#2563eb;margin-bottom:10px">' + t.orderLabel + '</div>'
+        + '<div style="font-size:26px;font-weight:900;letter-spacing:0.06em;color:#fff;margin-bottom:16px">' + order.orderNumber + '</div>'
+        + '<div style="display:inline-block;padding:8px 24px;border-radius:100px;background:' + statusColor + '18;border:1px solid ' + statusColor + '44">'
+        + '<span style="font-size:12px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:' + statusColor + '">' + statusLabel + '</span>'
+        + '</div>'
+        + '</td></tr>'
+        + '<tr><td style="padding:24px 32px;border-bottom:1px solid #1f1f1f">'
+        + '<p style="margin:0 0 6px;font-size:14px;color:#fff;font-weight:700">' + t.heading + '</p>'
+        + '<p style="margin:0;font-size:13px;color:#a1a1aa;line-height:1.6">' + t.body + '</p>'
+        + '</td></tr>'
+        + '<tr><td style="padding:24px 32px;border-bottom:1px solid #1f1f1f">'
+        + '<div style="font-size:9px;font-weight:800;letter-spacing:0.2em;text-transform:uppercase;color:#3f3f46;margin-bottom:14px">' + t.specLabel + '</div>'
+        + '<table width="100%" cellpadding="0" cellspacing="0">' + buildSpecRows(order) + '</table>'
+        + '</td></tr>'
+        + '<tr><td style="padding:24px 32px;border-bottom:1px solid #1f1f1f">'
+        + '<table width="100%" cellpadding="0" cellspacing="0"><tr>'
+        + '<td style="vertical-align:bottom">'
+        + '<div style="font-size:9px;font-weight:800;letter-spacing:0.2em;text-transform:uppercase;color:#3f3f46;margin-bottom:8px">' + t.priceLabel + '</div>'
+        + '<div style="font-size:30px;font-weight:900;letter-spacing:-0.03em;color:#fff">' + (order.price || '') + '</div>'
+        + '</td>'
+        + '<td align="right" style="vertical-align:bottom">'
+        + '<div style="font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#52525b;margin-bottom:4px">' + t.delivLabel + '</div>'
+        + '<div style="font-size:13px;font-weight:700;color:#a1a1aa">' + (order.estimatedDelivery || '') + '</div>'
+        + '</td>'
+        + '</tr></table>'
+        + '</td></tr>'
+        + '<tr><td style="padding:24px 32px;text-align:center">'
+        + '<a href="https://sfflab.ee/?order=' + order.orderNumber + '" style="display:inline-block;padding:12px 28px;background:#2563eb;color:#fff;font-size:12px;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;text-decoration:none;border-radius:12px">' + t.trackBtn + '</a>'
+        + '</td></tr>'
+        + '<tr><td style="padding:18px 32px;background:#0a0a0a">'
+        + '<p style="margin:0;font-size:9px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:#3f3f46">SFF Lab OÜ · 2026 · Estonia · info@sfflab.ee</p>'
+        + '</td></tr>';
+
     return '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>SFF Lab Order Update</title></head>'
         + '<body style="margin:0;padding:0;background:#0a0a0a;font-family:\'Helvetica Neue\',Helvetica,Arial,sans-serif">'
         + '<table width="100%" cellpadding="0" cellspacing="0" style="background:#0a0a0a;padding:40px 16px"><tr><td align="center">'
-        + '<table width="100%" cellpadding="0" cellspacing="0" style="max-width:480px;background:#111111;border:1px solid #222222;border-radius:16px;overflow:hidden">'
-        + '<tr><td style="background:#0a0a0a;padding:24px 32px;border-bottom:1px solid #1f1f1f">'
-        + '<div style="font-size:20px;font-weight:900;letter-spacing:-0.03em;color:#fff;text-transform:uppercase">SFF LAB<span style="color:#2563eb">.</span></div>'
-        + '<div style="font-size:9px;font-weight:800;letter-spacing:0.25em;text-transform:uppercase;color:#2563eb;margin-top:4px">Order Status Update</div>'
-        + '</td></tr>'
-
-        /* Order + new status */
-        + '<tr><td style="padding:28px 32px;border-bottom:1px solid #1f1f1f;text-align:center">'
-        + '<div style="font-size:9px;font-weight:800;letter-spacing:0.2em;text-transform:uppercase;color:#3f3f46;margin-bottom:6px">Order</div>'
-        + '<div style="font-size:18px;font-weight:900;letter-spacing:0.04em;color:#fff;margin-bottom:20px">' + order.orderNumber + '</div>'
-        + '<div style="display:inline-block;padding:8px 24px;border-radius:100px;background:' + statusColor + '18;border:1px solid ' + statusColor + '44">'
-        + '<span style="font-size:13px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:' + statusColor + '">' + etLabel + ' / ' + ruLabel + '</span>'
-        + '</div>'
-        + '</td></tr>'
-
-        /* Message ET + RU */
-        + '<tr><td style="padding:24px 32px 16px 32px">'
-        + '<div style="font-size:9px;font-weight:800;letter-spacing:0.2em;text-transform:uppercase;color:#2563eb;margin-bottom:8px">Eesti keeles</div>'
-        + '<p style="margin:0;font-size:13px;color:#a1a1aa;line-height:1.6">'
-        + 'Teie tellimuse <strong style="color:#fff">' + order.orderNumber + '</strong> staatus on uuendatud: <strong style="color:' + statusColor + '">' + etLabel + '</strong>.'
-        + (newStatus === 'shipped' ? ' Tellimus on teel!' : '')
-        + (newStatus === 'ready'   ? ' Võtame teiega varsti ühendust.' : '')
-        + '</p>'
-        + '</td></tr>'
-        + '<tr><td style="padding:0 32px 24px 32px;border-bottom:1px solid #1f1f1f">'
-        + '<div style="font-size:9px;font-weight:800;letter-spacing:0.2em;text-transform:uppercase;color:#52525b;margin-bottom:8px">По-русски</div>'
-        + '<p style="margin:0;font-size:13px;color:#a1a1aa;line-height:1.6">'
-        + 'Статус вашего заказа <strong style="color:#fff">' + order.orderNumber + '</strong> изменён на: <strong style="color:' + statusColor + '">' + ruLabel + '</strong>.'
-        + (newStatus === 'shipped' ? ' Заказ в пути!' : '')
-        + (newStatus === 'ready'   ? ' Скоро свяжемся с вами.' : '')
-        + '</p>'
-        + '</td></tr>'
-
-        + '<tr><td style="padding:16px 32px;text-align:center">'
-        + '<p style="margin:0 0 4px;font-size:11px;color:#52525b">Küsimused / Вопросы</p>'
-        + '<a href="mailto:info@sfflab.ee" style="font-size:13px;font-weight:700;color:#60a5fa;text-decoration:none">info@sfflab.ee</a>'
-        + '</td></tr>'
-        + '<tr><td style="padding:16px 32px;background:#0a0a0a">'
-        + '<p style="margin:0;font-size:9px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:#3f3f46">SFF Lab OÜ · Estonia</p>'
-        + '</td></tr>'
+        + '<table width="100%" cellpadding="0" cellspacing="0" style="max-width:540px;background:#111111;border:1px solid #222222;border-radius:16px;overflow:hidden">'
+        + inner
         + '</table></td></tr></table></body></html>';
 }
 
@@ -158,10 +239,16 @@ module.exports = async function handler(req, res) {
                     host: 'smtp.gmail.com', port: 465, secure: true,
                     auth: { user: process.env.GMAIL_USER, pass: process.env.GMAIL_APP_PASSWORD }
                 });
+                var STATUS_EN = {
+                    pending: 'Pending', pending_payment: 'Awaiting Payment',
+                    in_progress: 'In Progress', ready: 'Ready',
+                    shipped: 'Shipped', completed: 'Completed', cancelled: 'Cancelled'
+                };
+                var lang = order.language || 'et';
                 await transporter.sendMail({
                     from:    'SFF Lab <info@sfflab.ee>',
                     to:      order.email,
-                    subject: 'SFF Lab: ' + orderNumber + ' — ' + (STATUS_ET[newStatus] || newStatus) + ' / ' + (STATUS_RU[newStatus] || newStatus),
+                    subject: 'SFF Lab: ' + orderNumber + ' — ' + (lang === 'ru' ? (STATUS_RU[newStatus] || newStatus) : lang === 'en' ? (STATUS_EN[newStatus] || newStatus) : (STATUS_ET[newStatus] || newStatus)),
                     html:    buildStatusNotificationHtml(order, newStatus)
                 });
             } catch (mailErr) {
