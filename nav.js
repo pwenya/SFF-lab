@@ -29,6 +29,7 @@
         + '<div>'
         + '<div class="text-[9px] font-extrabold uppercase tracking-[0.2em] text-zinc-600">SFF Lab OÜ · 17506407 · EE102985942</div>'
         + '<div class="text-[9px] font-semibold uppercase tracking-[0.15em] text-zinc-700 mt-1"><a href="mailto:info@sfflab.ee" class="hover:text-zinc-400 transition" style="text-decoration:none">info@sfflab.ee</a></div>'
+        + '<div class="text-[9px] font-semibold uppercase tracking-[0.15em] text-zinc-700 mt-1">2026</div>'
         + '</div>'
         + '<div class="md:text-right">'
         + '<div class="text-[9px] font-bold uppercase tracking-[0.2em] text-zinc-600" data-key="footer-built">Ehitatud Eestis</div>'
