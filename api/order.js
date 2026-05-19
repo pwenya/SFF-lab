@@ -69,8 +69,8 @@ function validateInputs(body) {
     if (!phone || !isValidPhone(phone)) {
         return { error: 'Phone must be 6–20 characters (digits, +, -, spaces, parentheses).' };
     }
-    if (isNaN(priceNum) || priceNum < 1000 || priceNum > 10000) {
-        return { error: 'Price must be a number between 1000 and 10000.' };
+    if (isNaN(priceNum) || priceNum < 1 || priceNum > 10000) {
+        return { error: 'Price must be a number between 1 and 10000.' };
     }
     return null;
 }
