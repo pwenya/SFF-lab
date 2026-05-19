@@ -122,34 +122,69 @@ function buildInternalHtml(d) {
     return emailWrap('SFF Lab — New Order', inner);
 }
 
-/* ── Customer confirmation email (ET + RU) ── */
+/* ── Customer confirmation email (ET / RU / EN) ── */
 function buildConfirmationHtml(d) {
-    var inner = navHeader('Order Confirmed')
+    var lang = d.language || 'et';
+
+    var texts = {
+        et: {
+            subtitle:  'Makse õnnestus',
+            orderLabel:'Tellimuse number',
+            heading:   'Makse õnnestus!',
+            body:      'Teie makse tellimuse <strong style="color:#fff">' + d.orderNumber + '</strong> eest on edukalt laekunud. Teie tellimus on võetud tootmisse.',
+            specLabel: 'Tellimus',
+            priceLabel:'Kokku',
+            delivLabel:'Eeldatav valmimisaeg',
+            question:  'Küsimused',
+            subject:   'Makse õnnestus — tellimus ' + d.orderNumber
+        },
+        ru: {
+            subtitle:  'Оплата прошла успешно',
+            orderLabel:'Номер заказа',
+            heading:   'Оплата прошла успешно!',
+            body:      'Оплата по заказу <strong style="color:#fff">' + d.orderNumber + '</strong> успешно получена. Ваш заказ принят в производство.',
+            specLabel: 'Конфигурация',
+            priceLabel:'Итого',
+            delivLabel:'Ожидаемая готовность',
+            question:  'Вопросы',
+            subject:   'Оплата подтверждена — заказ ' + d.orderNumber
+        },
+        en: {
+            subtitle:  'Payment Confirmed',
+            orderLabel:'Order Number',
+            heading:   'Payment confirmed!',
+            body:      'Your payment for order <strong style="color:#fff">' + d.orderNumber + '</strong> has been successfully received. Your order is now in production.',
+            specLabel: 'Configuration',
+            priceLabel:'Total',
+            delivLabel:'Estimated Ready',
+            question:  'Questions',
+            subject:   'Payment confirmed — order ' + d.orderNumber
+        }
+    };
+
+    var t = texts[lang] || texts['et'];
+
+    var inner = navHeader(t.subtitle)
         + '<tr><td style="padding:28px 32px;background:#0d0d0d;border-bottom:1px solid #1f1f1f;text-align:center">'
-        + '<div style="font-size:9px;font-weight:800;letter-spacing:0.25em;text-transform:uppercase;color:#2563eb;margin-bottom:10px">Order Number / Номер заказа</div>'
+        + '<div style="font-size:9px;font-weight:800;letter-spacing:0.25em;text-transform:uppercase;color:#2563eb;margin-bottom:10px">' + t.orderLabel + '</div>'
         + '<div style="font-size:26px;font-weight:900;letter-spacing:0.06em;color:#fff">' + d.orderNumber + '</div>'
         + '</td></tr>'
-        + '<tr><td style="padding:24px 32px 16px 32px">'
-        + '<div style="font-size:9px;font-weight:800;letter-spacing:0.2em;text-transform:uppercase;color:#2563eb;margin-bottom:10px">Eesti keeles</div>'
-        + '<p style="margin:0 0 6px;font-size:14px;color:#fff;font-weight:700">Täname tellimuse eest!</p>'
-        + '<p style="margin:0;font-size:13px;color:#a1a1aa;line-height:1.6">Teie tellimus <strong style="color:#fff">' + d.orderNumber + '</strong> on vastu võetud. Võtame teiega ühendust <strong style="color:#fff">24 tunni jooksul</strong> üksikasjade ja makse täpsustamiseks.</p>'
-        + '</td></tr>'
-        + '<tr><td style="padding:0 32px 24px 32px;border-bottom:1px solid #1f1f1f">'
-        + '<div style="font-size:9px;font-weight:800;letter-spacing:0.2em;text-transform:uppercase;color:#52525b;margin-bottom:10px">По-русски</div>'
-        + '<p style="margin:0 0 6px;font-size:14px;color:#fff;font-weight:700">Спасибо за заказ!</p>'
-        + '<p style="margin:0;font-size:13px;color:#a1a1aa;line-height:1.6">Ваш заказ <strong style="color:#fff">' + d.orderNumber + '</strong> принят. Мы свяжемся с вами в течение <strong style="color:#fff">24 часов</strong> для уточнения деталей и оплаты.</p>'
+        + '<tr><td style="padding:24px 32px;border-bottom:1px solid #1f1f1f">'
+        + '<div style="font-size:32px;margin-bottom:12px">✓</div>'
+        + '<p style="margin:0 0 6px;font-size:14px;color:#fff;font-weight:700">' + t.heading + '</p>'
+        + '<p style="margin:0;font-size:13px;color:#a1a1aa;line-height:1.6">' + t.body + '</p>'
         + '</td></tr>'
         + '<tr><td style="padding:24px 32px;border-bottom:1px solid #1f1f1f">'
-        + '<div style="font-size:9px;font-weight:800;letter-spacing:0.2em;text-transform:uppercase;color:#3f3f46;margin-bottom:14px">Tellimus / Конфигурация</div>'
+        + '<div style="font-size:9px;font-weight:800;letter-spacing:0.2em;text-transform:uppercase;color:#3f3f46;margin-bottom:14px">' + t.specLabel + '</div>'
         + '<table width="100%" cellpadding="0" cellspacing="0">' + buildSpecRows(d) + '</table></td></tr>'
-        + priceRow(d.price, d.estimatedDelivery, 'Kokku / Итого', 'Eeldatav / Готовность')
+        + priceRow(d.price, d.estimatedDelivery, t.priceLabel, t.delivLabel)
         + '<tr><td style="padding:18px 32px;text-align:center">'
-        + '<p style="margin:0 0 4px;font-size:11px;color:#52525b">Küsimused / Вопросы</p>'
+        + '<p style="margin:0 0 4px;font-size:11px;color:#52525b">' + t.question + '</p>'
         + '<a href="mailto:info@sfflab.ee" style="font-size:13px;font-weight:700;color:#60a5fa;text-decoration:none">info@sfflab.ee</a>'
         + '</td></tr>'
         + emailFooter();
 
-    return emailWrap('SFF Lab — Order Confirmed', inner);
+    return emailWrap('SFF Lab — ' + t.subtitle, inner);
 }
 
 module.exports = async function handler(req, res) {
@@ -230,7 +265,8 @@ module.exports = async function handler(req, res) {
                     controller:        order.controller || '',
                     scenario:          order.scenario   || '',
                     price:             order.price,
-                    estimatedDelivery: order.estimatedDelivery
+                    estimatedDelivery: order.estimatedDelivery,
+                    language:          order.language   || 'et'
                 };
                 await Promise.all([
                     transporter.sendMail({
@@ -243,7 +279,9 @@ module.exports = async function handler(req, res) {
                     transporter.sendMail({
                         from:    'SFF Lab <info@sfflab.ee>',
                         to:      order.email,
-                        subject: 'Your order ' + order.orderNumber + ' has been received — payment confirmed',
+                        subject: order.language === 'ru' ? ('Оплата подтверждена — заказ ' + order.orderNumber)
+                               : order.language === 'en' ? ('Payment confirmed — order ' + order.orderNumber)
+                               : ('Makse õnnestus — tellimus ' + order.orderNumber),
                         html:    buildConfirmationHtml(d)
                     })
                 ]);
