@@ -128,49 +128,38 @@ function buildConfirmationHtml(d) {
 
     var texts = {
         et: {
-            subtitle:  'Makse õnnestus',
-            orderLabel:'Tellimuse number',
-            heading:   'Makse õnnestus!',
-            body:      'Teie makse tellimuse <strong style="color:#fff">' + d.orderNumber + '</strong> eest on edukalt laekunud. Teie tellimus on võetud tootmisse.',
+            subtitle:  'Makse õnnestus · ' + d.orderNumber,
             specLabel: 'Tellimus',
             priceLabel:'Kokku',
             delivLabel:'Eeldatav valmimisaeg',
-            question:  'Küsimused',
-            subject:   'Makse õnnestus — tellimus ' + d.orderNumber
+            heading:   'Tellimus on tootmises.',
+            body:      'Teie makse on edukalt laekunud. Alustame ehitamisega.',
+            subject:   'Makse õnnestus — ' + d.orderNumber
         },
         ru: {
-            subtitle:  'Оплата прошла успешно',
-            orderLabel:'Номер заказа',
-            heading:   'Оплата прошла успешно!',
-            body:      'Оплата по заказу <strong style="color:#fff">' + d.orderNumber + '</strong> успешно получена. Ваш заказ принят в производство.',
+            subtitle:  'Оплата прошла · ' + d.orderNumber,
             specLabel: 'Конфигурация',
             priceLabel:'Итого',
             delivLabel:'Ожидаемая готовность',
-            question:  'Вопросы',
-            subject:   'Оплата подтверждена — заказ ' + d.orderNumber
+            heading:   'Заказ принят в производство.',
+            body:      'Оплата успешно получена. Приступаем к сборке.',
+            subject:   'Оплата подтверждена — ' + d.orderNumber
         },
         en: {
-            subtitle:  'Payment Confirmed',
-            orderLabel:'Order Number',
-            heading:   'Payment confirmed!',
-            body:      'Your payment for order <strong style="color:#fff">' + d.orderNumber + '</strong> has been successfully received. Your order is now in production.',
+            subtitle:  'Payment confirmed · ' + d.orderNumber,
             specLabel: 'Configuration',
             priceLabel:'Total',
             delivLabel:'Estimated Ready',
-            question:  'Questions',
-            subject:   'Payment confirmed — order ' + d.orderNumber
+            heading:   'Order is in production.',
+            body:      'Your payment has been received. We are starting the build.',
+            subject:   'Payment confirmed — ' + d.orderNumber
         }
     };
 
     var t = texts[lang] || texts['et'];
 
     var inner = navHeader(t.subtitle)
-        + '<tr><td style="padding:28px 32px;background:#0d0d0d;border-bottom:1px solid #1f1f1f;text-align:center">'
-        + '<div style="font-size:9px;font-weight:800;letter-spacing:0.25em;text-transform:uppercase;color:#2563eb;margin-bottom:10px">' + t.orderLabel + '</div>'
-        + '<div style="font-size:26px;font-weight:900;letter-spacing:0.06em;color:#fff">' + d.orderNumber + '</div>'
-        + '</td></tr>'
         + '<tr><td style="padding:24px 32px;border-bottom:1px solid #1f1f1f">'
-        + '<div style="font-size:32px;margin-bottom:12px">✓</div>'
         + '<p style="margin:0 0 6px;font-size:14px;color:#fff;font-weight:700">' + t.heading + '</p>'
         + '<p style="margin:0;font-size:13px;color:#a1a1aa;line-height:1.6">' + t.body + '</p>'
         + '</td></tr>'
@@ -178,14 +167,14 @@ function buildConfirmationHtml(d) {
         + '<div style="font-size:9px;font-weight:800;letter-spacing:0.2em;text-transform:uppercase;color:#3f3f46;margin-bottom:14px">' + t.specLabel + '</div>'
         + '<table width="100%" cellpadding="0" cellspacing="0">' + buildSpecRows(d) + '</table></td></tr>'
         + priceRow(d.price, d.estimatedDelivery, t.priceLabel, t.delivLabel)
-        + '<tr><td style="padding:18px 32px;text-align:center">'
+        + '<tr><td style="padding:24px 32px;text-align:center">'
         + '<a href="https://sfflab.ee/?order=' + d.orderNumber + '" style="display:inline-block;padding:12px 28px;background:#2563eb;color:#fff;font-size:12px;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;text-decoration:none;border-radius:12px">'
         + (lang === 'ru' ? 'Статус заказа' : (lang === 'en' ? 'Track Order' : 'Tellimuse staatus'))
         + '</a>'
         + '</td></tr>'
         + emailFooter();
 
-    return emailWrap('SFF Lab — ' + t.subtitle, inner);
+    return emailWrap('SFF Lab · ' + t.subtitle, inner);
 }
 
 module.exports = async function handler(req, res) {
