@@ -113,6 +113,9 @@
             var params = new URLSearchParams(window.location.search);
             var orderId = params.get('order');
             if (!orderId) return;
+            // Only auto-open if explicitly triggered via email link, not after payment redirect
+            if (document.referrer && document.referrer.includes('payment')) return;
+            if (window.location.pathname.includes('success')) return;
             var idEl = document.getElementById('order-id');
             if (idEl) idEl.value = orderId.toUpperCase();
             window.openModal();
