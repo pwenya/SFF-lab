@@ -22,14 +22,16 @@ function isAdmin(req) {
     try { jwt.verify(token, process.env.NEXTAUTH_SECRET); return true; } catch (e) { return false; }
 }
 
-var VALID_STATUSES = ['pending', 'pending_payment', 'in_progress', 'ready', 'shipped'];
+var VALID_STATUSES = ['pending', 'pending_payment', 'in_progress', 'ready', 'shipped', 'completed', 'cancelled'];
 
 var STATUS_ET = {
     pending:         'Ootel',
     pending_payment: 'Ootel makset',
     in_progress:     'Töös',
     ready:           'Valmis',
-    shipped:         'Saadetud'
+    shipped:         'Saadetud',
+    completed:       'Lõpetatud',
+    cancelled:       'Tühistatud'
 };
 
 var STATUS_RU = {
@@ -37,7 +39,9 @@ var STATUS_RU = {
     pending_payment: 'Ожидает оплаты',
     in_progress:     'В работе',
     ready:           'Готово',
-    shipped:         'Отправлено'
+    shipped:         'Отправлено',
+    completed:       'Завершён',
+    cancelled:       'Отменён'
 };
 
 function createRedis() {
@@ -66,7 +70,9 @@ function buildStatusNotificationHtml(order, newStatus) {
         pending_payment: '#f59e0b',
         in_progress:     '#3b82f6',
         ready:           '#22c55e',
-        shipped:         '#a78bfa'
+        shipped:         '#a78bfa',
+        completed:       '#4ade80',
+        cancelled:       '#f87171'
     };
     var statusColor = COLOR_MAP[newStatus] || '#a1a1aa';
 
