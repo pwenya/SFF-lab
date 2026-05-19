@@ -30,7 +30,7 @@ module.exports = async function handler(req, res) {
     var customerEmail = stripHtml(body.customerEmail  || '');
     var description   = stripHtml(body.description    || '');
 
-    if (!amountCents || amountCents < 100 || !orderId) {
+    if (!amountCents || amountCents < 1 || !orderId) {
         return res.status(400).json({ error: 'Missing or invalid fields: amount and orderId required' });
     }
 
