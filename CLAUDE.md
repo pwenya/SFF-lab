@@ -141,6 +141,7 @@ The site is deployed on Vercel at `https://sfflab.ee`. Use **root-relative paths
   - Nav button is always blue on shop page; shows `Ostukorv · N` / `Корзина · N` / `Cart · N` when items present, plain label when empty.
   - Toast on add: pops below the nav button (reads its `getBoundingClientRect()`), spring animation, language-aware text: ET `Lisatud`, RU `Добавлено`, EN `Added`. Falls back to bottom-right on mobile (button hidden, rect is zero).
   - All cart overlay static texts use `data-key`: `cart-title`, `cart-total-label`, `cart-checkout`, `cart-empty-text` — translated via `pageTranslations`.
+  - Product card "add to cart" buttons use `data-key="cart-add"`: ET `+ Ostukorvi`, RU `+ В корзину`, EN `+ Add to cart`.
 
 ## Token efficiency rules
 - Work on ONE file at a time unless explicitly told otherwise
