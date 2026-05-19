@@ -7,7 +7,7 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link rel="apple-touch-icon" href="/favicon.svg">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #050505; color: white; overflow-x: hidden; }
 
@@ -74,6 +74,10 @@
         .card-specs { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 16px; font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: #52525b; }
         .spec-label { color: #3f3f46; }
         .spec-val { color: #71717a; }
+
+        /* ── Trust bar — hide scrollbar so it never adds height ── */
+        .trust-scroller { scrollbar-width: none; }
+        .trust-scroller::-webkit-scrollbar { display: none; }
 
         /* ── Size comparison ── */
         .size-bar { border-radius: 18px; display: flex; align-items: center; justify-content: center; }
@@ -145,7 +149,7 @@
 <body class="antialiased text-zinc-100">
 
     <div class="pt-[73px] md:pt-[88px]">
-        <div class="border-b border-white/5 py-3 overflow-x-auto">
+        <div class="trust-scroller border-b border-white/5 py-3 overflow-x-auto">
             <div class="flex items-center justify-start md:justify-center gap-6 md:gap-10 px-6 whitespace-nowrap text-zinc-400 text-[9px] font-black uppercase tracking-[0.2em]">
                 <span data-key="trust-1">Euroopa mini-PC turg kasvab 7% aastas</span>
                 <span class="text-zinc-600 shrink-0">·</span>
@@ -165,7 +169,7 @@
             <div class="flex flex-col lg:flex-row items-center lg:items-start gap-12 lg:gap-20">
 
                 <!-- Left: text (60%) -->
-                <div class="flex-[3] text-center lg:text-left">
+                <div class="flex-[3] min-w-0 text-center lg:text-left lg:min-h-[460px]">
                     <h1 class="anim-hero-title text-[2.6rem] sm:text-7xl md:text-[84px] font-extrabold tracking-tighter leading-tight sm:leading-[1.05] mb-8 uppercase">
                         <span data-key="hero-l1" class="text-gradient block">VAIKSEM.</span>
                         <span data-key="hero-l2" class="text-white block">VÄIKSEM.</span>
@@ -175,13 +179,13 @@
                         Full PC power. Console size. Silent operation.
                     </p>
                     <div class="anim-hero-cta flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
-                        <a href="boxes.html" data-key="hero-btn-boxes" class="btn-ripple inline-block bg-white text-black px-10 py-4 rounded-full hover:bg-zinc-200 hover:scale-105 transition-all duration-300 uppercase tracking-[0.25em] text-[14px] font-black">Korpused</a>
-                        <a href="#pricing" data-key="hero-btn-pricing" class="inline-block border border-white/20 text-white px-10 py-4 rounded-full hover:border-white/40 hover:bg-white/5 transition-all duration-300 uppercase tracking-[0.25em] text-[14px] font-black">Paketid ↓</a>
+                        <a href="boxes.html" data-key="hero-btn-boxes" class="btn-ripple inline-block bg-white text-black px-10 py-4 rounded-full hover:bg-zinc-200 hover:scale-105 transition-all duration-300 uppercase tracking-[0.12em] text-[14px] font-black min-w-[13rem] text-center">Korpused</a>
+                        <a href="#pricing" data-key="hero-btn-pricing" class="inline-block border border-white/20 text-white px-10 py-4 rounded-full hover:border-white/40 hover:bg-white/5 transition-all duration-300 uppercase tracking-[0.12em] text-[14px] font-black min-w-[13rem] text-center">Paketid ↓</a>
                     </div>
                 </div>
 
                 <!-- Right: case showcase (40%) -->
-                <div class="flex-[2] flex flex-col items-center justify-center anim-hero-cta w-full">
+                <div class="flex-[2] flex flex-col items-center justify-center anim-hero-cta w-full lg:h-[460px]">
                     <div class="showcase-wrap">
                         <div class="showcase-card">
                             <div class="showcase-glow"></div>
@@ -241,7 +245,7 @@
         </div>
     </section>
 
-    <section id="pricing" class="pt-4 pb-24 px-6 bg-transparent relative z-20">
+    <section id="pricing" class="scroll-mt-24 pt-4 pb-24 px-6 bg-transparent relative z-20">
         <div class="max-w-6xl mx-auto">
 
             <div class="reveal reveal-delay-1 flex justify-center space-x-4 mb-16">
@@ -439,7 +443,7 @@
         </div>
     </section>
 
-    <section id="compatibility" class="py-20 px-6 relative z-20">
+    <section id="compatibility" class="pt-0 pb-20 px-6 relative z-20" style="margin-top:-6px">
         <div class="max-w-6xl mx-auto">
             <div class="text-center mb-12 reveal">
                 <span class="text-blue-600 text-[11px] font-black uppercase tracking-[0.3em]">SteamOS</span>

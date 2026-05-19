@@ -2,8 +2,8 @@
     /* ── Inject shared CSS ── */
     var s = document.createElement('style');
     s.textContent = [
-        '.lang-btn{color:#71717a}',
-        '.lang-btn.active{color:white;border-bottom:2px solid #2563eb;padding-bottom:2px}',
+        '.lang-btn{color:#71717a;padding-bottom:2px}',
+        '.lang-btn.active{color:white;border-bottom:2px solid #2563eb}',
         '.nav-scrolled{background:rgba(0,0,0,0.92)!important;border-color:rgba(255,255,255,0.08)!important}',
         '@keyframes _navFadeIn{from{opacity:0}to{opacity:1}}',
         '.anim-nav{animation:_navFadeIn 0.6s ease both}',
@@ -71,7 +71,7 @@
         + '<span class="text-zinc-800">|</span>'
         + '<button onclick="setLanguage(\'en\')" id="lang-en" class="lang-btn transition hover:text-white" style="background:none;border:none;cursor:pointer;font-weight:700;letter-spacing:0.15em">EN</button>'
         + '</div>'
-        + '<button onclick="openModal()" data-key="nav-status" class="nav-status-btn btn-ripple bg-white text-black px-6 py-2.5 rounded-full hover:bg-zinc-200 transition uppercase tracking-widest text-[11px] font-black" style="flex-shrink:0;white-space:nowrap;border:none;cursor:pointer">Tellimuse staatus</button>'
+        + '<button onclick="openModal()" data-key="nav-status" class="nav-status-btn btn-ripple bg-white text-black px-6 py-2.5 rounded-full hover:bg-zinc-200 transition uppercase tracking-widest text-[11px] font-black" style="flex-shrink:0;white-space:nowrap;border:none;cursor:pointer;min-width:11rem;text-align:center">Tellimuse staatus</button>'
         + '</div>'
         + '</div>'
         + '</nav>';
