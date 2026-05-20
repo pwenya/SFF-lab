@@ -2,23 +2,7 @@ const fs = require('fs').promises;
 const path = require('path');
 const formidable = require('formidable');
 
-// Helper to parse CSV
-function parseCSV(csv) {
-    const lines = csv.trim().split('\n');
-    const headers = lines[0].split(',').map(h => h.trim());
-    const rows = lines.slice(1).map(line => {
-        // This is a simple parser, it won't handle commas within quoted fields.
-        // LHV's format seems simple enough for this to work for now.
-        const values = line.split(',');
-        return headers.reduce((obj, header, index) => {
-            obj[header] = values[index] ? values[index].trim() : '';
-            return obj;
-        }, {});
-    });
-    return rows;
-}
-
-// Path to our makeshift database
+// --- DATABASE HELPERS ---
 const DB_PATH = path.join(process.cwd(), 'api', 'lhv', 'db.json');
 
 async function readDb() {
@@ -27,7 +11,6 @@ async function readDb() {
         const data = await fs.readFile(DB_PATH, 'utf-8');
         return JSON.parse(data);
     } catch (error) {
-        // If file doesn't exist, initialize with empty structure
         if (error.code === 'ENOENT') {
             return { statements: [], transactions: [] };
         }
@@ -39,16 +22,27 @@ async function writeDb(data) {
     await fs.writeFile(DB_PATH, JSON.stringify(data, null, 2));
 }
 
-export default async function handler(req, res) {
-    if (req.method !== 'POST') {
-        return res.status(405).json({ success: false, error: 'Method Not Allowed' });
-    }
 
+// --- LOGIC ---
+
+// Handles GET /api/lhv - Fetches statement history
+async function handleGet(req, res) {
+    try {
+        const db = await readDb();
+        const sortedStatements = (db.statements || []).sort((a, b) => new Date(b.uploadedAt) - new Date(a.uploadedAt));
+        res.status(200).json({ success: true, files: sortedStatements });
+    } catch (error) {
+        console.error('List Statements Error:', error);
+        res.status(500).json({ success: false, error: 'Server error reading statement history.' });
+    }
+}
+
+// Handles POST /api/lhv - Uploads a new statement
+async function handlePost(req, res) {
     const form = formidable({});
 
     try {
         const [fields, files] = await form.parse(req);
-        
         const statementFile = files.statement?.[0];
 
         if (!statementFile) {
@@ -56,9 +50,18 @@ export default async function handler(req, res) {
         }
 
         const csvContent = await fs.readFile(statementFile.filepath, 'utf-8');
-        const transactions = parseCSV(csvContent);
+        
+        // Basic CSV parser
+        const lines = csvContent.trim().split('\n');
+        const headers = lines[0].split(',').map(h => h.trim());
+        const transactions = lines.slice(1).map(line => {
+            const values = line.split(',');
+            return headers.reduce((obj, header, index) => {
+                obj[header] = values[index] ? values[index].trim() : '';
+                return obj;
+            }, {});
+        });
 
-        // Filter for only settled transactions with a valid amount
         const settledTransactions = transactions.filter(tx => 
             tx.Status === 'settled' && 
             tx['Initial amount'] && 
@@ -70,9 +73,8 @@ export default async function handler(req, res) {
         }
 
         const db = await readDb();
-
-        // Check if this file has been uploaded already based on content hash (simple approach)
         const fileHash = statementFile.hash;
+
         if (db.statements.some(s => s.hash === fileHash)) {
             return res.status(409).json({ success: false, error: 'This statement has already been uploaded.' });
         }
@@ -82,12 +84,11 @@ export default async function handler(req, res) {
             fileName: statementFile.originalFilename,
             uploadedAt: new Date().toISOString(),
             txCount: settledTransactions.length,
-            hash: fileHash, // Store hash to prevent duplicates
+            hash: fileHash,
         };
 
         db.statements.push(newStatement);
         
-        // Add transactions to the DB, linking them to the statement
         settledTransactions.forEach(tx => {
             db.transactions.push({
                 statementId: newStatement.id,
@@ -97,13 +98,11 @@ export default async function handler(req, res) {
                 date: tx.Created,
                 status: tx.Status,
                 paymentMethod: tx['Payment method'],
-                raw: tx // Store the raw row for future needs
+                raw: tx
             });
         });
         
-        // Sort statements by date, newest first
         db.statements.sort((a, b) => new Date(b.uploadedAt) - new Date(a.uploadedAt));
-
         await writeDb(db);
 
         res.status(200).json({ 
@@ -118,9 +117,21 @@ export default async function handler(req, res) {
     }
 }
 
-// We need to disable the Next.js body parser for formidable to work
+
+// --- MAIN HANDLER ---
+
+export default async function handler(req, res) {
+    if (req.method === 'GET') {
+        return handleGet(req, res);
+    }
+    if (req.method === 'POST') {
+        return handlePost(req, res);
+    }
+    return res.status(405).json({ success: false, error: 'Method Not Allowed' });
+}
+
 export const config = {
     api: {
-        bodyParser: false,
+        bodyParser: false, // Required for formidable
     },
 };
