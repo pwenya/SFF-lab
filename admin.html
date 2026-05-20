@@ -293,7 +293,11 @@
         <div id="bank-transactions-section" class="mb-10">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.06)">
                 <h2 style="font-size:12px;font-weight:800;letter-spacing:0.2em;text-transform:uppercase;color:#52525b;">Bank Transactions</h2>
-                <button onclick="exportTransactionsToCSV()" class="filter-btn" style="background:rgba(59,130,246,0.1);border-color:rgba(59,130,246,0.3);color:#60a5fa">Export as CSV</button>
+                <div style="display:flex;gap:12px;align-items:center;">
+                    <select id="bt-filter-month" class="status-select" style="padding:6px 12px;font-size:10px;" onchange="renderBankTransactionsTable()"></select>
+                    <select id="bt-filter-year" class="status-select" style="padding:6px 12px;font-size:10px;" onchange="renderBankTransactionsTable()"></select>
+                    <button onclick="exportTransactionsToCSV()" class="filter-btn" style="background:rgba(59,130,246,0.1);border-color:rgba(59,130,246,0.3);color:#60a5fa">Export as CSV</button>
+                </div>
             </div>
             <div class="glass rounded-[24px] overflow-hidden">
                 <div id="bank-transactions-table-header" style="display:grid;grid-template-columns:150px 1fr 120px 100px 120px 80px;gap:12px;padding:12px 20px;border-bottom:1px solid rgba(255,255,255,0.06);font-size:9px;font-weight:800;letter-spacing:0.18em;text-transform:uppercase;color:#3f3f46">
@@ -407,6 +411,7 @@
         if (email) document.getElementById('admin-email-label').innerText = email;
         startAutoRefresh();
         loadStatementHistory();
+        initBankTransactionFilters();
         loadBankTransactions();
         initTaxReportSelectors();
     }
@@ -718,6 +723,22 @@
         });
     }
 
+    function initBankTransactionFilters() {
+        const monthSelect = document.getElementById('bt-filter-month');
+        const yearSelect = document.getElementById('bt-filter-year');
+
+        const months = ['All Months', 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+        const currentYear = new Date().getFullYear();
+
+        monthSelect.innerHTML = months.map((m, i) => `<option value="${i === 0 ? 'all' : i}">${m}</option>`).join('');
+
+        let yearsHtml = '<option value="all">All Years</option>';
+        for (let y = currentYear; y >= 2024; y--) {
+            yearsHtml += `<option value="${y}">${y}</option>`;
+        }
+        yearSelect.innerHTML = yearsHtml;
+    }
+
     function loadBankTransactions() {
         fetch('/api/lhv?action=transactions', { credentials: 'include' })
         .then(r => r.ok ? r.json() : Promise.reject('Failed to load transactions'))
@@ -732,32 +753,46 @@
         });
     }
 
+    function getFilteredBankTransactions() {
+        const monthFilter = document.getElementById('bt-filter-month').value;
+        const yearFilter = document.getElementById('bt-filter-year').value;
+
+        return ALL_BANK_TRANSACTIONS.filter(tx => {
+            const d = new Date(tx.date);
+            const mMatch = monthFilter === 'all' || (d.getMonth() + 1) === parseInt(monthFilter);
+            const yMatch = yearFilter === 'all' || d.getFullYear() === parseInt(yearFilter);
+            return mMatch && yMatch;
+        });
+    }
+
     function renderBankTransactionsTable() {
         const body = document.getElementById('bank-transactions-table-body');
-        if (ALL_BANK_TRANSACTIONS.length === 0) {
+        const filteredTx = getFilteredBankTransactions();
+
+        if (filteredTx.length === 0) {
             body.innerHTML = `<div style="padding:48px;text-align:center;color:#3f3f46;">No transactions found.</div>`;
             return;
         }
-        body.innerHTML = ALL_BANK_TRANSACTIONS.map(tx => {
-            const rowStyle = tx.matched ? 'opacity:0.4;color:#71717a;' : 'color:white;';
-            return `<div style="display:grid;grid-template-columns:150px 1fr 120px 100px 120px 80px;gap:12px;padding:14px 20px;border-bottom:1px solid rgba(255,255,255,0.04);font-size:11px;${rowStyle}">
+        body.innerHTML = filteredTx.map(tx => {
+            return `<div style="display:grid;grid-template-columns:150px 1fr 120px 100px 120px 80px;gap:12px;padding:14px 20px;border-bottom:1px solid rgba(255,255,255,0.04);font-size:11px;color:white;transition:background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.03)'" onmouseout="this.style.background='transparent'">
                 <span style="color:#71717a;">${new Date(tx.date).toLocaleString()}</span>
                 <span style="font-weight:600;">${esc(tx.orderRef || '—')}</span>
                 <span style="font-weight:800;">${tx.amount.toFixed(2)}</span>
-                <span>${esc(tx.currency)}</span>
-                <span>${esc(tx.paymentMethod)}</span>
-                <span style="color:${tx.matched ? '#4ade80' : '#71717a'};">${tx.matched ? '✓ Yes' : 'No'}</span>
+                <span style="color:#e4e4e7;">${esc(tx.currency)}</span>
+                <span style="color:#e4e4e7;">${esc(tx.paymentMethod)}</span>
+                <span style="color:${tx.matched ? '#4ade80' : '#71717a'};font-weight:800;">${tx.matched ? '✓ Yes' : 'No'}</span>
             </div>`;
         }).join('');
     }
 
     function exportTransactionsToCSV() {
-        if (ALL_BANK_TRANSACTIONS.length === 0) {
+        const filteredTx = getFilteredBankTransactions();
+        if (filteredTx.length === 0) {
             showToast('No transactions to export', '#f59e0b');
             return;
         }
         const headers = ['Date', 'OrderReference', 'Amount', 'Currency', 'PaymentMethod', 'Matched'];
-        const rows = ALL_BANK_TRANSACTIONS.map(tx => [
+        const rows = filteredTx.map(tx => [
             `"${new Date(tx.date).toISOString()}"`,
             `"${esc(tx.orderRef || '')}"`,
             tx.amount.toFixed(2),
