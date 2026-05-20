@@ -238,7 +238,8 @@
         <div style="display:flex;align-items:center;gap:16px">
             <span id="admin-email-label" style="font-size:9px;color:#3f3f46;font-weight:700;letter-spacing:0.1em;text-transform:uppercase"></span>
             <span id="refresh-indicator" style="font-size:9px;color:#3f3f46;font-weight:700;letter-spacing:0.1em;text-transform:uppercase"></span>
-<a id="nav-logout-btn" href="/api/auth/logout" style="background:none;border:none;color:#52525b;font-size:9px;font-weight:800;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;text-decoration:none;transition:color 0.2s" onmouseover="this.style.color='white'" onmouseout="this.style.color='#52525b'">Logout</a>
+            <button id="nav-refresh-btn" onclick="loadOrders()" style="background:none;border:none;color:#52525b;font-size:9px;font-weight:800;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;transition:color 0.2s" onmouseover="this.style.color='white'" onmouseout="this.style.color='#52525b'">Refresh</button>
+            <a id="nav-logout-btn" href="/api/auth/logout" style="background:none;border:none;color:#52525b;font-size:9px;font-weight:800;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;text-decoration:none;transition:color 0.2s" onmouseover="this.style.color='white'" onmouseout="this.style.color='#52525b'">Logout</a>
         </div>
     </div>
 
@@ -263,6 +264,15 @@
             <div class="stat-card">
                 <div id="stat-done" style="font-size:28px;font-weight:900;letter-spacing:-0.03em;color:#4ade80;margin-bottom:4px">—</div>
                 <div style="font-size:9px;font-weight:800;letter-spacing:0.15em;text-transform:uppercase;color:#52525b">Ready / Shipped</div>
+            </div>
+        </div>
+
+        <!-- LHV Accounting Section -->
+        <div class="mb-10">
+            <h2 style="font-size:12px;font-weight:800;letter-spacing:0.2em;text-transform:uppercase;color:#52525b;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.06)">LHV Accounting</h2>
+            <div style="display:flex;flex-wrap:wrap;gap:12px">
+                <button onclick="createLhvInvoice()" class="filter-btn" style="background:rgba(59,130,246,0.1);border-color:rgba(59,130,246,0.3);color:#60a5fa">Create Invoice</button>
+                <button onclick="getLhvTransactions()" class="filter-btn">Get Transactions</button>
             </div>
         </div>
 
@@ -594,8 +604,33 @@
         t.classList.add('show');
         setTimeout(function () { t.classList.remove('show'); }, 3000);
     }
+
+    function createLhvInvoice() {
+        showToast('Creating LHV invoice... (Not implemented)', '#f59e0b');
+    }
+
+    function getLhvTransactions() {
+        showToast('Getting LHV transactions... (Not implemented)', '#f59e0b');
+    }
+
     /* Check URL for error params from OAuth redirect */
     (function () {
+        // Локальный обход авторизации для разработки
+        if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+            console.warn('Local development mode: Bypassing authentication and using mock data.');
+            showDashboard('local-dev@sfflab.ee');
+
+            // Отключаем авто-обновление, чтобы избежать запросов к API
+            if (refreshTimer) clearInterval(refreshTimer);
+            document.getElementById('refresh-indicator').innerText = 'Local Mode';
+
+            // Симулируем загрузку пустого списка заказов
+            ALL_ORDERS = [];
+            updateStats();
+            renderTable();
+            return;
+        }
+
         var params = new URLSearchParams(window.location.search);
         var errorKey = params.get('error');
 

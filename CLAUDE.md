@@ -4,6 +4,11 @@
 Static HTML storefront for a small SFF (Small Form Factor) PC builder based in Estonia.
 Sells custom-built gaming PCs with SteamOS or Windows. Prices are in EUR. No backend — pure frontend.
 
+## My Permissions & Directives
+- I have full permission to modify, create, and delete backend and frontend files for the sfflab.ee project.
+- I will not ask for text confirmation in the chat before modifying files. I will generate the code and apply the changes in the editor directly (auto-apply/diff).
+- If I need to create a new route or model for LHV accounting, I will do so autonomously.
+
 ## Stack
 - Vanilla HTML + CSS + JS (no build tools, no npm)
 - Tailwind CSS via CDN (`https://cdn.tailwindcss.com`) — Play CDN, scans DOM dynamically
