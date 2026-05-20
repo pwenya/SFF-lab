@@ -73,15 +73,12 @@ async function handlePost(req, res, redis) {
             return res.status(200).json({ success: true, message: 'No new processable transactions found.' });
         }
 
-        let newTxCount = 0;
-        let matchedOrderUpdates = 0; // Count of orders whose status was updated
+        let processedCount = 0;
+        let matchedOrderUpdates = 0;
 
         for (const tx of settledTransactions) {
             const txKey = `lhv_tx:${tx.Reference}`;
-            const exists = await redis.exists(txKey);
-            if (exists) continue;
-
-            newTxCount++;
+            processedCount++;
             
             const orderRef = tx['Order reference'];
             let isMatched = false;
@@ -106,8 +103,9 @@ async function handlePost(req, res, redis) {
                 currency: tx.Currency,
                 date: tx.Created,
                 paymentMethod: tx['Payment method'],
-                matched: isMatched, // Correctly set based on order existence
+                matched: isMatched,
             };
+            // This will now OVERWRITE existing records, fixing the 'matched' flag
             await redis.set(txKey, transactionRecord);
         }
 
@@ -123,11 +121,9 @@ async function handlePost(req, res, redis) {
             });
         }
 
-        let message = `Processed ${newTxCount} new transaction(s).`;
+        let message = `Processed ${processedCount} transaction(s) from the file.`;
         if (matchedOrderUpdates > 0) {
             message += ` Automatically updated ${matchedOrderUpdates} order(s) status.`;
-        } else if (newTxCount > 0) {
-            message += ` No order statuses were updated.`;
         }
 
         res.status(200).json({ success: true, message });
