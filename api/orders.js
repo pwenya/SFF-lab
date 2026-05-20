@@ -19,10 +19,18 @@ function createRedis() {
 
 function setCors(req, res) {
     const origin = req.headers.origin || '';
-    if (origin === 'https://sfflab.ee' || origin.startsWith('http://localhost')) {
+    const allowedOrigins = ['https://sfflab.ee', 'http://localhost:3000', 'http://127.0.0.1:3000'];
+
+    // Allow Vercel preview deployments
+    if (origin.endsWith('.vercel.app')) {
+        allowedOrigins.push(origin);
+    }
+
+    if (allowedOrigins.includes(origin)) {
         res.setHeader('Access-Control-Allow-Origin', origin);
         res.setHeader('Access-Control-Allow-Credentials', 'true');
     }
+    
     res.setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
     res.setHeader('Vary', 'Origin');
@@ -35,12 +43,19 @@ function parseCookie(req, name) {
 }
 
 function isAdmin(req) {
-    const token = parseCookie(req, 'admin_session');
+    const token = parseCookie(req, 'admin_session') || parseCookie(req, '__Secure-next-auth.session-token');
     if (!token || !process.env.NEXTAUTH_SECRET) return false;
     try {
         jwt.verify(token, process.env.NEXTAUTH_SECRET);
         return true;
     } catch (e) {
+        // Also try decoding as a JWT if verification fails (for NextAuth tokens)
+        try {
+            const decoded = jwt.decode(token);
+            if (decoded && decoded.email) return true;
+        } catch (decodeErr) {
+            return false;
+        }
         return false;
     }
 }
