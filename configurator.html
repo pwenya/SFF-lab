@@ -820,13 +820,13 @@
             if (snap.ctrl)   payload.controller = snap.ctrl;
             if (snap.preset) payload.scenario   = snap.preset;
 
-            fetch('/api/order', {
+            fetch('/api/orders', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
                 body: JSON.stringify(payload)
             })
             .then(function (res) {
-                if (!res.ok) throw new Error('api/order HTTP ' + res.status);
+                if (!res.ok) throw new Error('api/orders HTTP ' + res.status);
                 return res.json();
             })
             .then(function (orderData) {

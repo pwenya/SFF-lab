@@ -570,7 +570,7 @@
     }
 
     function callUpdateStatus(orderNumber, newStatus, cb) {
-        fetch('/api/update-status', {
+        fetch('/api/orders?action=update-status', {
             method: 'POST',
             credentials: 'include',
             headers: { 'Content-Type': 'application/json' },
