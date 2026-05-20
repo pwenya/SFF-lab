@@ -606,11 +606,51 @@
     }
 
     function createLhvInvoice() {
-        showToast('Creating LHV invoice... (Not implemented)', '#f59e0b');
+        // We'll need to decide what data to send. For now, let's send a dummy object.
+        // In a real scenario, you might select an order from the table.
+        var dummyOrderData = {
+            orderId: 'SFF-' + Date.now(),
+            amount: 1999.99,
+            customerName: 'Local Dev Test'
+        };
+
+        showToast('Sending request to /api/lhv/create-invoice...', '#60a5fa');
+        fetch('/api/lhv/create-invoice', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(dummyOrderData)
+        })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+            console.log('LHV Invoice Response:', data);
+            if (data.success) {
+                showToast('Success: ' + data.message, '#4ade80');
+            } else {
+                showToast('Error: ' + (data.error || 'Unknown error'), '#f87171');
+            }
+        })
+        .catch(function(err) {
+            console.error('LHV Invoice Fetch Error:', err);
+            showToast('Network error creating invoice', '#f87171');
+        });
     }
 
     function getLhvTransactions() {
-        showToast('Getting LHV transactions... (Not implemented)', '#f59e0b');
+        showToast('Sending request to /api/lhv/get-transactions...', '#60a5fa');
+        fetch('/api/lhv/get-transactions')
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+            console.log('LHV Transactions Response:', data);
+            if (data.success) {
+                showToast('Found ' + data.transactions.length + ' transactions', '#4ade80');
+            } else {
+                showToast('Error: ' + (data.error || 'Unknown error'), '#f87171');
+            }
+        })
+        .catch(function(err) {
+            console.error('LHV Transactions Fetch Error:', err);
+            showToast('Network error getting transactions', '#f87171');
+        });
     }
 
     /* Check URL for error params from OAuth redirect */
