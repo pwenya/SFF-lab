@@ -74,7 +74,7 @@ async function handlePost(req, res, redis) {
         }
 
         let newTxCount = 0;
-        let matchedCount = 0;
+        let matchedOrderUpdates = 0; // Count of orders whose status was updated
 
         for (const tx of settledTransactions) {
             const txKey = `lhv_tx:${tx.Reference}`;
@@ -87,12 +87,15 @@ async function handlePost(req, res, redis) {
             let isMatched = false;
             if (orderRef) {
                 const order = await redis.get(`order:${orderRef}`);
-                if (order && order.status === 'pending_payment') {
-                    order.status = 'in_progress';
-                    order.updatedAt = new Date().toISOString();
-                    await redis.set(`order:${orderRef}`, order);
-                    matchedCount++;
+                if (order) { // Order exists, so this transaction is matched
                     isMatched = true;
+                    // Only update status if it's pending payment
+                    if (order.status === 'pending_payment') {
+                        order.status = 'in_progress';
+                        order.updatedAt = new Date().toISOString();
+                        await redis.set(`order:${orderRef}`, order);
+                        matchedOrderUpdates++;
+                    }
                 }
             }
             
@@ -103,7 +106,7 @@ async function handlePost(req, res, redis) {
                 currency: tx.Currency,
                 date: tx.Created,
                 paymentMethod: tx['Payment method'],
-                matched: isMatched,
+                matched: isMatched, // Correctly set based on order existence
             };
             await redis.set(txKey, transactionRecord);
         }
@@ -121,8 +124,10 @@ async function handlePost(req, res, redis) {
         }
 
         let message = `Processed ${newTxCount} new transaction(s).`;
-        if (matchedCount > 0) {
-            message += ` Automatically matched ${matchedCount} order(s).`;
+        if (matchedOrderUpdates > 0) {
+            message += ` Automatically updated ${matchedOrderUpdates} order(s) status.`;
+        } else if (newTxCount > 0) {
+            message += ` No order statuses were updated.`;
         }
 
         res.status(200).json({ success: true, message });
