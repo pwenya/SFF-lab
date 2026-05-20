@@ -1,31 +1,12 @@
-const fs = require('fs').promises;
-const path = require('path');
-const crypto = require('crypto');
 const { Redis } = require('@upstash/redis');
+const crypto = require('crypto');
 
-// --- REDIS & DB HELPERS ---
-const DB_PATH = path.join(process.env.VERCEL ? '/tmp' : __dirname, 'lhv_db.json');
-
+// --- REDIS & CORS HELPERS ---
 function createRedis() {
     return new Redis({
         url: process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL,
         token: process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN,
     });
-}
-
-async function readDb() {
-    try {
-        await fs.access(DB_PATH);
-        const data = await fs.readFile(DB_PATH, 'utf-8');
-        return JSON.parse(data);
-    } catch (error) {
-        if (error.code === 'ENOENT') return { statements: [], transactions: [] };
-        throw error;
-    }
-}
-
-async function writeDb(data) {
-    await fs.writeFile(DB_PATH, JSON.stringify(data, null, 2));
 }
 
 function setCors(req, res) {
@@ -43,23 +24,34 @@ function setCors(req, res) {
 
 // --- LOGIC ---
 
-async function handleGet(req, res) {
+async function handleGet(req, res, redis) {
     const { action } = req.query;
     try {
-        const db = await readDb();
         if (action === 'transactions') {
-            const sortedTransactions = (db.transactions || []).sort((a, b) => new Date(b.date) - new Date(a.date));
+            const transactionKeys = await redis.keys('lhv_tx:*');
+            if (transactionKeys.length === 0) {
+                return res.status(200).json({ success: true, transactions: [] });
+            }
+            const transactions = await redis.mget(...transactionKeys);
+            const sortedTransactions = transactions.sort((a, b) => new Date(b.date) - new Date(a.date));
             return res.status(200).json({ success: true, transactions: sortedTransactions });
         }
-        const sortedStatements = (db.statements || []).sort((a, b) => new Date(b.uploadedAt) - new Date(a.uploadedAt));
-        res.status(200).json({ success: true, files: sortedStatements });
+        // Fallback for getting statements (if we decide to store them in Redis too)
+        const statementKeys = await redis.keys('lhv_stmt:*');
+        if (statementKeys.length === 0) {
+            return res.status(200).json({ success: true, files: [] });
+        }
+        const statements = await redis.mget(...statementKeys);
+        const sortedStatements = statements.sort((a, b) => new Date(b.uploadedAt) - new Date(a.uploadedAt));
+        return res.status(200).json({ success: true, files: sortedStatements });
+
     } catch (error) {
         console.error('LHV GET Error:', error);
         res.status(500).json({ success: false, error: 'Server error reading data.' });
     }
 }
 
-async function handlePost(req, res) {
+async function handlePost(req, res, redis) {
     try {
         const { fileName, csvContent } = req.body;
         if (!fileName || !csvContent) {
@@ -76,61 +68,61 @@ async function handlePost(req, res) {
             }, {});
         });
 
-        const settledTransactions = transactions.filter(tx => tx.Status === 'settled' && tx['Initial amount'] && !isNaN(parseFloat(tx['Initial amount'])));
+        const settledTransactions = transactions.filter(tx => tx.Status === 'settled' && tx['Initial amount'] && !isNaN(parseFloat(tx['Initial amount'])) && tx.Reference);
         if (settledTransactions.length === 0) {
-            return res.status(400).json({ success: false, error: 'No new settled transactions found.' });
+            return res.status(200).json({ success: true, message: 'No new processable transactions found.' });
         }
 
-        const db = await readDb();
-        const redis = createRedis();
-        const fileHash = crypto.createHash('sha256').update(csvContent).digest('hex');
-
-        if (db.statements.some(s => s.hash === fileHash)) {
-            return res.status(409).json({ success: false, error: 'This statement has already been uploaded.' });
-        }
-
+        let newTxCount = 0;
         let matchedCount = 0;
-        
-        for (const tx of settledTransactions) {
-            const orderRef = tx['Order reference'];
-            if (!orderRef) continue;
 
-            const order = await redis.get(`order:${orderRef}`);
-            if (order && order.status === 'pending_payment') {
-                order.status = 'in_progress';
-                order.updatedAt = new Date().toISOString();
-                await redis.set(`order:${orderRef}`, order);
-                matchedCount++;
+        for (const tx of settledTransactions) {
+            const txKey = `lhv_tx:${tx.Reference}`;
+            const exists = await redis.exists(txKey);
+            if (exists) continue;
+
+            newTxCount++;
+            
+            const orderRef = tx['Order reference'];
+            let isMatched = false;
+            if (orderRef) {
+                const order = await redis.get(`order:${orderRef}`);
+                if (order && order.status === 'pending_payment') {
+                    order.status = 'in_progress';
+                    order.updatedAt = new Date().toISOString();
+                    await redis.set(`order:${orderRef}`, order);
+                    matchedCount++;
+                    isMatched = true;
+                }
             }
             
-            // Add transaction to our DB with a matched status
-            db.transactions.push({
-                id: `tx_${Date.now()}_${Math.random()}`,
-                statementId: `stmt_${fileHash.substring(0, 8)}`,
+            const transactionRecord = {
+                id: tx.Reference,
                 orderRef: orderRef,
                 amount: parseFloat(tx['Initial amount']),
                 currency: tx.Currency,
                 date: tx.Created,
                 paymentMethod: tx['Payment method'],
-                matched: !!order, // Mark as matched if order was found
-                raw: tx
+                matched: isMatched,
+            };
+            await redis.set(txKey, transactionRecord);
+        }
+
+        // Store statement info
+        const fileHash = crypto.createHash('sha256').update(csvContent).digest('hex');
+        const statementKey = `lhv_stmt:${fileHash}`;
+        if (!(await redis.exists(statementKey))) {
+            await redis.set(statementKey, {
+                fileName: fileName,
+                uploadedAt: new Date().toISOString(),
+                txCount: settledTransactions.length,
+                hash: fileHash,
             });
         }
 
-        db.statements.push({
-            id: `stmt_${Date.now()}`,
-            fileName: fileName,
-            uploadedAt: new Date().toISOString(),
-            txCount: settledTransactions.length,
-            hash: fileHash,
-        });
-        
-        db.statements.sort((a, b) => new Date(b.uploadedAt) - new Date(a.uploadedAt));
-        await writeDb(db);
-
-        let message = `Processed ${settledTransactions.length} transactions.`;
+        let message = `Processed ${newTxCount} new transaction(s).`;
         if (matchedCount > 0) {
-            message += ` Automatically matched and updated ${matchedCount} order(s).`;
+            message += ` Automatically matched ${matchedCount} order(s).`;
         }
 
         res.status(200).json({ success: true, message });
@@ -145,8 +137,15 @@ async function handlePost(req, res) {
 export default async function handler(req, res) {
     setCors(req, res);
     if (req.method === 'OPTIONS') return res.status(200).end();
-    if (req.method === 'GET') return handleGet(req, res);
-    if (req.method === 'POST') return handlePost(req, res);
+    
+    const redis = createRedis();
+
+    if (req.method === 'GET') {
+        return handleGet(req, res, redis);
+    }
+    if (req.method === 'POST') {
+        return handlePost(req, res, redis);
+    }
     return res.status(405).json({ success: false, error: 'Method Not Allowed' });
 }
 
