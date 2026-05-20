@@ -632,9 +632,9 @@
         var formData = new FormData();
         formData.append('statement', file);
 
-        fetch('/api/lhv/upload-statement', {
+        fetch('/api/lhv', { // UPDATED URL
             method: 'POST',
-            credentials: 'include', // Important for auth
+            credentials: 'include',
             body: formData
         })
         .then(function(r) {
@@ -647,7 +647,7 @@
             console.log('Upload Response:', data);
             if (data.success) {
                 showToast('Statement processed: ' + data.message, '#4ade80');
-                loadStatementHistory(); // Refresh the list after upload
+                loadStatementHistory();
             } else {
                 showToast('Error: ' + (data.error || 'Unknown processing error'), '#f87171');
             }
@@ -664,7 +664,7 @@
         var historyDiv = document.getElementById('statement-history');
         historyDiv.innerHTML = 'Loading history...';
 
-        fetch('/api/lhv/list-statements', { credentials: 'include' })
+        fetch('/api/lhv', { credentials: 'include' }) // UPDATED URL
         .then(function(r) {
             if (!r.ok) throw new Error('Server error');
             return r.json();
