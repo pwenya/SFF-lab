@@ -629,33 +629,43 @@
         }
 
         showToast('Uploading statement...', '#60a5fa');
-        var formData = new FormData();
-        formData.append('statement', file);
 
-        fetch('/api/lhv', { // UPDATED URL
-            method: 'POST',
-            credentials: 'include',
-            body: formData
-        })
-        .then(function(r) {
-            if (!r.ok) {
-                return r.json().then(function(err) { throw new Error(err.error || 'Server error ' + r.status); });
-            }
-            return r.json();
-        })
-        .then(function(data) {
-            console.log('Upload Response:', data);
-            if (data.success) {
-                showToast('Statement processed: ' + data.message, '#4ade80');
-                loadStatementHistory();
-            } else {
-                showToast('Error: ' + (data.error || 'Unknown processing error'), '#f87171');
-            }
-        })
-        .catch(function(err) {
-            console.error('LHV Upload Fetch Error:', err);
-            showToast('Upload failed: ' + err.message, '#f87171');
-        });
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const csvContent = e.target.result;
+            fetch('/api/lhv', {
+                method: 'POST',
+                credentials: 'include',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    fileName: file.name,
+                    csvContent: csvContent
+                })
+            })
+            .then(function(r) {
+                if (!r.ok) {
+                    return r.json().then(function(err) { throw new Error(err.error || 'Server error ' + r.status); });
+                }
+                return r.json();
+            })
+            .then(function(data) {
+                console.log('Upload Response:', data);
+                if (data.success) {
+                    showToast('Statement processed: ' + data.message, '#4ade80');
+                    loadStatementHistory();
+                } else {
+                    showToast('Error: ' + (data.error || 'Unknown processing error'), '#f87171');
+                }
+            })
+            .catch(function(err) {
+                console.error('LHV Upload Fetch Error:', err);
+                showToast('Upload failed: ' + err.message, '#f87171');
+            });
+        };
+        reader.onerror = function() {
+            showToast('Failed to read file', '#f87171');
+        };
+        reader.readAsText(file);
 
         document.getElementById('lhv-csv-upload').value = '';
     }
