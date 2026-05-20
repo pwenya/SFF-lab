@@ -204,6 +204,56 @@ async function handleUpdateStatus(req, res, redis) {
     return res.status(200).json({ success: true, orderNumber, status });
 }
 
+async function handleGetTaxReport(req, res, redis) {
+    if (!isAdmin(req)) return res.status(401).json({ error: 'Unauthorized' });
+
+    const { month, year } = req.query;
+    if (!month || !year) {
+        return res.status(400).json({ error: 'Missing month or year parameter.' });
+    }
+
+    const orderNumbers = await redis.lrange('orders:all', 0, -1);
+    if (!orderNumbers || orderNumbers.length === 0) {
+        return res.status(200).json({ report: { gross: 0, net: 0, vat: 0, count: 0, orders: [] } });
+    }
+
+    const allOrders = await Promise.all(orderNumbers.map(n => redis.get(`order:${n}`)));
+    
+    // Filter orders for the specific month/year that are NOT pending or cancelled.
+    // Assuming 'in_progress', 'ready', 'shipped', 'completed' are paid orders.
+    const validStatuses = ['in_progress', 'ready', 'shipped', 'completed'];
+    
+    const reportOrders = allOrders.filter(order => {
+        if (!order || !order.createdAt || !validStatuses.includes(order.status)) return false;
+        const d = new Date(order.createdAt);
+        return d.getMonth() + 1 === parseInt(month) && d.getFullYear() === parseInt(year);
+    });
+
+    let totalGross = 0;
+    
+    reportOrders.forEach(order => {
+        // Price might be "2250 €" or similar string, extract the number
+        const priceNum = parseFloat(String(order.price).replace(/[^0-9.]/g, '')) || 0;
+        totalGross += priceNum;
+    });
+
+    const vatRate = 0.24;
+    // Gross = Net * 1.24  => Net = Gross / 1.24
+    const totalNet = totalGross / (1 + vatRate);
+    const totalVat = totalGross - totalNet;
+
+    return res.status(200).json({ 
+        report: {
+            gross: totalGross.toFixed(2),
+            net: totalNet.toFixed(2),
+            vat: totalVat.toFixed(2),
+            count: reportOrders.length,
+            month: month,
+            year: year
+        } 
+    });
+}
+
 // --- MAIN ROUTER ---
 
 export default async function handler(req, res) {
@@ -214,7 +264,9 @@ export default async function handler(req, res) {
 
     try {
         if (req.method === 'GET') {
-            if (req.query.orderNumber) {
+            if (req.query.action === 'tax-report') {
+                return await handleGetTaxReport(req, res, redis);
+            } else if (req.query.orderNumber) {
                 return await handleGetOrderStatus(req, res, redis);
             } else {
                 return await handleGetAllOrders(req, res, redis);
