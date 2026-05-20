@@ -219,12 +219,27 @@ async function handleGetTaxReport(req, res, redis) {
 
     const allOrders = await Promise.all(orderNumbers.map(n => redis.get(`order:${n}`)));
     
-    // Filter orders for the specific month/year that are NOT pending or cancelled.
-    // Assuming 'in_progress', 'ready', 'shipped', 'completed' are paid orders.
+    // We only want orders that are actually paid AND match the month/year.
     const validStatuses = ['in_progress', 'ready', 'shipped', 'completed'];
+    
+    // 1. Get all transactions to find which orders are actually paid
+    const transactionKeys = await redis.keys('lhv_tx:*');
+    let matchedOrderRefs = new Set();
+    if (transactionKeys.length > 0) {
+        const transactions = await redis.mget(...transactionKeys);
+        transactions.forEach(tx => {
+            if (tx && tx.matched && tx.orderRef) {
+                matchedOrderRefs.add(tx.orderRef);
+            }
+        });
+    }
     
     const reportOrders = allOrders.filter(order => {
         if (!order || !order.createdAt || !validStatuses.includes(order.status)) return false;
+        
+        // Ensure the order has a matching bank transaction
+        if (!matchedOrderRefs.has(order.orderNumber)) return false;
+
         const d = new Date(order.createdAt);
         return d.getMonth() + 1 === parseInt(month) && d.getFullYear() === parseInt(year);
     });
@@ -232,13 +247,11 @@ async function handleGetTaxReport(req, res, redis) {
     let totalGross = 0;
     
     reportOrders.forEach(order => {
-        // Price might be "2250 €" or similar string, extract the number
         const priceNum = parseFloat(String(order.price).replace(/[^0-9.]/g, '')) || 0;
         totalGross += priceNum;
     });
 
     const vatRate = 0.24;
-    // Gross = Net * 1.24  => Net = Gross / 1.24
     const totalNet = totalGross / (1 + vatRate);
     const totalVat = totalGross - totalNet;
 
