@@ -40,13 +40,23 @@ function setCors(req, res) {
 // --- LOGIC ---
 
 async function handleGet(req, res) {
+    const { action } = req.query;
+    
     try {
         const db = await readDb();
+
+        if (action === 'transactions') {
+            const sortedTransactions = (db.transactions || []).sort((a, b) => new Date(b.date) - new Date(a.date));
+            return res.status(200).json({ success: true, transactions: sortedTransactions });
+        }
+
+        // Default action: get statements
         const sortedStatements = (db.statements || []).sort((a, b) => new Date(b.uploadedAt) - new Date(a.uploadedAt));
         res.status(200).json({ success: true, files: sortedStatements });
+
     } catch (error) {
-        console.error('List Statements Error:', error);
-        res.status(500).json({ success: false, error: 'Server error reading statement history.' });
+        console.error('LHV GET Error:', error);
+        res.status(500).json({ success: false, error: 'Server error reading data.' });
     }
 }
 
@@ -138,8 +148,6 @@ export default async function handler(req, res) {
     return res.status(405).json({ success: false, error: 'Method Not Allowed' });
 }
 
-// We no longer need formidable, so we can remove the custom body parser config.
-// Vercel's default body parser will handle the JSON payload.
 export const config = {
     api: {
         bodyParser: true,
