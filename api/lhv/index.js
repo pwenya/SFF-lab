@@ -1,9 +1,17 @@
 const fs = require('fs').promises;
 const path = require('path');
 const crypto = require('crypto');
+const { Redis } = require('@upstash/redis');
 
-// --- DATABASE HELPERS ---
+// --- REDIS & DB HELPERS ---
 const DB_PATH = path.join(process.env.VERCEL ? '/tmp' : __dirname, 'lhv_db.json');
+
+function createRedis() {
+    return new Redis({
+        url: process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL,
+        token: process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN,
+    });
+}
 
 async function readDb() {
     try {
@@ -11,9 +19,7 @@ async function readDb() {
         const data = await fs.readFile(DB_PATH, 'utf-8');
         return JSON.parse(data);
     } catch (error) {
-        if (error.code === 'ENOENT') {
-            return { statements: [], transactions: [] };
-        }
+        if (error.code === 'ENOENT') return { statements: [], transactions: [] };
         throw error;
     }
 }
@@ -25,9 +31,7 @@ async function writeDb(data) {
 function setCors(req, res) {
     const origin = req.headers.origin || '';
     const allowedOrigins = ['https://sfflab.ee', 'http://localhost:3000', 'http://127.0.0.1:3000'];
-    if (origin.endsWith('.vercel.app')) {
-        allowedOrigins.push(origin);
-    }
+    if (origin.endsWith('.vercel.app')) allowedOrigins.push(origin);
     if (allowedOrigins.includes(origin)) {
         res.setHeader('Access-Control-Allow-Origin', origin);
         res.setHeader('Access-Control-Allow-Credentials', 'true');
@@ -41,19 +45,14 @@ function setCors(req, res) {
 
 async function handleGet(req, res) {
     const { action } = req.query;
-    
     try {
         const db = await readDb();
-
         if (action === 'transactions') {
             const sortedTransactions = (db.transactions || []).sort((a, b) => new Date(b.date) - new Date(a.date));
             return res.status(200).json({ success: true, transactions: sortedTransactions });
         }
-
-        // Default action: get statements
         const sortedStatements = (db.statements || []).sort((a, b) => new Date(b.uploadedAt) - new Date(a.uploadedAt));
         res.status(200).json({ success: true, files: sortedStatements });
-
     } catch (error) {
         console.error('LHV GET Error:', error);
         res.status(500).json({ success: false, error: 'Server error reading data.' });
@@ -63,7 +62,6 @@ async function handleGet(req, res) {
 async function handlePost(req, res) {
     try {
         const { fileName, csvContent } = req.body;
-
         if (!fileName || !csvContent) {
             return res.status(400).json({ success: false, error: 'Missing fileName or csvContent.' });
         }
@@ -78,54 +76,64 @@ async function handlePost(req, res) {
             }, {});
         });
 
-        const settledTransactions = transactions.filter(tx => 
-            tx.Status === 'settled' && 
-            tx['Initial amount'] && 
-            !isNaN(parseFloat(tx['Initial amount']))
-        );
-
+        const settledTransactions = transactions.filter(tx => tx.Status === 'settled' && tx['Initial amount'] && !isNaN(parseFloat(tx['Initial amount'])));
         if (settledTransactions.length === 0) {
-            return res.status(400).json({ success: false, error: 'No settled transactions found in the file.' });
+            return res.status(400).json({ success: false, error: 'No new settled transactions found.' });
         }
 
         const db = await readDb();
+        const redis = createRedis();
         const fileHash = crypto.createHash('sha256').update(csvContent).digest('hex');
 
         if (db.statements.some(s => s.hash === fileHash)) {
             return res.status(409).json({ success: false, error: 'This statement has already been uploaded.' });
         }
 
-        const newStatement = {
+        let matchedCount = 0;
+        
+        for (const tx of settledTransactions) {
+            const orderRef = tx['Order reference'];
+            if (!orderRef) continue;
+
+            const order = await redis.get(`order:${orderRef}`);
+            if (order && order.status === 'pending_payment') {
+                order.status = 'in_progress';
+                order.updatedAt = new Date().toISOString();
+                await redis.set(`order:${orderRef}`, order);
+                matchedCount++;
+            }
+            
+            // Add transaction to our DB with a matched status
+            db.transactions.push({
+                id: `tx_${Date.now()}_${Math.random()}`,
+                statementId: `stmt_${fileHash.substring(0, 8)}`,
+                orderRef: orderRef,
+                amount: parseFloat(tx['Initial amount']),
+                currency: tx.Currency,
+                date: tx.Created,
+                paymentMethod: tx['Payment method'],
+                matched: !!order, // Mark as matched if order was found
+                raw: tx
+            });
+        }
+
+        db.statements.push({
             id: `stmt_${Date.now()}`,
             fileName: fileName,
             uploadedAt: new Date().toISOString(),
             txCount: settledTransactions.length,
             hash: fileHash,
-        };
-
-        db.statements.push(newStatement);
-        
-        settledTransactions.forEach(tx => {
-            db.transactions.push({
-                statementId: newStatement.id,
-                orderRef: tx['Order reference'],
-                amount: parseFloat(tx['Initial amount']),
-                currency: tx.Currency,
-                date: tx.Created,
-                status: tx.Status,
-                paymentMethod: tx['Payment method'],
-                raw: tx
-            });
         });
         
         db.statements.sort((a, b) => new Date(b.uploadedAt) - new Date(a.uploadedAt));
         await writeDb(db);
 
-        res.status(200).json({ 
-            success: true, 
-            message: `Processed ${settledTransactions.length} transactions.`,
-            statement: newStatement
-        });
+        let message = `Processed ${settledTransactions.length} transactions.`;
+        if (matchedCount > 0) {
+            message += ` Automatically matched and updated ${matchedCount} order(s).`;
+        }
+
+        res.status(200).json({ success: true, message });
 
     } catch (error) {
         console.error('Upload Error:', error);
@@ -134,17 +142,11 @@ async function handlePost(req, res) {
 }
 
 // --- MAIN HANDLER ---
-
 export default async function handler(req, res) {
     setCors(req, res);
     if (req.method === 'OPTIONS') return res.status(200).end();
-
-    if (req.method === 'GET') {
-        return handleGet(req, res);
-    }
-    if (req.method === 'POST') {
-        return handlePost(req, res);
-    }
+    if (req.method === 'GET') return handleGet(req, res);
+    if (req.method === 'POST') return handlePost(req, res);
     return res.status(405).json({ success: false, error: 'Method Not Allowed' });
 }
 

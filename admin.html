@@ -296,12 +296,13 @@
                 <button onclick="exportTransactionsToCSV()" class="filter-btn" style="background:rgba(59,130,246,0.1);border-color:rgba(59,130,246,0.3);color:#60a5fa">Export as CSV</button>
             </div>
             <div class="glass rounded-[24px] overflow-hidden">
-                <div id="bank-transactions-table-header" style="display:grid;grid-template-columns:150px 1fr 120px 100px 120px;gap:12px;padding:12px 20px;border-bottom:1px solid rgba(255,255,255,0.06);font-size:9px;font-weight:800;letter-spacing:0.18em;text-transform:uppercase;color:#3f3f46">
+                <div id="bank-transactions-table-header" style="display:grid;grid-template-columns:150px 1fr 120px 100px 120px 80px;gap:12px;padding:12px 20px;border-bottom:1px solid rgba(255,255,255,0.06);font-size:9px;font-weight:800;letter-spacing:0.18em;text-transform:uppercase;color:#3f3f46">
                     <span>Date</span>
                     <span>Order Reference</span>
                     <span>Amount</span>
                     <span>Currency</span>
                     <span>Payment Method</span>
+                    <span>Matched</span>
                 </div>
                 <div id="bank-transactions-table-body">
                     <div style="padding:48px;text-align:center;color:#3f3f46;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase">Loading transactions…</div>
@@ -660,9 +661,10 @@
             .then(r => r.ok ? r.json() : r.json().then(err => Promise.reject(err)))
             .then(data => {
                 if (data.success) {
-                    showToast('Statement processed: ' + data.message, '#4ade80');
+                    showToast(data.message || 'Statement processed', '#4ade80');
                     loadStatementHistory();
                     loadBankTransactions();
+                    loadOrders(); // Refresh orders to see status changes
                 } else {
                     showToast('Error: ' + (data.error || 'Unknown error'), '#f87171');
                 }
@@ -723,12 +725,14 @@
             return;
         }
         body.innerHTML = ALL_BANK_TRANSACTIONS.map(tx => {
-            return `<div style="display:grid;grid-template-columns:150px 1fr 120px 100px 120px;gap:12px;padding:14px 20px;border-bottom:1px solid rgba(255,255,255,0.04);font-size:11px;">
+            const rowStyle = tx.matched ? 'opacity:0.4;color:#71717a;' : 'color:white;';
+            return `<div style="display:grid;grid-template-columns:150px 1fr 120px 100px 120px 80px;gap:12px;padding:14px 20px;border-bottom:1px solid rgba(255,255,255,0.04);font-size:11px;${rowStyle}">
                 <span style="color:#71717a;">${new Date(tx.date).toLocaleString()}</span>
-                <span style="font-weight:600;color:white;">${esc(tx.orderRef || '—')}</span>
-                <span style="font-weight:800;color:white;">${tx.amount.toFixed(2)}</span>
-                <span style="color:#71717a;">${esc(tx.currency)}</span>
-                <span style="color:#71717a;">${esc(tx.paymentMethod)}</span>
+                <span style="font-weight:600;">${esc(tx.orderRef || '—')}</span>
+                <span style="font-weight:800;">${tx.amount.toFixed(2)}</span>
+                <span>${esc(tx.currency)}</span>
+                <span>${esc(tx.paymentMethod)}</span>
+                <span style="color:${tx.matched ? '#4ade80' : '#71717a'};">${tx.matched ? '✓ Yes' : 'No'}</span>
             </div>`;
         }).join('');
     }
@@ -738,13 +742,14 @@
             showToast('No transactions to export', '#f59e0b');
             return;
         }
-        const headers = ['Date', 'OrderReference', 'Amount', 'Currency', 'PaymentMethod'];
+        const headers = ['Date', 'OrderReference', 'Amount', 'Currency', 'PaymentMethod', 'Matched'];
         const rows = ALL_BANK_TRANSACTIONS.map(tx => [
             `"${new Date(tx.date).toISOString()}"`,
             `"${esc(tx.orderRef || '')}"`,
             tx.amount.toFixed(2),
             `"${esc(tx.currency)}"`,
-            `"${esc(tx.paymentMethod)}"`
+            `"${esc(tx.paymentMethod)}"`,
+            `"${tx.matched ? 'Yes' : 'No'}"`
         ].join(','));
 
         const csvContent = [headers.join(','), ...rows].join('\n');
