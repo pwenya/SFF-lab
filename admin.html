@@ -310,6 +310,19 @@
             </div>
         </div>
 
+        <!-- Tax Reporting Section -->
+        <div id="tax-reporting-section" class="mb-10">
+            <h2 style="font-size:12px;font-weight:800;letter-spacing:0.2em;text-transform:uppercase;color:#52525b;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.06)">Tax Reporting</h2>
+            <div style="display:flex;gap:12px;margin-bottom:20px">
+                <select id="report-month" class="status-select" style="padding:8px 14px;font-size:11px;"></select>
+                <select id="report-year" class="status-select" style="padding:8px 14px;font-size:11px;"></select>
+                <button onclick="generateTaxReport()" class="filter-btn" style="background:rgba(59,130,246,0.1);border-color:rgba(59,130,246,0.3);color:#60a5fa">Generate Report</button>
+            </div>
+            <div id="tax-report-results" class="glass rounded-xl" style="padding:20px;font-size:12px;color:#a1a1aa;">
+                Select month and year to generate tax report.
+            </div>
+        </div>
+
         <div style="display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:20px">
             <div style="display:flex;flex-wrap:wrap;gap:6px">
                 <button class="filter-btn active" onclick="setFilter('all',this)">All</button>
@@ -395,6 +408,7 @@
         startAutoRefresh();
         loadStatementHistory();
         loadBankTransactions();
+        initTaxReportSelectors();
     }
 
     function loadOrders() {
@@ -762,6 +776,74 @@
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
+    }
+
+    function initTaxReportSelectors() {
+        const monthSelect = document.getElementById('report-month');
+        const yearSelect = document.getElementById('report-year');
+
+        const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+        const currentMonth = new Date().getMonth();
+        const currentYear = new Date().getFullYear();
+
+        monthSelect.innerHTML = months.map((m, i) => `<option value="${i + 1}" ${i === currentMonth ? 'selected' : ''}>${m}</option>`).join('');
+
+        let yearsHtml = '';
+        for (let y = currentYear; y >= 2024; y--) {
+            yearsHtml += `<option value="${y}">${y}</option>`;
+        }
+        yearSelect.innerHTML = yearsHtml;
+    }
+
+    function generateTaxReport() {
+        const month = document.getElementById('report-month').value;
+        const year = document.getElementById('report-year').value;
+        const resultsDiv = document.getElementById('tax-report-results');
+
+        resultsDiv.innerHTML = '<div style="text-align:center;padding:20px;">Generating report...</div>';
+
+        fetch(`/api/orders?action=tax-report&month=${month}&year=${year}`, { credentials: 'include' })
+        .then(r => r.ok ? r.json() : Promise.reject('Failed to fetch report'))
+        .then(data => {
+            if (!data.report) throw new Error('Invalid response');
+            const rep = data.report;
+
+            if (rep.count === 0) {
+                resultsDiv.innerHTML = `<div style="padding:20px;text-align:center;color:#f59e0b;">No paid orders found for ${month}/${year}.</div>`;
+                return;
+            }
+
+            resultsDiv.innerHTML = `
+                <div style="display:flex;flex-direction:column;gap:12px;">
+                    <div style="font-size:14px;font-weight:800;color:white;margin-bottom:8px;">Summary for ${month}/${year} (${rep.count} orders)</div>
+
+                    <div style="display:flex;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,0.06);padding-bottom:8px;">
+                        <span style="color:#a1a1aa">Gross Sales (Total Received):</span>
+                        <span style="font-weight:800;color:white;">${rep.gross} €</span>
+                    </div>
+
+                    <div style="display:flex;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,0.06);padding-bottom:8px;">
+                        <span style="color:#a1a1aa">VAT Amount (24% to pay):</span>
+                        <span style="font-weight:800;color:#ef4444;">${rep.vat} €</span>
+                    </div>
+
+                    <div style="display:flex;justify-content:space-between;padding-bottom:8px;">
+                        <span style="color:#a1a1aa">Net Sales (Company Revenue):</span>
+                        <span style="font-weight:800;color:#4ade80;">${rep.net} €</span>
+                    </div>
+
+                    <div style="margin-top:16px;padding:16px;background:rgba(37,99,235,0.1);border-radius:12px;border:1px solid rgba(37,99,235,0.2);">
+                        <div style="font-size:10px;font-weight:800;color:#60a5fa;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:8px;">How to declare (e-MTA KMD):</div>
+                        <div>Enter <strong style="color:white;">${rep.net}</strong> in <strong>Lahtris 1</strong> (24% määraga maksustatavad toimingud).</div>
+                        <div style="font-size:10px;color:#a1a1aa;margin-top:4px;">The VAT (${rep.vat}) will be calculated automatically.</div>
+                    </div>
+                </div>
+            `;
+        })
+        .catch(err => {
+            console.error(err);
+            resultsDiv.innerHTML = `<div style="color:#ef4444;">Error generating report.</div>`;
+        });
     }
 
     /* Check URL for error params from OAuth redirect */
