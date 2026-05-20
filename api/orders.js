@@ -8,7 +8,7 @@ const { Redis } = require('@upstash/redis');
 const nodemailer = require('nodemailer');
 const jwt = require('jsonwebtoken');
 
-// --- UTILS & HELPERS (including email templates) ---
+// --- UTILS & HELPERS ---
 
 function createRedis() {
     return new Redis({
@@ -54,11 +54,29 @@ function isAdmin(req) {
     }
 }
 
-function stripHtml(str) {
-    return String(str).replace(/<[^>]*>/g, '').trim();
+// --- EMAIL TEMPLATES (Full version restored) ---
+
+function specRow(label, value) {
+    return '<tr>'
+        + '<td style="padding:8px 0;font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#52525b;width:100px;border-bottom:1px solid #1f1f1f;vertical-align:top">' + label + '</td>'
+        + '<td style="padding:8px 0 8px 12px;font-size:12px;color:#e4e4e7;border-bottom:1px solid #1f1f1f;word-break:break-word">' + value + '</td>'
+        + '</tr>';
 }
 
-// --- EMAIL TEMPLATES (from old files) ---
+function buildSpecRows(order) {
+    var rows = [
+        ['Model', order.model],
+        ['OS', order.os],
+        ['Case', order['case']],
+        ['CPU', order.cpu],
+        ['GPU', order.gpu],
+        ['RAM', order.ram],
+        ['SSD', order.ssd],
+        order.psu        ? ['PSU', order.psu]               : null,
+        order.controller ? ['Controller', order.controller] : null,
+    ].filter(Boolean);
+    return rows.map(function(r) { return specRow(r[0], r[1]); }).join('');
+}
 
 function buildStatusNotificationHtml(order, newStatus) {
     var lang = order.language || 'et';
@@ -74,20 +92,37 @@ function buildStatusNotificationHtml(order, newStatus) {
     var STATUS_ET = { pending: 'Ootel', pending_payment: 'Ootel makset', in_progress: 'Töös', ready: 'Valmis', shipped: 'Saadetud', completed: 'Lõpetatud', cancelled: 'Tühistatud' };
     var STATUS_RU = { pending: 'Ожидает', pending_payment: 'Ожидает оплаты', in_progress: 'В работе', ready: 'Готово', shipped: 'Отправлено', completed: 'Завершён', cancelled: 'Отменён' };
     var STATUS_EN = { pending: 'Pending', pending_payment: 'Awaiting Payment', in_progress: 'In Progress', ready: 'Ready', shipped: 'Shipped', completed: 'Completed', cancelled: 'Cancelled' };
-
     var statusLabel = isRu ? (STATUS_RU[newStatus] || newStatus) : isEn ? (STATUS_EN[newStatus] || newStatus) : (STATUS_ET[newStatus] || newStatus);
 
     var texts = {
-        et: { subtitle: 'Tellimuse uuendus · ' + order.orderNumber, heading: 'Tellimuse staatus uuendatud.', body: `Teie tellimuse <strong style="color:#fff">${order.orderNumber}</strong> staatus on muutunud: <strong style="color:${statusColor}">${statusLabel}</strong>.`, trackBtn: 'Tellimuse staatus' },
-        ru: { subtitle: 'Обновление заказа · ' + order.orderNumber, heading: 'Статус заказа обновлён.', body: `Статус вашего заказа <strong style="color:#fff">${order.orderNumber}</strong> изменён на: <strong style="color:${statusColor}">${statusLabel}</strong>.`, trackBtn: 'Статус заказа' },
-        en: { subtitle: 'Order Update · ' + order.orderNumber, heading: 'Order status updated.', body: `Your order <strong style="color:#fff">${order.orderNumber}</strong> status has changed to: <strong style="color:${statusColor}">${statusLabel}</strong>.`, trackBtn: 'Track Order' }
+        et: { subtitle: 'Tellimuse uuendus · ' + order.orderNumber, heading: 'Tellimuse staatus uuendatud.', body: `Teie tellimuse <strong style="color:#fff">${order.orderNumber}</strong> staatus on muutunud: <strong style="color:${statusColor}">${statusLabel}</strong>.`, specLabel: 'Tellimus', priceLabel: 'Kokku', delivLabel: 'Eeldatav valmimisaeg', trackBtn: 'Tellimuse staatus' },
+        ru: { subtitle: 'Обновление заказа · ' + order.orderNumber, heading: 'Статус заказа обновлён.', body: `Статус вашего заказа <strong style="color:#fff">${order.orderNumber}</strong> изменён на: <strong style="color:${statusColor}">${statusLabel}</strong>.`, specLabel: 'Конфигурация', priceLabel: 'Итого', delivLabel: 'Ожидаемая готовность', trackBtn: 'Статус заказа' },
+        en: { subtitle: 'Order Update · ' + order.orderNumber, heading: 'Order status updated.', body: `Your order <strong style="color:#fff">${order.orderNumber}</strong> status has changed to: <strong style="color:${statusColor}">${statusLabel}</strong>.`, specLabel: 'Configuration', priceLabel: 'Total', delivLabel: 'Estimated Ready', trackBtn: 'Track Order' }
     };
     var t = texts[lang] || texts['et'];
 
-    // Simplified for brevity, assuming structure is correct
-    return `<!DOCTYPE html>... (Full HTML from old update-status.js) ...<a href="https://sfflab.ee/?order=${order.orderNumber}">${t.trackBtn}</a>...</html>`;
-}
+    var inner = '<tr><td style="background:#0a0a0a;padding:28px 32px;border-bottom:1px solid #1f1f1f">'
+        + `<div style="font-size:22px;font-weight:900;letter-spacing:-0.03em;color:#fff;text-transform:uppercase">SFF LAB<span style="color:#2563eb">.</span></div>`
+        + `<div style="font-size:9px;font-weight:800;letter-spacing:0.25em;text-transform:uppercase;color:#2563eb;margin-top:6px">${t.subtitle}</div></td></tr>`
+        + '<tr><td style="padding:24px 32px;border-bottom:1px solid #1f1f1f">'
+        + `<p style="margin:0 0 6px;font-size:14px;color:#fff;font-weight:700">${t.heading}</p>`
+        + `<p style="margin:0;font-size:13px;color:#a1a1aa;line-height:1.6">${t.body}</p></td></tr>`
+        + '<tr><td style="padding:24px 32px;border-bottom:1px solid #1f1f1f">'
+        + `<div style="font-size:9px;font-weight:800;letter-spacing:0.2em;text-transform:uppercase;color:#3f3f46;margin-bottom:14px">${t.specLabel}</div>`
+        + `<table width="100%" cellpadding="0" cellspacing="0">${buildSpecRows(order)}</table></td></tr>`
+        + '<tr><td style="padding:24px 32px;border-bottom:1px solid #1f1f1f"><table width="100%" cellpadding="0" cellspacing="0"><tr><td style="vertical-align:bottom">'
+        + `<div style="font-size:9px;font-weight:800;letter-spacing:0.2em;text-transform:uppercase;color:#3f3f46;margin-bottom:8px">${t.priceLabel}</div>`
+        + `<div style="font-size:30px;font-weight:900;letter-spacing:-0.03em;color:#fff">${order.price || ''}</div></td>`
+        + '<td align="right" style="vertical-align:bottom">'
+        + `<div style="font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#52525b;margin-bottom:4px">${t.delivLabel}</div>`
+        + `<div style="font-size:13px;font-weight:700;color:#a1a1aa">${order.estimatedDelivery || ''}</div></td>`
+        + '</tr></table></td></tr>'
+        + '<tr><td style="padding:24px 32px;text-align:center">'
+        + `<a href="https://sfflab.ee/?order=${order.orderNumber}" style="display:inline-block;padding:12px 28px;background:#2563eb;color:#fff;font-size:12px;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;text-decoration:none;border-radius:12px">${t.trackBtn}</a></td></tr>`
+        + '<tr><td style="padding:18px 32px;background:#0a0a0a"><p style="margin:0;font-size:9px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:#3f3f46">SFF Lab OÜ · Estonia · info@sfflab.ee</p></td></tr>';
 
+    return `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>SFF Lab Order Update</title></head><body style="margin:0;padding:0;background:#0a0a0a;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif"><table width="100%" cellpadding="0" cellspacing="0" style="background:#0a0a0a;padding:40px 16px"><tr><td align="center"><table width="100%" cellpadding="0" cellspacing="0" style="max-width:540px;background:#111111;border:1px solid #222222;border-radius:16px;overflow:hidden">${inner}</table></td></tr></table></body></html>`;
+}
 
 // --- HANDLERS ---
 
@@ -121,10 +156,6 @@ async function handleCreateOrder(req, res, redis) {
     const orderRecord = { ...req.body, orderNumber, status: 'pending_payment', createdAt: new Date().toISOString(), customerIp: req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.socket?.remoteAddress };
     await redis.set(`order:${orderNumber}`, orderRecord);
     await redis.lpush('orders:all', orderNumber);
-    
-    // NOTE: Confirmation email on creation is handled after successful payment, not here.
-    // Internal notification can be sent here if needed.
-
     return res.status(200).json({ success: true, orderNumber });
 }
 
@@ -146,7 +177,6 @@ async function handleUpdateStatus(req, res, redis) {
 
     await redis.set(`order:${orderNumber}`, order);
     
-    // --- RE-ADD EMAIL LOGIC ---
     if (prevStatus !== status && order.email && process.env.GMAIL_USER && process.env.GMAIL_APP_PASSWORD) {
         try {
             const transporter = nodemailer.createTransport({
@@ -164,14 +194,12 @@ async function handleUpdateStatus(req, res, redis) {
                 from: 'SFF Lab <info@sfflab.ee>',
                 to: order.email,
                 subject: `SFF Lab: ${orderNumber} — ${subjectStatus}`,
-                html: buildStatusNotificationHtml(order, status) // Assuming this function is complete
+                html: buildStatusNotificationHtml(order, status)
             });
         } catch (mailErr) {
             console.error('Notification email error:', mailErr.message);
-            // Do not fail the request if email fails
         }
     }
-    // --- END RE-ADD EMAIL LOGIC ---
 
     return res.status(200).json({ success: true, orderNumber, status });
 }
