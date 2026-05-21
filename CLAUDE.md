@@ -25,10 +25,15 @@ admin.html           — order management panel (Google OAuth protected)
 legal.html           — legal pages (terms, privacy, returns)
 nav.js               — shared nav + modal + i18n engine (injected into every page)
 payment/success.html — post-payment success page
+payment/cancel.html  — post-payment cancel page
 api/payment/         — Vercel serverless payment handlers (create.js, notify.js)
 api/order.js         — order creation endpoint
 api/update-status.js — order status update + customer email notification
 IMG/                 — product images (MoodBlack.1.png, TerraJade.2.png, etc.)
+favicon.svg          — SVG icon (modern browsers)
+favicon.ico          — ICO icon 32x32 (Google Search, legacy browsers)
+favicon-192.png      — PNG icon 192x192 (Apple Touch, Google Search)
+sitemap.xml          — sitemap for Google (index, boxes, shop, configurator, legal)
 start.bat            — launches local dev server
 ```
 
@@ -79,6 +84,7 @@ Injected by nav.js via `insertAdjacentHTML('beforeend', FOOTER_HTML)`. Structure
 - Elements get translated via `data-key="some-key"` attribute
 - `window.load` in nav.js calls `setLanguage(localStorage.getItem('selectedLanguage') || 'et')` — applies saved language on every page load
 - **`pageTranslations` must be defined BEFORE the `<script src="nav.js">` tag** — nav.js reads it at `window.load` time
+- **Dynamic page title:** `setLanguage` in nav.js updates `document.title` if `pageTranslations[lang]['page-title']` exists. The static `<title>` tag always holds the ET version (for Google). Add `'page-title'` to all three language blocks in `pageTranslations` on every page.
 
 ## Paths — IMPORTANT
 The site is deployed on Vercel at `https://sfflab.ee`. Use **root-relative paths** (`/`, `/#pricing`, `/boxes.html`) for nav links — NOT `index.html` or `../index.html`. Relative file paths (`boxes.html`, `configurator.html`) are fine for same-directory links, but the homepage must always be `/`.
@@ -194,6 +200,20 @@ The site is deployed on Vercel at `https://sfflab.ee`. Use **root-relative paths
 - Date column shows date + time (`HH:MM`) on separate line.
 - Customer detail panel shows `paymentMethod` row if present on the order object.
 - Mobile: hides columns 4,5,6,8 (Customer, Config, Price, Update); shows checkbox(1), Order#(2), Date(3), Status(7).
+
+## Favicons
+Three favicon formats are served from the root:
+- `favicon.ico` — 32×32, for Google Search and legacy browsers
+- `favicon-192.png` — 192×192, for Apple Touch and Google Search
+- `favicon.svg` — for modern browsers
+
+Every HTML page must include all three link tags:
+```html
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="apple-touch-icon" href="/favicon-192.png">
+```
 
 ## Vercel Analytics
 All HTML pages include `<script defer src="/_vercel/insights/script.js"></script>` before `</head>`.
