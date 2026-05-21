@@ -267,6 +267,40 @@ async function handleGetTaxReport(req, res, redis) {
     });
 }
 
+// --- EXPENSES ---
+async function handleGetExpenses(req, res, redis) {
+    if (!isAdmin(req)) return res.status(401).json({ error: 'Unauthorized' });
+    const keys = await redis.keys('expense:*');
+    if (!keys || keys.length === 0) return res.status(200).json({ expenses: [] });
+    const expenses = await redis.mget(...keys);
+    const sorted = expenses.filter(Boolean).sort((a, b) => new Date(b.date) - new Date(a.date));
+    return res.status(200).json({ expenses: sorted });
+}
+
+async function handleAddExpense(req, res, redis) {
+    if (!isAdmin(req)) return res.status(401).json({ error: 'Unauthorized' });
+    const { date, supplier, description, net, vat } = req.body;
+    if (!date || !supplier || net === undefined || vat === undefined) {
+        return res.status(400).json({ error: 'Missing required fields' });
+    }
+    
+    // Unique ID for the expense
+    const id = `expense:${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
+    const expense = {
+        id,
+        date,
+        supplier,
+        description: description || '',
+        net: parseFloat(net),
+        vat: parseFloat(vat),
+        gross: parseFloat(net) + parseFloat(vat),
+        createdAt: new Date().toISOString()
+    };
+    
+    await redis.set(id, expense);
+    return res.status(200).json({ success: true, expense });
+}
+
 // --- MAIN ROUTER ---
 
 export default async function handler(req, res) {
@@ -279,6 +313,8 @@ export default async function handler(req, res) {
         if (req.method === 'GET') {
             if (req.query.action === 'tax-report') {
                 return await handleGetTaxReport(req, res, redis);
+            } else if (req.query.action === 'expenses') {
+                return await handleGetExpenses(req, res, redis);
             } else if (req.query.orderNumber) {
                 return await handleGetOrderStatus(req, res, redis);
             } else {
@@ -289,6 +325,8 @@ export default async function handler(req, res) {
         if (req.method === 'POST') {
             if (req.query.action === 'update-status') {
                 return await handleUpdateStatus(req, res, redis);
+            } else if (req.query.action === 'add-expense') {
+                return await handleAddExpense(req, res, redis);
             } else {
                 return await handleCreateOrder(req, res, redis);
             }
