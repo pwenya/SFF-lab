@@ -337,7 +337,7 @@
 
             <div class="glass rounded-[24px] p-6 mb-6">
                 <h3 id="expense-form-title" style="font-size:10px;font-weight:800;letter-spacing:0.15em;text-transform:uppercase;color:#a1a1aa;margin-bottom:16px">Add New Expense</h3>
-                <div style="display:grid;grid-template-columns:1fr 1fr 2fr 1fr 1fr 130px auto;gap:12px;align-items:end;">
+                <div style="display:grid;grid-template-columns:1fr 1fr 2fr 1fr 1fr 1fr 130px auto;gap:12px;align-items:end;">
                     <input type="hidden" id="exp-id" value="">
                     <div>
                         <label style="display:block;font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#52525b;margin-bottom:6px">Date</label>
@@ -350,6 +350,10 @@
                     <div>
                         <label style="display:block;font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#52525b;margin-bottom:6px">Description</label>
                         <input type="text" id="exp-desc" class="admin-input" style="padding:8px 12px;font-size:12px;width:100%" placeholder="e.g. Components for SFF-1234">
+                    </div>
+                    <div>
+                        <label style="display:block;font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#52525b;margin-bottom:6px">Order No</label>
+                        <input type="text" id="exp-order-no" class="admin-input" style="padding:8px 12px;font-size:12px;width:100%" placeholder="SFF-2024-…">
                     </div>
                     <div>
                         <label style="display:block;font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#52525b;margin-bottom:6px">Net Amount (€)</label>
@@ -395,10 +399,11 @@
             </div>
 
             <div class="glass rounded-[24px] overflow-hidden">
-                <div style="display:grid;grid-template-columns:100px 150px 1fr 100px 100px 100px 90px 100px;gap:12px;padding:12px 20px;border-bottom:1px solid rgba(255,255,255,0.06);font-size:9px;font-weight:800;letter-spacing:0.18em;text-transform:uppercase;color:#3f3f46">
+                <div style="display:grid;grid-template-columns:100px 150px 1fr 110px 90px 90px 100px 90px 160px;gap:12px;padding:12px 20px;border-bottom:1px solid rgba(255,255,255,0.06);font-size:9px;font-weight:800;letter-spacing:0.18em;text-transform:uppercase;color:#3f3f46">
                     <span>Date</span>
                     <span>Supplier</span>
                     <span>Description</span>
+                    <span>Order No</span>
                     <span>Net (€)</span>
                     <span>VAT (€)</span>
                     <span>Gross (€)</span>
@@ -407,6 +412,37 @@
                 </div>
                 <div id="expenses-table-body">
                     <div style="padding:48px;text-align:center;color:#3f3f46;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase">Loading expenses…</div>
+                </div>
+            </div>
+
+            <div id="expense-summary-widget" style="display:none;margin-top:16px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:24px;padding:20px 24px">
+                <div style="font-size:9px;font-weight:800;letter-spacing:0.2em;text-transform:uppercase;color:#3f3f46;margin-bottom:16px">Expense Summary</div>
+                <div style="display:flex;flex-wrap:wrap;gap:32px">
+                    <div>
+                        <div id="sum-gross" style="font-size:20px;font-weight:900;color:white;letter-spacing:-0.02em">0.00 €</div>
+                        <div style="font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#52525b;margin-top:3px">Total Gross</div>
+                    </div>
+                    <div>
+                        <div id="sum-net" style="font-size:20px;font-weight:900;color:#a1a1aa;letter-spacing:-0.02em">0.00 €</div>
+                        <div style="font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#52525b;margin-top:3px">Net (excl. VAT)</div>
+                    </div>
+                    <div>
+                        <div id="sum-vat" style="font-size:20px;font-weight:900;color:#f59e0b;letter-spacing:-0.02em">0.00 €</div>
+                        <div style="font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#52525b;margin-top:3px">Deductible VAT</div>
+                    </div>
+                    <div style="width:1px;background:rgba(255,255,255,0.06);align-self:stretch"></div>
+                    <div>
+                        <div id="sum-confirmed" style="font-size:20px;font-weight:900;color:#4ade80;letter-spacing:-0.02em">0.00 €</div>
+                        <div style="font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#52525b;margin-top:3px">Confirmed (bank linked)</div>
+                    </div>
+                    <div>
+                        <div id="sum-unconfirmed" style="font-size:20px;font-weight:900;color:#f59e0b;letter-spacing:-0.02em">0.00 €</div>
+                        <div style="font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#52525b;margin-top:3px">Unconfirmed</div>
+                    </div>
+                    <div id="sum-mismatch-block" style="display:none">
+                        <div id="sum-mismatch" style="font-size:20px;font-weight:900;color:#f87171;letter-spacing:-0.02em">0</div>
+                        <div style="font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#52525b;margin-top:3px">Amount Mismatch ⚠</div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -860,7 +896,7 @@
             return;
         }
         body.innerHTML = filteredTx.map(tx => {
-            const rowStyle = tx.matched ? 'opacity:0.4;color:#71717a;' : 'color:white;';
+            const rowStyle = tx.matched ? 'color:#a1a1aa;' : 'color:white;';
 
             let matchedDisplay = '';
             if (tx.matched) {
@@ -1023,6 +1059,7 @@
             ALL_EXPENSES = data.expenses;
             renderExpensesTable();
             renderLoanBalance();
+            renderExpenseSummary();
         })
         .catch(err => {
             console.error('Expenses Fetch Error:', err);
@@ -1036,32 +1073,118 @@
         loan_repayment: '<span style="background:rgba(167,139,250,0.1);color:#a78bfa;font-size:9px;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;padding:3px 8px;border-radius:6px;border:1px solid rgba(167,139,250,0.2)">Laen ↑</span>'
     };
 
+    var linkingExpenseId = null;
+
     function renderExpensesTable() {
         const body = document.getElementById('expenses-table-body');
         if (ALL_EXPENSES.length === 0) {
             body.innerHTML = `<div style="padding:48px;text-align:center;color:#3f3f46;">No expenses recorded yet.</div>`;
             return;
         }
+        const ROW_GRID = 'display:grid;grid-template-columns:100px 150px 1fr 110px 90px 90px 100px 90px 160px;gap:12px;padding:14px 20px;border-bottom:1px solid rgba(255,255,255,0.04);font-size:11px;color:white;transition:background 0.2s;';
         body.innerHTML = ALL_EXPENSES.map(exp => {
-            const t = exp.type || 'expense';
-            const isLoan = t === 'loan_in' || t === 'loan_repayment';
-            const grossColor = t === 'loan_in' ? '#60a5fa' : t === 'loan_repayment' ? '#a78bfa' : '#4ade80';
-            const vatColor   = isLoan ? '#3f3f46' : '#ef4444';
-            const badge      = TYPE_BADGE[t] || TYPE_BADGE['expense'];
-            return `<div style="display:grid;grid-template-columns:100px 150px 1fr 100px 100px 100px 90px 100px;gap:12px;padding:14px 20px;border-bottom:1px solid rgba(255,255,255,0.04);font-size:11px;color:white;transition:background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.03)'" onmouseout="this.style.background='transparent'">
+            const t         = exp.type || 'expense';
+            const isLoan    = t === 'loan_in' || t === 'loan_repayment';
+            const grossColor= t === 'loan_in' ? '#60a5fa' : t === 'loan_repayment' ? '#a78bfa' : '#4ade80';
+            const vatColor  = isLoan ? '#3f3f46' : '#ef4444';
+            const badge     = TYPE_BADGE[t] || TYPE_BADGE['expense'];
+            const safeId    = exp.id.replace(/[^a-z0-9]/gi, '_');
+
+            // Linked tx badge
+            let linkedBadge = '';
+            if (exp.linkedTxId) {
+                const tx = ALL_BANK_TRANSACTIONS.find(tx => tx.id === exp.linkedTxId);
+                const txAmt = tx ? tx.amount.toFixed(2) + ' €' : exp.linkedTxId;
+                const mismatch = tx && Math.abs(tx.amount - exp.gross) > 0.01;
+                linkedBadge = `<span style="background:rgba(74,222,128,0.08);color:${mismatch ? '#f59e0b' : '#4ade80'};font-size:9px;font-weight:800;padding:2px 7px;border-radius:5px;border:1px solid ${mismatch ? 'rgba(245,158,11,0.25)' : 'rgba(74,222,128,0.2)'};" title="${mismatch ? 'Amount mismatch!' : 'Bank confirmed'}">✓ ${txAmt}${mismatch ? ' ⚠' : ''}</span> `;
+            }
+
+            // Actions cell
+            let actionsHtml;
+            if (linkingExpenseId === exp.id) {
+                const available = ALL_BANK_TRANSACTIONS.filter(tx => !tx.matched || tx.linkedExpenseId === exp.id);
+                const options = available.map(tx =>
+                    `<option value="${esc(tx.id)}">${tx.date ? tx.date.slice(0,10) : ''} · ${tx.amount.toFixed(2)} € · ${esc(tx.orderRef || tx.id)}</option>`
+                ).join('');
+                actionsHtml = `<span style="display:flex;align-items:center;gap:4px;flex-wrap:wrap;">
+                    <select id="link-tx-select-${safeId}" class="status-select" style="padding:3px 6px;font-size:9px;max-width:130px">
+                        <option value="">Pick tx…</option>${options}
+                    </select>
+                    <button onclick="confirmLinkExpense('${exp.id}','${safeId}')" style="background:none;border:none;color:#4ade80;cursor:pointer;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:0.08em">✓</button>
+                    <button onclick="cancelLinkPicker()" style="background:none;border:none;color:#71717a;cursor:pointer;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:0.08em">✕</button>
+                </span>`;
+            } else {
+                const linkBtn = exp.linkedTxId
+                    ? `<button onclick="unlinkExpenseFromTx('${exp.id}')" style="background:none;border:none;color:#71717a;cursor:pointer;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;margin-right:6px" title="Unlink">Unlink</button>`
+                    : (t === 'expense' ? `<button onclick="showLinkPicker('${exp.id}')" style="background:none;border:none;color:#a78bfa;cursor:pointer;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;margin-right:6px">Link Tx</button>` : '');
+                actionsHtml = `<span style="text-align:right;display:flex;align-items:center;justify-content:flex-end;gap:4px;">
+                    ${linkedBadge}${linkBtn}
+                    <button onclick="editExpense('${exp.id}')" style="background:none;border:none;color:#60a5fa;cursor:pointer;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:0.1em">Edit</button>
+                    <button onclick="deleteExpense('${exp.id}')" style="background:none;border:none;color:#f87171;cursor:pointer;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;margin-left:4px">Del</button>
+                </span>`;
+            }
+
+            return `<div style="${ROW_GRID}" onmouseover="this.style.background='rgba(255,255,255,0.03)'" onmouseout="this.style.background='transparent'">
                 <span style="color:#71717a;">${esc(exp.date)}</span>
                 <span style="font-weight:600;">${esc(exp.supplier)}</span>
                 <span style="color:#a1a1aa;">${esc(exp.description)}</span>
+                <span style="color:#60a5fa;font-size:10px;">${esc(exp.orderNo || '—')}</span>
                 <span style="font-weight:800;">${exp.net.toFixed(2)}</span>
                 <span style="font-weight:800;color:${vatColor};">${exp.vat.toFixed(2)}</span>
                 <span style="font-weight:800;color:${grossColor};">${exp.gross.toFixed(2)}</span>
                 <span>${badge}</span>
-                <span style="text-align:right">
-                    <button onclick="editExpense('${exp.id}')" style="background:none;border:none;color:#60a5fa;cursor:pointer;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;margin-right:8px">Edit</button>
-                    <button onclick="deleteExpense('${exp.id}')" style="background:none;border:none;color:#f87171;cursor:pointer;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:0.1em">Del</button>
-                </span>
+                ${actionsHtml}
             </div>`;
         }).join('');
+    }
+
+    function showLinkPicker(expenseId) {
+        linkingExpenseId = expenseId;
+        renderExpensesTable();
+    }
+
+    function cancelLinkPicker() {
+        linkingExpenseId = null;
+        renderExpensesTable();
+    }
+
+    function confirmLinkExpense(expenseId, safeId) {
+        const txId = document.getElementById('link-tx-select-' + safeId).value;
+        if (!txId) { showToast('Pick a transaction first', '#f59e0b'); return; }
+        fetch('/api/orders?action=link-expense-tx', {
+            method: 'POST', credentials: 'include',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ expenseId, txId })
+        })
+        .then(r => r.ok ? r.json() : r.json().then(e => Promise.reject(e)))
+        .then(data => {
+            if (data.success) {
+                showToast('Linked to bank transaction', '#4ade80');
+                linkingExpenseId = null;
+                Promise.all([loadExpenses(), loadBankTransactions()]);
+            } else {
+                showToast('Error: ' + (data.error || 'Unknown'), '#f87171');
+            }
+        })
+        .catch(err => { console.error(err); showToast('Failed to link', '#f87171'); });
+    }
+
+    function unlinkExpenseFromTx(expenseId) {
+        fetch('/api/orders?action=unlink-expense-tx', {
+            method: 'POST', credentials: 'include',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ expenseId })
+        })
+        .then(r => r.ok ? r.json() : r.json().then(e => Promise.reject(e)))
+        .then(data => {
+            if (data.success) {
+                showToast('Unlinked', '#4ade80');
+                Promise.all([loadExpenses(), loadBankTransactions()]);
+            } else {
+                showToast('Error: ' + (data.error || 'Unknown'), '#f87171');
+            }
+        })
+        .catch(err => { console.error(err); showToast('Failed to unlink', '#f87171'); });
     }
 
     function renderLoanBalance() {
@@ -1073,6 +1196,35 @@
         document.getElementById('loan-issued').textContent      = issued.toFixed(2) + ' €';
         document.getElementById('loan-repaid').textContent      = repaid.toFixed(2) + ' €';
         document.getElementById('loan-outstanding').textContent = (issued - repaid).toFixed(2) + ' €';
+    }
+
+    function renderExpenseSummary() {
+        const expenses = ALL_EXPENSES.filter(e => (e.type || 'expense') === 'expense');
+        if (expenses.length === 0) {
+            document.getElementById('expense-summary-widget').style.display = 'none';
+            return;
+        }
+        const totalGross  = expenses.reduce((s, e) => s + (e.gross || 0), 0);
+        const totalNet    = expenses.reduce((s, e) => s + (e.net  || 0), 0);
+        const totalVat    = expenses.reduce((s, e) => s + (e.vat  || 0), 0);
+        const confirmed   = expenses.filter(e => e.linkedTxId);
+        const unconfirmed = expenses.filter(e => !e.linkedTxId);
+        const confirmedGross   = confirmed.reduce((s, e) => s + (e.gross || 0), 0);
+        const unconfirmedGross = unconfirmed.reduce((s, e) => s + (e.gross || 0), 0);
+        let mismatches = 0;
+        confirmed.forEach(e => {
+            const tx = ALL_BANK_TRANSACTIONS.find(t => t.id === e.linkedTxId);
+            if (tx && Math.abs(tx.amount - e.gross) > 0.01) mismatches++;
+        });
+        document.getElementById('expense-summary-widget').style.display = 'block';
+        document.getElementById('sum-gross').textContent       = totalGross.toFixed(2)     + ' €';
+        document.getElementById('sum-net').textContent         = totalNet.toFixed(2)       + ' €';
+        document.getElementById('sum-vat').textContent         = totalVat.toFixed(2)       + ' €';
+        document.getElementById('sum-confirmed').textContent   = confirmedGross.toFixed(2) + ' €';
+        document.getElementById('sum-unconfirmed').textContent = unconfirmedGross.toFixed(2) + ' €';
+        const mb = document.getElementById('sum-mismatch-block');
+        mb.style.display = mismatches > 0 ? 'block' : 'none';
+        document.getElementById('sum-mismatch').textContent = mismatches;
     }
 
     function onExpTypeChange(type) {
@@ -1094,7 +1246,8 @@
         const desc = document.getElementById('exp-desc').value;
         const net = parseFloat(document.getElementById('exp-net').value);
         const vat = parseFloat(document.getElementById('exp-vat').value);
-        const type = document.getElementById('exp-type').value || 'expense';
+        const type    = document.getElementById('exp-type').value || 'expense';
+        const orderNo = document.getElementById('exp-order-no').value.trim();
 
         if (!date || !supplier || isNaN(net) || isNaN(vat)) {
             showToast('Please fill all required fields', '#f59e0b');
@@ -1102,7 +1255,7 @@
         }
 
         const action = id ? 'update-expense' : 'add-expense';
-        const payload = { date: date, supplier: supplier, description: desc, net: net, vat: vat, type: type };
+        const payload = { date, supplier, description: desc, net, vat, type, orderNo };
         if (id) payload.id = id;
 
         fetch(`/api/orders?action=${action}`, {
@@ -1137,7 +1290,8 @@
         document.getElementById('exp-desc').value = exp.description;
         document.getElementById('exp-net').value = exp.net;
         document.getElementById('exp-vat').value = exp.vat;
-        document.getElementById('exp-type').value = exp.type || 'expense';
+        document.getElementById('exp-type').value    = exp.type || 'expense';
+        document.getElementById('exp-order-no').value = exp.orderNo || '';
         onExpTypeChange(exp.type || 'expense');
 
         document.getElementById('expense-form-title').innerText = 'Edit Expense';
@@ -1159,7 +1313,8 @@
         document.getElementById('exp-desc').value = '';
         document.getElementById('exp-net').value = '';
         document.getElementById('exp-vat').value = '';
-        document.getElementById('exp-type').value = 'expense';
+        document.getElementById('exp-type').value    = 'expense';
+        document.getElementById('exp-order-no').value = '';
         onExpTypeChange('expense');
 
         document.getElementById('expense-form-title').innerText = 'Add New Expense';

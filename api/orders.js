@@ -286,11 +286,13 @@ async function handleAddExpense(req, res, redis) {
 
     const VALID_TYPES = ['expense', 'loan_in', 'loan_repayment'];
     const id = `expense:${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
+    const { orderNo } = req.body;
     const expense = {
         id,
         date,
         supplier,
         description: description || '',
+        orderNo: orderNo || '',
         net: parseFloat(net),
         vat: parseFloat(vat),
         gross: parseFloat(net) + parseFloat(vat),
@@ -315,11 +317,13 @@ async function handleUpdateExpense(req, res, redis) {
     }
 
     const VALID_TYPES = ['expense', 'loan_in', 'loan_repayment'];
+    const { orderNo } = req.body;
     const expense = {
         ...existing,
         date,
         supplier,
         description: description || '',
+        orderNo: orderNo !== undefined ? orderNo : (existing.orderNo || ''),
         net: parseFloat(net),
         vat: parseFloat(vat),
         gross: parseFloat(net) + parseFloat(vat),
@@ -334,10 +338,55 @@ async function handleUpdateExpense(req, res, redis) {
 async function handleDeleteExpense(req, res, redis) {
     if (!isAdmin(req)) return res.status(401).json({ error: 'Unauthorized' });
     const { id } = req.body;
-    if (!id) {
-        return res.status(400).json({ error: 'Missing id' });
-    }
+    if (!id) return res.status(400).json({ error: 'Missing id' });
     await redis.del(id);
+    return res.status(200).json({ success: true });
+}
+
+async function handleLinkExpenseTx(req, res, redis) {
+    if (!isAdmin(req)) return res.status(401).json({ error: 'Unauthorized' });
+    const { expenseId, txId } = req.body;
+    if (!expenseId || !txId) return res.status(400).json({ error: 'Missing expenseId or txId' });
+
+    const [expense, tx] = await Promise.all([
+        redis.get(expenseId),
+        redis.get(`lhv_tx:${txId}`)
+    ]);
+    if (!expense) return res.status(404).json({ error: 'Expense not found' });
+    if (!tx)      return res.status(404).json({ error: 'Transaction not found' });
+
+    expense.linkedTxId = txId;
+    tx.matched         = true;
+    tx.category        = 'expense_payment';
+    tx.linkedExpenseId = expenseId;
+
+    await Promise.all([
+        redis.set(expenseId, expense),
+        redis.set(`lhv_tx:${txId}`, tx)
+    ]);
+    return res.status(200).json({ success: true });
+}
+
+async function handleUnlinkExpenseTx(req, res, redis) {
+    if (!isAdmin(req)) return res.status(401).json({ error: 'Unauthorized' });
+    const { expenseId } = req.body;
+    if (!expenseId) return res.status(400).json({ error: 'Missing expenseId' });
+
+    const expense = await redis.get(expenseId);
+    if (!expense) return res.status(404).json({ error: 'Expense not found' });
+
+    if (expense.linkedTxId) {
+        const tx = await redis.get(`lhv_tx:${expense.linkedTxId}`);
+        if (tx) {
+            tx.matched         = false;
+            tx.category        = null;
+            tx.linkedExpenseId = null;
+            await redis.set(`lhv_tx:${expense.linkedTxId}`, tx);
+        }
+    }
+
+    delete expense.linkedTxId;
+    await redis.set(expenseId, expense);
     return res.status(200).json({ success: true });
 }
 
@@ -371,6 +420,10 @@ export default async function handler(req, res) {
                 return await handleUpdateExpense(req, res, redis);
             } else if (req.query.action === 'delete-expense') {
                 return await handleDeleteExpense(req, res, redis);
+            } else if (req.query.action === 'link-expense-tx') {
+                return await handleLinkExpenseTx(req, res, redis);
+            } else if (req.query.action === 'unlink-expense-tx') {
+                return await handleUnlinkExpenseTx(req, res, redis);
             } else {
                 return await handleCreateOrder(req, res, redis);
             }
