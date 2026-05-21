@@ -78,11 +78,16 @@ async function handlePost(req, res, redis) {
 
         for (const tx of settledTransactions) {
             const txKey = `lhv_tx:${tx.Reference}`;
+            // We load existing to preserve category if it was set
+            const existingTx = await redis.get(txKey);
+            
             processedCount++;
             
             const orderRef = tx['Order reference'];
-            let isMatched = false;
-            if (orderRef) {
+            let isMatched = existingTx ? existingTx.matched : false; // Keep existing matched status if available
+            let category = existingTx ? existingTx.category : null;
+
+            if (orderRef && !existingTx) { // Only try to match automatically if it's new
                 const order = await redis.get(`order:${orderRef}`);
                 if (order) { // Order exists, so this transaction is matched
                     isMatched = true;
@@ -104,8 +109,8 @@ async function handlePost(req, res, redis) {
                 date: tx.Created,
                 paymentMethod: tx['Payment method'],
                 matched: isMatched,
+                category: category, // Persist category
             };
-            // This will now OVERWRITE existing records, fixing the 'matched' flag
             await redis.set(txKey, transactionRecord);
         }
 
@@ -134,6 +139,35 @@ async function handlePost(req, res, redis) {
     }
 }
 
+async function handleCategorize(req, res, redis) {
+    const { id, category } = req.body;
+    
+    if (!id || !category) {
+        return res.status(400).json({ success: false, error: 'Missing transaction id or category.' });
+    }
+
+    try {
+        const txKey = `lhv_tx:${id}`;
+        const transaction = await redis.get(txKey);
+        
+        if (!transaction) {
+            return res.status(404).json({ success: false, error: 'Transaction not found.' });
+        }
+
+        transaction.category = category;
+        transaction.matched = true; // Once categorized, it's considered matched/handled
+        
+        await redis.set(txKey, transaction);
+        
+        return res.status(200).json({ success: true, message: 'Transaction categorized successfully.' });
+
+    } catch (error) {
+        console.error('Categorize Error:', error);
+        res.status(500).json({ success: false, error: 'Server error categorizing transaction.' });
+    }
+}
+
+
 // --- MAIN HANDLER ---
 export default async function handler(req, res) {
     setCors(req, res);
@@ -145,6 +179,11 @@ export default async function handler(req, res) {
         return handleGet(req, res, redis);
     }
     if (req.method === 'POST') {
+        const { action } = req.query;
+        if (action === 'categorize') {
+            return handleCategorize(req, res, redis);
+        }
+        // Default POST is upload statement
         return handlePost(req, res, redis);
     }
     return res.status(405).json({ success: false, error: 'Method Not Allowed' });
