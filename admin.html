@@ -329,6 +329,54 @@
             </div>
         </div>
 
+        <!-- Expense Ledger Section -->
+        <div id="expense-ledger-section" class="mb-10">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.06)">
+                <h2 style="font-size:12px;font-weight:800;letter-spacing:0.2em;text-transform:uppercase;color:#52525b;">Expense Ledger</h2>
+            </div>
+
+            <div class="glass rounded-[24px] p-6 mb-6">
+                <h3 style="font-size:10px;font-weight:800;letter-spacing:0.15em;text-transform:uppercase;color:#a1a1aa;margin-bottom:16px">Add New Expense</h3>
+                <div style="display:grid;grid-template-columns:1fr 1fr 2fr 1fr 1fr auto;gap:12px;align-items:end;">
+                    <div>
+                        <label style="display:block;font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#52525b;margin-bottom:6px">Date</label>
+                        <input type="date" id="exp-date" class="admin-input" style="padding:8px 12px;font-size:12px;width:100%">
+                    </div>
+                    <div>
+                        <label style="display:block;font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#52525b;margin-bottom:6px">Supplier</label>
+                        <input type="text" id="exp-supplier" class="admin-input" style="padding:8px 12px;font-size:12px;width:100%" placeholder="e.g. Amazon.de">
+                    </div>
+                    <div>
+                        <label style="display:block;font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#52525b;margin-bottom:6px">Description</label>
+                        <input type="text" id="exp-desc" class="admin-input" style="padding:8px 12px;font-size:12px;width:100%" placeholder="e.g. Components for SFF-1234">
+                    </div>
+                    <div>
+                        <label style="display:block;font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#52525b;margin-bottom:6px">Net Amount (€)</label>
+                        <input type="number" id="exp-net" step="0.01" class="admin-input" style="padding:8px 12px;font-size:12px;width:100%" placeholder="0.00">
+                    </div>
+                    <div>
+                        <label style="display:block;font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#52525b;margin-bottom:6px">VAT Amount (€)</label>
+                        <input type="number" id="exp-vat" step="0.01" class="admin-input" style="padding:8px 12px;font-size:12px;width:100%" placeholder="0.00">
+                    </div>
+                    <button onclick="addExpense()" class="filter-btn" style="background:rgba(34,197,94,0.1);border-color:rgba(34,197,94,0.3);color:#4ade80;padding:9px 16px;height:max-content">Add</button>
+                </div>
+            </div>
+
+            <div class="glass rounded-[24px] overflow-hidden">
+                <div style="display:grid;grid-template-columns:100px 150px 1fr 100px 100px 100px;gap:12px;padding:12px 20px;border-bottom:1px solid rgba(255,255,255,0.06);font-size:9px;font-weight:800;letter-spacing:0.18em;text-transform:uppercase;color:#3f3f46">
+                    <span>Date</span>
+                    <span>Supplier</span>
+                    <span>Description</span>
+                    <span>Net (€)</span>
+                    <span>VAT (€)</span>
+                    <span>Gross (€)</span>
+                </div>
+                <div id="expenses-table-body">
+                    <div style="padding:48px;text-align:center;color:#3f3f46;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase">Loading expenses…</div>
+                </div>
+            </div>
+        </div>
+
         <div style="display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:20px">
             <div style="display:flex;flex-wrap:wrap;gap:6px">
                 <button class="filter-btn active" onclick="setFilter('all',this)">All</button>
@@ -380,6 +428,7 @@
 <script>
     var ALL_ORDERS   = [];
     var ALL_BANK_TRANSACTIONS = [];
+    var ALL_EXPENSES = [];
     var activeFilter = 'all';
     var currentDetailOrder = null;
     var refreshTimer = null;
@@ -416,6 +465,7 @@
         initBankTransactionFilters();
         loadBankTransactions();
         initTaxReportSelectors();
+        loadExpenses();
     }
 
     function loadOrders() {
@@ -776,6 +826,7 @@
             return;
         }
         body.innerHTML = filteredTx.map(tx => {
+            const rowStyle = tx.matched ? 'opacity:0.4;color:#71717a;' : 'color:white;';
             return `<div style="display:grid;grid-template-columns:150px 1fr 120px 100px 120px 80px;gap:12px;padding:14px 20px;border-bottom:1px solid rgba(255,255,255,0.04);font-size:11px;color:white;transition:background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.03)'" onmouseout="this.style.background='transparent'">
                 <span style="color:#71717a;">${new Date(tx.date).toLocaleString()}</span>
                 <span style="font-weight:600;">${esc(tx.orderRef || '—')}</span>
@@ -880,6 +931,77 @@
         .catch(err => {
             console.error(err);
             resultsDiv.innerHTML = `<div style="color:#ef4444;">Error generating report.</div>`;
+        });
+    }
+
+    function loadExpenses() {
+        fetch('/api/orders?action=expenses', { credentials: 'include' })
+        .then(r => r.ok ? r.json() : Promise.reject('Failed to load expenses'))
+        .then(data => {
+            if (!data.expenses) throw new Error('Invalid response');
+            ALL_EXPENSES = data.expenses;
+            renderExpensesTable();
+        })
+        .catch(err => {
+            console.error('Expenses Fetch Error:', err);
+            document.getElementById('expenses-table-body').innerHTML = `<div style="padding:48px;text-align:center;color:#f87171;">Failed to load expenses.</div>`;
+        });
+    }
+
+    function renderExpensesTable() {
+        const body = document.getElementById('expenses-table-body');
+        if (ALL_EXPENSES.length === 0) {
+            body.innerHTML = `<div style="padding:48px;text-align:center;color:#3f3f46;">No expenses recorded yet.</div>`;
+            return;
+        }
+        body.innerHTML = ALL_EXPENSES.map(exp => {
+            return `<div style="display:grid;grid-template-columns:100px 150px 1fr 100px 100px 100px;gap:12px;padding:14px 20px;border-bottom:1px solid rgba(255,255,255,0.04);font-size:11px;color:white;transition:background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.03)'" onmouseout="this.style.background='transparent'">
+                <span style="color:#71717a;">${esc(exp.date)}</span>
+                <span style="font-weight:600;">${esc(exp.supplier)}</span>
+                <span style="color:#a1a1aa;">${esc(exp.description)}</span>
+                <span style="font-weight:800;">${exp.net.toFixed(2)}</span>
+                <span style="font-weight:800;color:#ef4444;">${exp.vat.toFixed(2)}</span>
+                <span style="font-weight:800;color:#4ade80;">${exp.gross.toFixed(2)}</span>
+            </div>`;
+        }).join('');
+    }
+
+    function addExpense() {
+        const date = document.getElementById('exp-date').value;
+        const supplier = document.getElementById('exp-supplier').value;
+        const desc = document.getElementById('exp-desc').value;
+        const net = parseFloat(document.getElementById('exp-net').value);
+        const vat = parseFloat(document.getElementById('exp-vat').value);
+
+        if (!date || !supplier || isNaN(net) || isNaN(vat)) {
+            showToast('Please fill all required fields', '#f59e0b');
+            return;
+        }
+
+        fetch('/api/orders?action=add-expense', {
+            method: 'POST',
+            credentials: 'include',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ date: date, supplier: supplier, description: desc, net: net, vat: vat })
+        })
+        .then(r => r.ok ? r.json() : r.json().then(err => Promise.reject(err)))
+        .then(data => {
+            if (data.success) {
+                showToast('Expense added', '#4ade80');
+                // Reset form
+                document.getElementById('exp-supplier').value = '';
+                document.getElementById('exp-desc').value = '';
+                document.getElementById('exp-net').value = '';
+                document.getElementById('exp-vat').value = '';
+                // Reload table
+                loadExpenses();
+            } else {
+                showToast('Error: ' + (data.error || 'Unknown error'), '#f87171');
+            }
+        })
+        .catch(err => {
+            console.error('Add Expense Error:', err);
+            showToast('Failed to add expense', '#f87171');
         });
     }
 
