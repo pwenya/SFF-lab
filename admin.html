@@ -415,36 +415,6 @@
                 </div>
             </div>
 
-            <div id="expense-summary-widget" style="display:none;margin-top:16px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:24px;padding:20px 24px">
-                <div style="font-size:9px;font-weight:800;letter-spacing:0.2em;text-transform:uppercase;color:#3f3f46;margin-bottom:16px">Expense Summary</div>
-                <div style="display:flex;flex-wrap:wrap;gap:32px">
-                    <div>
-                        <div id="sum-gross" style="font-size:20px;font-weight:900;color:white;letter-spacing:-0.02em">0.00 €</div>
-                        <div style="font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#52525b;margin-top:3px">Total Gross</div>
-                    </div>
-                    <div>
-                        <div id="sum-net" style="font-size:20px;font-weight:900;color:#a1a1aa;letter-spacing:-0.02em">0.00 €</div>
-                        <div style="font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#52525b;margin-top:3px">Net (excl. VAT)</div>
-                    </div>
-                    <div>
-                        <div id="sum-vat" style="font-size:20px;font-weight:900;color:#f59e0b;letter-spacing:-0.02em">0.00 €</div>
-                        <div style="font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#52525b;margin-top:3px">Deductible VAT</div>
-                    </div>
-                    <div style="width:1px;background:rgba(255,255,255,0.06);align-self:stretch"></div>
-                    <div>
-                        <div id="sum-confirmed" style="font-size:20px;font-weight:900;color:#4ade80;letter-spacing:-0.02em">0.00 €</div>
-                        <div style="font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#52525b;margin-top:3px">Confirmed (bank linked)</div>
-                    </div>
-                    <div>
-                        <div id="sum-unconfirmed" style="font-size:20px;font-weight:900;color:#f59e0b;letter-spacing:-0.02em">0.00 €</div>
-                        <div style="font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#52525b;margin-top:3px">Unconfirmed</div>
-                    </div>
-                    <div id="sum-mismatch-block" style="display:none">
-                        <div id="sum-mismatch" style="font-size:20px;font-weight:900;color:#f87171;letter-spacing:-0.02em">0</div>
-                        <div style="font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#52525b;margin-top:3px">Amount Mismatch ⚠</div>
-                    </div>
-                </div>
-            </div>
         </div>
 
         <div style="display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:20px">
@@ -1002,7 +972,7 @@
 
     function generateTaxReport() {
         const month = document.getElementById('report-month').value;
-        const year = document.getElementById('report-year').value;
+        const year  = document.getElementById('report-year').value;
         const resultsDiv = document.getElementById('tax-report-results');
 
         resultsDiv.innerHTML = '<div style="text-align:center;padding:20px;">Generating report...</div>';
@@ -1013,37 +983,69 @@
             if (!data.report) throw new Error('Invalid response');
             const rep = data.report;
 
-            if (rep.count === 0) {
-                resultsDiv.innerHTML = `<div style="padding:20px;text-align:center;color:#f59e0b;">No paid orders found for ${month}/${year}.</div>`;
+            // Expenses for this month from local data
+            const monthExpenses = ALL_EXPENSES.filter(e => {
+                if ((e.type || 'expense') !== 'expense') return false;
+                if (!e.date) return false;
+                const d = new Date(e.date);
+                return d.getMonth() + 1 === parseInt(month) && d.getFullYear() === parseInt(year);
+            });
+            const expNet   = monthExpenses.reduce((s, e) => s + (e.net  || 0), 0);
+            const expVat   = monthExpenses.reduce((s, e) => s + (e.vat  || 0), 0);
+            const expGross = monthExpenses.reduce((s, e) => s + (e.gross || 0), 0);
+
+            const salesNet = parseFloat(rep.net)  || 0;
+            const salesVat = parseFloat(rep.vat)  || 0;
+            const vatToPay = Math.max(0, salesVat - expVat);
+            const profit   = salesNet - expNet;
+
+            const noRevenue = rep.count === 0;
+            const noExpenses = monthExpenses.length === 0;
+
+            if (noRevenue && noExpenses) {
+                resultsDiv.innerHTML = `<div style="padding:20px;text-align:center;color:#f59e0b;">No data found for ${month}/${year}.</div>`;
                 return;
             }
 
-            resultsDiv.innerHTML = `
-                <div style="display:flex;flex-direction:column;gap:12px;">
-                    <div style="font-size:14px;font-weight:800;color:white;margin-bottom:8px;">Summary for ${month}/${year} (${rep.count} orders)</div>
+            const row = (label, value, color) =>
+                `<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.05);">
+                    <span style="color:#a1a1aa">${label}</span>
+                    <span style="font-weight:800;color:${color || 'white'}">${value}</span>
+                </div>`;
 
-                    <div style="display:flex;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,0.06);padding-bottom:8px;">
-                        <span style="color:#a1a1aa">Gross Sales (Total Received):</span>
-                        <span style="font-weight:800;color:white;">${rep.gross} €</span>
-                    </div>
+            const sectionHead = (label) =>
+                `<div style="font-size:9px;font-weight:800;letter-spacing:0.18em;text-transform:uppercase;color:#3f3f46;margin-top:20px;margin-bottom:4px;">${label}</div>`;
 
-                    <div style="display:flex;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,0.06);padding-bottom:8px;">
-                        <span style="color:#a1a1aa">VAT Amount (24% to pay):</span>
-                        <span style="font-weight:800;color:#ef4444;">${rep.vat} €</span>
-                    </div>
+            resultsDiv.innerHTML = `<div style="display:flex;flex-direction:column;">
+                <div style="font-size:13px;font-weight:800;color:white;margin-bottom:4px;">${month}/${year}</div>
+                <div style="font-size:10px;color:#52525b;margin-bottom:16px;">${rep.count} order${rep.count !== 1 ? 's' : ''}${noRevenue ? ' · no confirmed revenue' : ''} · ${monthExpenses.length} expense${monthExpenses.length !== 1 ? 's' : ''}</div>
 
-                    <div style="display:flex;justify-content:space-between;padding-bottom:8px;">
-                        <span style="color:#a1a1aa">Net Sales (Company Revenue):</span>
-                        <span style="font-weight:800;color:#4ade80;">${rep.net} €</span>
-                    </div>
+                ${sectionHead('Revenue')}
+                ${row('Gross received', rep.gross + ' €')}
+                ${row('Output VAT (24%)', rep.vat + ' €', '#ef4444')}
+                ${row('Net sales', rep.net + ' €', '#4ade80')}
 
-                    <div style="margin-top:16px;padding:16px;background:rgba(37,99,235,0.1);border-radius:12px;border:1px solid rgba(37,99,235,0.2);">
-                        <div style="font-size:10px;font-weight:800;color:#60a5fa;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:8px;">How to declare (e-MTA KMD):</div>
-                        <div>Enter <strong style="color:white;">${rep.net}</strong> in <strong>Lahtris 1</strong> (24% määraga maksustatavad toimingud).</div>
-                        <div style="font-size:10px;color:#a1a1aa;margin-top:4px;">The VAT (${rep.vat}) will be calculated automatically.</div>
+                ${sectionHead('Expenses')}
+                ${noExpenses
+                    ? `<div style="padding:10px 0;color:#3f3f46;font-size:11px;">No expenses recorded for this month.</div>`
+                    : row('Gross paid', expGross.toFixed(2) + ' €')
+                    + row('Deductible input VAT', expVat.toFixed(2) + ' €', '#4ade80')
+                    + row('Net expenses', expNet.toFixed(2) + ' €')
+                }
+
+                ${sectionHead('Result')}
+                ${row('Estimated net profit', profit.toFixed(2) + ' €', profit >= 0 ? '#4ade80' : '#f87171')}
+                ${row('VAT to pay (output − input)', vatToPay.toFixed(2) + ' €', '#f59e0b')}
+
+                <div style="margin-top:20px;padding:16px;background:rgba(37,99,235,0.08);border-radius:12px;border:1px solid rgba(37,99,235,0.18);">
+                    <div style="font-size:9px;font-weight:800;color:#60a5fa;letter-spacing:0.12em;text-transform:uppercase;margin-bottom:10px;">e-MTA KMD (käibedeklaratsioon)</div>
+                    <div style="display:flex;flex-direction:column;gap:6px;font-size:12px;">
+                        <div><strong style="color:white;">Lahter 1</strong> <span style="color:#a1a1aa">— müük 24%:</span> <strong style="color:white;">${rep.net} €</strong></div>
+                        ${!noExpenses ? `<div><strong style="color:white;">Lahter 5</strong> <span style="color:#a1a1aa">— sisendkäibemaks:</span> <strong style="color:#4ade80;">${expVat.toFixed(2)} €</strong></div>` : ''}
+                        <div style="margin-top:4px;padding-top:8px;border-top:1px solid rgba(255,255,255,0.06);"><strong style="color:#f59e0b;">Tasuda KMD:</strong> <strong style="color:#f59e0b;">${vatToPay.toFixed(2)} €</strong></div>
                     </div>
                 </div>
-            `;
+            </div>`;
         })
         .catch(err => {
             console.error(err);
@@ -1059,7 +1061,6 @@
             ALL_EXPENSES = data.expenses;
             renderExpensesTable();
             renderLoanBalance();
-            renderExpenseSummary();
         })
         .catch(err => {
             console.error('Expenses Fetch Error:', err);
@@ -1196,35 +1197,6 @@
         document.getElementById('loan-issued').textContent      = issued.toFixed(2) + ' €';
         document.getElementById('loan-repaid').textContent      = repaid.toFixed(2) + ' €';
         document.getElementById('loan-outstanding').textContent = (issued - repaid).toFixed(2) + ' €';
-    }
-
-    function renderExpenseSummary() {
-        const expenses = ALL_EXPENSES.filter(e => (e.type || 'expense') === 'expense');
-        if (expenses.length === 0) {
-            document.getElementById('expense-summary-widget').style.display = 'none';
-            return;
-        }
-        const totalGross  = expenses.reduce((s, e) => s + (e.gross || 0), 0);
-        const totalNet    = expenses.reduce((s, e) => s + (e.net  || 0), 0);
-        const totalVat    = expenses.reduce((s, e) => s + (e.vat  || 0), 0);
-        const confirmed   = expenses.filter(e => e.linkedTxId);
-        const unconfirmed = expenses.filter(e => !e.linkedTxId);
-        const confirmedGross   = confirmed.reduce((s, e) => s + (e.gross || 0), 0);
-        const unconfirmedGross = unconfirmed.reduce((s, e) => s + (e.gross || 0), 0);
-        let mismatches = 0;
-        confirmed.forEach(e => {
-            const tx = ALL_BANK_TRANSACTIONS.find(t => t.id === e.linkedTxId);
-            if (tx && Math.abs(tx.amount - e.gross) > 0.01) mismatches++;
-        });
-        document.getElementById('expense-summary-widget').style.display = 'block';
-        document.getElementById('sum-gross').textContent       = totalGross.toFixed(2)     + ' €';
-        document.getElementById('sum-net').textContent         = totalNet.toFixed(2)       + ' €';
-        document.getElementById('sum-vat').textContent         = totalVat.toFixed(2)       + ' €';
-        document.getElementById('sum-confirmed').textContent   = confirmedGross.toFixed(2) + ' €';
-        document.getElementById('sum-unconfirmed').textContent = unconfirmedGross.toFixed(2) + ' €';
-        const mb = document.getElementById('sum-mismatch-block');
-        mb.style.display = mismatches > 0 ? 'block' : 'none';
-        document.getElementById('sum-mismatch').textContent = mismatches;
     }
 
     function onExpTypeChange(type) {
