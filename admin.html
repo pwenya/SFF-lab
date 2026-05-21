@@ -946,9 +946,9 @@
             return `<div style="display:grid;grid-template-columns:150px 1fr 120px 100px 120px 120px;gap:12px;padding:14px 20px;border-bottom:1px solid rgba(255,255,255,0.04);font-size:11px;${rowStyle}transition:background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.03)'" onmouseout="this.style.background='transparent'">
                 <span style="color:#71717a;">${new Date(tx.date).toLocaleString()}</span>
                 <span style="font-weight:600;">${esc(tx.orderRef || '—')}</span>
-                <span style="font-weight:800;">${tx.amount.toFixed(2)}</span>
+                <span style="font-weight:800;color:${tx.direction === 'D' ? '#f87171' : tx.direction === 'C' ? '#4ade80' : 'white'}">${tx.direction === 'D' ? '−' : tx.direction === 'C' ? '+' : ''}${tx.amount.toFixed(2)}</span>
                 <span style="color:#e4e4e7;">${esc(tx.currency)}</span>
-                <span style="color:#e4e4e7;">${esc(tx.paymentMethod)}</span>
+                <span style="color:#e4e4e7;">${esc(tx.paymentMethod || tx.description || '—')}</span>
                 <span style="display:flex;align-items:flex-start;">${matchedDisplay}</span>
             </div>`;
         }).join('');

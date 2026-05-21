@@ -51,91 +51,131 @@ async function handleGet(req, res, redis) {
     }
 }
 
+function parseCSVLine(line) {
+    const result = [];
+    let current = '';
+    let inQuotes = false;
+    for (let i = 0; i < line.length; i++) {
+        const ch = line[i];
+        if (ch === '"') { inQuotes = !inQuotes; }
+        else if (ch === ',' && !inQuotes) { result.push(current.trim()); current = ''; }
+        else { current += ch; }
+    }
+    result.push(current.trim());
+    return result;
+}
+
+function parseCyrillicLhv(lines) {
+    const headers = parseCSVLine(lines[0]);
+    return lines.slice(1).filter(l => l.trim()).map(line => {
+        const vals = parseCSVLine(line);
+        const r = {};
+        headers.forEach((h, i) => { r[h] = vals[i] || ''; });
+        const txId     = r['Ссылка проводки'];
+        const rawAmt   = parseFloat(r['Сумма']);
+        if (!txId || isNaN(rawAmt) || rawAmt === 0) return null;
+        const direction   = r['Дебет/Кредит (D/C)'] || (rawAmt < 0 ? 'D' : 'C');
+        const description = r['Пояснение'] || '';
+        const orderMatch  = description.match(/SFF-\d{4}-\d{4}-\d{4}/);
+        return {
+            id:            txId,
+            orderRef:      orderMatch ? orderMatch[0] : null,
+            amount:        Math.abs(rawAmt),
+            direction,
+            currency:      r['Валюта'] || 'EUR',
+            date:          r['Дата'],
+            paymentMethod: r['Имя плательщика/получателя'] || (direction === 'D' ? 'Outgoing' : 'Incoming'),
+            description,
+            matched:       false,
+            category:      null,
+        };
+    }).filter(Boolean);
+}
+
+function parseEnglishLhv(lines) {
+    const headers = parseCSVLine(lines[0]);
+    return lines.slice(1).filter(l => l.trim()).map(line => {
+        const vals = parseCSVLine(line);
+        const r = {};
+        headers.forEach((h, i) => { r[h.trim()] = vals[i] || ''; });
+        if (r.Status !== 'settled' || !r['Initial amount'] || isNaN(parseFloat(r['Initial amount'])) || !r.Reference) return null;
+        const rawAmt = parseFloat(r['Initial amount']);
+        return {
+            id:            r.Reference,
+            orderRef:      r['Order reference'] || null,
+            amount:        Math.abs(rawAmt),
+            direction:     rawAmt >= 0 ? 'C' : 'D',
+            currency:      r.Currency,
+            date:          r.Created,
+            paymentMethod: r['Payment method'] || 'Bank transfer',
+            description:   r['Order reference'] || '',
+            matched:       false,
+            category:      null,
+        };
+    }).filter(Boolean);
+}
+
 async function handlePost(req, res, redis) {
     try {
         const { fileName, csvContent } = req.body;
         if (!fileName || !csvContent) {
             return res.status(400).json({ success: false, error: 'Missing fileName or csvContent.' });
         }
-        
-        const lines = csvContent.trim().split('\n');
-        const headers = lines[0].split(',').map(h => h.trim());
-        const transactions = lines.slice(1).map(line => {
-            const values = line.split(',');
-            return headers.reduce((obj, header, index) => {
-                obj[header] = values[index] ? values[index].trim() : '';
-                return obj;
-            }, {});
-        });
 
-        const settledTransactions = transactions.filter(tx => tx.Status === 'settled' && tx['Initial amount'] && !isNaN(parseFloat(tx['Initial amount'])) && tx.Reference);
-        if (settledTransactions.length === 0) {
-            return res.status(200).json({ success: true, message: 'No new processable transactions found.' });
+        const lines = csvContent.trim().split('\n').filter(l => l.trim());
+        if (lines.length < 2) {
+            return res.status(200).json({ success: true, message: 'No data rows found.' });
+        }
+
+        const firstHeader = parseCSVLine(lines[0])[0] || '';
+        const isCyrillic  = /[А-Яа-яЁё]/.test(firstHeader);
+        const parsed      = isCyrillic ? parseCyrillicLhv(lines) : parseEnglishLhv(lines);
+
+        if (parsed.length === 0) {
+            return res.status(200).json({ success: true, message: 'No processable transactions found.' });
         }
 
         let processedCount = 0;
         let matchedOrderUpdates = 0;
 
-        for (const tx of settledTransactions) {
-            const txKey = `lhv_tx:${tx.Reference}`;
-            // We load existing to preserve category if it was set
+        for (const tx of parsed) {
+            const txKey     = `lhv_tx:${tx.id}`;
             const existingTx = await redis.get(txKey);
-            
-            processedCount++;
-            
-            const orderRef = tx['Order reference'];
-            let isMatched = existingTx ? existingTx.matched : false; // Keep existing matched status if available
-            let category = existingTx ? existingTx.category : null;
+            if (existingTx) continue; // preserve manual category/matched status
 
-            if (orderRef && !existingTx) { // Only try to match automatically if it's new
-                const order = await redis.get(`order:${orderRef}`);
-                if (order) { // Order exists, so this transaction is matched
-                    isMatched = true;
-                    // Only update status if it's pending payment
+            processedCount++;
+
+            // Auto-match only incoming transactions that reference an SFF order
+            if (tx.orderRef && tx.direction !== 'D') {
+                const order = await redis.get(`order:${tx.orderRef}`);
+                if (order) {
+                    tx.matched = true;
                     if (order.status === 'pending_payment') {
-                        order.status = 'in_progress';
+                        order.status    = 'in_progress';
                         order.updatedAt = new Date().toISOString();
-                        await redis.set(`order:${orderRef}`, order);
+                        await redis.set(`order:${tx.orderRef}`, order);
                         matchedOrderUpdates++;
                     }
                 }
             }
-            
-            const transactionRecord = {
-                id: tx.Reference,
-                orderRef: orderRef,
-                amount: parseFloat(tx['Initial amount']),
-                currency: tx.Currency,
-                date: tx.Created,
-                paymentMethod: tx['Payment method'],
-                matched: isMatched,
-                category: category, // Persist category
-            };
-            await redis.set(txKey, transactionRecord);
+
+            await redis.set(txKey, tx);
         }
 
-        // Store statement info
-        const fileHash = crypto.createHash('sha256').update(csvContent).digest('hex');
+        const fileHash    = crypto.createHash('sha256').update(csvContent).digest('hex');
         const statementKey = `lhv_stmt:${fileHash}`;
         if (!(await redis.exists(statementKey))) {
-            await redis.set(statementKey, {
-                fileName: fileName,
-                uploadedAt: new Date().toISOString(),
-                txCount: settledTransactions.length,
-                hash: fileHash,
-            });
+            await redis.set(statementKey, { fileName, uploadedAt: new Date().toISOString(), txCount: parsed.length, hash: fileHash });
         }
 
-        let message = `Processed ${processedCount} transaction(s) from the file.`;
-        if (matchedOrderUpdates > 0) {
-            message += ` Automatically updated ${matchedOrderUpdates} order(s) status.`;
-        }
+        let message = `Processed ${processedCount} new transaction(s) (${isCyrillic ? 'RU' : 'EN'} format).`;
+        if (matchedOrderUpdates > 0) message += ` Updated ${matchedOrderUpdates} order(s).`;
 
-        res.status(200).json({ success: true, message });
+        return res.status(200).json({ success: true, message });
 
     } catch (error) {
         console.error('Upload Error:', error);
-        res.status(500).json({ success: false, error: 'Server error processing the file.' });
+        return res.status(500).json({ success: false, error: 'Server error processing the file.' });
     }
 }
 
