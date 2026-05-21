@@ -302,7 +302,7 @@
                 </div>
             </div>
             <div class="glass rounded-[24px] overflow-hidden">
-                <div id="bank-transactions-table-header" style="display:grid;grid-template-columns:150px 1fr 120px 100px 120px 80px;gap:12px;padding:12px 20px;border-bottom:1px solid rgba(255,255,255,0.06);font-size:9px;font-weight:800;letter-spacing:0.18em;text-transform:uppercase;color:#3f3f46">
+                <div id="bank-transactions-table-header" style="display:grid;grid-template-columns:150px 1fr 120px 100px 120px 120px;gap:12px;padding:12px 20px;border-bottom:1px solid rgba(255,255,255,0.06);font-size:9px;font-weight:800;letter-spacing:0.18em;text-transform:uppercase;color:#3f3f46">
                     <span>Date</span>
                     <span>Order Reference</span>
                     <span>Amount</span>
@@ -832,15 +832,61 @@
         }
         body.innerHTML = filteredTx.map(tx => {
             const rowStyle = tx.matched ? 'opacity:0.4;color:#71717a;' : 'color:white;';
-            return `<div style="display:grid;grid-template-columns:150px 1fr 120px 100px 120px 80px;gap:12px;padding:14px 20px;border-bottom:1px solid rgba(255,255,255,0.04);font-size:11px;color:white;transition:background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.03)'" onmouseout="this.style.background='transparent'">
+
+            let matchedDisplay = '';
+            if (tx.matched) {
+                if (tx.category === 'owner_loan') matchedDisplay = '<span style="color:#4ade80;font-weight:800;">✓ Owner Loan</span>';
+                else if (tx.category === 'expense_payment') matchedDisplay = '<span style="color:#4ade80;font-weight:800;">✓ Expense</span>';
+                else if (tx.category === 'other') matchedDisplay = '<span style="color:#4ade80;font-weight:800;">✓ Other</span>';
+                else if (tx.category === 'manual_order') matchedDisplay = '<span style="color:#4ade80;font-weight:800;">✓ Matched</span>';
+                else matchedDisplay = '<span style="color:#4ade80;font-weight:800;">✓ Yes</span>';
+            } else {
+                matchedDisplay = `
+                    <select onchange="categorizeTransaction('${tx.id}', this.value)" class="status-select" style="padding:4px;font-size:9px;width:100%;max-width:110px;background:rgba(255,255,255,0.05);">
+                        <option value="">Categorize...</option>
+                        <option value="manual_order">Match to Order</option>
+                        <option value="owner_loan">Owner's Loan</option>
+                        <option value="expense_payment">Expense Payment</option>
+                        <option value="other">Other</option>
+                    </select>
+                `;
+            }
+
+            return `<div style="display:grid;grid-template-columns:150px 1fr 120px 100px 120px 120px;gap:12px;padding:14px 20px;border-bottom:1px solid rgba(255,255,255,0.04);font-size:11px;${rowStyle}transition:background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.03)'" onmouseout="this.style.background='transparent'">
                 <span style="color:#71717a;">${new Date(tx.date).toLocaleString()}</span>
                 <span style="font-weight:600;">${esc(tx.orderRef || '—')}</span>
                 <span style="font-weight:800;">${tx.amount.toFixed(2)}</span>
                 <span style="color:#e4e4e7;">${esc(tx.currency)}</span>
                 <span style="color:#e4e4e7;">${esc(tx.paymentMethod)}</span>
-                <span style="color:${tx.matched ? '#4ade80' : '#71717a'};font-weight:800;">${tx.matched ? '✓ Yes' : 'No'}</span>
+                <span style="display:flex;align-items:center;">${matchedDisplay}</span>
             </div>`;
         }).join('');
+    }
+
+    function categorizeTransaction(id, category) {
+        if (!category) return;
+
+        fetch('/api/lhv?action=categorize', {
+            method: 'POST',
+            credentials: 'include',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id: id, category: category })
+        })
+        .then(r => r.ok ? r.json() : r.json().then(err => Promise.reject(err)))
+        .then(data => {
+            if (data.success) {
+                showToast('Transaction categorized', '#4ade80');
+                loadBankTransactions(); // Refresh the table
+            } else {
+                showToast('Error: ' + (data.error || 'Unknown error'), '#f87171');
+                renderBankTransactionsTable(); // Reset dropdown
+            }
+        })
+        .catch(err => {
+            console.error('Categorize Error:', err);
+            showToast('Failed to categorize', '#f87171');
+            renderBankTransactionsTable(); // Reset dropdown
+        });
     }
 
     function exportTransactionsToCSV() {
@@ -849,14 +895,15 @@
             showToast('No transactions to export', '#f59e0b');
             return;
         }
-        const headers = ['Date', 'OrderReference', 'Amount', 'Currency', 'PaymentMethod', 'Matched'];
+        const headers = ['Date', 'OrderReference', 'Amount', 'Currency', 'PaymentMethod', 'Matched', 'Category'];
         const rows = filteredTx.map(tx => [
             `"${new Date(tx.date).toISOString()}"`,
             `"${esc(tx.orderRef || '')}"`,
             tx.amount.toFixed(2),
             `"${esc(tx.currency)}"`,
             `"${esc(tx.paymentMethod)}"`,
-            `"${tx.matched ? 'Yes' : 'No'}"`
+            `"${tx.matched ? 'Yes' : 'No'}"`,
+            `"${esc(tx.category || '')}"`
         ].join(','));
 
         const csvContent = [headers.join(','), ...rows].join('\n');
