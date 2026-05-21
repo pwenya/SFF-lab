@@ -52,7 +52,7 @@ module.exports = async function handler(req, res) {
         order_reference:     orderId,
         nonce:               crypto.randomUUID(),
         timestamp:           new Date().toISOString(),
-        customer_url:        'https://sfflab.ee/payment/success?order=' + encodeURIComponent(orderId),
+        customer_url:        'https://sfflab.ee/payment/success?order=' + encodeURIComponent(orderId) + '&value=' + amount,
         merchant_cancel_url:      'https://sfflab.ee/payment/cancel?order='  + encodeURIComponent(orderId),
         payment_notification_url: 'https://sfflab.ee/api/payment/notify',
         payment_description: (description || ('SFF Lab order ' + orderId))

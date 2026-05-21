@@ -99,6 +99,14 @@
                 num.textContent   = orderId;
                 lbl.textContent   = orderId;
             }
+
+            var orderValue = parseFloat(params.get('value')) || 2250;
+            gtag('event', 'conversion', {
+                'send_to': 'AW-18179171560/1UyzCJuu_rAcEOjJwNxD',
+                'value': orderValue,
+                'currency': 'EUR',
+                'transaction_id': orderId || ''
+            });
         })();
     </script>
 </body>
