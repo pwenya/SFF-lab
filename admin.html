@@ -468,6 +468,22 @@
         <div id="no-orders" style="display:none;padding:60px;text-align:center;color:#3f3f46;font-size:11px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase">No orders found</div>
     </div>
 
+    <!-- Link Expense Modal -->
+    <div id="link-modal-backdrop" onclick="closeLinkModal()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:100;backdrop-filter:blur(4px)"></div>
+    <div id="link-modal" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) translateY(12px) scale(0.97);z-index:101;width:520px;max-width:calc(100vw - 32px);background:#111;border:1px solid rgba(255,255,255,0.1);border-radius:24px;padding:28px;transition:transform 0.18s,opacity 0.18s;opacity:0">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+            <div>
+                <div style="font-size:10px;font-weight:800;letter-spacing:0.2em;text-transform:uppercase;color:#a1a1aa;margin-bottom:4px">Link to Bank Transaction</div>
+                <div id="link-modal-expense-label" style="font-size:13px;font-weight:700;color:white"></div>
+            </div>
+            <button onclick="closeLinkModal()" style="background:none;border:none;color:#52525b;font-size:18px;cursor:pointer;line-height:1;padding:4px">✕</button>
+        </div>
+        <div style="font-size:9px;font-weight:800;letter-spacing:0.15em;text-transform:uppercase;color:#3f3f46;margin-bottom:10px">Available transactions (expense_payment)</div>
+        <div id="link-modal-tx-list" style="display:flex;flex-direction:column;gap:6px;max-height:280px;overflow-y:auto"></div>
+        <div id="link-modal-empty" style="display:none;padding:24px;text-align:center;color:#3f3f46;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase">No expense_payment transactions found.<br><span style="color:#52525b;font-weight:400;font-size:10px;letter-spacing:0">Categorize a bank transaction as "Expense Payment" first.</span></div>
+    </div>
+    </div>
+
     <footer style="border-top:1px solid rgba(255,255,255,0.04);padding:20px 24px;margin-top:40px">
         <div style="max-width:1400px;margin:0 auto;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px;font-size:9px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#3f3f46">
             <span>SFF Lab OÜ · 17506407 · EE102985942</span>
@@ -900,14 +916,8 @@
             return;
         }
 
-        const expenseOptions = ALL_EXPENSES
-            .filter(e => (e.type || 'expense') === 'expense')
-            .map(e => `<option value="${esc(e.id)}">${esc(e.date)} · ${e.gross.toFixed(2)} € · ${esc(e.supplier)}</option>`)
-            .join('');
-
         body.innerHTML = filteredTx.map(tx => {
             const rowStyle = tx.matched ? 'color:#a1a1aa;' : 'color:white;';
-            const safeTxId = tx.id.replace(/[^a-z0-9]/gi, '_');
 
             let matchedDisplay = '';
             if (tx.matched) {
@@ -929,16 +939,13 @@
                            <option value="">Link expense… (optional)</option>${expenseOptions}
                        </select>`
                     : '';
-                matchedDisplay = `<div style="display:flex;flex-direction:column;gap:4px;">
-                    <select onchange="onTxCategoryChange('${tx.id}','${safeTxId}',this.value)" class="status-select" style="padding:4px;font-size:9px;width:100%;max-width:120px;background:rgba(255,255,255,0.05);">
-                        <option value="">Categorize...</option>
-                        <option value="manual_order">Match to Order</option>
-                        <option value="owner_loan">Owner Loan</option>
-                        <option value="expense_payment">Expense Payment</option>
-                        <option value="other">Other</option>
-                    </select>
-                    ${expPicker}
-                </div>`;
+                matchedDisplay = `<select onchange="onTxCategoryChange('${tx.id}', this.value)" class="status-select" style="padding:4px;font-size:9px;width:100%;max-width:120px;background:rgba(255,255,255,0.05);">
+                    <option value="">Categorize...</option>
+                    <option value="manual_order">Match to Order</option>
+                    <option value="owner_loan">Owner Loan</option>
+                    <option value="expense_payment">Expense Payment</option>
+                    <option value="other">Other</option>
+                </select>`;
             }
 
             return `<div style="display:grid;grid-template-columns:150px 1fr 120px 100px 120px 120px;gap:12px;padding:14px 20px;border-bottom:1px solid rgba(255,255,255,0.04);font-size:11px;${rowStyle}transition:background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.03)'" onmouseout="this.style.background='transparent'">
@@ -952,25 +959,84 @@
         }).join('');
     }
 
-    function onTxCategoryChange(txId, safeTxId, category) {
+    function onTxCategoryChange(txId, category) {
         if (!category) return;
-        const expPicker = document.getElementById('exp-pick-' + safeTxId);
-        if (expPicker) expPicker.style.display = category === 'expense_payment' ? 'block' : 'none';
-        if (category !== 'expense_payment') {
-            categorizeTransaction(txId, category);
-            return;
-        }
-        // For expense_payment: ask user to also pick expense, then confirm
-        if (!expPicker || !expPicker.value) {
-            // No expenses to link or not selected yet — categorize immediately, link later
-            categorizeTransaction(txId, category);
-        }
+        categorizeTransaction(txId, category);
     }
 
-    function confirmExpenseLink(txId, safeTxId) {
-        const expPicker = document.getElementById('exp-pick-' + safeTxId);
-        const expenseId = expPicker ? expPicker.value : '';
-        categorizeTransaction(txId, 'expense_payment', expenseId || null);
+    var _linkingExpenseId = null;
+
+    function openLinkModal(expenseId) {
+        const exp = ALL_EXPENSES.find(e => e.id === expenseId);
+        if (!exp) return;
+        _linkingExpenseId = expenseId;
+
+        document.getElementById('link-modal-expense-label').textContent =
+            exp.supplier + (exp.description ? ' · ' + exp.description : '') + ' · ' + exp.gross.toFixed(2) + ' €';
+
+        const available = ALL_BANK_TRANSACTIONS.filter(tx =>
+            tx.category === 'expense_payment' && !tx.linkedExpenseId
+        );
+
+        const list = document.getElementById('link-modal-tx-list');
+        const empty = document.getElementById('link-modal-empty');
+
+        if (available.length === 0) {
+            list.innerHTML = '';
+            list.style.display = 'none';
+            empty.style.display = 'block';
+        } else {
+            empty.style.display = 'none';
+            list.style.display = 'flex';
+            list.innerHTML = available.map(tx => `
+                <div onclick="selectLinkTx('${tx.id}')" style="display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-radius:12px;border:1px solid rgba(255,255,255,0.07);cursor:pointer;transition:background 0.15s;background:rgba(255,255,255,0.02);"
+                     onmouseover="this.style.background='rgba(255,255,255,0.06)'" onmouseout="this.style.background='rgba(255,255,255,0.02)'">
+                    <div>
+                        <div style="font-size:12px;font-weight:700;color:white">${tx.date ? tx.date.slice(0,10) : '—'} · ${esc(tx.orderRef || tx.id)}</div>
+                        <div style="font-size:10px;color:#71717a;margin-top:2px">${esc(tx.paymentMethod || '')} · ${esc(tx.currency || 'EUR')}</div>
+                    </div>
+                    <div style="font-size:16px;font-weight:900;color:#4ade80">${tx.amount.toFixed(2)} €</div>
+                </div>
+            `).join('');
+        }
+
+        const modal = document.getElementById('link-modal');
+        const backdrop = document.getElementById('link-modal-backdrop');
+        modal.style.display = 'block';
+        backdrop.style.display = 'block';
+        requestAnimationFrame(() => {
+            modal.style.opacity = '1';
+            modal.style.transform = 'translate(-50%,-50%) translateY(0) scale(1)';
+        });
+    }
+
+    function closeLinkModal() {
+        const modal = document.getElementById('link-modal');
+        const backdrop = document.getElementById('link-modal-backdrop');
+        modal.style.opacity = '0';
+        modal.style.transform = 'translate(-50%,-50%) translateY(12px) scale(0.97)';
+        setTimeout(() => {
+            modal.style.display = 'none';
+            backdrop.style.display = 'none';
+            _linkingExpenseId = null;
+        }, 180);
+    }
+
+    function selectLinkTx(txId) {
+        if (!_linkingExpenseId) return;
+        fetch('/api/orders?action=link-expense-tx', {
+            method: 'POST', credentials: 'include',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ expenseId: _linkingExpenseId, txId })
+        })
+        .then(r => r.ok ? r.json() : r.json().then(e => Promise.reject(e)))
+        .then(data => {
+            if (!data.success) throw new Error(data.error);
+            showToast('Linked ✓', '#4ade80');
+            closeLinkModal();
+            Promise.all([loadExpenses(), loadBankTransactions()]);
+        })
+        .catch(err => { console.error(err); showToast('Failed to link', '#f87171'); });
     }
 
     function categorizeTransaction(id, category, expenseId) {
@@ -1171,11 +1237,11 @@
 
             let confirmBadge = '';
             if (exp.linkedTxId) {
-                const tx = ALL_BANK_TRANSACTIONS.find(t => t.id === exp.linkedTxId);
+                const tx = ALL_BANK_TRANSACTIONS.find(tx => tx.id === exp.linkedTxId);
                 const mismatch = tx && Math.abs(tx.amount - exp.gross) > 0.01;
-                confirmBadge = `<span style="color:${mismatch ? '#f59e0b' : '#4ade80'};font-size:9px;font-weight:800;" title="${mismatch ? 'Amount mismatch with bank tx' : 'Confirmed by bank'}">✓ Bank${mismatch ? ' ⚠' : ''}</span>`;
+                confirmBadge = `<span style="color:${mismatch ? '#f59e0b' : '#4ade80'};font-size:9px;font-weight:800;" title="${mismatch ? 'Amount mismatch' : 'Confirmed by bank'}">✓ Bank${mismatch ? ' ⚠' : ''}</span>`;
             } else if (t === 'expense') {
-                confirmBadge = `<span style="color:#3f3f46;font-size:9px;font-weight:700;">Unconfirmed</span>`;
+                confirmBadge = `<button onclick="openLinkModal('${exp.id}')" style="background:none;border:1px solid rgba(167,139,250,0.3);color:#a78bfa;cursor:pointer;font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;padding:3px 8px;border-radius:6px">Link Tx</button>`;
             }
 
             return `<div style="${ROW_GRID}" onmouseover="this.style.background='rgba(255,255,255,0.03)'" onmouseout="this.style.background='transparent'">
@@ -1187,7 +1253,7 @@
                 <span style="font-weight:800;color:${vatColor};">${exp.vat.toFixed(2)}</span>
                 <span style="font-weight:800;color:${grossColor};">${exp.gross.toFixed(2)}</span>
                 <span>${badge}</span>
-                <span style="display:flex;align-items:center;gap:6px;">
+                <span style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
                     ${confirmBadge}
                     <button onclick="editExpense('${exp.id}')" style="background:none;border:none;color:#60a5fa;cursor:pointer;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:0.1em">Edit</button>
                     <button onclick="deleteExpense('${exp.id}')" style="background:none;border:none;color:#f87171;cursor:pointer;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:0.1em">Del</button>
