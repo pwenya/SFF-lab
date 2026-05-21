@@ -279,12 +279,12 @@ async function handleGetExpenses(req, res, redis) {
 
 async function handleAddExpense(req, res, redis) {
     if (!isAdmin(req)) return res.status(401).json({ error: 'Unauthorized' });
-    const { date, supplier, description, net, vat } = req.body;
+    const { date, supplier, description, net, vat, type } = req.body;
     if (!date || !supplier || net === undefined || vat === undefined) {
         return res.status(400).json({ error: 'Missing required fields' });
     }
-    
-    // Unique ID for the expense
+
+    const VALID_TYPES = ['expense', 'loan_in', 'loan_repayment'];
     const id = `expense:${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
     const expense = {
         id,
@@ -294,25 +294,27 @@ async function handleAddExpense(req, res, redis) {
         net: parseFloat(net),
         vat: parseFloat(vat),
         gross: parseFloat(net) + parseFloat(vat),
+        type: VALID_TYPES.includes(type) ? type : 'expense',
         createdAt: new Date().toISOString()
     };
-    
+
     await redis.set(id, expense);
     return res.status(200).json({ success: true, expense });
 }
 
 async function handleUpdateExpense(req, res, redis) {
     if (!isAdmin(req)) return res.status(401).json({ error: 'Unauthorized' });
-    const { id, date, supplier, description, net, vat } = req.body;
+    const { id, date, supplier, description, net, vat, type } = req.body;
     if (!id || !date || !supplier || net === undefined || vat === undefined) {
         return res.status(400).json({ error: 'Missing required fields' });
     }
-    
+
     const existing = await redis.get(id);
     if (!existing) {
         return res.status(404).json({ error: 'Expense not found' });
     }
 
+    const VALID_TYPES = ['expense', 'loan_in', 'loan_repayment'];
     const expense = {
         ...existing,
         date,
@@ -321,6 +323,7 @@ async function handleUpdateExpense(req, res, redis) {
         net: parseFloat(net),
         vat: parseFloat(vat),
         gross: parseFloat(net) + parseFloat(vat),
+        type: VALID_TYPES.includes(type) ? type : (existing.type || 'expense'),
         updatedAt: new Date().toISOString()
     };
     

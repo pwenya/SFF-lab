@@ -337,7 +337,7 @@
 
             <div class="glass rounded-[24px] p-6 mb-6">
                 <h3 id="expense-form-title" style="font-size:10px;font-weight:800;letter-spacing:0.15em;text-transform:uppercase;color:#a1a1aa;margin-bottom:16px">Add New Expense</h3>
-                <div style="display:grid;grid-template-columns:1fr 1fr 2fr 1fr 1fr auto;gap:12px;align-items:end;">
+                <div style="display:grid;grid-template-columns:1fr 1fr 2fr 1fr 1fr 130px auto;gap:12px;align-items:end;">
                     <input type="hidden" id="exp-id" value="">
                     <div>
                         <label style="display:block;font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#52525b;margin-bottom:6px">Date</label>
@@ -359,6 +359,14 @@
                         <label style="display:block;font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#52525b;margin-bottom:6px">VAT Amount (€)</label>
                         <input type="number" id="exp-vat" step="0.01" class="admin-input" style="padding:8px 12px;font-size:12px;width:100%" placeholder="0.00">
                     </div>
+                    <div>
+                        <label style="display:block;font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#52525b;margin-bottom:6px">Type</label>
+                        <select id="exp-type" class="status-select" style="padding:8px 12px;font-size:12px;width:100%" onchange="onExpTypeChange(this.value)">
+                            <option value="expense">Expense</option>
+                            <option value="loan_in">Loan ↓ In</option>
+                            <option value="loan_repayment">Loan ↑ Repaid</option>
+                        </select>
+                    </div>
                     <div style="display:flex;gap:6px">
                         <button id="expense-submit-btn" onclick="addExpense()" class="filter-btn" style="background:rgba(34,197,94,0.1);border-color:rgba(34,197,94,0.3);color:#4ade80;padding:9px 16px;height:max-content">Add</button>
                         <button id="expense-cancel-btn" onclick="cancelEditExpense()" class="filter-btn" style="display:none;background:rgba(239,68,68,0.1);border-color:rgba(239,68,68,0.3);color:#f87171;padding:9px 16px;height:max-content">Cancel</button>
@@ -366,14 +374,35 @@
                 </div>
             </div>
 
+            <div id="loan-balance-widget" style="display:none;background:rgba(96,165,250,0.05);border:1px solid rgba(96,165,250,0.15);border-radius:24px;padding:20px 24px;margin-bottom:16px">
+                <div style="font-size:9px;font-weight:800;letter-spacing:0.2em;text-transform:uppercase;color:#3f3f46;margin-bottom:14px">Owner Loan Balance</div>
+                <div style="display:flex;gap:28px;flex-wrap:wrap;align-items:center">
+                    <div>
+                        <div id="loan-issued" style="font-size:22px;font-weight:900;color:#60a5fa;letter-spacing:-0.02em">0.00 €</div>
+                        <div style="font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#52525b;margin-top:3px">Issued to Company</div>
+                    </div>
+                    <div style="color:#3f3f46;font-size:18px;font-weight:300">−</div>
+                    <div>
+                        <div id="loan-repaid" style="font-size:22px;font-weight:900;color:#4ade80;letter-spacing:-0.02em">0.00 €</div>
+                        <div style="font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#52525b;margin-top:3px">Repaid</div>
+                    </div>
+                    <div style="color:#3f3f46;font-size:18px;font-weight:300">=</div>
+                    <div>
+                        <div id="loan-outstanding" style="font-size:22px;font-weight:900;color:white;letter-spacing:-0.02em">0.00 €</div>
+                        <div style="font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#52525b;margin-top:3px">Company Owes You</div>
+                    </div>
+                </div>
+            </div>
+
             <div class="glass rounded-[24px] overflow-hidden">
-                <div style="display:grid;grid-template-columns:100px 150px 1fr 100px 100px 100px 100px;gap:12px;padding:12px 20px;border-bottom:1px solid rgba(255,255,255,0.06);font-size:9px;font-weight:800;letter-spacing:0.18em;text-transform:uppercase;color:#3f3f46">
+                <div style="display:grid;grid-template-columns:100px 150px 1fr 100px 100px 100px 90px 100px;gap:12px;padding:12px 20px;border-bottom:1px solid rgba(255,255,255,0.06);font-size:9px;font-weight:800;letter-spacing:0.18em;text-transform:uppercase;color:#3f3f46">
                     <span>Date</span>
                     <span>Supplier</span>
                     <span>Description</span>
                     <span>Net (€)</span>
                     <span>VAT (€)</span>
                     <span>Gross (€)</span>
+                    <span>Type</span>
                     <span style="text-align:right">Actions</span>
                 </div>
                 <div id="expenses-table-body">
@@ -993,12 +1022,19 @@
             if (!data.expenses) throw new Error('Invalid response');
             ALL_EXPENSES = data.expenses;
             renderExpensesTable();
+            renderLoanBalance();
         })
         .catch(err => {
             console.error('Expenses Fetch Error:', err);
             document.getElementById('expenses-table-body').innerHTML = `<div style="padding:48px;text-align:center;color:#f87171;">Failed to load expenses.</div>`;
         });
     }
+
+    var TYPE_BADGE = {
+        expense:        '<span style="background:rgba(239,68,68,0.1);color:#f87171;font-size:9px;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;padding:3px 8px;border-radius:6px;border:1px solid rgba(239,68,68,0.15)">Expense</span>',
+        loan_in:        '<span style="background:rgba(96,165,250,0.1);color:#60a5fa;font-size:9px;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;padding:3px 8px;border-radius:6px;border:1px solid rgba(96,165,250,0.2)">Laen ↓</span>',
+        loan_repayment: '<span style="background:rgba(167,139,250,0.1);color:#a78bfa;font-size:9px;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;padding:3px 8px;border-radius:6px;border:1px solid rgba(167,139,250,0.2)">Laen ↑</span>'
+    };
 
     function renderExpensesTable() {
         const body = document.getElementById('expenses-table-body');
@@ -1007,19 +1043,48 @@
             return;
         }
         body.innerHTML = ALL_EXPENSES.map(exp => {
-            return `<div style="display:grid;grid-template-columns:100px 150px 1fr 100px 100px 100px 100px;gap:12px;padding:14px 20px;border-bottom:1px solid rgba(255,255,255,0.04);font-size:11px;color:white;transition:background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.03)'" onmouseout="this.style.background='transparent'">
+            const t = exp.type || 'expense';
+            const isLoan = t === 'loan_in' || t === 'loan_repayment';
+            const grossColor = t === 'loan_in' ? '#60a5fa' : t === 'loan_repayment' ? '#a78bfa' : '#4ade80';
+            const vatColor   = isLoan ? '#3f3f46' : '#ef4444';
+            const badge      = TYPE_BADGE[t] || TYPE_BADGE['expense'];
+            return `<div style="display:grid;grid-template-columns:100px 150px 1fr 100px 100px 100px 90px 100px;gap:12px;padding:14px 20px;border-bottom:1px solid rgba(255,255,255,0.04);font-size:11px;color:white;transition:background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.03)'" onmouseout="this.style.background='transparent'">
                 <span style="color:#71717a;">${esc(exp.date)}</span>
                 <span style="font-weight:600;">${esc(exp.supplier)}</span>
                 <span style="color:#a1a1aa;">${esc(exp.description)}</span>
                 <span style="font-weight:800;">${exp.net.toFixed(2)}</span>
-                <span style="font-weight:800;color:#ef4444;">${exp.vat.toFixed(2)}</span>
-                <span style="font-weight:800;color:#4ade80;">${exp.gross.toFixed(2)}</span>
+                <span style="font-weight:800;color:${vatColor};">${exp.vat.toFixed(2)}</span>
+                <span style="font-weight:800;color:${grossColor};">${exp.gross.toFixed(2)}</span>
+                <span>${badge}</span>
                 <span style="text-align:right">
                     <button onclick="editExpense('${exp.id}')" style="background:none;border:none;color:#60a5fa;cursor:pointer;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;margin-right:8px">Edit</button>
                     <button onclick="deleteExpense('${exp.id}')" style="background:none;border:none;color:#f87171;cursor:pointer;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:0.1em">Del</button>
                 </span>
             </div>`;
         }).join('');
+    }
+
+    function renderLoanBalance() {
+        const issued     = ALL_EXPENSES.filter(e => e.type === 'loan_in').reduce((s, e) => s + (e.gross || 0), 0);
+        const repaid     = ALL_EXPENSES.filter(e => e.type === 'loan_repayment').reduce((s, e) => s + (e.gross || 0), 0);
+        const widget     = document.getElementById('loan-balance-widget');
+        const hasLoans   = ALL_EXPENSES.some(e => e.type === 'loan_in' || e.type === 'loan_repayment');
+        widget.style.display = hasLoans ? 'block' : 'none';
+        document.getElementById('loan-issued').textContent      = issued.toFixed(2) + ' €';
+        document.getElementById('loan-repaid').textContent      = repaid.toFixed(2) + ' €';
+        document.getElementById('loan-outstanding').textContent = (issued - repaid).toFixed(2) + ' €';
+    }
+
+    function onExpTypeChange(type) {
+        const vatInput = document.getElementById('exp-vat');
+        if (type === 'loan_in' || type === 'loan_repayment') {
+            vatInput.value = '0';
+            vatInput.disabled = true;
+            vatInput.style.opacity = '0.35';
+        } else {
+            vatInput.disabled = false;
+            vatInput.style.opacity = '1';
+        }
     }
 
     function addExpense() {
@@ -1029,6 +1094,7 @@
         const desc = document.getElementById('exp-desc').value;
         const net = parseFloat(document.getElementById('exp-net').value);
         const vat = parseFloat(document.getElementById('exp-vat').value);
+        const type = document.getElementById('exp-type').value || 'expense';
 
         if (!date || !supplier || isNaN(net) || isNaN(vat)) {
             showToast('Please fill all required fields', '#f59e0b');
@@ -1036,7 +1102,7 @@
         }
 
         const action = id ? 'update-expense' : 'add-expense';
-        const payload = { date: date, supplier: supplier, description: desc, net: net, vat: vat };
+        const payload = { date: date, supplier: supplier, description: desc, net: net, vat: vat, type: type };
         if (id) payload.id = id;
 
         fetch(`/api/orders?action=${action}`, {
@@ -1071,6 +1137,8 @@
         document.getElementById('exp-desc').value = exp.description;
         document.getElementById('exp-net').value = exp.net;
         document.getElementById('exp-vat').value = exp.vat;
+        document.getElementById('exp-type').value = exp.type || 'expense';
+        onExpTypeChange(exp.type || 'expense');
 
         document.getElementById('expense-form-title').innerText = 'Edit Expense';
         const submitBtn = document.getElementById('expense-submit-btn');
@@ -1091,6 +1159,8 @@
         document.getElementById('exp-desc').value = '';
         document.getElementById('exp-net').value = '';
         document.getElementById('exp-vat').value = '';
+        document.getElementById('exp-type').value = 'expense';
+        onExpTypeChange('expense');
 
         document.getElementById('expense-form-title').innerText = 'Add New Expense';
         const submitBtn = document.getElementById('expense-submit-btn');
