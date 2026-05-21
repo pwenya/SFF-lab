@@ -301,6 +301,43 @@ async function handleAddExpense(req, res, redis) {
     return res.status(200).json({ success: true, expense });
 }
 
+async function handleUpdateExpense(req, res, redis) {
+    if (!isAdmin(req)) return res.status(401).json({ error: 'Unauthorized' });
+    const { id, date, supplier, description, net, vat } = req.body;
+    if (!id || !date || !supplier || net === undefined || vat === undefined) {
+        return res.status(400).json({ error: 'Missing required fields' });
+    }
+    
+    const existing = await redis.get(id);
+    if (!existing) {
+        return res.status(404).json({ error: 'Expense not found' });
+    }
+
+    const expense = {
+        ...existing,
+        date,
+        supplier,
+        description: description || '',
+        net: parseFloat(net),
+        vat: parseFloat(vat),
+        gross: parseFloat(net) + parseFloat(vat),
+        updatedAt: new Date().toISOString()
+    };
+    
+    await redis.set(id, expense);
+    return res.status(200).json({ success: true, expense });
+}
+
+async function handleDeleteExpense(req, res, redis) {
+    if (!isAdmin(req)) return res.status(401).json({ error: 'Unauthorized' });
+    const { id } = req.body;
+    if (!id) {
+        return res.status(400).json({ error: 'Missing id' });
+    }
+    await redis.del(id);
+    return res.status(200).json({ success: true });
+}
+
 // --- MAIN ROUTER ---
 
 export default async function handler(req, res) {
@@ -327,6 +364,10 @@ export default async function handler(req, res) {
                 return await handleUpdateStatus(req, res, redis);
             } else if (req.query.action === 'add-expense') {
                 return await handleAddExpense(req, res, redis);
+            } else if (req.query.action === 'update-expense') {
+                return await handleUpdateExpense(req, res, redis);
+            } else if (req.query.action === 'delete-expense') {
+                return await handleDeleteExpense(req, res, redis);
             } else {
                 return await handleCreateOrder(req, res, redis);
             }
