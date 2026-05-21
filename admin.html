@@ -336,8 +336,9 @@
             </div>
 
             <div class="glass rounded-[24px] p-6 mb-6">
-                <h3 style="font-size:10px;font-weight:800;letter-spacing:0.15em;text-transform:uppercase;color:#a1a1aa;margin-bottom:16px">Add New Expense</h3>
+                <h3 id="expense-form-title" style="font-size:10px;font-weight:800;letter-spacing:0.15em;text-transform:uppercase;color:#a1a1aa;margin-bottom:16px">Add New Expense</h3>
                 <div style="display:grid;grid-template-columns:1fr 1fr 2fr 1fr 1fr auto;gap:12px;align-items:end;">
+                    <input type="hidden" id="exp-id" value="">
                     <div>
                         <label style="display:block;font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#52525b;margin-bottom:6px">Date</label>
                         <input type="date" id="exp-date" class="admin-input" style="padding:8px 12px;font-size:12px;width:100%">
@@ -358,18 +359,22 @@
                         <label style="display:block;font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#52525b;margin-bottom:6px">VAT Amount (€)</label>
                         <input type="number" id="exp-vat" step="0.01" class="admin-input" style="padding:8px 12px;font-size:12px;width:100%" placeholder="0.00">
                     </div>
-                    <button onclick="addExpense()" class="filter-btn" style="background:rgba(34,197,94,0.1);border-color:rgba(34,197,94,0.3);color:#4ade80;padding:9px 16px;height:max-content">Add</button>
+                    <div style="display:flex;gap:6px">
+                        <button id="expense-submit-btn" onclick="addExpense()" class="filter-btn" style="background:rgba(34,197,94,0.1);border-color:rgba(34,197,94,0.3);color:#4ade80;padding:9px 16px;height:max-content">Add</button>
+                        <button id="expense-cancel-btn" onclick="cancelEditExpense()" class="filter-btn" style="display:none;background:rgba(239,68,68,0.1);border-color:rgba(239,68,68,0.3);color:#f87171;padding:9px 16px;height:max-content">Cancel</button>
+                    </div>
                 </div>
             </div>
 
             <div class="glass rounded-[24px] overflow-hidden">
-                <div style="display:grid;grid-template-columns:100px 150px 1fr 100px 100px 100px;gap:12px;padding:12px 20px;border-bottom:1px solid rgba(255,255,255,0.06);font-size:9px;font-weight:800;letter-spacing:0.18em;text-transform:uppercase;color:#3f3f46">
+                <div style="display:grid;grid-template-columns:100px 150px 1fr 100px 100px 100px 100px;gap:12px;padding:12px 20px;border-bottom:1px solid rgba(255,255,255,0.06);font-size:9px;font-weight:800;letter-spacing:0.18em;text-transform:uppercase;color:#3f3f46">
                     <span>Date</span>
                     <span>Supplier</span>
                     <span>Description</span>
                     <span>Net (€)</span>
                     <span>VAT (€)</span>
                     <span>Gross (€)</span>
+                    <span style="text-align:right">Actions</span>
                 </div>
                 <div id="expenses-table-body">
                     <div style="padding:48px;text-align:center;color:#3f3f46;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase">Loading expenses…</div>
@@ -955,18 +960,23 @@
             return;
         }
         body.innerHTML = ALL_EXPENSES.map(exp => {
-            return `<div style="display:grid;grid-template-columns:100px 150px 1fr 100px 100px 100px;gap:12px;padding:14px 20px;border-bottom:1px solid rgba(255,255,255,0.04);font-size:11px;color:white;transition:background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.03)'" onmouseout="this.style.background='transparent'">
+            return `<div style="display:grid;grid-template-columns:100px 150px 1fr 100px 100px 100px 100px;gap:12px;padding:14px 20px;border-bottom:1px solid rgba(255,255,255,0.04);font-size:11px;color:white;transition:background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.03)'" onmouseout="this.style.background='transparent'">
                 <span style="color:#71717a;">${esc(exp.date)}</span>
                 <span style="font-weight:600;">${esc(exp.supplier)}</span>
                 <span style="color:#a1a1aa;">${esc(exp.description)}</span>
                 <span style="font-weight:800;">${exp.net.toFixed(2)}</span>
                 <span style="font-weight:800;color:#ef4444;">${exp.vat.toFixed(2)}</span>
                 <span style="font-weight:800;color:#4ade80;">${exp.gross.toFixed(2)}</span>
+                <span style="text-align:right">
+                    <button onclick="editExpense('${exp.id}')" style="background:none;border:none;color:#60a5fa;cursor:pointer;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;margin-right:8px">Edit</button>
+                    <button onclick="deleteExpense('${exp.id}')" style="background:none;border:none;color:#f87171;cursor:pointer;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:0.1em">Del</button>
+                </span>
             </div>`;
         }).join('');
     }
 
     function addExpense() {
+        const id = document.getElementById('exp-id').value;
         const date = document.getElementById('exp-date').value;
         const supplier = document.getElementById('exp-supplier').value;
         const desc = document.getElementById('exp-desc').value;
@@ -978,30 +988,93 @@
             return;
         }
 
-        fetch('/api/orders?action=add-expense', {
+        const action = id ? 'update-expense' : 'add-expense';
+        const payload = { date: date, supplier: supplier, description: desc, net: net, vat: vat };
+        if (id) payload.id = id;
+
+        fetch(`/api/orders?action=${action}`, {
             method: 'POST',
             credentials: 'include',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ date: date, supplier: supplier, description: desc, net: net, vat: vat })
+            body: JSON.stringify(payload)
         })
         .then(r => r.ok ? r.json() : r.json().then(err => Promise.reject(err)))
         .then(data => {
             if (data.success) {
-                showToast('Expense added', '#4ade80');
-                // Reset form
-                document.getElementById('exp-supplier').value = '';
-                document.getElementById('exp-desc').value = '';
-                document.getElementById('exp-net').value = '';
-                document.getElementById('exp-vat').value = '';
-                // Reload table
+                showToast(id ? 'Expense updated' : 'Expense added', '#4ade80');
+                cancelEditExpense();
                 loadExpenses();
             } else {
                 showToast('Error: ' + (data.error || 'Unknown error'), '#f87171');
             }
         })
         .catch(err => {
-            console.error('Add Expense Error:', err);
-            showToast('Failed to add expense', '#f87171');
+            console.error('Expense Save Error:', err);
+            showToast('Failed to save expense', '#f87171');
+        });
+    }
+
+    function editExpense(id) {
+        const exp = ALL_EXPENSES.find(e => e.id === id);
+        if (!exp) return;
+
+        document.getElementById('exp-id').value = exp.id;
+        document.getElementById('exp-date').value = exp.date;
+        document.getElementById('exp-supplier').value = exp.supplier;
+        document.getElementById('exp-desc').value = exp.description;
+        document.getElementById('exp-net').value = exp.net;
+        document.getElementById('exp-vat').value = exp.vat;
+
+        document.getElementById('expense-form-title').innerText = 'Edit Expense';
+        const submitBtn = document.getElementById('expense-submit-btn');
+        submitBtn.innerText = 'Save';
+        submitBtn.style.background = 'rgba(59,130,246,0.1)';
+        submitBtn.style.borderColor = 'rgba(59,130,246,0.3)';
+        submitBtn.style.color = '#60a5fa';
+        document.getElementById('expense-cancel-btn').style.display = 'inline-block';
+
+        // Scroll to form
+        document.getElementById('expense-ledger-section').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function cancelEditExpense() {
+        document.getElementById('exp-id').value = '';
+        document.getElementById('exp-date').value = '';
+        document.getElementById('exp-supplier').value = '';
+        document.getElementById('exp-desc').value = '';
+        document.getElementById('exp-net').value = '';
+        document.getElementById('exp-vat').value = '';
+
+        document.getElementById('expense-form-title').innerText = 'Add New Expense';
+        const submitBtn = document.getElementById('expense-submit-btn');
+        submitBtn.innerText = 'Add';
+        submitBtn.style.background = 'rgba(34,197,94,0.1)';
+        submitBtn.style.borderColor = 'rgba(34,197,94,0.3)';
+        submitBtn.style.color = '#4ade80';
+        document.getElementById('expense-cancel-btn').style.display = 'none';
+    }
+
+    function deleteExpense(id) {
+        if (!confirm('Are you sure you want to delete this expense?')) return;
+
+        fetch('/api/orders?action=delete-expense', {
+            method: 'POST',
+            credentials: 'include',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id: id })
+        })
+        .then(r => r.ok ? r.json() : r.json().then(err => Promise.reject(err)))
+        .then(data => {
+            if (data.success) {
+                showToast('Expense deleted', '#4ade80');
+                loadExpenses();
+            } else {
+                showToast('Error: ' + (data.error || 'Unknown error'), '#f87171');
+            }
+        })
+        .catch(err => {
+            console.error('Delete Expense Error:', err);
+            showToast('Failed to delete expense', '#f87171');
         });
     }
 
