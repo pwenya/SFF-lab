@@ -44,6 +44,9 @@
         .spinner { width: 18px; height: 18px; border: 2px solid rgba(255,255,255,0.15); border-top-color: white; border-radius: 50%; animation: spin 0.7s linear infinite; display: inline-block; vertical-align: middle; }
         #toast { position: fixed; bottom: 24px; right: 24px; z-index: 99999; padding: 12px 20px; border-radius: 12px; font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0; transform: translateY(8px); transition: all 0.3s; pointer-events: none; }
         #toast.show { opacity: 1; transform: translateY(0); }
+        #undo-toast { position: fixed; bottom: 24px; right: 24px; z-index: 99998; padding: 10px 16px; border-radius: 12px; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; opacity: 0; transform: translateY(8px); transition: all 0.3s; display: flex; align-items: center; gap: 12px; background: rgba(239,68,68,0.12); border: 1px solid rgba(239,68,68,0.25); color: #f87171; pointer-events: none; }
+        #undo-toast.show { opacity: 1; transform: translateY(0); pointer-events: auto; }
+        #undo-toast button { background: rgba(239,68,68,0.2); border: 1px solid rgba(239,68,68,0.35); color: #f87171; border-radius: 8px; padding: 3px 12px; font-size: 10px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; font-family: inherit; }
 
         /* Определение сетки в одном месте для удобства */
         .admin-grid { display: grid; grid-template-columns: 32px 160px 100px 1.2fr 130px 90px 130px 130px; gap: 12px; align-items: center; padding: 14px 20px; }
@@ -154,6 +157,7 @@
 <body class="antialiased min-h-screen">
 
 <div id="toast"></div>
+<div id="undo-toast"><span>Transaction deleted</span><button onclick="undoDeleteTx()">Undo</button></div>
 
 <div id="bulk-bar" style="display:none;position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:9998;background:#0a0a0a;border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:12px 20px;align-items:center;gap:12px;box-shadow:0 8px 32px rgba(0,0,0,0.6)">
     <span id="bulk-count" style="font-size:11px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:#a1a1aa"></span>
@@ -321,13 +325,14 @@
             </div>
 
             <div class="glass rounded-[24px] overflow-hidden">
-                <div id="bank-transactions-table-header" style="display:grid;grid-template-columns:150px 1fr 120px 100px 120px 120px;gap:12px;padding:12px 20px;border-bottom:1px solid rgba(255,255,255,0.06);font-size:9px;font-weight:800;letter-spacing:0.18em;text-transform:uppercase;color:#3f3f46">
+                <div id="bank-transactions-table-header" style="display:grid;grid-template-columns:150px 1fr 120px 100px 120px 120px 28px;gap:12px;padding:12px 20px;border-bottom:1px solid rgba(255,255,255,0.06);font-size:9px;font-weight:800;letter-spacing:0.18em;text-transform:uppercase;color:#3f3f46">
                     <span>Date</span>
                     <span>Order Reference</span>
                     <span>Amount</span>
                     <span>Currency</span>
                     <span>Payment Method</span>
                     <span>Matched</span>
+                    <span></span>
                 </div>
                 <div id="bank-transactions-table-body">
                     <div style="padding:48px;text-align:center;color:#3f3f46;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase">Loading transactions…</div>
@@ -934,7 +939,7 @@
                 const label = catLabels[tx.category] || '✓ Yes';
                 matchedDisplay = `<span style="color:#4ade80;font-weight:800;">${label}</span>${linkLabel}`;
             } else {
-                matchedDisplay = `<select onchange="onTxCategoryChange('${tx.id}', this.value)" class="status-select" style="padding:4px;font-size:9px;width:100%;max-width:120px;background:rgba(255,255,255,0.05);">
+                matchedDisplay = `<select onchange="onTxCategoryChange('${tx.id}', this.value)" class="status-select" style="padding:4px;font-size:9px;width:100%;max-width:120px;">
                     <option value="">Categorize...</option>
                     <option value="manual_order">Match to Order</option>
                     <option value="owner_loan">Owner Loan</option>
@@ -943,13 +948,14 @@
                 </select>`;
             }
 
-            return `<div style="display:grid;grid-template-columns:150px 1fr 120px 100px 120px 120px;gap:12px;padding:14px 20px;border-bottom:1px solid rgba(255,255,255,0.04);font-size:11px;${rowStyle}transition:background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.03)'" onmouseout="this.style.background='transparent'">
+            return `<div style="display:grid;grid-template-columns:150px 1fr 120px 100px 120px 120px 28px;gap:12px;padding:14px 20px;border-bottom:1px solid rgba(255,255,255,0.04);font-size:11px;${rowStyle}transition:background 0.2s;align-items:center;" onmouseover="this.style.background='rgba(255,255,255,0.03)'" onmouseout="this.style.background='transparent'">
                 <span style="color:#71717a;">${new Date(tx.date).toLocaleString()}</span>
                 <span style="font-weight:600;">${esc(tx.orderRef || '—')}</span>
                 <span style="font-weight:800;color:${tx.direction === 'D' ? '#f87171' : tx.direction === 'C' ? '#4ade80' : 'white'}">${tx.direction === 'D' ? '−' : tx.direction === 'C' ? '+' : ''}${tx.amount.toFixed(2)}</span>
                 <span style="color:#e4e4e7;">${esc(tx.currency)}</span>
                 <span style="color:#e4e4e7;">${esc(tx.paymentMethod || tx.description || '—')}</span>
                 <span style="display:flex;align-items:flex-start;">${matchedDisplay}</span>
+                <button onclick="deleteTx('${tx.id}')" style="background:none;border:none;color:#3f3f46;cursor:pointer;font-size:14px;padding:2px;line-height:1;border-radius:4px;transition:color 0.15s;" onmouseover="this.style.color='#f87171'" onmouseout="this.style.color='#3f3f46'" title="Delete">✕</button>
             </div>`;
         }).join('');
     }
@@ -957,6 +963,56 @@
     function onTxCategoryChange(txId, category) {
         if (!category) return;
         categorizeTransaction(txId, category);
+    }
+
+    var _lastDeletedTx = null;
+    var _undoTimer = null;
+
+    function deleteTx(txId) {
+        const tx = ALL_BANK_TRANSACTIONS.find(t => t.id === txId);
+        if (!tx) return;
+        fetch('/api/lhv?action=delete', {
+            method: 'POST', credentials: 'include',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id: txId })
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (!data.success) { showToast('Delete failed', '#f87171'); return; }
+            _lastDeletedTx = tx;
+            ALL_BANK_TRANSACTIONS = ALL_BANK_TRANSACTIONS.filter(t => t.id !== txId);
+            renderBankTransactionsTable();
+            const ut = document.getElementById('undo-toast');
+            ut.classList.add('show');
+            if (_undoTimer) clearTimeout(_undoTimer);
+            _undoTimer = setTimeout(function() {
+                ut.classList.remove('show');
+                _lastDeletedTx = null;
+            }, 5000);
+        })
+        .catch(function() { showToast('Delete failed', '#f87171'); });
+    }
+
+    function undoDeleteTx() {
+        if (!_lastDeletedTx) return;
+        const tx = _lastDeletedTx;
+        fetch('/api/lhv?action=restore', {
+            method: 'POST', credentials: 'include',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ tx: tx })
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (!data.success) { showToast('Restore failed', '#f87171'); return; }
+            ALL_BANK_TRANSACTIONS.push(tx);
+            ALL_BANK_TRANSACTIONS.sort(function(a, b) { return new Date(b.date) - new Date(a.date); });
+            _lastDeletedTx = null;
+            clearTimeout(_undoTimer);
+            document.getElementById('undo-toast').classList.remove('show');
+            renderBankTransactionsTable();
+            showToast('Restored', '#4ade80');
+        })
+        .catch(function() { showToast('Restore failed', '#f87171'); });
     }
 
     var _linkingExpenseId = null;

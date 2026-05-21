@@ -246,11 +246,35 @@ async function handleCategorize(req, res, redis) {
 }
 
 
+async function handleDeleteTx(req, res, redis) {
+    const { id } = req.body;
+    if (!id) return res.status(400).json({ success: false, error: 'Missing id.' });
+    try {
+        await redis.del(`lhv_tx:${id}`);
+        return res.status(200).json({ success: true });
+    } catch (error) {
+        console.error('Delete TX Error:', error);
+        return res.status(500).json({ success: false, error: 'Server error.' });
+    }
+}
+
+async function handleRestoreTx(req, res, redis) {
+    const { tx } = req.body;
+    if (!tx || !tx.id) return res.status(400).json({ success: false, error: 'Missing tx data.' });
+    try {
+        await redis.set(`lhv_tx:${tx.id}`, tx);
+        return res.status(200).json({ success: true });
+    } catch (error) {
+        console.error('Restore TX Error:', error);
+        return res.status(500).json({ success: false, error: 'Server error.' });
+    }
+}
+
 // --- MAIN HANDLER ---
 export default async function handler(req, res) {
     setCors(req, res);
     if (req.method === 'OPTIONS') return res.status(200).end();
-    
+
     const redis = createRedis();
 
     if (req.method === 'GET') {
@@ -258,10 +282,9 @@ export default async function handler(req, res) {
     }
     if (req.method === 'POST') {
         const { action } = req.query;
-        if (action === 'categorize') {
-            return handleCategorize(req, res, redis);
-        }
-        // Default POST is upload statement
+        if (action === 'categorize') return handleCategorize(req, res, redis);
+        if (action === 'delete')     return handleDeleteTx(req, res, redis);
+        if (action === 'restore')    return handleRestoreTx(req, res, redis);
         return handlePost(req, res, redis);
     }
     return res.status(405).json({ success: false, error: 'Method Not Allowed' });
