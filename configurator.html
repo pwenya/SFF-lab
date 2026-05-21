@@ -165,10 +165,16 @@
         <p data-key="config-sub" class="text-blue-500 mb-8 uppercase text-[10px] tracking-[0.3em] font-bold">BAAS</p>
 
         <div class="mb-10">
-            <p class="text-[9px] font-black uppercase tracking-[0.3em] text-zinc-600 mb-3">Võimalused</p>
-            <div class="flex flex-wrap gap-2">
-                <span class="preset-btn px-4 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest" style="cursor:default">Silent 1440p</span>
-                <span class="preset-btn px-4 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest" style="cursor:default">4K Living Room</span>
+            <button onclick="openPriceModal()" data-key="whats-included-btn" class="btn-ripple px-5 py-2.5 rounded-xl text-[9px] font-black uppercase tracking-widest transition" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);color:#71717a;cursor:pointer;font-family:inherit" onmouseover="this.style.color='white';this.style.borderColor='rgba(255,255,255,0.25)'" onmouseout="this.style.color='#71717a';this.style.borderColor='rgba(255,255,255,0.1)'">Mis sisaldub hinnas?</button>
+        </div>
+
+        <!-- What's included modal -->
+        <div id="price-info-modal" style="display:none;position:fixed;inset:0;z-index:10001;align-items:center;justify-content:center;padding:24px;background:rgba(0,0,0,0.75);backdrop-filter:blur(8px)">
+            <div style="position:relative;background:#0a0a0a;border:1px solid rgba(255,255,255,0.08);border-radius:32px;padding:40px;width:100%;max-width:440px;max-height:90vh;overflow-y:auto">
+                <button onclick="closePriceModal()" style="position:absolute;top:18px;right:22px;background:none;border:none;cursor:pointer;color:#71717a;font-size:20px;line-height:1;font-family:inherit" onmouseover="this.style.color='white'" onmouseout="this.style.color='#71717a'">✕</button>
+                <p style="font-size:9px;font-weight:900;letter-spacing:0.3em;text-transform:uppercase;color:#2563eb;margin-bottom:12px">SFF Lab</p>
+                <h3 data-key="whats-included-title" style="font-size:18px;font-weight:900;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:24px">Mis sisaldub hinnas?</h3>
+                <ul id="price-include-list" style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:12px;font-size:11px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:#a1a1aa"></ul>
             </div>
         </div>
 
@@ -316,7 +322,10 @@
                 'om-success-msg': 'Tellimus vastu võetud!\nVõtame ühendust 24 tunni jooksul.',
                 'om-err-msg': 'Midagi läks valesti. Palun proovi uuesti.',
                 'vat-note': 'Hind sisaldab käibemaksu (24%)',
-                'om-delivery-label': 'Eeldatav valmimine:'
+                'om-delivery-label': 'Eeldatav valmimine:',
+                'whats-included-btn': 'Mis sisaldub hinnas?',
+                'whats-included-title': 'Mis sisaldub hinnas?',
+                'whats-included-items': '— Kõik valitud komponendid|— Kokkupanek|— Komponentide testimine|— OS installatsioon ja seadistamine|— Kaablite korraldamine|— Premium pakend|— Tarne üle kogu Eesti|— 2 aasta garantii vastavalt EL seadusele'
             },
             ru: {
                 'back-link': '← На главную', 'config-title': 'Настрой свою систему', 'config-sub': 'БАЗА',
@@ -339,7 +348,10 @@
                 'om-success-msg': 'Заказ получен!\nСвяжемся с вами в течение 24 часов.',
                 'om-err-msg': 'Что-то пошло не так. Пожалуйста, попробуйте снова.',
                 'vat-note': 'Цена включает НДС (24%)',
-                'om-delivery-label': 'Ориентировочная готовность:'
+                'om-delivery-label': 'Ориентировочная готовность:',
+                'whats-included-btn': 'Что входит в цену?',
+                'whats-included-title': 'Что входит в цену?',
+                'whats-included-items': '— Все выбранные компоненты|— Сборка|— Тестирование компонентов|— Установка и настройка OS|— Кабель-менеджмент|— Премиальная упаковка|— Доставка по всей Эстонии|— Гарантия 2 года по закону ЕС'
             },
             en: {
                 'back-link': '← Back to home', 'config-title': 'Configure your system', 'config-sub': 'BASE',
@@ -362,7 +374,10 @@
                 'om-success-msg': 'Order received!\nWe will contact you within 24 hours.',
                 'om-err-msg': 'Something went wrong. Please try again.',
                 'vat-note': 'Price includes VAT (24%)',
-                'om-delivery-label': 'Estimated ready by:'
+                'om-delivery-label': 'Estimated ready by:',
+                'whats-included-btn': "What's included?",
+                'whats-included-title': "What's included in the price?",
+                'whats-included-items': '— All selected components|— Assembly|— Component testing|— OS installation & setup|— Cable management|— Premium packaging|— Delivery across Estonia|— 2-year warranty under EU law'
             }
         };
 
@@ -772,6 +787,30 @@
         window._omBackdrop = function (e) {
             if (e.target === document.getElementById('om-overlay')) window.closeOrderModal();
         };
+
+        window.openPriceModal = function () {
+            var lang  = localStorage.getItem('selectedLanguage') || 'et';
+            var tr    = (window.pageTranslations || {})[lang] || {};
+            var modal = document.getElementById('price-info-modal');
+            var list  = document.getElementById('price-include-list');
+            var title = modal.querySelector('[data-key="whats-included-title"]');
+            if (title && tr['whats-included-title']) title.innerText = tr['whats-included-title'];
+            var items = (tr['whats-included-items'] || '').split('|');
+            list.innerHTML = items.map(function(item) {
+                return '<li style="display:flex;gap:10px;align-items:flex-start"><span style="color:white;flex-shrink:0">' + item.substring(0, 1) + '</span><span>' + item.substring(2) + '</span></li>';
+            }).join('');
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        };
+
+        window.closePriceModal = function () {
+            document.getElementById('price-info-modal').style.display = 'none';
+            document.body.style.overflow = '';
+        };
+
+        document.addEventListener('click', function(e) {
+            if (e.target === document.getElementById('price-info-modal')) window.closePriceModal();
+        });
 
         window.submitOrderForm = function () {
             var lang  = localStorage.getItem('selectedLanguage') || 'et';
