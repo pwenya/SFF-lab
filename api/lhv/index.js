@@ -122,7 +122,7 @@ async function handlePost(req, res, redis) {
             return res.status(400).json({ success: false, error: 'Missing fileName or csvContent.' });
         }
 
-        const lines = csvContent.trim().split('\n').filter(l => l.trim());
+        const lines = csvContent.replace(/^﻿/, '').trim().split('\n').filter(l => l.trim());
         if (lines.length < 2) {
             return res.status(200).json({ success: true, message: 'No data rows found.' });
         }
