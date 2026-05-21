@@ -257,7 +257,7 @@
             </div>
 
             <div class="md:-mt-[96px]" style="display:flex;flex-direction:column;gap:16px;height:100%">
-                <div class="glass-panel p-10 rounded-[40px] h-fit md:sticky md:top-[100px]">
+                <div class="glass-panel p-10 rounded-[40px] h-fit md:sticky md:top-[100px]" style="z-index:2;position:relative">
                     <h2 data-key="summary-title" class="text-xl font-bold mb-6 uppercase tracking-widest">Sinu valik</h2>
                     <div class="space-y-4 border-b border-white/5 pb-6 mb-6 text-[10px] uppercase tracking-widest text-zinc-400">
                         <div class="flex justify-between">
@@ -703,7 +703,7 @@
                 ram:      RAM_LABELS[selectedRam],
                 ssd:      SSD_LABELS[selectedSsd],
                 psu:      document.getElementById('psu-block').style.display !== 'none'
-                              ? (selectedPsu === 45 ? '850W SFX Platinum' : '650W SFX Gold Quiet Edition') : null,
+                              ? (selectedPsu === 45 ? '850W SFX Gold' : '650W SFX Gold Quiet Edition') : null,
                 ctrl:     document.getElementById('ctrl-block').style.display !== 'none'
                               ? document.getElementById('ctrl-select').options[document.getElementById('ctrl-select').selectedIndex].text : null,
                 price:    document.getElementById('total-price').innerText,
