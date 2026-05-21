@@ -934,11 +934,6 @@
                 const label = catLabels[tx.category] || '✓ Yes';
                 matchedDisplay = `<span style="color:#4ade80;font-weight:800;">${label}</span>${linkLabel}`;
             } else {
-                const expPicker = expenseOptions
-                    ? `<select id="exp-pick-${safeTxId}" class="status-select" style="padding:3px 6px;font-size:9px;max-width:130px;margin-top:4px;display:none">
-                           <option value="">Link expense… (optional)</option>${expenseOptions}
-                       </select>`
-                    : '';
                 matchedDisplay = `<select onchange="onTxCategoryChange('${tx.id}', this.value)" class="status-select" style="padding:4px;font-size:9px;width:100%;max-width:120px;background:rgba(255,255,255,0.05);">
                     <option value="">Categorize...</option>
                     <option value="manual_order">Match to Order</option>
