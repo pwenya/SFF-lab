@@ -151,6 +151,7 @@
             var k = el.getAttribute('data-key');
             if (tr[lang] && tr[lang][k] !== undefined) el.innerText = tr[lang][k];
         });
+        if (tr[lang] && tr[lang]['page-title']) document.title = tr[lang]['page-title'];
         document.querySelectorAll('.lang-btn').forEach(function (b) { b.classList.remove('active'); });
         var ab = document.getElementById('lang-' + lang);
         if (ab) ab.classList.add('active');
