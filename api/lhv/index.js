@@ -98,17 +98,21 @@ function parseEnglishLhv(lines) {
         const vals = parseCSVLine(line);
         const r = {};
         headers.forEach((h, i) => { r[h.trim()] = vals[i] || ''; });
-        if (r.Status !== 'settled' || !r['Initial amount'] || isNaN(parseFloat(r['Initial amount'])) || !r.Reference) return null;
-        const rawAmt = parseFloat(r['Initial amount']);
+        const txId   = r['Transaction reference'];
+        const rawAmt = parseFloat(r['Amount']);
+        if (!txId || isNaN(rawAmt) || rawAmt === 0) return null;
+        const direction   = r['Debit/Credit (D/C)'] || (rawAmt < 0 ? 'D' : 'C');
+        const description = r['Description'] || '';
+        const orderMatch  = description.match(/SFF-\d{4}-\d{4}-\d{4}/);
         return {
-            id:            r.Reference,
-            orderRef:      r['Order reference'] || null,
+            id:            txId,
+            orderRef:      orderMatch ? orderMatch[0] : null,
             amount:        Math.abs(rawAmt),
-            direction:     rawAmt >= 0 ? 'C' : 'D',
-            currency:      r.Currency,
-            date:          r.Created,
-            paymentMethod: r['Payment method'] || 'Bank transfer',
-            description:   r['Order reference'] || '',
+            direction,
+            currency:      r['Currency'] || 'EUR',
+            date:          r['Date'],
+            paymentMethod: r['Sender/receiver name'] || (direction === 'D' ? 'Outgoing' : 'Incoming'),
+            description,
             matched:       false,
             category:      null,
         };
