@@ -92,7 +92,33 @@ function parseCyrillicLhv(lines) {
     }).filter(Boolean);
 }
 
-function parseEnglishLhv(lines) {
+// LHV Merchant Console (EveryPay) export — Status/Initial amount/Reference columns
+function parseMerchantConsole(lines) {
+    const headers = parseCSVLine(lines[0]);
+    return lines.slice(1).filter(l => l.trim()).map(line => {
+        const vals = parseCSVLine(line);
+        const r = {};
+        headers.forEach((h, i) => { r[h.trim()] = vals[i] || ''; });
+        if (r.Status !== 'settled' || !r['Initial amount'] || isNaN(parseFloat(r['Initial amount'])) || !r.Reference) return null;
+        const rawAmt   = parseFloat(r['Initial amount']);
+        const orderRef = r['Order reference'] || null;
+        return {
+            id:            r.Reference,
+            orderRef,
+            amount:        Math.abs(rawAmt),
+            direction:     'C', // merchant console only shows incoming payments
+            currency:      r.Currency || 'EUR',
+            date:          r.Created ? r.Created.split(' ')[0] : '',
+            paymentMethod: r['Payment method'] || 'card',
+            description:   orderRef || '',
+            matched:       false,
+            category:      null,
+        };
+    }).filter(Boolean);
+}
+
+// LHV Account Statement English export — Transaction reference/Amount/Debit/Credit columns
+function parseAccountStatementEn(lines) {
     const headers = parseCSVLine(lines[0]);
     return lines.slice(1).filter(l => l.trim()).map(line => {
         const vals = parseCSVLine(line);
@@ -117,6 +143,14 @@ function parseEnglishLhv(lines) {
             category:      null,
         };
     }).filter(Boolean);
+}
+
+function parseEnglishLhv(lines) {
+    const headerFields = parseCSVLine(lines[0]).map(h => h.trim());
+    if (headerFields.includes('Status') && headerFields.includes('Initial amount')) {
+        return parseMerchantConsole(lines);
+    }
+    return parseAccountStatementEn(lines);
 }
 
 async function handlePost(req, res, redis) {
