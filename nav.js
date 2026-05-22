@@ -73,8 +73,11 @@ posthog.init('phc_CQd2gFoyiJEiSVDvdiv46kPrcNSjfWUCw4GDhnPAf8Zb', {api_host: 'htt
         + '<a href="/" class="text-2xl md:text-3xl font-extrabold tracking-tighter uppercase text-white hover:opacity-80 transition" style="flex-shrink:0">SFF LAB<span class="text-blue-600">.</span></a>'
         + '<div style="display:flex;align-items:center;gap:16px;flex-shrink:1;min-width:0">'
         + '<a href="shop.html" class="min-[900px]:hidden flex items-center gap-1.5 hover:text-white transition" style="color:#52525b;font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:0.15em;white-space:nowrap">Shop <span style="font-size:8px;font-weight:800;letter-spacing:0.12em;color:#2563eb;background:rgba(37,99,235,0.15);padding:1px 5px;border-radius:3px;text-transform:uppercase">DEMO</span></a>'
+        + '<a href="exclusive.html" class="min-[900px]:hidden flex items-center hover:text-white transition" style="color:#52525b;font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:0.15em;white-space:nowrap" data-key="nav-exclusive">Eksklusiiv</a>'
         + '<div class="hidden min-[900px]:flex items-center text-[16px] font-bold uppercase tracking-[0.2em] text-zinc-500" style="flex-shrink:1;min-width:0">'
         + '<a href="shop.html" class="hover:text-white transition whitespace-nowrap flex items-center gap-2" style="color:#52525b;font-size:16px;font-weight:700;text-transform:uppercase;letter-spacing:0.2em">Shop <span style="font-size:9px;font-weight:800;letter-spacing:0.15em;color:#2563eb;background:rgba(37,99,235,0.15);padding:2px 6px;border-radius:4px;text-transform:uppercase">DEMO</span></a>'
+        + '<span class="text-zinc-800 mx-2">·</span>'
+        + '<a href="exclusive.html" data-key="nav-exclusive" class="hover:text-white transition whitespace-nowrap" style="color:#52525b;font-size:16px;font-weight:700;text-transform:uppercase;letter-spacing:0.2em">Eksklusiiv</a>'
         + '<span class="text-zinc-800 mx-2">·</span>'
         + '<a href="https://sfflab.ee/#pricing" data-key="nav-pricing" class="hover:text-white transition whitespace-nowrap">Paketid</a>'
         + '</div>'
@@ -139,13 +142,13 @@ posthog.init('phc_CQd2gFoyiJEiSVDvdiv46kPrcNSjfWUCw4GDhnPAf8Zb', {api_host: 'htt
 
     /* ── i18n ── */
     var _NAV_TR = {
-        et: { 'nav-pricing': 'Paketid',  'nav-status': 'Tellimuse staatus',
+        et: { 'nav-pricing': 'Paketid',  'nav-exclusive': 'Eksklusiiv', 'nav-status': 'Tellimuse staatus',
               'legal-terms': 'Müügitingimused', 'legal-privacy': 'Privaatsuspoliitika', 'legal-returns': 'Tagastuspoliitika',
               'footer-built': 'Ehitatud Eestis' },
-        ru: { 'nav-pricing': 'Цены',     'nav-status': 'Статус заказа',
+        ru: { 'nav-pricing': 'Цены',     'nav-exclusive': 'Эксклюзив', 'nav-status': 'Статус заказа',
               'legal-terms': 'Условия продажи', 'legal-privacy': 'Конфиденциальность',  'legal-returns': 'Возврат',
               'footer-built': 'Собрано в Эстонии' },
-        en: { 'nav-pricing': 'Packages', 'nav-status': 'Order Status',
+        en: { 'nav-pricing': 'Packages', 'nav-exclusive': 'Exclusive', 'nav-status': 'Order Status',
               'legal-terms': 'Terms of Sale',   'legal-privacy': 'Privacy Policy',      'legal-returns': 'Returns',
               'footer-built': 'Built in Estonia' }
     };
