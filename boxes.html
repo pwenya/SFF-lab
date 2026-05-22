@@ -172,6 +172,34 @@
                 </div>
             </div>
         </section>
+        <section class="product-section flex items-center justify-center px-6" data-model="tetra">
+            <div class="max-w-6xl w-full flex flex-col md:flex-row items-center justify-center gap-8 md:gap-16">
+                <div class="w-full md:w-[750px] shrink-0">
+                    <div class="glass-panel rounded-[30px] md:rounded-[40px] touch-pan-y" id="container-tetra">
+                        <button onclick="nav('tetra', -1)" class="nav-btn-inside btn-left hidden md:flex">←</button>
+                        <img id="img-tetra-pine" src="IMG/TetraPine.1.png" class="case-stack-img active" style="max-width:127%;max-height:127%">
+                        <button onclick="nav('tetra', 1)" class="nav-btn-inside btn-right hidden md:flex">→</button>
+                    </div>
+                </div>
+                <div class="flex flex-col items-center md:items-start gap-5 w-full md:w-[300px]">
+                    <div class="text-center md:text-left">
+                        <h2 class="text-3xl md:text-5xl font-black uppercase tracking-tighter mb-2">Tetra <span id="title-tetra">Pine</span></h2>
+                        <p data-key="tetra-sub" class="text-zinc-500 uppercase text-[10px] md:text-[11px] tracking-[0.4em] font-bold">Compact Console Format</p>
+                    </div>
+                    <div class="flex flex-row gap-4">
+                        <div id="tetra-pine" class="color-circle active w-10 h-10 md:w-12 md:h-12 rounded-full bg-[#4a5e3c]"></div>
+                    </div>
+                    <div>
+                        <p data-key="order-heading" class="text-[9px] font-black uppercase tracking-[0.25em] text-blue-500 mb-3">Mine tellima</p>
+                        <div class="flex gap-2">
+                            <a id="btn-core-tetra" href="configurator.html?base=2350&mode=core&os=steamos&case=Tetra&color=Pine" class="order-btn" data-key="btn-core" style="opacity:0.4;pointer-events:none">Baas</a>
+                            <a id="btn-plus-tetra" href="configurator.html?base=1999&mode=plus&os=steamos&case=Tetra&color=Pine" class="order-btn" data-key="btn-plus" style="opacity:0.4;pointer-events:none">Baas+</a>
+                            <a id="btn-enthusiast-tetra" href="configurator.html?base=2350&mode=enthusiast&os=steamos&case=Tetra&color=Pine" class="order-btn" data-key="btn-enthusiast" style="opacity:0.4;pointer-events:none">Custom</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
     </main>
 
     <script src="nav.js"></script>
@@ -185,7 +213,8 @@
                 'btn-enthusiast': 'Custom',
                 'terra-sub': 'Loodud mängijatele',
                 'ridge-sub': 'Slim konsooli formaat',
-                'mood-sub': 'Premium SFF disain'
+                'mood-sub': 'Premium SFF disain',
+                'tetra-sub': 'Console-style SFF korpus'
             },
             ru: {
                 'page-title': 'SFF Lab | Fractal Design Корпуса',
@@ -195,7 +224,8 @@
                 'btn-enthusiast': 'Custom',
                 'terra-sub': 'Для геймеров',
                 'ridge-sub': 'Тонкий консольный формат',
-                'mood-sub': 'Премиум SFF дизайн'
+                'mood-sub': 'Премиум SFF дизайн',
+                'tetra-sub': 'Console-style SFF корпус'
             },
             en: {
                 'order-heading': 'Order now',
@@ -204,14 +234,16 @@
                 'btn-enthusiast': 'Custom',
                 'terra-sub': 'Crafted for Gamers',
                 'ridge-sub': 'Slim Console Format',
-                'mood-sub': 'Premium SFF Design'
+                'mood-sub': 'Premium SFF Design',
+                'tetra-sub': 'Console-style SFF PC Case'
             }
         };
 
         var caseColorNames = {
             mood:  { black: 'Black', white: 'Light' },
             terra: { graphite: 'Graphite', jade: 'Jade', silver: 'Silver' },
-            ridge: { black: 'Black', white: 'White' }
+            ridge: { black: 'Black', white: 'White' },
+            tetra: { pine: 'Pine' }
         };
         function updateOrderLinks(model) {
             var colorKey  = config[model].current;
@@ -226,9 +258,10 @@
         var config = {
             mood:  { current: 'black',    idx: 0, black:    ['IMG/MoodBlack.1.png','IMG/MoodBlack.2.png','IMG/MoodBlack.3.png'],       white:    ['IMG/MoodLight.1.png','IMG/MoodLight.2.png','IMG/MoodLight.3.png'] },
             terra: { current: 'graphite', idx: 0, graphite: ['IMG/TerraGraphite.1.png','IMG/TerraGraphite.2.png','IMG/TerraGraphite.3.png'], jade: ['IMG/TerraJade.1.png','IMG/TerraJade.2.png','IMG/TerraJade.3.png'], silver: ['IMG/TerraSilver.1.png','IMG/TerraSilver.2.png','IMG/TerraSilver.3.png'] },
-            ridge: { current: 'black',    idx: 0, black:    ['IMG/RidgeBlack.1.png','IMG/RidgeBlack.2.png'],                             white:    ['IMG/RidgeWhite.1.png','IMG/RidgeWhite.2.png'] }
+            ridge: { current: 'black',    idx: 0, black:    ['IMG/RidgeBlack.1.png','IMG/RidgeBlack.2.png'],                             white:    ['IMG/RidgeWhite.1.png','IMG/RidgeWhite.2.png'] },
+            tetra: { current: 'pine',     idx: 0, pine:     ['IMG/TetraPine.1.png','IMG/TetraPine.2.png','IMG/TetraPine.3.png'], sizes: [127, 85, 68] }
         };
-        var colorNames = { black: 'Black', white: 'Light', graphite: 'Graphite', jade: 'Jade', silver: 'Silver' };
+        var colorNames = { black: 'Black', white: 'Light', graphite: 'Graphite', jade: 'Jade', silver: 'Silver', pine: 'Pine' };
         var lastCall = 0;
 
         function setColor(model, color) {
@@ -252,11 +285,18 @@
             m.idx = (m.idx + dir + len) % len;
             colors.forEach(function (color) {
                 var img = document.getElementById('img-' + model + '-' + color);
-                if (img) img.src = m[color][m.idx];
+                if (img) {
+                    img.src = m[color][m.idx];
+                    if (m.sizes) {
+                        var s = (m.sizes[m.idx] || 85) + '%';
+                        img.style.maxWidth = s;
+                        img.style.maxHeight = s;
+                    }
+                }
             });
         }
 
-        ['mood', 'terra', 'ridge'].forEach(function (model) {
+        ['mood', 'terra', 'ridge', 'tetra'].forEach(function (model) {
             var container = document.getElementById('container-' + model);
             var startX = 0;
             container.addEventListener('touchstart', function (e) { startX = e.changedTouches[0].screenX; }, { passive: true });
@@ -279,7 +319,7 @@
                     if (Array.isArray(arr)) arr.forEach(function (src) { var i = new Image(); i.src = src; });
                 });
             });
-            ['terra','ridge','mood'].forEach(updateOrderLinks);
+            ['terra','ridge','mood','tetra'].forEach(updateOrderLinks);
         };
     </script>
 </body>
