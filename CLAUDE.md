@@ -18,9 +18,10 @@ Sells custom-built gaming PCs with SteamOS or Windows. Prices are in EUR. No bac
 ## File structure
 ```
 index.html           — landing page (hero + pricing cards)
-boxes.html           — product showcase (Mood/Terra/Ridge cases with color switcher)
+boxes.html           — product showcase (Mood/Terra/Ridge/Tetra R cases with color switcher)
 configurator.html    — build configurator (pricing logic via URL params)
 shop.html            — shop page (GPU/CPU tabs, brand sub-tabs, product cards)
+exclusive.html       — exclusive/contact page (hero text + contact form popup)
 admin.html           — order management panel (Google OAuth protected)
 legal.html           — legal pages (terms, privacy, returns)
 nav.js               — shared nav + modal + i18n engine (injected into every page)
@@ -28,12 +29,13 @@ payment/success.html — post-payment success page
 payment/cancel.html  — post-payment cancel page
 api/payment/         — Vercel serverless payment handlers (create.js, notify.js)
 api/order.js         — order creation endpoint
+api/contact.js       — exclusive page contact form: sends email to info@sfflab.ee + confirmation to customer
 api/update-status.js — order status update + customer email notification
-IMG/                 — product images (MoodBlack.1.png, TerraJade.2.png, etc.)
+IMG/                 — product images (MoodBlack.1.png, TerraJade.2.png, TetraPine.1.png, etc.)
 favicon.svg          — SVG icon (modern browsers)
 favicon.ico          — ICO icon 32x32 (Google Search, legacy browsers)
 favicon-192.png      — PNG icon 192x192 (Apple Touch, Google Search)
-sitemap.xml          — sitemap for Google (index, boxes, shop, configurator, legal)
+sitemap.xml          — sitemap for Google (index, boxes, shop, configurator, exclusive, legal)
 start.bat            — launches local dev server
 ```
 
@@ -49,8 +51,9 @@ It also defines these globals used by all pages:
 **Rule: any site-wide UI (footer, banners, etc.) belongs in nav.js — never duplicate it in individual HTML files.**
 
 ### Nav links
-- Desktop: Pricing (`https://sfflab.ee/#pricing`, absolute URL), Shop (DEMO badge), action button — inside `class="hidden min-[900px]:flex"`
-- Mobile: Shop link added separately with `class="min-[900px]:hidden flex ..."` before the desktop nav div, so it appears only on narrow screens
+- Desktop order: Shop (DEMO badge) · Eksklusiiv · Paketid — inside `class="hidden min-[900px]:flex"`
+- Mobile: Shop and Eksklusiiv links added separately with `class="min-[900px]:hidden flex ..."` before the desktop nav div
+- Pricing links to `https://sfflab.ee/#pricing` (absolute URL)
 - Logo links to `/` (not `index.html`) — Vercel serves index.html at `/` but `index.html` as a path returns 404
 
 ### Nav action button (`#nav-action-btn`)
@@ -79,7 +82,7 @@ Injected by nav.js via `insertAdjacentHTML('beforeend', FOOTER_HTML)`. Structure
 
 ## i18n pattern
 - Language stored in `localStorage.selectedLanguage` (default: `'et'`)
-- nav.js handles nav-level and footer-level keys via `_NAV_TR`: `nav-pricing`, `nav-status`, `legal-terms`, `legal-privacy`, `legal-returns`, `footer-built`
+- nav.js handles nav-level and footer-level keys via `_NAV_TR`: `nav-pricing`, `nav-exclusive`, `nav-status`, `legal-terms`, `legal-privacy`, `legal-returns`, `footer-built`
 - Each page sets `window.pageTranslations = { et: {...}, ru: {...} }` before `nav.js` loads
 - Elements get translated via `data-key="some-key"` attribute
 - `window.load` in nav.js calls `setLanguage(localStorage.getItem('selectedLanguage') || 'et')` — applies saved language on every page load
@@ -122,6 +125,9 @@ The site is deployed on Vercel at `https://sfflab.ee`. Use **root-relative paths
 
 ### boxes.html
 - `.product-section` has `border-bottom`. Add `border-bottom: none` to `.product-section:last-child` so there's no double line where the last section meets the footer's `border-t`.
+- Cases in order: Terra, Ridge, Mood, **Tetra R** (Pine). Tetra R is last.
+- **Tetra R Pine** — single color (pine `#4a5e3c`), 3 photos (`TetraPine.1–3.png`), volume ~12.9 L. Order buttons are disabled (`opacity:0.4;pointer-events:none`).
+- **Per-image sizing** via `sizes` array in `config`: `tetra: { ..., sizes: [127, 85, 68] }`. `nav()` reads `m.sizes[m.idx]` and applies `img.style.maxWidth/maxHeight` on each swipe. First image also has inline `style="max-width:127%;max-height:127%"` for the initial render.
 
 ### index.html
 - Text column has `min-w-0` to prevent long EN words (e.g. "STRONGER.") from compressing the adjacent showcase column via flex min-width.
@@ -142,8 +148,8 @@ The site is deployed on Vercel at `https://sfflab.ee`. Use **root-relative paths
 - Grid visibility toggle uses CSS classes `shop-grid-visible` / `shop-grid-hidden` (same pattern as `os-grid-*` in index.html). `shop-grid-hidden` uses `position:absolute;width:100%` to keep layout stable.
 - `brands-cpu` div and hidden grids use `style="display:none"` — **not** Tailwind `hidden` — because Tailwind CDN may generate `.flex` after `.hidden`, making elements always visible.
 - On init, an IIFE applies brand button colors only — it does NOT call `showGrid()`, so the default `grid-gpu-nvidia` (which starts with class `shop-grid-visible` in HTML) stays visible.
-- Products currently listed: PNY RTX 5080 16GB OC (2000 €), PNY RTX 5080 16GB ARGB OC (2000 €). AMD GPU / Intel CPU / AMD CPU show "Coming Soon" placeholders.
-- Each product card has two buttons: `+ Ostukorvi` (ghost blue, calls `addToCart({title,brand,price,priceNum,specs})`) and `Tellida` (blue CTA, calls `openShopModal({name,brand,specs,price,priceDisplay})`).
+- Products currently listed: PNY RTX 5080 16GB OC, PNY RTX 5080 16GB ARGB OC. AMD GPU / Intel CPU / AMD CPU show "Coming Soon" placeholders.
+- **Pricing and order buttons are currently disabled** on all NVIDIA cards: price replaced with `tulevikus` (same text for all languages, zinc-600 color), both "add to cart" and "Tellida" buttons have `opacity:0.4;pointer-events:none` and no `onclick`.
 - **Order modal:** two-step — step 1 shows product overview; step 2 is customer form (name/email/phone). Submit calls `/api/order` then `/api/payment/create` and redirects to LHV payment page. `shopSubmitOrder` uses `p.name` and `p.price` (number).
 - **Cart (`#cart-overlay`, `.cart-overlay`):** centered overlay (same animation as order modal — `translateY(20px) scale(0.97)` → `(0) scale(1)`). No floating FAB — the nav `#nav-action-btn` is the cart entry point on this page.
   - Cart items: `{title, brand, price (string "X €"), priceNum (number), specs, qty}`.
@@ -186,6 +192,21 @@ The site is deployed on Vercel at `https://sfflab.ee`. Use **root-relative paths
 - `COLOR_MAP`: `completed` → `#4ade80`, `cancelled` → `#f87171`.
 - Sends bilingual ET/RU status notification email to customer on every status change.
 
+### exclusive.html
+- Hero page with large gradient title, subtitle, description, and "Võta ühendust" CTA button.
+- Contact popup modal (`.contact-overlay` / `.contact-box`): email + phone + textarea, all required. max-width 720px, padding 54px.
+- On submit: calls `POST /api/contact` with `{ email, phone, message, lang }`.
+- Success message shown inline in modal (button hidden); error shown in red below fields.
+- Placeholder text for inputs uses `data-ph` attribute updated via `updatePlaceholders(lang)` — patched into `setLanguage` on `window.load` (same pattern as shop.html).
+- **`setLanguage` patching:** exclusive.html patches `window.setLanguage` inside a `load` event listener so `updatePlaceholders()` runs after every language switch.
+
+### api/contact.js
+- Accepts `POST { email, phone, message, lang }`. Validates all three fields + basic email regex.
+- Sends to `info@sfflab.ee`: subject `Eksklusiiv päring · <email>`, HTML with email/phone rows + message body.
+- Sends confirmation to customer: subject and body in ET/RU/EN based on `lang`. Text: "thank you, we'll contact you within 2 business days."
+- Uses same nodemailer + Gmail SMTP pattern as notify.js (`GMAIL_USER`, `GMAIL_APP_PASSWORD`).
+- Same dark HTML email template as other endpoints (`emailWrap`, `navHeader`, `emailFooter`).
+
 ### payment/success.html
 - Shown after successful LHV payment redirect (`?order=` param pre-fills order number display).
 - Uses `../nav.js` for shared nav. All links use root-relative paths (`/`).
@@ -217,7 +238,7 @@ Every HTML page must include all three link tags:
 
 ## Vercel Analytics
 All HTML pages include `<script defer src="/_vercel/insights/script.js"></script>` before `</head>`.
-Currently added to: index.html, boxes.html, configurator.html, shop.html, legal.html, admin.html.
+Currently added to: index.html, boxes.html, configurator.html, shop.html, exclusive.html, legal.html, admin.html.
 If adding a new page, include this script tag.
 
 ## Legal
