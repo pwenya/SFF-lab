@@ -137,7 +137,7 @@ The site is deployed on Vercel at `https://sfflab.ee`. Use **root-relative paths
 - Compatibility section sits at `margin-top: -6px` relative to the pricing section above it.
 - All `✓ Verified` labels in game rows use `data-key="verified-label"` (translated: `✓ Ühilduv` / `✓ Совместимо` / `✓ Compatible`).
 - Compat-works/native/no: restructured as single `<span data-key="...">` — translations include the `✓`/`✗` symbol so there's no double-symbol.
-- **Current prices (SteamOS):** Baas 2250 €, Baas+ 2850 €, Custom from 2250 €
+- **Current prices (SteamOS):** Baas 2199 €, Baas+ 2799 €, Custom from 2199 €
 - **Windows section buttons are disabled** (`<button disabled>`) for all three cards — Windows ordering not yet available.
 - **Dual Boot Edition button is disabled** — test configuration, shows disclaimer text via `data-key="db-desc"` (red, bold) instead of description.
 - Configurator links use `?base=` param: Baas `base=2250`, Baas+ `base=2850`, Custom/Dual Boot `base=2250`.
