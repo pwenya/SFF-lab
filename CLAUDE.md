@@ -112,7 +112,9 @@ The site is deployed on Vercel at `https://sfflab.ee`. Use **root-relative paths
 ### configurator.html
 - `<body class="p-6 md:p-20 pb-6 md:pb-0 ...">` — has horizontal padding (24px mobile / 80px desktop). Bottom padding is 0 on desktop so the footer reaches the page bottom.
 - The shared footer needs negative horizontal margins to escape body padding and reach screen edges. This is handled via `#main-footer { margin-left: -24px; margin-right: -24px; }` / `@media (min-width:768px) { ... -80px }` in the page's `<style>` block.
-- Do NOT add padding back to `pb` on desktop — it breaks the sticky footer.
+- Do NOT add padding back to `pb` on the **body** on desktop — it breaks the sticky footer. Adding `pb` to the main content div is fine.
+- Main content div: `class="max-w-4xl mx-auto pt-[100px] md:pt-[80px] pb-16 md:pb-20"` — top padding clears nav with breathing room (mobile 24+100=124px total, desktop 80+80=160px total); bottom padding separates last card from footer.
+- Sticky right column wrapper: `class="md:-mt-[96px] md:sticky md:top-[120px]"` — the `-mt-[96px]` aligns the summary card visually with the first selector; `top-[120px]` keeps it 32px below the 88px desktop nav.
 - `BASE_PRICE` comes from `?base=` URL param, defaults to 2250.
 - **Pricing logic — IMPORTANT:** Component add-ons (CPU/GPU/RAM/SSD/PSU) are applied **only when `MODE === 'enthusiast'` (Custom)**. For `core` (Baas) and `plus` (Baas+), `BASE_PRICE` is the full fixed price — no add-ons are added. Controller and OS price add-ons apply to all modes.
 - **Current Custom add-on prices:**

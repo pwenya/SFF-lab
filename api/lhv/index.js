@@ -270,6 +270,48 @@ async function handleRestoreTx(req, res, redis) {
     }
 }
 
+// Called by the VPS webhook after parsing LHV Connect push (camt.053)
+async function handleIngest(req, res, redis) {
+    const secret = (req.headers.authorization || '').replace('Bearer ', '');
+    if (!process.env.LHV_WEBHOOK_SECRET || secret !== process.env.LHV_WEBHOOK_SECRET) {
+        return res.status(401).json({ success: false, error: 'Unauthorized' });
+    }
+
+    const { transactions } = req.body || {};
+    if (!Array.isArray(transactions)) {
+        return res.status(400).json({ success: false, error: 'Missing transactions array' });
+    }
+
+    let saved = 0, matched = 0;
+
+    for (const tx of transactions) {
+        if (!tx.id) continue;
+        const txKey = `lhv_tx:${tx.id}`;
+        if (await redis.get(txKey)) continue;
+
+        if (tx.orderRef && tx.direction !== 'D') {
+            const order = await redis.get(`order:${tx.orderRef}`);
+            if (order) {
+                tx.matched = true;
+                if (order.status === 'pending_payment') {
+                    await redis.set(`order:${tx.orderRef}`, {
+                        ...order,
+                        status: 'in_progress',
+                        updatedAt: new Date().toISOString(),
+                    });
+                    matched++;
+                }
+            }
+        }
+
+        await redis.set(txKey, tx);
+        saved++;
+    }
+
+    console.log(`[lhv/ingest] saved=${saved} matched=${matched} source=${req.body.source || 'unknown'}`);
+    return res.status(200).json({ success: true, saved, matched });
+}
+
 // --- MAIN HANDLER ---
 export default async function handler(req, res) {
     setCors(req, res);
@@ -285,6 +327,7 @@ export default async function handler(req, res) {
         if (action === 'categorize') return handleCategorize(req, res, redis);
         if (action === 'delete')     return handleDeleteTx(req, res, redis);
         if (action === 'restore')    return handleRestoreTx(req, res, redis);
+        if (action === 'ingest')     return handleIngest(req, res, redis);
         return handlePost(req, res, redis);
     }
     return res.status(405).json({ success: false, error: 'Method Not Allowed' });
