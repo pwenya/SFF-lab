@@ -95,6 +95,7 @@
                 <div class="anim-hero-cta flex justify-center gap-4 mb-8">
                     <button onclick="switchCategory('gpu')" id="tab-gpu" class="os-switch-btn active px-10 py-3 rounded-full text-[11px] font-black uppercase tracking-widest" data-key="shop-gpu">Videokaardid</button>
                     <button onclick="switchCategory('cpu')" id="tab-cpu" class="os-switch-btn px-10 py-3 rounded-full text-[11px] font-black uppercase tracking-widest" data-key="shop-cpu">Protsessorid</button>
+                    <button onclick="switchCategory('acc')" id="tab-acc" class="os-switch-btn px-10 py-3 rounded-full text-[11px] font-black uppercase tracking-widest" data-key="shop-acc">Aksessuaarid</button>
                 </div>
 
                 <!-- Brand sub-tabs: GPU (visible by default) -->
@@ -190,6 +191,64 @@
                         </div>
                     </div>
 
+                    <!-- Accessories · AULA -->
+                    <div id="grid-acc-aula" class="shop-grid shop-grid-hidden">
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch">
+
+                            <!-- AULA F75 PRO -->
+                            <div class="flex reveal">
+                                <div class="glass-card p-8 rounded-[40px] flex flex-col w-full">
+                                    <div class="product-img-wrap">
+                                        <img src="" alt="AULA F75 PRO Mechanical Keyboard">
+                                    </div>
+                                    <span class="text-blue-500 text-[10px] font-black uppercase tracking-[0.2em] mb-2">AULA · Keyboard</span>
+                                    <h3 class="text-base font-extrabold text-white mb-4 leading-snug">F75 PRO Mechanical Keyboard 75%</h3>
+                                    <div class="space-y-1.5 text-[11px] font-bold uppercase tracking-[0.1em] mb-4">
+                                        <div class="text-zinc-600">Switch <span class="text-zinc-400">Hot-swap LEOBOG Reaper</span></div>
+                                        <div class="text-zinc-600">Connection <span class="text-zinc-400">USB-C · BT5.0 · 2.4GHz</span></div>
+                                    </div>
+                                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+                                        <div style="display:flex;gap:8px;align-items:center">
+                                            <button onclick="selectF75ProColor('grey')" id="f75pro-grey"
+                                                style="width:22px;height:22px;border-radius:100%;background:#4b5259;border:2px solid white;cursor:pointer;outline:none;flex-shrink:0;transition:border-color 0.2s"
+                                                title="Graphite"></button>
+                                            <button onclick="selectF75ProColor('pink')" id="f75pro-pink"
+                                                style="width:22px;height:22px;border-radius:100%;background:#f9a8d4;border:2px solid transparent;cursor:pointer;outline:none;flex-shrink:0;transition:border-color 0.2s"
+                                                title="Pastel Pink"></button>
+                                        </div>
+                                        <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#a1a1aa" id="f75pro-color-label">Graphite</span>
+                                    </div>
+                                    <div class="mt-auto">
+                                        <div id="f75pro-price" class="text-3xl font-black tracking-tighter text-white mb-5">119 €</div>
+                                        <button onclick="addF75ProToCart()" class="w-full py-3 rounded-2xl text-xs font-bold uppercase tracking-widest mb-2" style="background:rgba(37,99,235,0.1);color:#60a5fa;border:1px solid rgba(37,99,235,0.3);cursor:pointer" data-key="cart-add">+ Ostukorvi</button>
+                                        <button onclick="orderF75Pro()" class="w-full py-4 rounded-2xl text-xs font-black uppercase tracking-widest" style="background:#2563eb;color:#fff;border:none;cursor:pointer" data-key="shop-order">Tellida</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- AULA F75 MAX (coming soon) -->
+                            <div class="flex reveal">
+                                <div class="glass-card p-8 rounded-[40px] flex flex-col w-full">
+                                    <div class="product-img-wrap">
+                                        <img src="" alt="AULA F75 MAX Mechanical Keyboard">
+                                    </div>
+                                    <span class="text-blue-500 text-[10px] font-black uppercase tracking-[0.2em] mb-2">AULA · Keyboard</span>
+                                    <h3 class="text-base font-extrabold text-white mb-4 leading-snug">F75 MAX Mechanical Keyboard 75%</h3>
+                                    <div class="space-y-1.5 text-[11px] font-bold uppercase tracking-[0.1em] mb-6">
+                                        <div class="text-zinc-600">Switch <span class="text-zinc-400">Hot-swap LEOBOG Reaper</span></div>
+                                        <div class="text-zinc-600">Connection <span class="text-zinc-400">USB-C · BT5.0 · 2.4GHz</span></div>
+                                    </div>
+                                    <div class="mt-auto">
+                                        <div class="text-3xl font-black tracking-tighter text-zinc-600 mb-5">tulevikus</div>
+                                        <button class="w-full py-3 rounded-2xl text-xs font-bold uppercase tracking-widest mb-2" style="background:rgba(37,99,235,0.1);color:#60a5fa;border:1px solid rgba(37,99,235,0.3);opacity:0.4;pointer-events:none;cursor:not-allowed" data-key="cart-add">+ Ostukorvi</button>
+                                        <button class="w-full py-4 rounded-2xl text-xs font-black uppercase tracking-widest" style="background:#2563eb;color:#fff;opacity:0.4;pointer-events:none;cursor:not-allowed" data-key="shop-order">Tellida</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </section>
@@ -250,6 +309,7 @@
                 'page-title': 'SFF Lab | Pood',
                 'shop-gpu':         'Videokaardid',
                 'shop-cpu':         'Protsessorid',
+                'shop-acc':         'Aksessuaarid',
                 'shop-order':       'Tellida',
                 'shop-soon':        'Peagi',
                 'shop-proceed':     'Edasi',
@@ -266,6 +326,7 @@
                 'page-title': 'SFF Lab | Магазин',
                 'shop-gpu':         'Видеокарты',
                 'shop-cpu':         'Процессоры',
+                'shop-acc':         'Аксессуары',
                 'shop-order':       'Заказать',
                 'shop-soon':        'Скоро',
                 'shop-proceed':     'Далее',
@@ -281,6 +342,7 @@
             en: {
                 'shop-gpu':         'Graphics Cards',
                 'shop-cpu':         'Processors',
+                'shop-acc':         'Accessories',
                 'shop-order':       'Order',
                 'shop-soon':        'Coming Soon',
                 'shop-proceed':     'Continue',
@@ -308,9 +370,14 @@
             currentCategory = cat;
             document.getElementById('tab-gpu').classList.toggle('active', cat === 'gpu');
             document.getElementById('tab-cpu').classList.toggle('active', cat === 'cpu');
+            document.getElementById('tab-acc').classList.toggle('active', cat === 'acc');
             document.getElementById('brands-gpu').style.display = cat === 'gpu' ? 'flex' : 'none';
             document.getElementById('brands-cpu').style.display = cat === 'cpu' ? 'flex' : 'none';
-            showGrid(cat, currentBrands[cat]);
+            if (cat === 'acc') {
+                showGrid('acc', 'aula');
+            } else {
+                showGrid(cat, currentBrands[cat]);
+            }
         }
 
         function switchBrand(cat, brand) {
@@ -334,7 +401,7 @@
         }
 
         function showGrid(cat, brand) {
-            ['grid-gpu-nvidia', 'grid-gpu-amd', 'grid-cpu-intel', 'grid-cpu-amd'].forEach(function(id) {
+            ['grid-gpu-nvidia', 'grid-gpu-amd', 'grid-cpu-intel', 'grid-cpu-amd', 'grid-acc-aula'].forEach(function(id) {
                 var el = document.getElementById(id);
                 if (!el) return;
                 var active = (id === 'grid-' + cat + '-' + brand);
@@ -355,6 +422,42 @@
                 el.style.borderColor = c.border;
             });
         })();
+
+        var _f75proColor = 'grey';
+        var _f75proPrices = { grey: 119, pink: 129 };
+        var _f75proColorNames = { grey: 'Graphite', pink: 'Pastel Pink' };
+
+        function selectF75ProColor(color) {
+            _f75proColor = color;
+            document.getElementById('f75pro-grey').style.borderColor = (color === 'grey') ? 'white' : 'transparent';
+            document.getElementById('f75pro-pink').style.borderColor = (color === 'pink') ? 'white' : 'transparent';
+            document.getElementById('f75pro-color-label').textContent = _f75proColorNames[color];
+            document.getElementById('f75pro-price').textContent = _f75proPrices[color] + ' €';
+        }
+
+        function addF75ProToCart() {
+            var name  = _f75proColorNames[_f75proColor];
+            var price = _f75proPrices[_f75proColor];
+            addToCart({
+                title:    'AULA F75 PRO Mechanical Keyboard 75% — ' + name,
+                brand:    'AULA',
+                price:    price + ' €',
+                priceNum: price,
+                specs:    [{ l: 'Color', v: name }, { l: 'Switch', v: 'Hot-swap LEOBOG Reaper' }, { l: 'Connection', v: 'USB-C · BT5.0 · 2.4GHz' }]
+            });
+        }
+
+        function orderF75Pro() {
+            var name  = _f75proColorNames[_f75proColor];
+            var price = _f75proPrices[_f75proColor];
+            openShopModal({
+                name:         'AULA F75 PRO Mechanical Keyboard 75% — ' + name,
+                brand:        'AULA · Keyboard',
+                priceDisplay: price + ' €',
+                price:        price,
+                specs:        [{ l: 'Color', v: name }, { l: 'Switch', v: 'Hot-swap LEOBOG Reaper' }, { l: 'Connection', v: 'USB-C · BT5.0 · 2.4GHz' }]
+            });
+        }
 
         var observer = new IntersectionObserver(function(entries) {
             entries.forEach(function(e) { if (e.isIntersecting) e.target.classList.add('visible'); });
