@@ -145,13 +145,19 @@ The site is deployed on Vercel at `https://sfflab.ee`. Use **root-relative paths
 - Configurator links use `?base=` param: Baas `base=2250`, Baas+ `base=2850`, Custom/Dual Boot `base=2250`.
 
 ### shop.html
-- GPU / CPU category tabs; NVIDIA / AMD / Intel brand sub-tabs.
+- Three category tabs: GPU / CPU / Accessories (`shop-gpu` / `shop-cpu` / `shop-acc`).
+- GPU and CPU have brand sub-tabs; Accessories has no sub-tabs — `switchCategory('acc')` calls `showGrid('acc', 'aula')` directly.
 - Brand sub-tab active colors: NVIDIA `#76b900`, AMD `#ed1c24`, Intel `#0071c5` — applied via inline `style`, not `.os-switch-btn.active` class, to avoid class override.
 - Grid visibility toggle uses CSS classes `shop-grid-visible` / `shop-grid-hidden` (same pattern as `os-grid-*` in index.html). `shop-grid-hidden` uses `position:absolute;width:100%` to keep layout stable.
 - `brands-cpu` div and hidden grids use `style="display:none"` — **not** Tailwind `hidden` — because Tailwind CDN may generate `.flex` after `.hidden`, making elements always visible.
 - On init, an IIFE applies brand button colors only — it does NOT call `showGrid()`, so the default `grid-gpu-nvidia` (which starts with class `shop-grid-visible` in HTML) stays visible.
+- `showGrid` list includes: `grid-gpu-nvidia`, `grid-gpu-amd`, `grid-cpu-intel`, `grid-cpu-amd`, `grid-acc-aula`.
 - Products currently listed: PNY RTX 5080 16GB OC, PNY RTX 5080 16GB ARGB OC. AMD GPU / Intel CPU / AMD CPU show "Coming Soon" placeholders.
 - **Pricing and order buttons are currently disabled** on all NVIDIA cards: price replaced with `tulevikus` (same text for all languages, zinc-600 color), both "add to cart" and "Tellida" buttons have `opacity:0.4;pointer-events:none` and no `onclick`.
+- **Accessories tab (`grid-acc-aula`):** two keyboard cards — AULA F75 PRO (active) and AULA F75 MAX (coming soon / `tulevikus`).
+  - **AULA F75 PRO Mechanical Keyboard 75%** — active for sale. Color picker: Graphite `#4b5259` (119 €) / Pastel Pink `#f9a8d4` (129 €). JS state: `_f75proColor`, `_f75proPrices`, `_f75proColorNames`. Functions: `selectF75ProColor(color)`, `addF75ProToCart()`, `orderF75Pro()`.
+  - Specs shown: Switch `Hot-swap LEOBOG Reaper`, Connection `USB-C · BT5.0 · 2.4GHz`.
+  - **AULA F75 MAX Mechanical Keyboard 75%** — disabled (same specs shown, buttons `opacity:0.4;pointer-events:none`).
 - **Order modal:** two-step — step 1 shows product overview; step 2 is customer form (name/email/phone). Submit calls `/api/order` then `/api/payment/create` and redirects to LHV payment page. `shopSubmitOrder` uses `p.name` and `p.price` (number).
 - **Cart (`#cart-overlay`, `.cart-overlay`):** centered overlay (same animation as order modal — `translateY(20px) scale(0.97)` → `(0) scale(1)`). No floating FAB — the nav `#nav-action-btn` is the cart entry point on this page.
   - Cart items: `{title, brand, price (string "X €"), priceNum (number), specs, qty}`.

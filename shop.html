@@ -199,7 +199,7 @@
                             <div class="flex reveal">
                                 <div class="glass-card p-8 rounded-[40px] flex flex-col w-full">
                                     <div class="product-img-wrap">
-                                        <img src="" alt="AULA F75 PRO Mechanical Keyboard">
+                                        <img id="f75pro-img" src="/IMG/ACCESSORIES/AULAF75PROGREY.png" alt="AULA F75 PRO Mechanical Keyboard" style="transition:opacity 0.2s ease">
                                     </div>
                                     <span class="text-blue-500 text-[10px] font-black uppercase tracking-[0.2em] mb-2">AULA · Keyboard</span>
                                     <h3 class="text-base font-extrabold text-white mb-4 leading-snug">F75 PRO Mechanical Keyboard 75%</h3>
@@ -230,18 +230,35 @@
                             <div class="flex reveal">
                                 <div class="glass-card p-8 rounded-[40px] flex flex-col w-full">
                                     <div class="product-img-wrap">
-                                        <img src="" alt="AULA F75 MAX Mechanical Keyboard">
+                                        <img id="f75max-img" src="/IMG/ACCESSORIES/F75MAXBLACK.png" alt="AULA F75 MAX Mechanical Keyboard" style="transition:opacity 0.2s ease">
                                     </div>
                                     <span class="text-blue-500 text-[10px] font-black uppercase tracking-[0.2em] mb-2">AULA · Keyboard</span>
                                     <h3 class="text-base font-extrabold text-white mb-4 leading-snug">F75 MAX Mechanical Keyboard 75%</h3>
-                                    <div class="space-y-1.5 text-[11px] font-bold uppercase tracking-[0.1em] mb-6">
+                                    <div class="space-y-1.5 text-[11px] font-bold uppercase tracking-[0.1em] mb-4">
                                         <div class="text-zinc-600">Switch <span class="text-zinc-400">Hot-swap LEOBOG Reaper</span></div>
                                         <div class="text-zinc-600">Connection <span class="text-zinc-400">USB-C · BT5.0 · 2.4GHz</span></div>
                                     </div>
+                                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+                                        <div style="display:flex;gap:8px;align-items:center">
+                                            <button onclick="selectF75MaxColor('black')" id="f75max-black"
+                                                style="width:22px;height:22px;border-radius:100%;background:#1c1c1e;border:2px solid white;cursor:pointer;outline:none;flex-shrink:0;transition:border-color 0.2s"
+                                                title="Black"></button>
+                                            <button onclick="selectF75MaxColor('caramel')" id="f75max-caramel"
+                                                style="width:22px;height:22px;border-radius:100%;background:#c8935a;border:2px solid rgba(255,255,255,0.15);cursor:pointer;outline:none;flex-shrink:0;transition:border-color 0.2s"
+                                                title="Caramel Pudding"></button>
+                                            <button onclick="selectF75MaxColor('pinkwhite')" id="f75max-pinkwhite"
+                                                style="width:22px;height:22px;border-radius:100%;background:#e88fa5;border:2px solid rgba(255,255,255,0.15);cursor:pointer;outline:none;flex-shrink:0;transition:border-color 0.2s"
+                                                title="Pink White"></button>
+                                            <button onclick="selectF75MaxColor('whiteblue')" id="f75max-whiteblue"
+                                                style="width:22px;height:22px;border-radius:100%;background:#7bb3f0;border:2px solid rgba(255,255,255,0.15);cursor:pointer;outline:none;flex-shrink:0;transition:border-color 0.2s"
+                                                title="White Blue"></button>
+                                        </div>
+                                        <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#a1a1aa" id="f75max-color-label">Black</span>
+                                    </div>
                                     <div class="mt-auto">
-                                        <div class="text-3xl font-black tracking-tighter text-zinc-600 mb-5">tulevikus</div>
-                                        <button class="w-full py-3 rounded-2xl text-xs font-bold uppercase tracking-widest mb-2" style="background:rgba(37,99,235,0.1);color:#60a5fa;border:1px solid rgba(37,99,235,0.3);opacity:0.4;pointer-events:none;cursor:not-allowed" data-key="cart-add">+ Ostukorvi</button>
-                                        <button class="w-full py-4 rounded-2xl text-xs font-black uppercase tracking-widest" style="background:#2563eb;color:#fff;opacity:0.4;pointer-events:none;cursor:not-allowed" data-key="shop-order">Tellida</button>
+                                        <div id="f75max-price" class="text-3xl font-black tracking-tighter text-white mb-5">149 €</div>
+                                        <button onclick="addF75MaxToCart()" class="w-full py-3 rounded-2xl text-xs font-bold uppercase tracking-widest mb-2" style="background:rgba(37,99,235,0.1);color:#60a5fa;border:1px solid rgba(37,99,235,0.3);cursor:pointer" data-key="cart-add">+ Ostukorvi</button>
+                                        <button onclick="orderF75Max()" class="w-full py-4 rounded-2xl text-xs font-black uppercase tracking-widest" style="background:#2563eb;color:#fff;border:none;cursor:pointer" data-key="shop-order">Tellida</button>
                                     </div>
                                 </div>
                             </div>
@@ -426,6 +443,10 @@
         var _f75proColor = 'grey';
         var _f75proPrices = { grey: 119, pink: 129 };
         var _f75proColorNames = { grey: 'Graphite', pink: 'Pastel Pink' };
+        var _f75proImages = {
+            grey: '/IMG/ACCESSORIES/AULAF75PROGREY.png',
+            pink: '/IMG/ACCESSORIES/AULAF75PROPASTELPINK.png'
+        };
 
         function selectF75ProColor(color) {
             _f75proColor = color;
@@ -433,6 +454,12 @@
             document.getElementById('f75pro-pink').style.borderColor = (color === 'pink') ? 'white' : 'transparent';
             document.getElementById('f75pro-color-label').textContent = _f75proColorNames[color];
             document.getElementById('f75pro-price').textContent = _f75proPrices[color] + ' €';
+            var img = document.getElementById('f75pro-img');
+            img.style.opacity = '0';
+            setTimeout(function() {
+                img.src = _f75proImages[color];
+                img.style.opacity = '1';
+            }, 150);
         }
 
         function addF75ProToCart() {
@@ -457,6 +484,55 @@
                 price:        price,
                 specs:        [{ l: 'Color', v: name }, { l: 'Switch', v: 'Hot-swap LEOBOG Reaper' }, { l: 'Connection', v: 'USB-C · BT5.0 · 2.4GHz' }]
             });
+        }
+
+        var _f75maxColor = 'black';
+        var _f75maxColorNames = { black: 'Black', caramel: 'Caramel Pudding', pinkwhite: 'Pink White', whiteblue: 'White Blue' };
+        var _f75maxImages = {
+            black:     '/IMG/ACCESSORIES/F75MAXBLACK.png',
+            caramel:   '/IMG/ACCESSORIES/F75MAXCARAMELPUDDING.png',
+            pinkwhite: '/IMG/ACCESSORIES/F75MAXPINKWHITE.png',
+            whiteblue: '/IMG/ACCESSORIES/F75MAXWHITEBLUE.png'
+        };
+        var _f75maxColorKeys = ['black', 'caramel', 'pinkwhite', 'whiteblue'];
+
+        var F75_MAX_PRICE = 149;
+
+        function addF75MaxToCart() {
+            var name = _f75maxColorNames[_f75maxColor];
+            addToCart({
+                title:    'AULA F75 MAX Mechanical Keyboard 75% — ' + name,
+                brand:    'AULA',
+                price:    F75_MAX_PRICE + ' €',
+                priceNum: F75_MAX_PRICE,
+                specs:    [{ l: 'Color', v: name }, { l: 'Switch', v: 'Hot-swap LEOBOG Reaper' }, { l: 'Connection', v: 'USB-C · BT5.0 · 2.4GHz' }]
+            });
+        }
+
+        function orderF75Max() {
+            var name = _f75maxColorNames[_f75maxColor];
+            openShopModal({
+                name:         'AULA F75 MAX Mechanical Keyboard 75% — ' + name,
+                brand:        'AULA · Keyboard',
+                priceDisplay: F75_MAX_PRICE + ' €',
+                price:        F75_MAX_PRICE,
+                specs:        [{ l: 'Color', v: name }, { l: 'Switch', v: 'Hot-swap LEOBOG Reaper' }, { l: 'Connection', v: 'USB-C · BT5.0 · 2.4GHz' }]
+            });
+        }
+
+        function selectF75MaxColor(color) {
+            _f75maxColor = color;
+            _f75maxColorKeys.forEach(function(c) {
+                var el = document.getElementById('f75max-' + c);
+                if (el) el.style.borderColor = (c === color) ? 'white' : 'rgba(255,255,255,0.15)';
+            });
+            document.getElementById('f75max-color-label').textContent = _f75maxColorNames[color];
+            var img = document.getElementById('f75max-img');
+            img.style.opacity = '0';
+            setTimeout(function() {
+                img.src = _f75maxImages[color];
+                img.style.opacity = '1';
+            }, 150);
         }
 
         var observer = new IntersectionObserver(function(entries) {
