@@ -35,6 +35,8 @@
 
         .os-switch-btn { transition: all 0.3s ease; border: 1px solid rgba(255,255,255,0.1); background: transparent; color: #52525b; cursor: pointer; }
         .os-switch-btn.active { background: white; color: black; border-color: white; }
+        @keyframes _pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(0.88); } }
+        #tab-acc::after { content: 'NEW'; font-size: 8px; font-weight: 800; letter-spacing: 0.12em; color: #fff; background: #2563eb; padding: 2px 6px; border-radius: 4px; margin-left: 6px; display: inline-block; vertical-align: middle; animation: _pulse 2s ease-in-out infinite; }
 
         .shop-grid { transition: opacity 0.35s ease, transform 0.35s ease; }
         .shop-grid-hidden { opacity: 0; transform: translateY(12px); pointer-events: none; position: absolute; width: 100%; top: 0; }
@@ -93,9 +95,9 @@
 
                 <!-- Category tabs -->
                 <div class="anim-hero-cta flex justify-center gap-4 mb-8">
-                    <button onclick="switchCategory('gpu')" id="tab-gpu" class="os-switch-btn active px-10 py-3 rounded-full text-[11px] font-black uppercase tracking-widest" data-key="shop-gpu">Videokaardid</button>
-                    <button onclick="switchCategory('cpu')" id="tab-cpu" class="os-switch-btn px-10 py-3 rounded-full text-[11px] font-black uppercase tracking-widest" data-key="shop-cpu">Protsessorid</button>
-                    <button onclick="switchCategory('acc')" id="tab-acc" class="os-switch-btn px-10 py-3 rounded-full text-[11px] font-black uppercase tracking-widest" data-key="shop-acc">Aksessuaarid</button>
+                    <button onclick="switchCategory('gpu')" id="tab-gpu" class="os-switch-btn active py-3 rounded-full text-[11px] font-black uppercase tracking-widest" style="width:185px;text-align:center" data-key="shop-gpu">Videokaardid</button>
+                    <button onclick="switchCategory('cpu')" id="tab-cpu" class="os-switch-btn py-3 rounded-full text-[11px] font-black uppercase tracking-widest" style="width:185px;text-align:center" data-key="shop-cpu">Protsessorid</button>
+                    <button onclick="switchCategory('acc')" id="tab-acc" class="os-switch-btn py-3 rounded-full text-[11px] font-black uppercase tracking-widest" style="width:185px;text-align:center" data-key="shop-acc">Aksessuaarid</button>
                 </div>
 
                 <!-- Brand sub-tabs: GPU (visible by default) -->
@@ -309,8 +311,8 @@
                                     </div>
                                     <div class="mt-auto">
                                         <div class="text-3xl font-black tracking-tighter text-white mb-5">159 €</div>
-                                        <button class="w-full py-3 rounded-2xl text-xs font-bold uppercase tracking-widest mb-2" style="background:rgba(37,99,235,0.1);color:#60a5fa;border:1px solid rgba(37,99,235,0.3);opacity:0.4;pointer-events:none;cursor:not-allowed" data-key="cart-add">+ Ostukorvi</button>
-                                        <button class="w-full py-4 rounded-2xl text-xs font-black uppercase tracking-widest" style="background:#2563eb;color:#fff;opacity:0.4;pointer-events:none;cursor:not-allowed" data-key="shop-order">Tellida</button>
+                                        <button onclick="addAce68ToCart()" class="w-full py-3 rounded-2xl text-xs font-bold uppercase tracking-widest mb-2" style="background:rgba(37,99,235,0.1);color:#60a5fa;border:1px solid rgba(37,99,235,0.3);cursor:pointer" data-key="cart-add">+ Ostukorvi</button>
+                                        <button onclick="orderAce68()" class="w-full py-4 rounded-2xl text-xs font-black uppercase tracking-widest" style="background:#2563eb;color:#fff;border:none;cursor:pointer" data-key="shop-order">Tellida</button>
                                     </div>
                                 </div>
                             </div>
@@ -764,6 +766,18 @@
             peachypink:   '/IMG/ACCESSORIES/ACE68TURBOPEACHYPINK.png'
         };
         var _ace68ColorKeys = ['cyberblack', 'galaxyorange', 'berryred', 'novawhite', 'peachypink'];
+        var ACE68_PRICE = 159;
+
+        function addAce68ToCart() {
+            var name = _ace68ColorNames[_ace68Color];
+            addToCart({ title: 'MCHOSE Ace 68 Turbo Full-aluminum — ' + name, brand: 'MCHOSE', price: ACE68_PRICE + ' €', priceNum: ACE68_PRICE,
+                specs: [{ l: 'Color', v: name }, { l: 'Switch', v: 'Mount Tai Magnetic Switch GT' }, { l: 'Connection', v: 'USB-C · BT5.0 · 2.4GHz' }] });
+        }
+        function orderAce68() {
+            var name = _ace68ColorNames[_ace68Color];
+            openShopModal({ name: 'MCHOSE Ace 68 Turbo Full-aluminum — ' + name, brand: 'MCHOSE · Keyboard', priceDisplay: ACE68_PRICE + ' €', price: ACE68_PRICE,
+                specs: [{ l: 'Color', v: name }, { l: 'Switch', v: 'Mount Tai Magnetic Switch GT' }, { l: 'Connection', v: 'USB-C · BT5.0 · 2.4GHz' }] });
+        }
 
         function selectAce68Color(color) {
             _ace68Color = color;
