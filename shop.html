@@ -316,6 +316,24 @@
                                     </div>
                                 </div>
                             </div>
+                            <!-- INTERNAL TEST -->
+                            <div class="flex reveal">
+                                <div class="glass-card p-8 rounded-[40px] flex flex-col w-full" style="border-color:rgba(234,179,8,0.3)">
+                                    <div class="product-img-wrap" style="background:rgba(234,179,8,0.04)">
+                                        <span style="font-size:11px;font-weight:800;letter-spacing:0.15em;text-transform:uppercase;color:#ca8a04">INTERNAL TEST</span>
+                                    </div>
+                                    <span class="text-[10px] font-black uppercase tracking-[0.2em] mb-2" style="color:#ca8a04">Test · Do Not Order</span>
+                                    <h3 class="text-base font-extrabold text-white mb-4 leading-snug">Internal Test — Not For Sale</h3>
+                                    <div class="space-y-1.5 text-[11px] font-bold uppercase tracking-[0.1em] mb-4">
+                                        <div class="text-zinc-600">Purpose <span class="text-zinc-400">Payment flow test</span></div>
+                                        <div class="text-zinc-600">Delivery <span style="color:#ca8a04">No goods will be sent</span></div>
+                                    </div>
+                                    <div class="mt-auto">
+                                        <div class="text-3xl font-black tracking-tighter text-white mb-5">1 €</div>
+                                        <button onclick="orderTestItem()" class="w-full py-4 rounded-2xl text-xs font-black uppercase tracking-widest" style="background:#ca8a04;color:#000;border:none;cursor:pointer">Test Order</button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -665,6 +683,7 @@
                 brand:        'AULA · Keyboard',
                 priceDisplay: price + ' €',
                 price:        price,
+                orderType:    'accessory',
                 specs:        [{ l: 'Color', v: name }, { l: 'Switch', v: 'Hot-swap LEOBOG Reaper' }, { l: 'Connection', v: 'USB-C · BT5.0 · 2.4GHz' }]
             });
         }
@@ -699,6 +718,7 @@
                 brand:        'AULA · Keyboard',
                 priceDisplay: F75_MAX_PRICE + ' €',
                 price:        F75_MAX_PRICE,
+                orderType:    'accessory',
                 specs:        [{ l: 'Color', v: name }, { l: 'Switch', v: 'Hot-swap LEOBOG Reaper' }, { l: 'Connection', v: 'USB-C · BT5.0 · 2.4GHz' }]
             });
         }
@@ -727,7 +747,7 @@
         }
         function orderK7Ultra() {
             var name = _k7ultraColorNames[_k7ultraColor];
-            openShopModal({ name: 'MCHOSE K7 Ultra — ' + name, brand: 'MCHOSE · Mouse', priceDisplay: K7_ULTRA_PRICE + ' €', price: K7_ULTRA_PRICE,
+            openShopModal({ name: 'MCHOSE K7 Ultra — ' + name, brand: 'MCHOSE · Mouse', priceDisplay: K7_ULTRA_PRICE + ' €', price: K7_ULTRA_PRICE, orderType: 'accessory',
                 specs: [{ l: 'Color', v: name }, { l: 'Sensor', v: 'PAW3950' }, { l: 'Polling', v: '8000 Hz' }, { l: 'Weight', v: '59g' }] });
         }
 
@@ -775,7 +795,7 @@
         }
         function orderAce68() {
             var name = _ace68ColorNames[_ace68Color];
-            openShopModal({ name: 'MCHOSE Ace 68 Turbo Full-aluminum — ' + name, brand: 'MCHOSE · Keyboard', priceDisplay: ACE68_PRICE + ' €', price: ACE68_PRICE,
+            openShopModal({ name: 'MCHOSE Ace 68 Turbo Full-aluminum — ' + name, brand: 'MCHOSE · Keyboard', priceDisplay: ACE68_PRICE + ' €', price: ACE68_PRICE, orderType: 'accessory',
                 specs: [{ l: 'Color', v: name }, { l: 'Switch', v: 'Mount Tai Magnetic Switch GT' }, { l: 'Connection', v: 'USB-C · BT5.0 · 2.4GHz' }] });
         }
 
@@ -803,7 +823,7 @@
         }
         function orderA5V3() {
             var name = _a5v3ColorNames[_a5v3Color];
-            openShopModal({ name: 'MCHOSE A5 V3 — ' + name, brand: 'MCHOSE · Mouse', priceDisplay: A5V3_PRICE + ' €', price: A5V3_PRICE,
+            openShopModal({ name: 'MCHOSE A5 V3 — ' + name, brand: 'MCHOSE · Mouse', priceDisplay: A5V3_PRICE + ' €', price: A5V3_PRICE, orderType: 'accessory',
                 specs: [{ l: 'Color', v: name }, { l: 'Sensor', v: 'PAW3395' }, { l: 'Polling', v: '8000 Hz' }, { l: 'Weight', v: '56g' }] });
         }
 
@@ -841,7 +861,7 @@
         }
         function orderAX5V2() {
             var name = _ax5v2ColorNames[_ax5v2Color];
-            openShopModal({ name: 'MCHOSE AX5 V2 Magnesium alloy — ' + name, brand: 'MCHOSE · Mouse', priceDisplay: AX5V2_PRICE + ' €', price: AX5V2_PRICE,
+            openShopModal({ name: 'MCHOSE AX5 V2 Magnesium alloy — ' + name, brand: 'MCHOSE · Mouse', priceDisplay: AX5V2_PRICE + ' €', price: AX5V2_PRICE, orderType: 'accessory',
                 specs: [{ l: 'Color', v: name }, { l: 'Sensor', v: 'PAW3950' }, { l: 'Polling', v: 'Dual 8000 Hz' }, { l: 'Weight', v: '54g' }] });
         }
 
@@ -881,6 +901,11 @@
             );
             all.forEach(function(src) { var i = new Image(); i.src = src; });
         })();
+
+        function orderTestItem() {
+            openShopModal({ name: 'INTERNAL TEST — NOT FOR SALE', brand: 'Test · Internal', priceDisplay: '1 €', price: 1, orderType: 'accessory',
+                specs: [{ l: 'Purpose', v: 'Payment flow test' }, { l: 'Delivery', v: 'No goods will be sent' }] });
+        }
 
         var observer = new IntersectionObserver(function(entries) {
             entries.forEach(function(e) { if (e.isIntersecting) e.target.classList.add('visible'); });
@@ -952,8 +977,9 @@
                         name:  name,  email: email,  phone: phone,
                         model: p.name,  gpu: p.name,
                         os: 'N/A',  case: 'N/A',  cpu: 'N/A',  ram: 'N/A',  ssd: 'N/A',
-                        price:    String(p.price),
-                        language: lang
+                        price:     String(p.price),
+                        language:  lang,
+                        orderType: p.orderType || 'accessory'
                     })
                 });
                 var orderData = await orderRes.json();
@@ -1075,7 +1101,7 @@
             closeCart();
             if (_cart.length === 1) {
                 var item = _cart[0];
-                openShopModal({ name: item.title, brand: item.brand, priceDisplay: item.price, price: item.priceNum, specs: item.specs });
+                openShopModal({ name: item.title, brand: item.brand, priceDisplay: item.price, price: item.priceNum, orderType: 'accessory', specs: item.specs });
             } else {
                 var totalNum = _cart.reduce(function(s, i) { return s + i.priceNum * i.qty; }, 0);
                 openShopModal({
@@ -1083,6 +1109,7 @@
                     brand:        'SFF Lab Shop',
                     priceDisplay: totalNum + ' €',
                     price:        totalNum,
+                    orderType:    'accessory',
                     specs:        _cart.map(function(i) { return { l: i.title, v: i.priceNum * i.qty + ' €' }; })
                 });
             }

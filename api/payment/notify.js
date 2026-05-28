@@ -63,6 +63,9 @@ function specRow(label, value) {
 }
 
 function buildSpecRows(d) {
+    if (d.orderType === 'accessory') {
+        return specRow('Product', d.model);
+    }
     return [
         ['Model',       d.model],
         ['OS',          d.os],
@@ -126,32 +129,33 @@ function buildInternalHtml(d) {
 function buildConfirmationHtml(d) {
     var lang = d.language || 'et';
 
+    var isAccessory = d.orderType === 'accessory';
     var texts = {
         et: {
             subtitle:  'Makse õnnestus · ' + d.orderNumber,
-            specLabel: 'Tellimus',
+            specLabel: isAccessory ? 'Toode' : 'Tellimus',
             priceLabel:'Kokku',
-            delivLabel:'Eeldatav valmimisaeg',
-            heading:   'Tellimus on tootmises.',
-            body:      'Teie makse on edukalt laekunud. Alustame ehitamisega.',
+            delivLabel: isAccessory ? 'Tarneaeg' : 'Eeldatav valmimisaeg',
+            heading:   isAccessory ? 'Tellimus on vastu võetud.' : 'Tellimus on tootmises.',
+            body:      isAccessory ? 'Teie makse on edukalt laekunud. Saadame tellimuse teele 14 tööpäeva jooksul.' : 'Teie makse on edukalt laekunud. Alustame ehitamisega.',
             subject:   'Makse õnnestus — ' + d.orderNumber
         },
         ru: {
             subtitle:  'Оплата прошла · ' + d.orderNumber,
-            specLabel: 'Конфигурация',
+            specLabel: isAccessory ? 'Товар' : 'Конфигурация',
             priceLabel:'Итого',
-            delivLabel:'Ожидаемая готовность',
-            heading:   'Заказ принят в производство.',
-            body:      'Оплата успешно получена. Приступаем к сборке.',
+            delivLabel: isAccessory ? 'Доставка' : 'Ожидаемая готовность',
+            heading:   isAccessory ? 'Заказ принят.' : 'Заказ принят в производство.',
+            body:      isAccessory ? 'Оплата успешно получена. Отправим ваш заказ в течение 14 рабочих дней.' : 'Оплата успешно получена. Приступаем к сборке.',
             subject:   'Оплата подтверждена — ' + d.orderNumber
         },
         en: {
             subtitle:  'Payment confirmed · ' + d.orderNumber,
-            specLabel: 'Configuration',
+            specLabel: isAccessory ? 'Product' : 'Configuration',
             priceLabel:'Total',
-            delivLabel:'Estimated Ready',
-            heading:   'Order is in production.',
-            body:      'Your payment has been received. We are starting the build.',
+            delivLabel: isAccessory ? 'Delivery' : 'Estimated Ready',
+            heading:   isAccessory ? 'Order received.' : 'Order is in production.',
+            body:      isAccessory ? 'Your payment has been received. We will ship your order within 14 business days.' : 'Your payment has been received. We are starting the build.',
             subject:   'Payment confirmed — ' + d.orderNumber
         }
     };
