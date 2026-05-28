@@ -37,7 +37,7 @@
         .os-switch-btn.active { background: white; color: black; border-color: white; }
 
         .shop-grid { transition: opacity 0.35s ease, transform 0.35s ease; }
-        .shop-grid-hidden { opacity: 0; transform: translateY(12px); pointer-events: none; position: absolute; width: 100%; }
+        .shop-grid-hidden { opacity: 0; transform: translateY(12px); pointer-events: none; position: absolute; width: 100%; top: 0; }
         .shop-grid-visible { opacity: 1; transform: translateY(0); }
 
         .product-img-wrap {
@@ -75,7 +75,7 @@
 </head>
 <body class="antialiased text-zinc-100">
 
-    <div class="pt-[73px] md:pt-[88px]">
+    <div class="pt-[73px] md:pt-[88px] grow">
 
         <!-- Hero -->
         <section class="py-16 px-6 text-center relative overflow-hidden">
