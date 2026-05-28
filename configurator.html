@@ -183,11 +183,12 @@
 
                 <div>
                     <label data-key="os-label" class="block text-[10px] font-black uppercase tracking-widest text-blue-500 mb-3">Operatsioonisüsteem (OS)</label>
-                    <div class="flex gap-2">
+                    <div id="os-btn-row" class="flex gap-2">
                         <button onclick="selectOS('steamos')" id="os-steamos" class="os-btn active flex-1 px-2 rounded-xl text-[9px] font-black uppercase tracking-wider flex items-center justify-center" style="padding-top:18px;padding-bottom:18px"><span onclick="event.stopPropagation();toggleWin11()" id="win11-inline-toggle" style="display:inline-flex;align-items:center;justify-content:center;gap:6px;cursor:pointer;pointer-events:auto;user-select:none"><span id="win11-track" style="display:inline-flex;width:26px;height:14px;border-radius:7px;background:#3f3f46;position:relative;transition:background 0.2s;flex-shrink:0"><span id="win11-knob" style="position:absolute;top:2px;left:2px;width:10px;height:10px;border-radius:50%;background:#71717a;transition:all 0.2s"></span></span>Win 11 Pro</span></button>
                         <button onclick="selectOS('windows')" id="os-windows" class="os-btn flex-1 py-3 px-2 rounded-xl text-[9px] font-black uppercase tracking-wider text-center">Windows 11<br><span class="text-[8px] opacity-60">+79€</span></button>
                         <button onclick="selectOS('dualboot')" id="os-dualboot" class="os-btn flex-1 py-3 px-2 rounded-xl text-[9px] font-black uppercase tracking-wider text-center">Dual Boot<br><span class="text-[8px] opacity-60">+79€</span></button>
                     </div>
+                    <div id="os-dualboot-display" style="display:none;padding-top:18px;padding-bottom:18px" class="os-btn active px-4 rounded-xl text-[9px] font-black uppercase tracking-wider text-center">SteamOS + Win 11 Pro</div>
                     <div id="os-note-windows" class="os-note os-note-blue"        data-key="os-note-windows">✓ Maksimaalne mänguühilduvus · Windows litsents kaasas</div>
                     <div id="os-note-dualboot" class="os-note os-note-violet"    data-key="os-note-dualboot">✓ SteamOS + Windows 11 · Parim mõlemast maailmast</div>
                 </div>
@@ -223,12 +224,30 @@
                         <button onclick="selectRam('64')" id="ram-64" class="os-btn flex-1 py-3 px-2 rounded-xl text-[9px] font-black uppercase tracking-wider text-center" style="opacity:0.35">64 GB</button>
                     </div>
                 </div>
-                <div>
+                <div id="ssd-single-block">
                     <label data-key="ssd-label" class="block text-[10px] font-black uppercase tracking-widest text-blue-500 mb-3">Salvestusruum (SSD)</label>
                     <div class="flex gap-2">
                         <button onclick="selectSsd('1')" id="ssd-1tb" class="os-btn active flex-1 py-3 px-2 rounded-xl text-[9px] font-black uppercase tracking-wider text-center">1 TB</button>
                         <button onclick="selectSsd('2')" id="ssd-2tb" class="os-btn flex-1 py-3 px-2 rounded-xl text-[9px] font-black uppercase tracking-wider text-center" style="opacity:0.35">2 TB</button>
                         <button onclick="selectSsd('4')" id="ssd-4tb" class="os-btn flex-1 py-3 px-2 rounded-xl text-[9px] font-black uppercase tracking-wider text-center" style="display:none;opacity:0.35">4 TB</button>
+                    </div>
+                </div>
+                <div id="ssd-dual-block" style="display:none" class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-[10px] font-black uppercase tracking-widest text-blue-500 mb-3">SteamOS Salvestusruum</label>
+                        <div class="flex gap-2">
+                            <button onclick="selectSsdOs('1')" id="ssd-os-1tb" class="os-btn active flex-1 py-3 px-2 rounded-xl text-[9px] font-black uppercase tracking-wider text-center">1 TB</button>
+                            <button onclick="selectSsdOs('2')" id="ssd-os-2tb" class="os-btn flex-1 py-3 px-2 rounded-xl text-[9px] font-black uppercase tracking-wider text-center">2 TB</button>
+                            <button onclick="selectSsdOs('4')" id="ssd-os-4tb" class="os-btn flex-1 py-3 px-2 rounded-xl text-[9px] font-black uppercase tracking-wider text-center">4 TB</button>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-black uppercase tracking-widest text-blue-500 mb-3">Win Salvestusruum</label>
+                        <div class="flex gap-2">
+                            <button onclick="selectSsdWin('1')" id="ssd-win-1tb" class="os-btn active flex-1 py-3 px-2 rounded-xl text-[9px] font-black uppercase tracking-wider text-center">1 TB</button>
+                            <button onclick="selectSsdWin('2')" id="ssd-win-2tb" class="os-btn flex-1 py-3 px-2 rounded-xl text-[9px] font-black uppercase tracking-wider text-center">2 TB</button>
+                            <button onclick="selectSsdWin('4')" id="ssd-win-4tb" class="os-btn flex-1 py-3 px-2 rounded-xl text-[9px] font-black uppercase tracking-wider text-center">4 TB</button>
+                        </div>
                     </div>
                 </div>
                 <div id="psu-block" style="display:none">
@@ -389,6 +408,8 @@
         var COLOR_PARAM = urlParams.get('color');
         var selectedOS  = 'steamos';
         var win11Enabled = true;
+        var selectedSsdOs  = '1';
+        var selectedSsdWin = '1';
         var selectedPreset = null;
         var OS_PRICES   = { steamos: 0, windows: 79, dualboot: 79 };
         var CASE_IMAGES = {
@@ -409,7 +430,9 @@
         var selectedCaseColor = 'Black';
         var currentPhotoNum = 1;
         var RAM_PRICES  = { '16': 0, '32': 150, '64': 640 };
-        var SSD_PRICES  = { '1': 0, '2': 90, '4': 330 };
+        var SSD_PRICES      = { '1': 0,  '2': 90,  '4': 330 };
+        var WIN_SSD_PRICES  = { '1': 190, '2': 320, '4': 590 };
+        var DUAL_OS_SSD_PRICES = { '1': 0, '2': 130, '4': 400 };
         var CPU_PRICES  = { '7500f': 0, '7500x3d': 65 };
         var GPU_PRICES  = { '9060xt': 0, '9070xt16': 250, '9070xt20': 340 };
         var RAM_LABELS  = { '16': '16GB DDR5 Corsair Vengeance', '32': '32GB DDR5 Corsair Vengeance', '64': '64GB DDR5 Corsair Vengeance' };
@@ -564,6 +587,37 @@
                 var _subEl2 = document.querySelector('[data-key="config-sub"]');
                 if (_subEl2) _subEl2.innerText = 'CUSTOM';
                 modelDisp.innerText = 'CUSTOM';
+            } else if (MODE === 'dualboot') {
+                // CPU/GPU/RAM/PSU: all selectable, defaults from HTML (7500F, 9060XT, 16GB, 650W)
+                document.getElementById('cpu-container').style.pointerEvents = '';
+                document.getElementById('gpu-container').style.pointerEvents = '';
+                ['cpu-7500f','cpu-7500x3d','gpu-9060xt','gpu-9070xt16','ram-16','ram-32','ram-64'].forEach(function(id) {
+                    var b = document.getElementById(id);
+                    if (b) { b.style.pointerEvents = ''; b.style.cursor = ''; b.style.opacity = ''; }
+                });
+                document.getElementById('psu-block').style.display = 'block';
+                // OS: hide buttons, show fixed label
+                document.getElementById('os-btn-row').style.display = 'none';
+                document.getElementById('os-dualboot-display').style.display = '';
+                document.getElementById('os-note-dualboot').style.display = 'none';
+                document.getElementById('os-note-windows').style.display = 'none';
+                // SSD: hide single, show dual
+                document.getElementById('ssd-single-block').style.display = 'none';
+                document.getElementById('ssd-dual-block').style.display = 'grid';
+                // Win11 always on
+                win11Enabled = true;
+                // OS display in summary card
+                var _osDisp = document.getElementById('os-display');
+                if (_osDisp) { _osDisp.innerText = 'SteamOS + Win 11 Pro'; _osDisp.style.color = '#c4b5fd'; }
+                // Model
+                modelDisp.innerText = 'DUAL BOOT';
+                if (window.pageTranslations) {
+                    ['et','ru','en'].forEach(function(l) {
+                        if (window.pageTranslations[l]) window.pageTranslations[l]['config-sub'] = 'DUAL BOOT';
+                    });
+                }
+                var _subDb = document.querySelector('[data-key="config-sub"]');
+                if (_subDb) _subDb.innerText = 'DUAL BOOT';
             }
             syncDropdowns();
         }
@@ -602,10 +656,11 @@
 
         /* ── GPU / PSU coupling ── */
         function handleGpuChange() {
-            var psuWarning  = document.getElementById('psu-warning');
+            var psuWarning   = document.getElementById('psu-warning');
             var psuContainer = document.getElementById('psu-container');
+            var needsPsu     = (MODE === 'enthusiast' || MODE === 'dualboot');
             if (selectedGpu === '9070xt16' || selectedGpu === '9070xt20') {
-                if (MODE === 'enthusiast') {
+                if (needsPsu) {
                     selectPsu('850');
                     var b650 = document.getElementById('psu-650');
                     if (b650) b650.style.opacity = '0.35';
@@ -613,7 +668,7 @@
                 }
                 if (psuWarning) psuWarning.classList.remove('hidden');
             } else {
-                if (MODE === 'enthusiast') {
+                if (needsPsu) {
                     if (psuContainer) psuContainer.style.pointerEvents = '';
                     var b650 = document.getElementById('psu-650');
                     if (b650) b650.style.opacity = '';
@@ -643,19 +698,55 @@
             }
         }
         function toggleWin11() {
+            if (MODE === 'dualboot') return;
             win11Enabled = !win11Enabled;
             _updateWin11Visual();
+            updatePrice();
+        }
+        function selectSsdOs(size) {
+            selectedSsdOs = size;
+            ['1','2','4'].forEach(function(s) {
+                var b = document.getElementById('ssd-os-' + s + 'tb');
+                if (b) b.classList.remove('active');
+            });
+            var a = document.getElementById('ssd-os-' + size + 'tb');
+            if (a) a.classList.add('active');
+            updatePrice();
+        }
+        function selectSsdWin(size) {
+            selectedSsdWin = size;
+            ['1','2','4'].forEach(function(s) {
+                var b = document.getElementById('ssd-win-' + s + 'tb');
+                if (b) b.classList.remove('active');
+            });
+            var a = document.getElementById('ssd-win-' + size + 'tb');
+            if (a) a.classList.add('active');
             updatePrice();
         }
 
         /* ── Price calculation ── */
         function updatePrice() {
             var custom = (MODE === 'enthusiast');
-            var cpu  = custom ? (CPU_PRICES[selectedCpu] || 0) : 0;
-            var gpu  = custom ? (GPU_PRICES[selectedGpu] || 0) : 0;
-            var ram  = custom ? (RAM_PRICES[selectedRam] || 0) : 0;
-            var ssd  = custom ? (SSD_PRICES[selectedSsd] || 0) : 0;
-            var psu  = custom && document.getElementById('psu-block').style.display !== 'none' ? selectedPsu : 0;
+            var dual   = (MODE === 'dualboot');
+            var cpu, gpu, ram, ssd;
+            if (dual) {
+                cpu = CPU_PRICES[selectedCpu] || 0;
+                gpu = GPU_PRICES[selectedGpu] || 0;
+                ram = RAM_PRICES[selectedRam] || 0;
+                ssd = (DUAL_OS_SSD_PRICES[selectedSsdOs] || 0) + (WIN_SSD_PRICES[selectedSsdWin] || 0);
+            } else if (custom) {
+                cpu = CPU_PRICES[selectedCpu] || 0;
+                gpu = GPU_PRICES[selectedGpu] || 0;
+                ram = RAM_PRICES[selectedRam] || 0;
+                ssd = SSD_PRICES[selectedSsd]  || 0;
+            } else {
+                cpu = 0; gpu = 0; ram = 0; ssd = 0;
+            }
+            var _psuBlock = document.getElementById('psu-block');
+            var _psuOn    = _psuBlock && _psuBlock.style.display !== 'none';
+            var psu = custom && _psuOn ? selectedPsu
+                    : dual   && _psuOn ? (selectedPsu > 0 ? 66 : 0)
+                    : 0;
             var ctrl = document.getElementById('ctrl-block').style.display !== 'none' ? parseInt(document.getElementById('ctrl-select').value) || 0 : 0;
             var os   = OS_PRICES[selectedOS] || 0;
             var win  = win11Enabled ? 79 : 0;
@@ -733,11 +824,12 @@
             var lang  = localStorage.getItem('selectedLanguage') || 'et';
             var isRu  = lang === 'ru';
             var osLabels = { steamos: 'SteamOS', windows: 'Windows 11', dualboot: 'Dual Boot' };
+            var osDisplay = MODE === 'dualboot' ? 'SteamOS + Windows 11 Pro' : (osLabels[selectedOS] || selectedOS);
             return {
                 lang:     lang,
                 isRu:     isRu,
                 model:    document.getElementById('model-display').innerText,
-                os:       osLabels[selectedOS],
+                os:       osDisplay,
                 caseTxt:  selectedCaseModel + ' — ' + selectedCaseColor,
                 cpu:      CPU_LABELS[selectedCpu],
                 gpu:      GPU_LABELS[selectedGpu],
