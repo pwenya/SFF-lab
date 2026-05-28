@@ -205,7 +205,7 @@
                             <div class="flex reveal">
                                 <div class="glass-card p-8 rounded-[40px] flex flex-col w-full">
                                     <div class="product-img-wrap">
-                                        <img id="f75pro-img" src="/IMG/ACCESSORIES/AULAF75PROGREY.png" alt="AULA F75 PRO Mechanical Keyboard" style="transition:opacity 0.2s ease">
+                                        <img id="f75pro-img" src="/IMG/ACCESSORIES/AULAF75PROGREY.png" alt="AULA F75 PRO Mechanical Keyboard" style="transition:opacity 0.2s ease;transform:scale(0.694) translateY(85px);transform-origin:center top">
                                     </div>
                                     <span class="text-blue-500 text-[10px] font-black uppercase tracking-[0.2em] mb-2">AULA · Keyboard</span>
                                     <h3 class="text-base font-extrabold text-white mb-4 leading-snug">F75 PRO Mechanical Keyboard 75%</h3>
@@ -236,7 +236,7 @@
                             <div class="flex reveal">
                                 <div class="glass-card p-8 rounded-[40px] flex flex-col w-full">
                                     <div class="product-img-wrap">
-                                        <img id="f75max-img" src="/IMG/ACCESSORIES/F75MAXBLACK.png" alt="AULA F75 MAX Mechanical Keyboard" style="transition:opacity 0.2s ease">
+                                        <img id="f75max-img" src="/IMG/ACCESSORIES/F75MAXBLACK.png" alt="AULA F75 MAX Mechanical Keyboard" style="transition:opacity 0.2s ease;transform:scale(1.1);transform-origin:center center">
                                     </div>
                                     <span class="text-blue-500 text-[10px] font-black uppercase tracking-[0.2em] mb-2">AULA · Keyboard</span>
                                     <h3 class="text-base font-extrabold text-white mb-4 leading-snug">F75 MAX Mechanical Keyboard 75%</h3>
@@ -273,7 +273,7 @@
                             <div class="flex reveal">
                                 <div class="glass-card p-8 rounded-[40px] flex flex-col w-full">
                                     <div class="product-img-wrap">
-                                        <img id="ace68-img" src="/IMG/ACCESSORIES/ACE68TURBOCYBERBLACK.png" alt="MCHOSE Ace 68 Turbo Full-aluminum">
+                                        <img id="ace68-img" src="/IMG/ACCESSORIES/ACE68TURBOCYBERBLACK.png" alt="MCHOSE Ace 68 Turbo Full-aluminum" style="transform:scale(1.1);transform-origin:center center">
                                     </div>
                                     <span class="text-blue-500 text-[10px] font-black uppercase tracking-[0.2em] mb-2">MCHOSE · Keyboard</span>
                                     <h3 class="text-base font-extrabold text-white mb-4 leading-snug">Ace 68 Turbo Full-aluminum</h3>
@@ -318,7 +318,7 @@
                             <div class="flex reveal">
                                 <div class="glass-card p-8 rounded-[40px] flex flex-col w-full">
                                     <div class="product-img-wrap">
-                                        <img id="ax5v2-img" src="/IMG/ACCESSORIES/AX5V2PINK.png" alt="MCHOSE AX5 V2 Mouse" style="transition:opacity 0.2s ease">
+                                        <img id="ax5v2-img" src="/IMG/ACCESSORIES/AX5V2PINK.png" alt="MCHOSE AX5 V2 Mouse" style="transition:opacity 0.2s ease;transform-origin:center center">
                                     </div>
                                     <span class="text-blue-500 text-[10px] font-black uppercase tracking-[0.2em] mb-2">MCHOSE · Mouse</span>
                                     <h3 class="text-base font-extrabold text-white mb-4 leading-snug">MCHOSE AX5 V2</h3>
@@ -797,6 +797,7 @@
                 img.style.opacity = '0';
                 setTimeout(function() {
                     img.src = _ax5v2Images[color];
+                    img.style.transform = (color === 'white') ? 'scale(0.734)' : '';
                     img.style.opacity = '1';
                 }, 150);
             }
