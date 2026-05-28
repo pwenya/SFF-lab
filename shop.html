@@ -374,6 +374,42 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <!-- MCHOSE A5 V3 -->
+                            <div class="flex reveal">
+                                <div class="glass-card p-8 rounded-[40px] flex flex-col w-full">
+                                    <div class="product-img-wrap">
+                                        <img id="a5v3-img" src="/IMG/ACCESSORIES/A5V3BLACK.png" alt="MCHOSE A5 V3 Mouse">
+                                    </div>
+                                    <span class="text-blue-500 text-[10px] font-black uppercase tracking-[0.2em] mb-2">MCHOSE · Mouse</span>
+                                    <h3 class="text-base font-extrabold text-white mb-4 leading-snug">MCHOSE A5 V3</h3>
+                                    <div class="space-y-1.5 text-[11px] font-bold uppercase tracking-[0.1em] mb-4" style="height: 40px;">
+                                        <!-- Specs to be added later -->
+                                    </div>
+                                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+                                        <div style="display:flex;gap:8px;align-items:center">
+                                            <button onclick="selectA5V3Color('black')" id="a5v3-black"
+                                                style="width:22px;height:22px;border-radius:100%;background:#1c1c1e;border:2px solid white;cursor:pointer;outline:none;flex-shrink:0;transition:border-color 0.2s"
+                                                title="Black"></button>
+                                            <button onclick="selectA5V3Color('white')" id="a5v3-white"
+                                                style="width:22px;height:22px;border-radius:100%;background:#ffffff;border:2px solid rgba(255,255,255,0.15);cursor:pointer;outline:none;flex-shrink:0;transition:border-color 0.2s"
+                                                title="White"></button>
+                                            <button onclick="selectA5V3Color('berryred')" id="a5v3-berryred"
+                                                style="width:22px;height:22px;border-radius:100%;background:#ef4444;border:2px solid rgba(255,255,255,0.15);cursor:pointer;outline:none;flex-shrink:0;transition:border-color 0.2s"
+                                                title="Berry Red"></button>
+                                            <button onclick="selectA5V3Color('blue')" id="a5v3-blue"
+                                                style="width:22px;height:22px;border-radius:100%;background:#3b82f6;border:2px solid rgba(255,255,255,0.15);cursor:pointer;outline:none;flex-shrink:0;transition:border-color 0.2s"
+                                                title="Blue"></button>
+                                        </div>
+                                        <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#a1a1aa" id="a5v3-color-label">Black</span>
+                                    </div>
+                                    <div class="mt-auto">
+                                        <div class="text-3xl font-black tracking-tighter text-white mb-5">129 €</div>
+                                        <button class="w-full py-3 rounded-2xl text-xs font-bold uppercase tracking-widest mb-2" style="background:rgba(37,99,235,0.1);color:#60a5fa;border:1px solid rgba(37,99,235,0.3);opacity:0.4;pointer-events:none;cursor:not-allowed" data-key="cart-add">+ Ostukorvi</button>
+                                        <button class="w-full py-4 rounded-2xl text-xs font-black uppercase tracking-widest" style="background:#2563eb;color:#fff;opacity:0.4;pointer-events:none;cursor:not-allowed" data-key="shop-order">Tellida</button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -681,6 +717,57 @@
             img.style.opacity = '0';
             setTimeout(function() {
                 img.src = _k7ultraImages[color];
+                img.style.opacity = '1';
+            }, 150);
+        }
+
+        var _ace68Color = 'cyberblack';
+        var _ace68ColorNames = { cyberblack: 'Cyber Black', galaxyorange: 'Galaxy Orange', berryred: 'Berry Red', novawhite: 'Nova White', peachypink: 'Peachy Pink' };
+        var _ace68Images = {
+            cyberblack:   '/IMG/ACCESSORIES/ACE68TURBOCYBERBLACK.png',
+            galaxyorange: '/IMG/ACCESSORIES/ACE68TURBOGALAXYORANGE.png',
+            berryred:     '/IMG/ACCESSORIES/ACE68TURBOBERRYRED.png',
+            novawhite:    '/IMG/ACCESSORIES/ACE68TURBONOVAWHITE.png',
+            peachypink:   '/IMG/ACCESSORIES/ACE68TURBOPEACHYPINK.png'
+        };
+        var _ace68ColorKeys = ['cyberblack', 'galaxyorange', 'berryred', 'novawhite', 'peachypink'];
+
+        function selectAce68Color(color) {
+            _ace68Color = color;
+            _ace68ColorKeys.forEach(function(c) {
+                var el = document.getElementById('ace68-' + c);
+                if (el) el.style.borderColor = (c === color) ? 'white' : 'rgba(255,255,255,0.15)';
+            });
+            document.getElementById('ace68-color-label').textContent = _ace68ColorNames[color];
+            var img = document.getElementById('ace68-img');
+            img.style.opacity = '0';
+            setTimeout(function() {
+                img.src = _ace68Images[color];
+                img.style.opacity = '1';
+            }, 150);
+        }
+
+        var _a5v3Color = 'black';
+        var _a5v3ColorNames = { black: 'Black', white: 'White', berryred: 'Berry Red', blue: 'Blue' };
+        var _a5v3Images = {
+            black:    '/IMG/ACCESSORIES/A5V3BLACK.png',
+            white:    '/IMG/ACCESSORIES/A5V3WHITE.png',
+            berryred: '/IMG/ACCESSORIES/A5V3BERRYRED.png',
+            blue:     '/IMG/ACCESSORIES/A5V3BLUE.png'
+        };
+        var _a5v3ColorKeys = ['black', 'white', 'berryred', 'blue'];
+
+        function selectA5V3Color(color) {
+            _a5v3Color = color;
+            _a5v3ColorKeys.forEach(function(c) {
+                var el = document.getElementById('a5v3-' + c);
+                if (el) el.style.borderColor = (c === color) ? 'white' : 'rgba(255,255,255,0.15)';
+            });
+            document.getElementById('a5v3-color-label').textContent = _a5v3ColorNames[color];
+            var img = document.getElementById('a5v3-img');
+            img.style.opacity = '0';
+            setTimeout(function() {
+                img.src = _a5v3Images[color];
                 img.style.opacity = '1';
             }, 150);
         }
