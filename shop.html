@@ -318,7 +318,7 @@
                             <div class="flex reveal">
                                 <div class="glass-card p-8 rounded-[40px] flex flex-col w-full">
                                     <div class="product-img-wrap">
-                                        <img src="/IMG/ACCESSORIES/AX5V2PINK.png" alt="MCHOSE AX5 V2 Mouse">
+                                        <img id="ax5v2-img" src="/IMG/ACCESSORIES/AX5V2PINK.png" alt="MCHOSE AX5 V2 Mouse" style="transition:opacity 0.2s ease">
                                     </div>
                                     <span class="text-blue-500 text-[10px] font-black uppercase tracking-[0.2em] mb-2">MCHOSE · Mouse</span>
                                     <h3 class="text-base font-extrabold text-white mb-4 leading-snug">MCHOSE AX5 V2</h3>
@@ -327,9 +327,14 @@
                                     </div>
                                     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
                                         <div style="display:flex;gap:8px;align-items:center">
-                                            <button style="width:22px;height:22px;border-radius:100%;background:#f9a8d4;border:2px solid white;cursor:default;outline:none;flex-shrink:0;" title="Pink"></button>
+                                            <button onclick="selectAX5V2Color('pink')" id="ax5v2-pink"
+                                                style="width:22px;height:22px;border-radius:100%;background:#f9a8d4;border:2px solid white;cursor:pointer;outline:none;flex-shrink:0;transition:border-color 0.2s"
+                                                title="Pink"></button>
+                                            <button onclick="selectAX5V2Color('white')" id="ax5v2-white"
+                                                style="width:22px;height:22px;border-radius:100%;background:#ffffff;border:2px solid rgba(255,255,255,0.15);cursor:pointer;outline:none;flex-shrink:0;transition:border-color 0.2s"
+                                                title="White"></button>
                                         </div>
-                                        <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#a1a1aa">Pink</span>
+                                        <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#a1a1aa" id="ax5v2-color-label">Pink</span>
                                     </div>
                                     <div class="mt-auto">
                                         <div class="text-3xl font-black tracking-tighter text-white mb-5">119 €</div>
@@ -770,6 +775,31 @@
                 img.src = _a5v3Images[color];
                 img.style.opacity = '1';
             }, 150);
+        }
+
+        var _ax5v2Color = 'pink';
+        var _ax5v2ColorNames = { pink: 'Pink', white: 'White' };
+        var _ax5v2Images = {
+            pink:  '/IMG/ACCESSORIES/AX5V2PINK.png',
+            white: '/IMG/ACCESSORIES/AX5V2WHITE.png'
+        };
+        var _ax5v2ColorKeys = ['pink', 'white'];
+
+        function selectAX5V2Color(color) {
+            _ax5v2Color = color;
+            _ax5v2ColorKeys.forEach(function(c) {
+                var el = document.getElementById('ax5v2-' + c);
+                if (el) el.style.borderColor = (c === color) ? 'white' : 'rgba(255,255,255,0.15)';
+            });
+            document.getElementById('ax5v2-color-label').textContent = _ax5v2ColorNames[color];
+            var img = document.getElementById('ax5v2-img');
+            if(img) {
+                img.style.opacity = '0';
+                setTimeout(function() {
+                    img.src = _ax5v2Images[color];
+                    img.style.opacity = '1';
+                }, 150);
+            }
         }
 
         var observer = new IntersectionObserver(function(entries) {
