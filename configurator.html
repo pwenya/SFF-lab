@@ -468,7 +468,7 @@
                 var b = document.getElementById('ram-' + s);
                 if (!b) return;
                 b.classList.remove('active');
-                if (MODE !== 'enthusiast') b.style.opacity = '0.35';
+                if (MODE !== 'enthusiast' && MODE !== 'dualboot') b.style.opacity = '0.35';
             });
             var btn = document.getElementById('ram-' + size);
             if (btn) { btn.classList.add('active'); btn.style.opacity = ''; }
