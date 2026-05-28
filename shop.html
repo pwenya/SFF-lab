@@ -110,6 +110,12 @@
                     <button onclick="switchBrand('cpu','amd')"   id="brand-cpu-amd"   class="os-switch-btn px-8 py-2.5 rounded-full text-[11px] font-black uppercase tracking-widest">AMD</button>
                 </div>
 
+                <!-- Brand sub-tabs: Accessories (hidden via style) -->
+                <div id="brands-acc" style="display:none" class="flex justify-center gap-3 mb-10">
+                    <button onclick="switchBrand('acc','keyboards')" id="brand-acc-keyboards" class="os-switch-btn px-8 py-2.5 rounded-full text-[11px] font-black uppercase tracking-widest">Klaviatuurid</button>
+                    <button onclick="switchBrand('acc','mice')"      id="brand-acc-mice"      class="os-switch-btn px-8 py-2.5 rounded-full text-[11px] font-black uppercase tracking-widest">Hiired</button>
+                </div>
+
                 <!-- Grids -->
                 <div class="relative">
 
@@ -191,8 +197,8 @@
                         </div>
                     </div>
 
-                    <!-- Accessories · AULA -->
-                    <div id="grid-acc-aula" class="shop-grid shop-grid-hidden">
+                    <!-- Accessories · Keyboards -->
+                    <div id="grid-acc-keyboards" class="shop-grid shop-grid-hidden">
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch">
 
                             <!-- AULA F75 PRO -->
@@ -262,7 +268,72 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                    </div>
 
+                    <!-- Accessories · Mice -->
+                    <div id="grid-acc-mice" class="shop-grid shop-grid-hidden">
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch">
+                            <!-- MCHOSE AX5 V2 -->
+                            <div class="flex reveal">
+                                <div class="glass-card p-8 rounded-[40px] flex flex-col w-full">
+                                    <div class="product-img-wrap">
+                                        <img src="/IMG/ACCESSORIES/AX5V2PINK.png" alt="MCHOSE AX5 V2 Mouse">
+                                    </div>
+                                    <span class="text-blue-500 text-[10px] font-black uppercase tracking-[0.2em] mb-2">MCHOSE · Mouse</span>
+                                    <h3 class="text-base font-extrabold text-white mb-4 leading-snug">MCHOSE AX5 V2</h3>
+                                    <div class="space-y-1.5 text-[11px] font-bold uppercase tracking-[0.1em] mb-4" style="height: 40px;">
+                                        <!-- Specs to be added later -->
+                                    </div>
+                                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+                                        <div style="display:flex;gap:8px;align-items:center">
+                                            <button style="width:22px;height:22px;border-radius:100%;background:#f9a8d4;border:2px solid white;cursor:default;outline:none;flex-shrink:0;" title="Pink"></button>
+                                        </div>
+                                        <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#a1a1aa">Pink</span>
+                                    </div>
+                                    <div class="mt-auto">
+                                        <div class="text-3xl font-black tracking-tighter text-white mb-5">119 €</div>
+                                        <button class="w-full py-3 rounded-2xl text-xs font-bold uppercase tracking-widest mb-2" style="background:rgba(37,99,235,0.1);color:#60a5fa;border:1px solid rgba(37,99,235,0.3);opacity:0.4;pointer-events:none;cursor:not-allowed" data-key="cart-add">+ Ostukorvi</button>
+                                        <button class="w-full py-4 rounded-2xl text-xs font-black uppercase tracking-widest" style="background:#2563eb;color:#fff;opacity:0.4;pointer-events:none;cursor:not-allowed" data-key="shop-order">Tellida</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- MCHOSE K7 Ultra -->
+                            <div class="flex reveal">
+                                <div class="glass-card p-8 rounded-[40px] flex flex-col w-full">
+                                    <div class="product-img-wrap">
+                                        <img id="k7ultra-img" src="/IMG/ACCESSORIES/7ULTRAREDGOLD.png" alt="MCHOSE K7 Ultra Mouse" style="transition:opacity 0.2s ease">
+                                    </div>
+                                    <span class="text-blue-500 text-[10px] font-black uppercase tracking-[0.2em] mb-2">MCHOSE · Mouse</span>
+                                    <h3 class="text-base font-extrabold text-white mb-4 leading-snug">MCHOSE K7 Ultra</h3>
+                                    <div class="space-y-1.5 text-[11px] font-bold uppercase tracking-[0.1em] mb-4" style="height: 40px;">
+                                        <!-- Specs to be added later -->
+                                    </div>
+                                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+                                        <div style="display:flex;gap:8px;align-items:center">
+                                            <button onclick="selectK7UltraColor('redgold')" id="k7ultra-redgold"
+                                                style="width:22px;height:22px;border-radius:100%;background:#ef4444;border:2px solid white;cursor:pointer;outline:none;flex-shrink:0;transition:border-color 0.2s"
+                                                title="Red Gold"></button>
+                                            <button onclick="selectK7UltraColor('rosered')" id="k7ultra-rosered"
+                                                style="width:22px;height:22px;border-radius:100%;background:#f9a8d4;border:2px solid rgba(255,255,255,0.15);cursor:pointer;outline:none;flex-shrink:0;transition:border-color 0.2s"
+                                                title="Rose Red"></button>
+                                            <button onclick="selectK7UltraColor('whitegold')" id="k7ultra-whitegold"
+                                                style="width:22px;height:22px;border-radius:100%;background:#e0e0e0;border:2px solid rgba(255,255,255,0.15);cursor:pointer;outline:none;flex-shrink:0;transition:border-color 0.2s"
+                                                title="White Gold"></button>
+                                            <button onclick="selectK7UltraColor('blackgold')" id="k7ultra-blackgold"
+                                                style="width:22px;height:22px;border-radius:100%;background:#1c1c1e;border:2px solid rgba(255,255,255,0.15);cursor:pointer;outline:none;flex-shrink:0;transition:border-color 0.2s"
+                                                title="Black Gold"></button>
+                                        </div>
+                                        <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#a1a1aa" id="k7ultra-color-label">Red Gold</span>
+                                    </div>
+                                    <div class="mt-auto">
+                                        <div class="text-3xl font-black tracking-tighter text-white mb-5">129 €</div>
+                                        <button class="w-full py-3 rounded-2xl text-xs font-bold uppercase tracking-widest mb-2" style="background:rgba(37,99,235,0.1);color:#60a5fa;border:1px solid rgba(37,99,235,0.3);opacity:0.4;pointer-events:none;cursor:not-allowed" data-key="cart-add">+ Ostukorvi</button>
+                                        <button class="w-full py-4 rounded-2xl text-xs font-black uppercase tracking-widest" style="background:#2563eb;color:#fff;opacity:0.4;pointer-events:none;cursor:not-allowed" data-key="shop-order">Tellida</button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -381,7 +452,7 @@
         };
 
         var currentCategory = 'gpu';
-        var currentBrands = { gpu: 'nvidia', cpu: 'intel' };
+        var currentBrands = { gpu: 'nvidia', cpu: 'intel', acc: 'keyboards' };
 
         function switchCategory(cat) {
             currentCategory = cat;
@@ -390,35 +461,45 @@
             document.getElementById('tab-acc').classList.toggle('active', cat === 'acc');
             document.getElementById('brands-gpu').style.display = cat === 'gpu' ? 'flex' : 'none';
             document.getElementById('brands-cpu').style.display = cat === 'cpu' ? 'flex' : 'none';
-            if (cat === 'acc') {
-                showGrid('acc', 'aula');
-            } else {
-                showGrid(cat, currentBrands[cat]);
-            }
+            document.getElementById('brands-acc').style.display = cat === 'acc' ? 'flex' : 'none';
+            showGrid(cat, currentBrands[cat]);
         }
 
         function switchBrand(cat, brand) {
             currentBrands[cat] = brand;
-            var brandIds = cat === 'gpu' ? ['nvidia', 'amd'] : ['intel', 'amd'];
+            var brandIds;
+            if (cat === 'gpu') brandIds = ['nvidia', 'amd'];
+            else if (cat === 'cpu') brandIds = ['intel', 'amd'];
+            else if (cat === 'acc') brandIds = ['keyboards', 'mice'];
+
             brandIds.forEach(function(b) {
                 var el = document.getElementById('brand-' + cat + '-' + b);
                 if (!el) return;
                 if (b === brand) {
                     var c = BRAND_COLORS[b];
-                    el.style.background = c.bg;
-                    el.style.color = c.color;
-                    el.style.borderColor = c.border;
+                    if (c) {
+                        el.style.background = c.bg;
+                        el.style.color = c.color;
+                        el.style.borderColor = c.border;
+                    } else {
+                        el.classList.add('active');
+                    }
                 } else {
-                    el.style.background = '';
-                    el.style.color = '';
-                    el.style.borderColor = '';
+                    var c = BRAND_COLORS[b];
+                    if (c) {
+                        el.style.background = '';
+                        el.style.color = '';
+                        el.style.borderColor = '';
+                    } else {
+                        el.classList.remove('active');
+                    }
                 }
             });
             showGrid(cat, brand);
         }
 
         function showGrid(cat, brand) {
-            ['grid-gpu-nvidia', 'grid-gpu-amd', 'grid-cpu-intel', 'grid-cpu-amd', 'grid-acc-aula'].forEach(function(id) {
+            ['grid-gpu-nvidia', 'grid-gpu-amd', 'grid-cpu-intel', 'grid-cpu-amd', 'grid-acc-keyboards', 'grid-acc-mice'].forEach(function(id) {
                 var el = document.getElementById(id);
                 if (!el) return;
                 var active = (id === 'grid-' + cat + '-' + brand);
@@ -429,14 +510,18 @@
 
         // Apply initial brand colors without touching grid visibility
         (function() {
-            [['gpu','nvidia'],['cpu','intel']].forEach(function(pair) {
+            [['gpu','nvidia'],['cpu','intel'], ['acc', 'keyboards']].forEach(function(pair) {
                 var cat = pair[0], brand = pair[1];
                 var el = document.getElementById('brand-' + cat + '-' + brand);
                 if (!el) return;
                 var c = BRAND_COLORS[brand];
-                el.style.background  = c.bg;
-                el.style.color       = c.color;
-                el.style.borderColor = c.border;
+                if (c) {
+                    el.style.background  = c.bg;
+                    el.style.color       = c.color;
+                    el.style.borderColor = c.border;
+                } else {
+                    el.classList.add('active');
+                }
             });
         })();
 
@@ -531,6 +616,31 @@
             img.style.opacity = '0';
             setTimeout(function() {
                 img.src = _f75maxImages[color];
+                img.style.opacity = '1';
+            }, 150);
+        }
+
+        var _k7ultraColor = 'redgold';
+        var _k7ultraColorNames = { redgold: 'Red Gold', rosered: 'Rose Red', whitegold: 'White Gold', blackgold: 'Black Gold' };
+        var _k7ultraImages = {
+            redgold:   '/IMG/ACCESSORIES/7ULTRAREDGOLD.png',
+            rosered:   '/IMG/ACCESSORIES/7ULTRAROSERED.png',
+            whitegold: '/IMG/ACCESSORIES/7ULTRAWHITEGOLD.png',
+            blackgold: '/IMG/ACCESSORIES/7ULTRABLACKGOLD.png'
+        };
+        var _k7ultraColorKeys = ['redgold', 'rosered', 'whitegold', 'blackgold'];
+
+        function selectK7UltraColor(color) {
+            _k7ultraColor = color;
+            _k7ultraColorKeys.forEach(function(c) {
+                var el = document.getElementById('k7ultra-' + c);
+                if (el) el.style.borderColor = (c === color) ? 'white' : 'rgba(255,255,255,0.15)';
+            });
+            document.getElementById('k7ultra-color-label').textContent = _k7ultraColorNames[color];
+            var img = document.getElementById('k7ultra-img');
+            img.style.opacity = '0';
+            setTimeout(function() {
+                img.src = _k7ultraImages[color];
                 img.style.opacity = '1';
             }, 150);
         }
