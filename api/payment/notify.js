@@ -268,7 +268,8 @@ module.exports = async function handler(req, res) {
                     scenario:          order.scenario   || '',
                     price:             order.price,
                     estimatedDelivery: order.estimatedDelivery,
-                    language:          order.language   || 'et'
+                    language:          order.language   || 'et',
+                    orderType:         order.orderType  || ''
                 };
                 await Promise.all([
                     transporter.sendMail({
