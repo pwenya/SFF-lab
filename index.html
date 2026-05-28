@@ -254,12 +254,12 @@
         <div class="max-w-6xl mx-auto">
 
             <div class="reveal reveal-delay-1 flex justify-center space-x-4 mb-16">
-                <button onclick="switchOS('steamos')" id="btn-steamos" class="os-switch-btn active px-10 py-3 rounded-full text-[11px] font-black uppercase tracking-widest shadow-xl">SteamOS</button>
-                <button onclick="switchOS('windows')" id="btn-windows" class="os-switch-btn px-10 py-3 rounded-full text-[11px] font-black uppercase tracking-widest shadow-xl">Windows 11</button>
+                <button onclick="switchOS('windows')" id="btn-windows" class="os-switch-btn active px-10 py-3 rounded-full text-[11px] font-black uppercase tracking-widest shadow-xl">Windows 11</button>
+                <button onclick="switchOS('steamos')" id="btn-steamos" class="os-switch-btn px-10 py-3 rounded-full text-[11px] font-black uppercase tracking-widest shadow-xl">SteamOS</button>
             </div>
 
             <div class="relative">
-                <div id="grid-steamos" class="os-grid os-grid-visible">
+                <div id="grid-steamos" class="os-grid os-grid-hidden">
                     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
 
                         <div class="flex reveal reveal-delay-1" data-card="core" data-scenarios="steamos office travel">
@@ -272,7 +272,7 @@
                                         <li data-key="p1-feat-2">✓ Ehitatud ja testitud käsitsi</li>
                                         <li data-key="p1-feat-3">✓ SteamOS seadistatud — lülita sisse ja mängi</li>
                                         <li data-key="p1-feat-4">✓ 2 aastat garantii · tarnimine üle Eesti</li>
-                                        <li data-key="p1-feat-5">✓ Valmis 2–3 nädalaga</li>
+                                        <li data-key="p1-feat-5">✓ Valmis 1-2 nädalaga</li>
                                     </ul>
                                 </div>
                                 <div class="mt-8">
@@ -293,7 +293,7 @@
                                         <li data-key="p2-feat-2">✓ Ehitatud ja testitud käsitsi</li>
                                         <li data-key="p2-feat-3">✓ SteamOS seadistatud — lülita sisse ja mängi</li>
                                         <li data-key="p2-feat-4">✓ 2 aastat garantii · tarnimine üle Eesti</li>
-                                        <li data-key="p2-feat-5">✓ Valmis 2–3 nädalaga</li>
+                                        <li data-key="p2-feat-5">✓ Valmis 1-2 nädalaga</li>
                                     </ul>
                                 </div>
                                 <div class="mt-8">
@@ -313,7 +313,7 @@
                                         <li data-key="p3-feat-2">✓ Ehitatud ja testitud käsitsi</li>
                                         <li data-key="p3-feat-3">✓ SteamOS seadistatud — lülita sisse ja mängi</li>
                                         <li data-key="p3-feat-4">✓ 2 aastat garantii · tarnimine üle Eesti</li>
-                                        <li data-key="p3-feat-5">✓ Valmis 2–3 nädalaga</li>
+                                        <li data-key="p3-feat-5">✓ Valmis 1-2 nädalaga</li>
                                     </ul>
                                 </div>
                                 <div class="mt-8">
@@ -322,6 +322,77 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+
+                </div>
+
+                <div id="grid-windows" class="os-grid os-grid-visible">
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
+
+                        <div class="flex reveal reveal-delay-1" data-card="win-core">
+                            <div class="glass-card p-10 rounded-[40px] flex flex-col justify-between w-full">
+                                <div class="flex flex-col flex-1">
+                                    <span class="text-blue-600 text-[11px] font-black uppercase tracking-[0.2em]">Core Edition</span>
+                                    <h3 data-key="p1-title" class="text-3xl font-extrabold mt-3 mb-8 text-white uppercase">Baas</h3>
+                                    <ul class="space-y-4 text-zinc-400 text-sm">
+                                        <li data-key="w1-feat-1">✓ 2K natiivselt. 4K FSR-iga.</li>
+                                        <li data-key="w1-feat-2">✓ Ehitatud ja testitud käsitsi</li>
+                                        <li data-key="w1-feat-3">✓ Windows 11 Pro</li>
+                                        <li data-key="w1-feat-4">✓ 2 aastat garantii · tarnimine üle Eesti</li>
+                                        <li data-key="w1-feat-5">✓ Valmis 1-2 nädalaga</li>
+                                    </ul>
+                                </div>
+                                <div class="mt-8">
+                                    <div class="text-4xl font-black mb-1 tracking-tighter text-white">2199 €</div>
+                                    <div class="text-violet-400 text-[10px] uppercase tracking-widest mb-5">+79€ Windows 11 Pro</div>
+                                    <a href="configurator.html?base=2199&mode=core&os=windows" class="btn-ripple block text-center bg-blue-600 text-white py-4 rounded-2xl hover:bg-blue-500 transition-all font-bold text-xs uppercase tracking-widest shadow-lg shadow-blue-600/20" data-key="p1-btn">Vali disain</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex reveal reveal-delay-2" data-card="win-plus">
+                            <div class="glass-card p-10 rounded-[40px] flex flex-col justify-between relative w-full">
+                                <div data-key="popular-badge" class="absolute top-6 right-6 bg-blue-600/90 text-[10px] font-black px-4 py-1.5 rounded-full uppercase tracking-widest text-white shadow-lg">Populaarne</div>
+                                <div class="flex flex-col flex-1">
+                                    <span class="text-blue-600 text-[11px] font-black uppercase tracking-[0.2em]">Ultimate Kit</span>
+                                    <h3 data-key="p2-title" class="text-3xl font-extrabold mt-3 mb-8 text-white uppercase">Baas+</h3>
+                                    <ul class="space-y-4 text-zinc-400 text-sm">
+                                        <li data-key="w2-feat-1">✓ Natiivselt 4K</li>
+                                        <li data-key="w2-feat-2">✓ Ehitatud ja testitud käsitsi</li>
+                                        <li data-key="w2-feat-3">✓ Windows 11 Pro</li>
+                                        <li data-key="w2-feat-4">✓ 2 aastat garantii · tarnimine üle Eesti</li>
+                                        <li data-key="w2-feat-5">✓ Valmis 1-2 nädalaga</li>
+                                    </ul>
+                                </div>
+                                <div class="mt-8">
+                                    <div class="text-4xl font-black mb-1 tracking-tighter text-white">2799 €</div>
+                                    <div class="text-violet-400 text-[10px] uppercase tracking-widest mb-5">+79€ Windows 11 Pro</div>
+                                    <a href="configurator.html?base=2799&mode=plus&os=windows" class="btn-ripple block text-center bg-blue-600 text-white py-4 rounded-2xl hover:bg-blue-500 transition-all font-bold text-xs uppercase tracking-widest shadow-lg shadow-blue-600/20" data-key="p2-btn">Vali disain</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex reveal reveal-delay-3" data-card="win-enthusiast">
+                            <div class="glass-card p-10 rounded-[40px] flex flex-col justify-between w-full">
+                                <div class="flex flex-col flex-1">
+                                    <span class="text-blue-600 text-[11px] font-black uppercase tracking-[0.2em]">Enthusiast</span>
+                                    <h3 data-key="p3-title" class="text-3xl font-extrabold mt-3 mb-8 text-white uppercase">Pane kokku</h3>
+                                    <ul class="space-y-4 text-zinc-400 text-sm">
+                                        <li data-key="w3-feat-1">✓ Sina valid iga detaili</li>
+                                        <li data-key="w3-feat-2">✓ Ehitatud ja testitud käsitsi</li>
+                                        <li data-key="w3-feat-3">✓ Windows 11 Pro</li>
+                                        <li data-key="w3-feat-4">✓ 2 aastat garantii · tarnimine üle Eesti</li>
+                                        <li data-key="w3-feat-5">✓ Valmis 1-2 nädalaga</li>
+                                    </ul>
+                                </div>
+                                <div class="mt-8">
+                                    <div class="text-4xl font-black mb-1 tracking-tighter text-white">2199 € +</div>
+                                    <div class="text-violet-400 text-[10px] uppercase tracking-widest mb-5">+79€ Windows 11 Pro</div>
+                                    <a href="configurator.html?base=2199&mode=enthusiast&os=windows" class="btn-ripple block text-center bg-blue-600 text-white py-4 rounded-2xl hover:bg-blue-500 transition-all font-bold text-xs uppercase tracking-widest shadow-lg shadow-blue-600/20" data-key="p3-btn">Alusta ehitamist</a>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
 
                     <div class="dual-boot-card p-8 mt-6 reveal" data-card="dualboot" data-scenarios="dualboot">
@@ -354,94 +425,6 @@
                                 <button disabled data-key="soon-btn" class="px-8 py-4 rounded-2xl bg-zinc-800 text-zinc-500 cursor-not-allowed text-xs font-black uppercase tracking-widest text-center">Tulemas</button>
                             </div>
                         </div>
-                    </div>
-                </div>
-
-                <div id="grid-windows" class="os-grid os-grid-hidden">
-                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
-
-                        <div class="flex reveal reveal-delay-1" data-card="win-core">
-                            <div class="glass-card p-10 rounded-[40px] flex flex-col justify-between w-full">
-                                <div class="flex flex-col flex-1">
-                                    <span class="text-blue-600 text-[11px] font-black uppercase tracking-[0.2em]">Core Edition</span>
-                                    <h3 data-key="p1-title" class="text-3xl font-extrabold mt-3 mb-8 text-white uppercase">Baas</h3>
-                                    <ul class="space-y-4 text-zinc-400 text-sm mb-8">
-                                        <li>✓ Ryzen 5 7500F + RX 9060 XT</li>
-                                        <li>✓ 16GB DDR5 + 1TB</li>
-                                        <li>✓ 650W SFX Gold (Quiet Edition)</li>
-                                        <li data-key="win-license">✓ Windows 11 Pro litsents</li>
-                                    </ul>
-                                    <div class="mt-auto pt-5 border-t border-white/5 flex flex-col gap-1.5" style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:#52525b">
-                                        <span><span style="color:#2563eb">✓</span> <span data-key="trust-ready">Valmis 10–14 päevaga</span></span>
-                                        <span><span style="color:#2563eb">✓</span> <span data-key="trust-warranty">2 aastat garantii</span></span>
-                                        <span><span style="color:#2563eb">✓</span> <span data-key="trust-win11">Windows 11 Pro eelinstallitud</span></span>
-                                        <span><span style="color:#2563eb">✓</span> <span data-key="trust-delivery">Tarnimine üle Eesti</span></span>
-                                    </div>
-                                    <div class="mt-4">
-                                        <span class="text-[10px] font-black text-green-500 bg-green-600/10 px-3 py-1 rounded-full uppercase tracking-widest" data-key="win-compat">✓ Maksimaalne mängude ühilduvus</span>
-                                    </div>
-                                </div>
-                                <div class="mt-8">
-                                    <div class="text-4xl font-black mb-6 tracking-tighter text-white">2329 €</div>
-                                    <button disabled data-key="soon-btn" class="block w-full text-center bg-zinc-800 text-zinc-500 cursor-not-allowed py-4 rounded-2xl font-bold text-xs uppercase tracking-widest">Tulemas</button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="flex reveal reveal-delay-2" data-card="win-plus">
-                            <div class="glass-card p-10 rounded-[40px] flex flex-col justify-between relative w-full">
-                                <div data-key="popular-badge" class="absolute top-6 right-6 bg-blue-600/90 text-[10px] font-black px-4 py-1.5 rounded-full uppercase tracking-widest text-white shadow-lg">Populaarne</div>
-                                <div class="flex flex-col flex-1">
-                                    <span class="text-blue-600 text-[11px] font-black uppercase tracking-[0.2em]">Ultimate Kit</span>
-                                    <h3 data-key="p2-title" class="text-3xl font-extrabold mt-3 mb-8 text-white uppercase">Baas+</h3>
-                                    <ul class="space-y-4 text-zinc-400 text-sm mb-8">
-                                        <li data-key="p2-feature-1">✓ Ryzen 5 7500F / 7500X3D</li>
-                                        <li data-key="p2-feature-2">✓ Xbox / DualSense kontroller</li>
-                                        <li data-key="p2-feature-3">✓ 4K HDMI 2.1 Ultra High Speed</li>
-                                        <li data-key="win-license">✓ Windows 11 Pro litsents</li>
-                                    </ul>
-                                    <div class="mt-auto pt-5 border-t border-white/5 flex flex-col gap-1.5" style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:#52525b">
-                                        <span><span style="color:#2563eb">✓</span> <span data-key="trust-ready">Valmis 10–14 päevaga</span></span>
-                                        <span><span style="color:#2563eb">✓</span> <span data-key="trust-warranty">2 aastat garantii</span></span>
-                                        <span><span style="color:#2563eb">✓</span> <span data-key="trust-win11">Windows 11 Pro eelinstallitud</span></span>
-                                        <span><span style="color:#2563eb">✓</span> <span data-key="trust-delivery">Tarnimine üle Eesti</span></span>
-                                    </div>
-                                    <div class="mt-4">
-                                        <span class="text-[10px] font-black text-green-500 bg-green-600/10 px-3 py-1 rounded-full uppercase tracking-widest" data-key="win-compat">✓ Maksimaalne mängude ühilduvus</span>
-                                    </div>
-                                </div>
-                                <div class="mt-8">
-                                    <div class="text-4xl font-black mb-6 tracking-tighter text-white">2929 €</div>
-                                    <button disabled data-key="soon-btn" class="block w-full text-center bg-zinc-800 text-zinc-500 cursor-not-allowed py-4 rounded-2xl font-bold text-xs uppercase tracking-widest">Tulemas</button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="flex reveal reveal-delay-3" data-card="win-enthusiast">
-                            <div class="glass-card p-10 rounded-[40px] flex flex-col justify-between w-full">
-                                <div class="flex flex-col flex-1">
-                                    <span class="text-blue-600 text-[11px] font-black uppercase tracking-[0.2em]">Enthusiast</span>
-                                    <h3 data-key="p3-title" class="text-3xl font-extrabold mt-3 mb-8 text-white uppercase">Pane kokku</h3>
-                                    <p data-key="p3-desc" class="text-zinc-400 text-sm leading-relaxed mb-8">
-                                        Koosta oma unistuste SFF süsteem: vali 7500X3D, RX 9070 XT ja kuni 4TB Samsung SSD.
-                                    </p>
-                                    <div class="mt-auto pt-5 border-t border-white/5 flex flex-col gap-1.5" style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:#52525b">
-                                        <span><span style="color:#2563eb">✓</span> <span data-key="trust-ready">Valmis 10–14 päevaga</span></span>
-                                        <span><span style="color:#2563eb">✓</span> <span data-key="trust-warranty">2 aastat garantii</span></span>
-                                        <span><span style="color:#2563eb">✓</span> <span data-key="trust-win11">Windows 11 Pro eelinstallitud</span></span>
-                                        <span><span style="color:#2563eb">✓</span> <span data-key="trust-delivery">Tarnimine üle Eesti</span></span>
-                                    </div>
-                                    <div class="mt-4">
-                                        <span class="text-[10px] font-black text-green-500 bg-green-600/10 px-3 py-1 rounded-full uppercase tracking-widest" data-key="win-compat">✓ Maksimaalne mängude ühilduvus</span>
-                                    </div>
-                                </div>
-                                <div class="mt-8">
-                                    <div class="text-4xl font-black mb-6 tracking-tighter text-white">2329 € +</div>
-                                    <button disabled data-key="soon-btn" class="block w-full text-center bg-zinc-800 text-zinc-500 cursor-not-allowed py-4 rounded-2xl font-bold text-xs uppercase tracking-widest">Tulemas</button>
-                                </div>
-                            </div>
-                        </div>
-
                     </div>
                 </div>
             </div>
@@ -559,13 +542,16 @@
                 'spec-noise-lbl':'Müra','spec-power-lbl':'Tarbimine','spec-vol-lbl':'Maht','spec-tv-lbl':'TV ala','spec-upg-lbl':'Upg.',
                 'trust-ready':'Valmis 10–14 päevaga','trust-warranty':'2 aastat garantii','trust-steamos':'SteamOS eelseadistatud','trust-win11':'Windows 11 Pro eelinstallitud','trust-delivery':'Tarnimine üle Eesti',
                 'p1-title':'Baas','p1-custom':'✓ Vali korpuse disain','p1-btn':'Vali disain',
-                'p1-feat-1':'✓ 2K natiivselt. 4K FSR-iga.','p1-feat-2':'✓ Ehitatud ja testitud käsitsi','p1-feat-3':'✓ SteamOS seadistatud — lülita sisse ja mängi','p1-feat-4':'✓ 2 aastat garantii · tarnimine üle Eesti','p1-feat-5':'✓ Valmis 2–3 nädalaga',
-                'p2-feat-1':'✓ Natiivselt 4K','p2-feat-2':'✓ Ehitatud ja testitud käsitsi','p2-feat-3':'✓ SteamOS seadistatud — lülita sisse ja mängi','p2-feat-4':'✓ 2 aastat garantii · tarnimine üle Eesti','p2-feat-5':'✓ Valmis 2–3 nädalaga',
+                'p1-feat-1':'✓ 2K natiivselt. 4K FSR-iga.','p1-feat-2':'✓ Ehitatud ja testitud käsitsi','p1-feat-3':'✓ SteamOS seadistatud — lülita sisse ja mängi','p1-feat-4':'✓ 2 aastat garantii · tarnimine üle Eesti','p1-feat-5':'✓ Valmis 1-2 nädalaga',
+                'p2-feat-1':'✓ Natiivselt 4K','p2-feat-2':'✓ Ehitatud ja testitud käsitsi','p2-feat-3':'✓ SteamOS seadistatud — lülita sisse ja mängi','p2-feat-4':'✓ 2 aastat garantii · tarnimine üle Eesti','p2-feat-5':'✓ Valmis 1-2 nädalaga',
                 'popular-badge':'Populaarne','p2-title':'Baas+','p2-btn':'Vali disain',
                 'p2-feature-1':'✓ Ryzen 5 7500F / 7500X3D','p2-feature-2':'✓ Xbox / DualSense kontroller','p2-feature-3':'✓ 4K HDMI 2.1 Ultra High Speed','p2-feature-4':'✓ SFF Lab premium pakend',
                 'p3-title':'Custom','p3-btn':'Alusta ehitamist',
-                'p3-feat-1':'✓ Sina valid iga detaili','p3-feat-2':'✓ Ehitatud ja testitud käsitsi','p3-feat-3':'✓ SteamOS seadistatud — lülita sisse ja mängi','p3-feat-4':'✓ 2 aastat garantii · tarnimine üle Eesti','p3-feat-5':'✓ Valmis 2–3 nädalaga',
+                'p3-feat-1':'✓ Sina valid iga detaili','p3-feat-2':'✓ Ehitatud ja testitud käsitsi','p3-feat-3':'✓ SteamOS seadistatud — lülita sisse ja mängi','p3-feat-4':'✓ 2 aastat garantii · tarnimine üle Eesti','p3-feat-5':'✓ Valmis 1-2 nädalaga',
                 'win-license':'✓ Windows 11 Pro litsents','win-compat':'✓ Maksimaalne mängude ühilduvus',
+                'w1-feat-1':'✓ 2K natiivselt. 4K FSR-iga.','w1-feat-2':'✓ Ehitatud ja testitud käsitsi','w1-feat-3':'✓ Windows 11 Pro','w1-feat-4':'✓ 2 aastat garantii · tarnimine üle Eesti','w1-feat-5':'✓ Valmis 1-2 nädalaga',
+                'w2-feat-1':'✓ Natiivselt 4K','w2-feat-2':'✓ Ehitatud ja testitud käsitsi','w2-feat-3':'✓ Windows 11 Pro','w2-feat-4':'✓ 2 aastat garantii · tarnimine üle Eesti','w2-feat-5':'✓ Valmis 1-2 nädalaga',
+                'w3-feat-1':'✓ Sina valid iga detaili','w3-feat-2':'✓ Ehitatud ja testitud käsitsi','w3-feat-3':'✓ Windows 11 Pro','w3-feat-4':'✓ 2 aastat garantii · tarnimine üle Eesti','w3-feat-5':'✓ Valmis 1-2 nädalaga',
                 'db-badge':'Mõlema maailma parim','db-desc':'Naudi SteamOS-i konsoolilikku mugavust ja lülitu Windows 11-le, kui soovid mängida mänge, mis nõuavad kernel-tasemel anti-cheati (nt Valorant, EA FC).','db-allgames':'Kõik mängud ✓','db-from':'Alates','db-btn':'Konfigureeri','soon-btn':'Tulemas',
                 'compat-title':'Ühilduvus','compat-sub':'SteamOS toetab 90%+ Steami mängudest tänu Proton ühilduvuskihile.',
                 'tab-games':'Mängud','tab-controllers':'Kontrollerid','tab-launchers':'Platvormid',
@@ -586,13 +572,16 @@
                 'spec-noise-lbl':'Шум','spec-power-lbl':'Потребление','spec-vol-lbl':'Объём','spec-tv-lbl':'Под TV','spec-upg-lbl':'Апгр.',
                 'trust-ready':'Готово за 10–14 дней','trust-warranty':'2 года гарантии','trust-steamos':'SteamOS предустановлен','trust-win11':'Windows 11 Pro предустановлен','trust-delivery':'Доставка по Эстонии',
                 'p1-title':'База','p1-custom':'✓ Выбор дизайна корпуса','p1-btn':'Выбрать дизайн',
-                'p1-feat-1':'✓ 2K нативно. 4K через FSR.','p1-feat-2':'✓ Собрано и протестировано вручную','p1-feat-3':'✓ SteamOS настроен — включи и играй','p1-feat-4':'✓ 2 года гарантии · доставка по Эстонии','p1-feat-5':'✓ Готово за 2–3 недели',
-                'p2-feat-1':'✓ Нативный 4K','p2-feat-2':'✓ Собрано и протестировано вручную','p2-feat-3':'✓ SteamOS настроен — включи и играй','p2-feat-4':'✓ 2 года гарантии · доставка по Эстонии','p2-feat-5':'✓ Готово за 2–3 недели',
+                'p1-feat-1':'✓ 2K нативно. 4K через FSR.','p1-feat-2':'✓ Собрано и протестировано вручную','p1-feat-3':'✓ SteamOS настроен — включи и играй','p1-feat-4':'✓ 2 года гарантии · доставка по Эстонии','p1-feat-5':'✓ Готово за 1-2 недели',
+                'p2-feat-1':'✓ Нативный 4K','p2-feat-2':'✓ Собрано и протестировано вручную','p2-feat-3':'✓ SteamOS настроен — включи и играй','p2-feat-4':'✓ 2 года гарантии · доставка по Эстонии','p2-feat-5':'✓ Готово за 1-2 недели',
                 'popular-badge':'Популярно','p2-title':'База+','p2-btn':'Выбрать дизайн',
                 'p2-feature-1':'✓ Ryzen 5 7500F / 7500X3D','p2-feature-2':'✓ Xbox / DualSense контроллер','p2-feature-3':'✓ 4K HDMI 2.1 Ultra High Speed','p2-feature-4':'✓ SFF Lab премиум упаковка',
                 'p3-title':'Custom','p3-btn':'Начать сборку',
-                'p3-feat-1':'✓ Ты выбираешь каждую деталь','p3-feat-2':'✓ Собрано и протестировано вручную','p3-feat-3':'✓ SteamOS настроен — включи и играй','p3-feat-4':'✓ 2 года гарантии · доставка по Эстонии','p3-feat-5':'✓ Готово за 2–3 недели',
+                'p3-feat-1':'✓ Ты выбираешь каждую деталь','p3-feat-2':'✓ Собрано и протестировано вручную','p3-feat-3':'✓ SteamOS настроен — включи и играй','p3-feat-4':'✓ 2 года гарантии · доставка по Эстонии','p3-feat-5':'✓ Готово за 1-2 недели',
                 'win-license':'✓ Лицензия Windows 11 Pro','win-compat':'✓ Максимальная совместимость игр',
+                'w1-feat-1':'✓ 2K нативно. 4K через FSR.','w1-feat-2':'✓ Собрано и протестировано вручную','w1-feat-3':'✓ Windows 11 Pro','w1-feat-4':'✓ 2 года гарантии · доставка по Эстонии','w1-feat-5':'✓ Готово за 1-2 недели',
+                'w2-feat-1':'✓ Нативный 4K','w2-feat-2':'✓ Собрано и протестировано вручную','w2-feat-3':'✓ Windows 11 Pro','w2-feat-4':'✓ 2 года гарантии · доставка по Эстонии','w2-feat-5':'✓ Готово за 1-2 недели',
+                'w3-feat-1':'✓ Ты выбираешь каждую деталь','w3-feat-2':'✓ Собрано и протестировано вручную','w3-feat-3':'✓ Windows 11 Pro','w3-feat-4':'✓ 2 года гарантии · доставка по Эстонии','w3-feat-5':'✓ Готово за 1-2 недели',
                 'db-badge':'Лучшее из обоих миров','db-desc':'Наслаждайся консольным удобством SteamOS и переключайся на Windows 11 для игр с античитом уровня ядра (Valorant, EA FC и др.).','db-allgames':'Все игры ✓','db-from':'От','db-btn':'Настроить','soon-btn':'Скоро',
                 'compat-title':'Совместимость','compat-sub':'SteamOS поддерживает 90%+ игр Steam благодаря слою совместимости Proton.',
                 'tab-games':'Игры','tab-controllers':'Контроллеры','tab-launchers':'Платформы',
@@ -613,13 +602,16 @@
                 'spec-noise-lbl':'Noise','spec-power-lbl':'Power','spec-vol-lbl':'Volume','spec-tv-lbl':'Under TV','spec-upg-lbl':'Upgr.',
                 'trust-ready':'Ready in 10–14 days','trust-warranty':'2 year warranty','trust-steamos':'SteamOS pre-installed','trust-win11':'Windows 11 Pro pre-installed','trust-delivery':'Delivery across Estonia',
                 'p1-title':'Core','p1-custom':'✓ Choose case design','p1-btn':'Choose design',
-                'p1-feat-1':'✓ 2K native. 4K with FSR.','p1-feat-2':'✓ Hand-built and tested','p1-feat-3':'✓ SteamOS pre-configured — plug and play','p1-feat-4':'✓ 2 year warranty · delivery across Estonia','p1-feat-5':'✓ Ready in 2–3 weeks',
-                'p2-feat-1':'✓ Native 4K','p2-feat-2':'✓ Hand-built and tested','p2-feat-3':'✓ SteamOS pre-configured — plug and play','p2-feat-4':'✓ 2 year warranty · delivery across Estonia','p2-feat-5':'✓ Ready in 2–3 weeks',
+                'p1-feat-1':'✓ 2K native. 4K with FSR.','p1-feat-2':'✓ Hand-built and tested','p1-feat-3':'✓ SteamOS pre-configured — plug and play','p1-feat-4':'✓ 2 year warranty · delivery across Estonia','p1-feat-5':'✓ Ready in 1-2 weeks',
+                'p2-feat-1':'✓ Native 4K','p2-feat-2':'✓ Hand-built and tested','p2-feat-3':'✓ SteamOS pre-configured — plug and play','p2-feat-4':'✓ 2 year warranty · delivery across Estonia','p2-feat-5':'✓ Ready in 1-2 weeks',
                 'popular-badge':'Popular','p2-title':'Core+','p2-btn':'Choose design',
                 'p2-feature-1':'✓ Ryzen 5 7500F / 7500X3D','p2-feature-2':'✓ Xbox / DualSense controller','p2-feature-3':'✓ 4K HDMI 2.1 Ultra High Speed','p2-feature-4':'✓ SFF Lab premium packaging',
                 'p3-title':'Custom','p3-btn':'Start building',
-                'p3-feat-1':'✓ You choose every component','p3-feat-2':'✓ Hand-built and tested','p3-feat-3':'✓ SteamOS pre-configured — plug and play','p3-feat-4':'✓ 2 year warranty · delivery across Estonia','p3-feat-5':'✓ Ready in 2–3 weeks',
+                'p3-feat-1':'✓ You choose every component','p3-feat-2':'✓ Hand-built and tested','p3-feat-3':'✓ SteamOS pre-configured — plug and play','p3-feat-4':'✓ 2 year warranty · delivery across Estonia','p3-feat-5':'✓ Ready in 1-2 weeks',
                 'win-license':'✓ Windows 11 Pro license','win-compat':'✓ Maximum game compatibility',
+                'w1-feat-1':'✓ 2K native. 4K with FSR.','w1-feat-2':'✓ Hand-built and tested','w1-feat-3':'✓ Windows 11 Pro','w1-feat-4':'✓ 2 year warranty · delivery across Estonia','w1-feat-5':'✓ Ready in 1-2 weeks',
+                'w2-feat-1':'✓ Native 4K','w2-feat-2':'✓ Hand-built and tested','w2-feat-3':'✓ Windows 11 Pro','w2-feat-4':'✓ 2 year warranty · delivery across Estonia','w2-feat-5':'✓ Ready in 1-2 weeks',
+                'w3-feat-1':'✓ You choose every component','w3-feat-2':'✓ Hand-built and tested','w3-feat-3':'✓ Windows 11 Pro','w3-feat-4':'✓ 2 year warranty · delivery across Estonia','w3-feat-5':'✓ Ready in 1-2 weeks',
                 'db-badge':'Best of both worlds','db-desc':'Enjoy the console-like convenience of SteamOS and switch to Windows 11 for games requiring kernel-level anti-cheat (e.g. Valorant, EA FC).','db-allgames':'All games ✓','db-from':'From','db-btn':'Configure','soon-btn':'Coming Soon',
                 'compat-title':'Compatibility','compat-sub':'SteamOS supports 90%+ of Steam games via the Proton compatibility layer.',
                 'tab-games':'Games','tab-controllers':'Controllers','tab-launchers':'Platforms',
@@ -630,7 +622,7 @@
             }
         };
 
-        var currentOS = 'steamos';
+        var currentOS = 'windows';
         function switchOS(os) {
             if (os === currentOS) return;
             currentOS = os;

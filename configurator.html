@@ -184,7 +184,7 @@
                 <div>
                     <label data-key="os-label" class="block text-[10px] font-black uppercase tracking-widest text-blue-500 mb-3">Operatsioonisüsteem (OS)</label>
                     <div class="flex gap-2">
-                        <button onclick="selectOS('steamos')" id="os-steamos" class="os-btn active-green flex-1 py-3 px-2 rounded-xl text-[9px] font-black uppercase tracking-wider text-center">SteamOS<br><span class="text-[8px] opacity-60 normal-case" data-key="os-note-steamos-short">18 000+ mängu</span></button>
+                        <button onclick="selectOS('steamos')" id="os-steamos" class="os-btn active flex-1 px-2 rounded-xl text-[9px] font-black uppercase tracking-wider flex items-center justify-center" style="padding-top:18px;padding-bottom:18px"><span onclick="event.stopPropagation();toggleWin11()" id="win11-inline-toggle" style="display:inline-flex;align-items:center;justify-content:center;gap:6px;cursor:pointer;pointer-events:auto;user-select:none"><span id="win11-track" style="display:inline-flex;width:26px;height:14px;border-radius:7px;background:#3f3f46;position:relative;transition:background 0.2s;flex-shrink:0"><span id="win11-knob" style="position:absolute;top:2px;left:2px;width:10px;height:10px;border-radius:50%;background:#71717a;transition:all 0.2s"></span></span>Win 11 Pro</span></button>
                         <button onclick="selectOS('windows')" id="os-windows" class="os-btn flex-1 py-3 px-2 rounded-xl text-[9px] font-black uppercase tracking-wider text-center">Windows 11<br><span class="text-[8px] opacity-60">+79€</span></button>
                         <button onclick="selectOS('dualboot')" id="os-dualboot" class="os-btn flex-1 py-3 px-2 rounded-xl text-[9px] font-black uppercase tracking-wider text-center">Dual Boot<br><span class="text-[8px] opacity-60">+79€</span></button>
                     </div>
@@ -388,6 +388,7 @@
         var CASE_PARAM  = urlParams.get('case');
         var COLOR_PARAM = urlParams.get('color');
         var selectedOS  = 'steamos';
+        var win11Enabled = true;
         var selectedPreset = null;
         var OS_PRICES   = { steamos: 0, windows: 79, dualboot: 79 };
         var CASE_IMAGES = {
@@ -425,7 +426,7 @@
         function selectOS(os) {
             selectedOS = os;
             document.querySelectorAll('.os-btn').forEach(function (b) { b.classList.remove('active', 'active-green'); });
-            document.getElementById('os-' + os).classList.add(os === 'steamos' ? 'active-green' : 'active');
+            document.getElementById('os-' + os).classList.add('active');
             document.querySelectorAll('.os-note').forEach(function (n) { n.classList.remove('show'); });
             var osNote = document.getElementById('os-note-' + os);
             if (osNote) osNote.classList.add('show');
@@ -623,6 +624,30 @@
             updatePrice();
         }
 
+        /* ── Win11 toggle ── */
+        function _updateWin11Visual() {
+            var track = document.getElementById('win11-track');
+            var knob  = document.getElementById('win11-knob');
+            var col   = document.getElementById('os-steamos');
+            if (!track) return;
+            if (win11Enabled) {
+                track.style.background = '#2563eb';
+                knob.style.background  = '#ffffff';
+                knob.style.left        = '14px';
+                if (col) { col.classList.add('active'); col.style.opacity = ''; }
+            } else {
+                track.style.background = '#3f3f46';
+                knob.style.background  = '#71717a';
+                knob.style.left        = '2px';
+                if (col) { col.classList.remove('active'); col.style.opacity = ''; }
+            }
+        }
+        function toggleWin11() {
+            win11Enabled = !win11Enabled;
+            _updateWin11Visual();
+            updatePrice();
+        }
+
         /* ── Price calculation ── */
         function updatePrice() {
             var custom = (MODE === 'enthusiast');
@@ -633,7 +658,8 @@
             var psu  = custom && document.getElementById('psu-block').style.display !== 'none' ? selectedPsu : 0;
             var ctrl = document.getElementById('ctrl-block').style.display !== 'none' ? parseInt(document.getElementById('ctrl-select').value) || 0 : 0;
             var os   = OS_PRICES[selectedOS] || 0;
-            document.getElementById('total-price').innerText = (BASE_PRICE + cpu + gpu + ram + ssd + psu + ctrl + os) + ' €';
+            var win  = win11Enabled ? 79 : 0;
+            document.getElementById('total-price').innerText = (BASE_PRICE + cpu + gpu + ram + ssd + psu + ctrl + os + win) + ' €';
         }
 
         /* ── Case selector ── */
@@ -1043,7 +1069,10 @@
                 document.querySelectorAll('[id^="case-model-"]').forEach(function (b) { b.classList.remove('active'); });
                 document.getElementById('case-model-' + CASE_PARAM).classList.add('active');
             }
-            renderCaseColors(); initMode(); updatePrice(); window.updateCaseImage();
+            renderCaseColors(); initMode();
+            if (urlParams.get('os') === 'windows') win11Enabled = true;
+            _updateWin11Visual();
+            updatePrice(); window.updateCaseImage();
         });
 
         /* ══ TEST MODE — delete this block after testing ══════════════════════
