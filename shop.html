@@ -803,6 +803,17 @@
             }
         }
 
+        (function() {
+            var all = [].concat(
+                Object.values(_f75proImages),
+                Object.values(_f75maxImages),
+                Object.values(_ace68Images),
+                Object.values(_a5v3Images),
+                Object.values(_ax5v2Images)
+            );
+            all.forEach(function(src) { var i = new Image(); i.src = src; });
+        })();
+
         var observer = new IntersectionObserver(function(entries) {
             entries.forEach(function(e) { if (e.isIntersecting) e.target.classList.add('visible'); });
         }, { threshold: 0.1 });
