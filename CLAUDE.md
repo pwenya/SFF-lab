@@ -115,14 +115,28 @@ The site is deployed on Vercel at `https://sfflab.ee`. Use **root-relative paths
 - Do NOT add padding back to `pb` on the **body** on desktop — it breaks the sticky footer. Adding `pb` to the main content div is fine.
 - Main content div: `class="max-w-4xl mx-auto pt-[100px] md:pt-[80px] pb-16 md:pb-20"` — top padding clears nav with breathing room (mobile 24+100=124px total, desktop 80+80=160px total); bottom padding separates last card from footer.
 - Sticky right column wrapper: `class="md:-mt-[96px] md:sticky md:top-[120px]"` — the `-mt-[96px]` aligns the summary card visually with the first selector; `top-[120px]` keeps it 32px below the 88px desktop nav.
-- `BASE_PRICE` comes from `?base=` URL param, defaults to 2250.
-- **Pricing logic — IMPORTANT:** Component add-ons (CPU/GPU/RAM/SSD/PSU) are applied **only when `MODE === 'enthusiast'` (Custom)**. For `core` (Baas) and `plus` (Baas+), `BASE_PRICE` is the full fixed price — no add-ons are added. Controller and OS price add-ons apply to all modes.
-- **Current Custom add-on prices:**
+- `BASE_PRICE` comes from `?base=` URL param, defaults to 2199.
+- **Pricing logic — IMPORTANT:** Component add-ons (CPU/GPU/RAM/SSD/PSU) are applied only when `MODE === 'enthusiast'` (Custom) OR `MODE === 'dualboot'`. For `core` (Baas) and `plus` (Baas+), `BASE_PRICE` is the full fixed price — no add-ons are added. Controller and OS price add-ons apply to all modes.
+- **Current add-on prices (Custom & Dual Boot):**
   - CPU: 7500f +0, 7500x3d +65
   - GPU: 9060xt +0, 9070xt16 +250, 9070xt20 +340
-  - RAM: 16GB +0, 32GB +150, 64GB +640 (diff 64↔32 = 490)
-  - SSD: 1TB +0, 2TB +90, 4TB +330 (diff 4TB↔2TB = 240)
-  - PSU: 650W +0, 850W +45
+  - RAM: 16GB +0, 32GB +150, 64GB +640
+  - SSD (Custom): 1TB +0, 2TB +90, 4TB +330
+  - PSU (Custom): 650W +0, 850W +45
+  - PSU (Dual Boot): 650W +0, 850W +66 (forced when 9070XT selected)
+- **Win11 Pro toggle:** inline toggle inside the OS-steamos button (replaces "18 000+ mängu" label). IDs: `win11-track`, `win11-knob`. State: `var win11Enabled = true` (ON by default). `toggleWin11()` is a no-op in dualboot mode. Adds +79€ when ON. Activated visually via `_updateWin11Visual()`. Auto-enabled when URL param `?os=windows` is present.
+- **Dual Boot mode (`mode=dualboot`):**
+  - URL from index: `configurator.html?base=2199&mode=dualboot`
+  - All hardware selectable: CPU, GPU, RAM, PSU (defaults: 7500F, 9060XT, 16GB, 650W)
+  - When 9070XT selected → PSU forced to 850W (+66€) via `handleGpuChange`
+  - OS section: `#os-btn-row` hidden, `#os-dualboot-display` shown ("SteamOS + Win 11 Pro")
+  - Win11 toggle: always ON, locked (toggleWin11 returns early for dualboot)
+  - Two SSD selectors side by side: `#ssd-single-block` hidden, `#ssd-dual-block` shown
+    - SteamOS SSD: uses `DUAL_OS_SSD_PRICES` — 1TB +0, 2TB +130, 4TB +400
+    - Win SSD: uses `WIN_SSD_PRICES` — 1TB +190, 2TB +320, 4TB +590
+  - Default price: 2199 + 0 + 0 + 0 + 0 + 190 + 0 + 79 = **2468€**
+  - Full config (7500X3D+9070XT+32GB+1TB+1TB+850W+Win11): **2999€**
+- **Windows mode (`?os=windows`):** Win11 toggle auto-enabled on load, adds +79€. Used by Baas/Baas+/Custom Windows cards from index.html.
 - Internal test product: mode=`test`, title `INTERNAL TEST - NOT FOR SALE` (no square brackets).
 
 ### boxes.html
