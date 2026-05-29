@@ -30,7 +30,7 @@ posthog.init('phc_CQd2gFoyiJEiSVDvdiv46kPrcNSjfWUCw4GDhnPAf8Zb', {api_host: 'htt
         '.modal-input::placeholder{color:#52525b}',
         '.nav-status-btn{display:block;flex-shrink:0;white-space:nowrap}',
         '@media (max-width:767px){.nav-status-btn{display:none!important}}',
-        'html{height:100%}body{min-height:100%;display:flex;flex-direction:column}body>div:not(#main-footer){width:100%}#main-footer{margin-top:auto}',
+        'html{height:100%}body{min-height:100%;display:flex;flex-direction:column}body>div:not(#main-footer):not(#lang-dd-menu){width:100%}#main-footer{margin-top:auto}',
     ].join('');
     document.head.appendChild(s);
 
@@ -86,7 +86,7 @@ posthog.init('phc_CQd2gFoyiJEiSVDvdiv46kPrcNSjfWUCw4GDhnPAf8Zb', {api_host: 'htt
         + '<span id="lang-dd-label">ET</span>'
         + '<svg width="8" height="5" viewBox="0 0 8 5" fill="none"><path d="M1 1l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'
         + '</button>'
-        + '<div id="lang-dd-menu" style="display:none;position:fixed;background:#0a0a0a;border:1px solid rgba(255,255,255,0.1);border-radius:10px;overflow:hidden;z-index:99999;min-width:52px">'
+        + '<div id="lang-dd-menu" style="display:none;position:fixed;width:auto;background:#0a0a0a;border:1px solid rgba(255,255,255,0.1);border-radius:10px;overflow:hidden;z-index:99999;min-width:52px">'
         + '<button onclick="setLanguage(\'et\');window._closeLangDD()" style="display:block;width:100%;padding:9px 14px;background:none;border:none;border-bottom:1px solid rgba(255,255,255,0.05);cursor:pointer;color:#71717a;font-size:11px;font-weight:800;letter-spacing:0.15em;font-family:inherit;text-align:center;transition:color 0.15s" onmouseover="this.style.color=\'white\'" onmouseout="this.style.color=\'#71717a\'">ET</button>'
         + '<button onclick="setLanguage(\'ru\');window._closeLangDD()" style="display:block;width:100%;padding:9px 14px;background:none;border:none;border-bottom:1px solid rgba(255,255,255,0.05);cursor:pointer;color:#71717a;font-size:11px;font-weight:800;letter-spacing:0.15em;font-family:inherit;text-align:center;transition:color 0.15s" onmouseover="this.style.color=\'white\'" onmouseout="this.style.color=\'#71717a\'">RU</button>'
         + '<button onclick="setLanguage(\'en\');window._closeLangDD()" style="display:block;width:100%;padding:9px 14px;background:none;border:none;cursor:pointer;color:#71717a;font-size:11px;font-weight:800;letter-spacing:0.15em;font-family:inherit;text-align:center;transition:color 0.15s" onmouseover="this.style.color=\'white\'" onmouseout="this.style.color=\'#71717a\'">EN</button>'

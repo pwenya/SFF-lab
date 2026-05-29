@@ -1130,15 +1130,16 @@
             if (mobile) {
                 btn.style.setProperty('display', 'flex', 'important');
                 btn.style.minWidth       = '0';
-                btn.style.width          = '36px';
                 btn.style.height         = '36px';
-                btn.style.padding        = '0';
+                btn.style.padding        = count > 0 ? '0 10px 0 8px' : '0';
+                btn.style.width          = count > 0 ? 'auto' : '36px';
                 btn.style.borderRadius   = '10px';
                 btn.style.alignItems     = 'center';
                 btn.style.justifyContent = 'center';
                 btn.style.position       = 'relative';
+                btn.style.gap            = '6px';
                 btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>'
-                    + (count > 0 ? '<span style="position:absolute;top:-5px;right:-5px;background:#ef4444;color:white;font-size:8px;font-weight:900;border-radius:50%;width:15px;height:15px;display:flex;align-items:center;justify-content:center;font-family:inherit">' + count + '</span>' : '');
+                    + (count > 0 ? '<span style="font-size:11px;font-weight:900;letter-spacing:0.05em;font-family:inherit">' + count + '</span>' : '');
             } else {
                 btn.style.display        = '';
                 btn.style.width          = '';
