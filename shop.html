@@ -1128,7 +1128,7 @@
             var count   = _cart.reduce(function(s, i) { return s + i.qty; }, 0);
             var mobile  = window.innerWidth < 900;
             if (mobile) {
-                btn.style.display        = 'flex';
+                btn.style.setProperty('display', 'flex', 'important');
                 btn.style.minWidth       = '0';
                 btn.style.width          = '36px';
                 btn.style.height         = '36px';
