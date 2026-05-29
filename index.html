@@ -688,6 +688,18 @@
             entries.forEach(function(e) { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
         }, { threshold: 0.08 });
         document.querySelectorAll('.reveal').forEach(function(el) { observer.observe(el); });
+
+        window.addEventListener('load', function() {
+            if (window.innerWidth >= 900) return;
+            var navRight = document.getElementById('main-nav-right');
+            var btn = document.getElementById('nav-action-btn');
+            if (navRight) navRight.style.gap = '8px';
+            if (btn) {
+                btn.style.setProperty('display', 'flex', 'important');
+                btn.style.minWidth = '0';
+                btn.style.padding = '8px 12px';
+            }
+        });
     </script>
 </body>
 </html>
