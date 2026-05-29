@@ -210,10 +210,17 @@
                     </div>
                 </div>
                 <div>
-                    <label data-key="gpu-label" class="block text-[10px] font-black uppercase tracking-widest text-blue-500 mb-3">Videokaart (GPU)</label>
+                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+                        <label data-key="gpu-label" class="text-[10px] font-black uppercase tracking-widest text-blue-500">Videokaart (GPU)</label>
+                        <span id="nvidia-toggle-wrap" style="display:none;align-items:center;gap:6px">
+                            <span id="nvidia-amd-lbl" style="font-size:9px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:#ef4444">AMD</span>
+                            <span onclick="toggleNvidiaMode()" id="nvidia-track" style="display:inline-flex;width:32px;height:18px;border-radius:9px;background:#ef4444;position:relative;transition:background 0.2s;cursor:pointer;flex-shrink:0"><span id="nvidia-knob" style="position:absolute;top:3px;left:3px;width:12px;height:12px;border-radius:50%;background:#ffffff;transition:all 0.2s"></span></span>
+                            <span id="nvidia-nv-lbl" style="font-size:9px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:#52525b">NVIDIA</span>
+                        </span>
+                    </div>
                     <div id="gpu-container" class="flex gap-2" style="pointer-events:none">
-                        <button onclick="selectGpu('9060xt')"   id="gpu-9060xt"   class="os-btn active flex-1 py-3 px-2 rounded-xl text-[9px] font-black uppercase tracking-wider text-center">RX 9060 XT 16GB</button>
-                        <button onclick="selectGpu('9070xt16')" id="gpu-9070xt16" class="os-btn flex-1 py-3 px-2 rounded-xl text-[9px] font-black uppercase tracking-wider text-center" style="opacity:0.35">RX 9070 XT 16GB</button>
+                        <button onclick="selectGpu('9060xt')"   id="gpu-9060xt"   class="os-btn active flex-1 py-3 px-2 rounded-xl text-[9px] font-black uppercase tracking-wider text-center">RX 9060 XT 16GB OC</button>
+                        <button onclick="selectGpu('9070xt16')" id="gpu-9070xt16" class="os-btn flex-1 py-3 px-2 rounded-xl text-[9px] font-black uppercase tracking-wider text-center" style="opacity:0.35">RX 9070 XT 16GB OC</button>
                     </div>
                 </div>
                 <div>
@@ -256,7 +263,7 @@
                         <button onclick="selectPsu('650')" id="psu-650" class="os-btn active flex-1 py-3 px-2 rounded-xl text-[9px] font-black uppercase tracking-wider text-center">650W<br><span class="text-[8px] opacity-60 normal-case">SFX Gold</span></button>
                         <button onclick="selectPsu('850')" id="psu-850" class="os-btn flex-1 py-3 px-2 rounded-xl text-[9px] font-black uppercase tracking-wider text-center">850W<br><span class="text-[8px] opacity-60 normal-case">SFX Gold</span></button>
                     </div>
-                    <p id="psu-warning" class="text-[9px] text-amber-500 uppercase mt-2 hidden" data-key="psu-req">9070 XT jaoks on vajalik 850W toiteplokk</p>
+                    <p id="psu-warning" class="text-[9px] text-amber-500 uppercase mt-2 hidden" data-key="psu-req">9070 XT 16GB OC jaoks on vajalik 850W toiteplokk</p>
                 </div>
                 <div id="ctrl-block" style="display:none">
                     <label data-key="ctrl-label" class="block text-[10px] font-black uppercase tracking-widest text-blue-500 mb-3">Kontroller (Controller)</label>
@@ -330,7 +337,7 @@
                 'case-label': 'Korpuse disain', 'ctrl-label': 'Kontroller', 'cpu-label': 'Protsessor',
                 'gpu-label': 'Videokaart', 'psu-label': 'Toiteplokk', 'ram-label': 'Operatiivmälu',
                 'ssd-label': 'Salvestusruum', 'hdmi-label': 'Kaabel', 'pkg-label': 'Pakend',
-                'psu-req': '9070 XT jaoks on vajalik 850W toiteplokk',
+                'psu-req': '9070 XT 16GB OC jaoks on vajalik 850W toiteplokk',
                 'summary-title': 'Sinu valik', 'sum-model': 'Mudel:', 'sum-os': 'OS:', 'sum-build': 'Tüüp:',
                 'order-open-btn': 'Vormista tellimus',
                 'legal-info': '* Eritellimusel valmiv toode.\nVÕS § 53 lg 4 kohaselt tagastamisõigus puudub.',
@@ -356,7 +363,7 @@
                 'case-label': 'Дизайн корпуса', 'ctrl-label': 'Контроллер', 'cpu-label': 'Процессор',
                 'gpu-label': 'Видеокарта', 'psu-label': 'Блок питания', 'ram-label': 'Оперативная память',
                 'ssd-label': 'Накопитель', 'hdmi-label': 'Кабель', 'pkg-label': 'Упаковка',
-                'psu-req': 'Для 9070 XT необходим блок 850W',
+                'psu-req': 'Для 9070 XT 16GB OC необходим блок 850W',
                 'summary-title': 'Ваш выбор', 'sum-model': 'Модель:', 'sum-os': 'ОС:', 'sum-build': 'Тип:',
                 'order-open-btn': 'Оформить заказ',
                 'legal-info': '* Товар под заказ.\nСогласно VÕS § 53 lg 4, возврат невозможен.',
@@ -382,7 +389,7 @@
                 'case-label': 'Case design', 'ctrl-label': 'Controller', 'cpu-label': 'Processor (CPU)',
                 'gpu-label': 'Graphics Card (GPU)', 'psu-label': 'Power Supply (PSU)', 'ram-label': 'Memory (RAM)',
                 'ssd-label': 'Storage (SSD)', 'hdmi-label': 'Cable', 'pkg-label': 'Packaging',
-                'psu-req': '850W PSU required for RX 9070 XT',
+                'psu-req': '850W PSU required for RX 9070 XT 16GB OC',
                 'summary-title': 'Your build', 'sum-model': 'Model:', 'sum-os': 'OS:', 'sum-build': 'Type:',
                 'order-open-btn': 'Place order',
                 'legal-info': '* Made to order.\nNo return right per VÕS § 53 lg 4.',
@@ -438,7 +445,10 @@
         var RAM_LABELS  = { '16': '16GB DDR5 Corsair Vengeance', '32': '32GB DDR5 Corsair Vengeance', '64': '64GB DDR5 Corsair Vengeance' };
         var SSD_LABELS  = { '1': 'WD_BLACK SN7100 1TB', '2': 'WD_BLACK SN7100 2TB', '4': 'WD_BLACK SN7100 4TB' };
         var CPU_LABELS  = { '7500f': 'AMD Ryzen 5 7500F', '7500x3d': 'AMD Ryzen 5 7500X3D' };
-        var GPU_LABELS  = { '9060xt': 'AMD Radeon RX 9060 XT 16GB', '9070xt16': 'AMD Radeon RX 9070 XT 16GB', '9070xt20': 'AMD Radeon RX 9070 XT 20GB' };
+        var GPU_LABELS        = { '9060xt': 'AMD Radeon RX 9060 XT 16GB OC', '9070xt16': 'AMD Radeon RX 9070 XT 16GB OC', '9070xt20': 'AMD Radeon RX 9070 XT 20GB' };
+        var NVIDIA_GPU_LABELS = { '9060xt': 'NVIDIA GeForce RTX 5060 Ti 16GB OC', '9070xt16': 'NVIDIA GeForce RTX 5070 Ti 16GB OC' };
+        var NVIDIA_GPU_EXTRA  = { '9060xt': 170, '9070xt16': 300 };
+        var nvidiaMode = false;
         var selectedRam = '16';
         var selectedSsd = '1';
         var selectedCpu = '7500f';
@@ -458,6 +468,7 @@
             var colors = { steamos: '#4ade80', windows: '#93c5fd',   dualboot: '#c4b5fd' };
             disp.innerText   = labels[os];
             disp.style.color = colors[os];
+            _updateNvidiaToggleVisibility();
             updatePrice();
         }
 
@@ -679,6 +690,49 @@
             updatePrice();
         }
 
+        /* ── NVIDIA / AMD GPU toggle ── */
+        function toggleNvidiaMode() {
+            nvidiaMode = !nvidiaMode;
+            _updateNvidiaVisual();
+            _updateGpuButtons();
+            updatePrice();
+        }
+        function _updateNvidiaVisual() {
+            var track  = document.getElementById('nvidia-track');
+            var knob   = document.getElementById('nvidia-knob');
+            var amdLbl = document.getElementById('nvidia-amd-lbl');
+            var nvLbl  = document.getElementById('nvidia-nv-lbl');
+            if (!track) return;
+            if (nvidiaMode) {
+                track.style.background = '#76b900';
+                knob.style.left        = '17px';
+                if (amdLbl) amdLbl.style.color = '#52525b';
+                if (nvLbl)  nvLbl.style.color  = '#76b900';
+            } else {
+                track.style.background = '#ef4444';
+                knob.style.left        = '3px';
+                if (amdLbl) amdLbl.style.color = '#ef4444';
+                if (nvLbl)  nvLbl.style.color  = '#52525b';
+            }
+        }
+        function _updateGpuButtons() {
+            var btn1 = document.getElementById('gpu-9060xt');
+            var btn2 = document.getElementById('gpu-9070xt16');
+            if (btn1) btn1.textContent = nvidiaMode ? 'RTX 5060 Ti 16GB OC' : 'RX 9060 XT 16GB OC';
+            if (btn2) btn2.textContent = nvidiaMode ? 'RTX 5070 Ti 16GB OC' : 'RX 9070 XT 16GB OC';
+        }
+        function _updateNvidiaToggleVisibility() {
+            var wrap = document.getElementById('nvidia-toggle-wrap');
+            if (!wrap) return;
+            var show = (urlParams.get('os') === 'windows' || selectedOS === 'windows') && MODE !== 'dualboot';
+            wrap.style.display = show ? 'flex' : 'none';
+            if (!show && nvidiaMode) {
+                nvidiaMode = false;
+                _updateNvidiaVisual();
+                _updateGpuButtons();
+            }
+        }
+
         /* ── Win11 toggle ── */
         function _updateWin11Visual() {
             var track = document.getElementById('win11-track');
@@ -742,6 +796,7 @@
             } else {
                 cpu = 0; gpu = 0; ram = 0; ssd = 0;
             }
+            var nvExtra = nvidiaMode ? (NVIDIA_GPU_EXTRA[selectedGpu] || 0) : 0;
             var _psuBlock = document.getElementById('psu-block');
             var _psuOn    = _psuBlock && _psuBlock.style.display !== 'none';
             var psu = custom && _psuOn ? selectedPsu
@@ -750,7 +805,7 @@
             var ctrl = document.getElementById('ctrl-block').style.display !== 'none' ? parseInt(document.getElementById('ctrl-select').value) || 0 : 0;
             var os   = OS_PRICES[selectedOS] || 0;
             var win  = win11Enabled ? 79 : 0;
-            document.getElementById('total-price').innerText = (BASE_PRICE + cpu + gpu + ram + ssd + psu + ctrl + os + win) + ' €';
+            document.getElementById('total-price').innerText = (BASE_PRICE + cpu + gpu + nvExtra + ram + ssd + psu + ctrl + os + win) + ' €';
         }
 
         /* ── Case selector ── */
@@ -832,7 +887,7 @@
                 os:       osDisplay,
                 caseTxt:  selectedCaseModel + ' — ' + selectedCaseColor,
                 cpu:      CPU_LABELS[selectedCpu],
-                gpu:      GPU_LABELS[selectedGpu],
+                gpu:      (nvidiaMode ? NVIDIA_GPU_LABELS[selectedGpu] : null) || GPU_LABELS[selectedGpu],
                 ram:      RAM_LABELS[selectedRam],
                 ssd:      SSD_LABELS[selectedSsd],
                 psu:      document.getElementById('psu-block').style.display !== 'none'
@@ -1163,6 +1218,7 @@
             }
             renderCaseColors(); initMode();
             if (urlParams.get('os') === 'windows') win11Enabled = true;
+            _updateNvidiaToggleVisibility();
             _updateWin11Visual();
             updatePrice(); window.updateCaseImage();
         });
