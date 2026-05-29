@@ -318,24 +318,6 @@
                                 </div>
                             </div>
 
-                            <!-- INTERNAL TEST -->
-                            <div class="flex reveal">
-                                <div class="glass-card p-8 rounded-[40px] flex flex-col w-full" style="border-color:rgba(234,179,8,0.3)">
-                                    <div class="product-img-wrap" style="background:rgba(234,179,8,0.04)">
-                                        <span style="font-size:11px;font-weight:800;letter-spacing:0.15em;text-transform:uppercase;color:#ca8a04">INTERNAL TEST</span>
-                                    </div>
-                                    <span class="text-[10px] font-black uppercase tracking-[0.2em] mb-2" style="color:#ca8a04">Test · Do Not Order</span>
-                                    <h3 class="text-base font-extrabold text-white mb-4 leading-snug">Internal Test — Not For Sale</h3>
-                                    <div class="space-y-1.5 text-[11px] font-bold uppercase tracking-[0.1em] mb-4">
-                                        <div class="text-zinc-600">Purpose <span class="text-zinc-400">Payment flow test</span></div>
-                                        <div class="text-zinc-600">Delivery <span style="color:#ca8a04">No goods will be sent</span></div>
-                                    </div>
-                                    <div class="mt-auto">
-                                        <div class="text-3xl font-black tracking-tighter text-white mb-5">1 €</div>
-                                        <button onclick="orderTestItem()" class="w-full py-4 rounded-2xl text-xs font-black uppercase tracking-widest" style="background:#ca8a04;color:#000;border:none;cursor:pointer">Test Order</button>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                     </div>
 
@@ -905,10 +887,6 @@
             all.forEach(function(src) { var i = new Image(); i.src = src; });
         })();
 
-        function orderTestItem() {
-            openShopModal({ name: 'INTERNAL TEST — NOT FOR SALE', brand: 'Test · Internal', priceDisplay: '1 €', price: 1, orderType: 'accessory',
-                specs: [{ l: 'Purpose', v: 'Payment flow test' }, { l: 'Delivery', v: 'No goods will be sent' }] });
-        }
 
         var observer = new IntersectionObserver(function(entries) {
             entries.forEach(function(e) { if (e.isIntersecting) e.target.classList.add('visible'); });
