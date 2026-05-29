@@ -1221,6 +1221,9 @@
             _updateNvidiaToggleVisibility();
             _updateWin11Visual();
             updatePrice(); window.updateCaseImage();
+            Object.values(CASE_IMAGES).forEach(function(base) {
+                [1,2,3].forEach(function(n) { (new Image()).src = base + '.' + n + '.png'; });
+            });
         });
 
         /* ══ TEST MODE — delete this block after testing ══════════════════════

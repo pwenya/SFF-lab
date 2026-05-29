@@ -8,6 +8,7 @@ Sells custom-built gaming PCs with SteamOS or Windows. Prices are in EUR. No bac
 - I have full permission to modify, create, and delete backend and frontend files for the sfflab.ee project.
 - I will not ask for text confirmation in the chat before modifying files. I will generate the code and apply the changes in the editor directly (auto-apply/diff).
 - If I need to create a new route or model for LHV accounting, I will do so autonomously.
+- **Communication style:** Do not narrate actions in chat — work silently, show only the final short result. If a task is unclear, ask a short clarifying question instead of reading the entire project.
 
 ## Stack
 - Vanilla HTML + CSS + JS (no build tools, no npm)
@@ -123,12 +124,16 @@ The site is deployed on Vercel at `https://sfflab.ee`. Use **root-relative paths
   - RAM: 16GB +0, 32GB +150, 64GB +640
   - SSD (Custom): 1TB +0, 2TB +90, 4TB +330
   - PSU (Custom): 650W +0, 850W +45
-  - PSU (Dual Boot): 650W +0, 850W +66 (forced when 9070XT selected)
+  - PSU (Dual Boot): 650W +0, 850W +66 (forced when 9070XT 16GB OC selected)
+- **GPU naming:** all RX 9060 XT and RX 9070 XT 16GB cards are named with OC suffix everywhere: `AMD Radeon RX 9060 XT 16GB OC`, `AMD Radeon RX 9070 XT 16GB OC`.
+- **NVIDIA/AMD GPU toggle:** shown next to the GPU label when Windows OS is active (`selectedOS === 'windows'` or `?os=windows` URL param), hidden in dualboot mode. IDs: `nvidia-toggle-wrap`, `nvidia-track`, `nvidia-knob`. State: `var nvidiaMode = false`. Toggle function: `toggleNvidiaMode()` — calls `_updateNvidiaVisual()`, `_updateGpuButtons()`, `updatePrice()`. Visual: red (`#ef4444`) = AMD (default/left), green (`#76b900`) = NVIDIA (right).
+  - NVIDIA GPU labels: `NVIDIA GeForce RTX 5060 Ti 16GB OC`, `NVIDIA GeForce RTX 5070 Ti 16GB OC`
+  - NVIDIA price extra (`NVIDIA_GPU_EXTRA`): 9060xt +170€, 9070xt16 +300€ — applied on top of AMD GPU price in ALL modes (including core/plus), stored separately and added to total via `nvExtra` variable.
 - **Win11 Pro toggle:** inline toggle inside the OS-steamos button (replaces "18 000+ mängu" label). IDs: `win11-track`, `win11-knob`. State: `var win11Enabled = true` (ON by default). `toggleWin11()` is a no-op in dualboot mode. Adds +79€ when ON. Activated visually via `_updateWin11Visual()`. Auto-enabled when URL param `?os=windows` is present.
 - **Dual Boot mode (`mode=dualboot`):**
   - URL from index: `configurator.html?base=2199&mode=dualboot`
-  - All hardware selectable: CPU, GPU, RAM, PSU (defaults: 7500F, 9060XT, 16GB, 650W)
-  - When 9070XT selected → PSU forced to 850W (+66€) via `handleGpuChange`
+  - All hardware selectable: CPU, GPU, RAM, PSU (defaults: 7500F, 9060XT 16GB OC, 16GB, 650W)
+  - When 9070XT 16GB OC selected → PSU forced to 850W (+66€) via `handleGpuChange`
   - OS section: `#os-btn-row` hidden, `#os-dualboot-display` shown ("SteamOS + Win 11 Pro")
   - Win11 toggle: always ON, locked (toggleWin11 returns early for dualboot)
   - Two SSD selectors side by side: `#ssd-single-block` hidden, `#ssd-dual-block` shown
@@ -168,10 +173,13 @@ The site is deployed on Vercel at `https://sfflab.ee`. Use **root-relative paths
 - `showGrid` list includes: `grid-gpu-nvidia`, `grid-gpu-amd`, `grid-cpu-intel`, `grid-cpu-amd`, `grid-acc-aula`.
 - Products currently listed: PNY RTX 5080 16GB OC, PNY RTX 5080 16GB ARGB OC. AMD GPU / Intel CPU / AMD CPU show "Coming Soon" placeholders.
 - **Pricing and order buttons are currently disabled** on all NVIDIA cards: price replaced with `tulevikus` (same text for all languages, zinc-600 color), both "add to cart" and "Tellida" buttons have `opacity:0.4;pointer-events:none` and no `onclick`.
-- **Accessories tab (`grid-acc-aula`):** two keyboard cards — AULA F75 PRO (active) and AULA F75 MAX (coming soon / `tulevikus`).
+- **Accessories tab (`grid-acc-aula`):** keyboard and mouse cards in `grid-acc-aula`.
   - **AULA F75 PRO Mechanical Keyboard 75%** — active for sale. Color picker: Graphite `#4b5259` (119 €) / Pastel Pink `#f9a8d4` (129 €). JS state: `_f75proColor`, `_f75proPrices`, `_f75proColorNames`. Functions: `selectF75ProColor(color)`, `addF75ProToCart()`, `orderF75Pro()`.
   - Specs shown: Switch `Hot-swap LEOBOG Reaper`, Connection `USB-C · BT5.0 · 2.4GHz`.
   - **AULA F75 MAX Mechanical Keyboard 75%** — disabled (same specs shown, buttons `opacity:0.4;pointer-events:none`).
+  - **MCHOSE K7 Ultra + Charging Dock** — mouse card. Full product name includes "+ Charging Dock" everywhere (card title, `addToCart`, `openShopModal`).
+  - **MCHOSE A5 V3** — mouse card.
+  - **MCHOSE AX5 V2 Magnesium alloy** — mouse card.
 - **Order modal:** two-step — step 1 shows product overview; step 2 is customer form (name/email/phone). Submit calls `/api/order` then `/api/payment/create` and redirects to LHV payment page. `shopSubmitOrder` uses `p.name` and `p.price` (number).
 - **Cart (`#cart-overlay`, `.cart-overlay`):** centered overlay (same animation as order modal — `translateY(20px) scale(0.97)` → `(0) scale(1)`). No floating FAB — the nav `#nav-action-btn` is the cart entry point on this page.
   - Cart items: `{title, brand, price (string "X €"), priceNum (number), specs, qty}`.
