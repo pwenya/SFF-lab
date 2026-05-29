@@ -73,7 +73,7 @@ posthog.init('phc_CQd2gFoyiJEiSVDvdiv46kPrcNSjfWUCw4GDhnPAf8Zb', {api_host: 'htt
         + '<a href="/" class="text-2xl md:text-3xl font-extrabold tracking-tighter uppercase text-white hover:opacity-80 transition" style="flex-shrink:0">SFF LAB<span class="text-blue-600">.</span></a>'
         + '<div id="main-nav-right" style="display:flex;align-items:center;gap:16px;flex-shrink:1;min-width:0">'
         + '<a href="shop.html" class="min-[900px]:hidden flex items-center justify-center hover:text-white transition text-zinc-500" style="width:34px;height:34px;border:1px solid rgba(255,255,255,0.1);border-radius:8px;position:relative;flex-shrink:0;text-decoration:none"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg><span style="position:absolute;top:-5px;right:-5px;font-size:7px;font-weight:800;letter-spacing:0.08em;color:#2563eb;background:#050505;border:1px solid rgba(37,99,235,0.4);padding:1px 4px;border-radius:3px;text-transform:uppercase;line-height:1.4">DEMO</span></a>'
-        + '<a href="exclusive.html" class="min-[900px]:hidden flex items-center justify-center hover:text-white transition text-zinc-500" style="width:36px;height:36px;border:1px solid rgba(255,255,255,0.1);border-radius:8px;flex-shrink:0;text-decoration:none"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1L23 12L12 23L1 12Z"/></svg></a>'
+        + '<a href="exclusive.html" class="min-[900px]:hidden flex items-center justify-center hover:text-white transition text-zinc-500" style="width:36px;height:36px;border:1px solid rgba(255,255,255,0.1);border-radius:8px;flex-shrink:0;text-decoration:none"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1L23 12L12 23L1 12Z"/></svg></a>'
         + '<div class="hidden min-[900px]:flex items-center text-[16px] font-bold uppercase tracking-[0.2em] text-zinc-500" style="flex-shrink:1;min-width:0">'
         + '<a href="shop.html" class="hover:text-white transition whitespace-nowrap flex items-center gap-2" style="font-size:16px;font-weight:700;text-transform:uppercase;letter-spacing:0.2em">Shop <span style="font-size:9px;font-weight:800;letter-spacing:0.15em;color:#2563eb;background:rgba(37,99,235,0.15);padding:2px 6px;border-radius:4px;text-transform:uppercase">DEMO</span></a>'
         + '<span class="text-zinc-800 mx-2">·</span>'
@@ -86,7 +86,7 @@ posthog.init('phc_CQd2gFoyiJEiSVDvdiv46kPrcNSjfWUCw4GDhnPAf8Zb', {api_host: 'htt
         + '<span id="lang-dd-label">ET</span>'
         + '<svg width="8" height="5" viewBox="0 0 8 5" fill="none"><path d="M1 1l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'
         + '</button>'
-        + '<div id="lang-dd-menu" style="display:none;position:fixed;width:auto;background:#0a0a0a;border:1px solid rgba(255,255,255,0.1);border-radius:10px;overflow:hidden;z-index:99999;min-width:52px">'
+        + '<div id="lang-dd-menu" style="display:none;position:absolute;right:0;top:calc(100% + 6px);background:#0a0a0a;border:1px solid rgba(255,255,255,0.1);border-radius:10px;overflow:hidden;z-index:99999;min-width:52px">'
         + '<button onclick="setLanguage(\'et\');window._closeLangDD()" style="display:block;width:100%;padding:9px 14px;background:none;border:none;border-bottom:1px solid rgba(255,255,255,0.05);cursor:pointer;color:#71717a;font-size:11px;font-weight:800;letter-spacing:0.15em;font-family:inherit;text-align:center;transition:color 0.15s" onmouseover="this.style.color=\'white\'" onmouseout="this.style.color=\'#71717a\'">ET</button>'
         + '<button onclick="setLanguage(\'ru\');window._closeLangDD()" style="display:block;width:100%;padding:9px 14px;background:none;border:none;border-bottom:1px solid rgba(255,255,255,0.05);cursor:pointer;color:#71717a;font-size:11px;font-weight:800;letter-spacing:0.15em;font-family:inherit;text-align:center;transition:color 0.15s" onmouseover="this.style.color=\'white\'" onmouseout="this.style.color=\'#71717a\'">RU</button>'
         + '<button onclick="setLanguage(\'en\');window._closeLangDD()" style="display:block;width:100%;padding:9px 14px;background:none;border:none;cursor:pointer;color:#71717a;font-size:11px;font-weight:800;letter-spacing:0.15em;font-family:inherit;text-align:center;transition:color 0.15s" onmouseover="this.style.color=\'white\'" onmouseout="this.style.color=\'#71717a\'">EN</button>'
@@ -108,8 +108,6 @@ posthog.init('phc_CQd2gFoyiJEiSVDvdiv46kPrcNSjfWUCw4GDhnPAf8Zb', {api_host: 'htt
     document.addEventListener('DOMContentLoaded', function () {
         document.body.insertAdjacentHTML('afterbegin', NAV_HTML);
         document.body.insertAdjacentHTML('beforeend', FOOTER_HTML);
-        var ddMenu = document.getElementById('lang-dd-menu');
-        if (ddMenu) document.body.appendChild(ddMenu);
         _init();
     });
 
@@ -159,24 +157,12 @@ posthog.init('phc_CQd2gFoyiJEiSVDvdiv46kPrcNSjfWUCw4GDhnPAf8Zb', {api_host: 'htt
         })();
     }
 
-    var _langDDOpen = false;
     window._toggleLangDD = function() {
-        var m   = document.getElementById('lang-dd-menu');
-        var btn = document.getElementById('lang-dd-btn');
-        if (!m || !btn) return;
-        _langDDOpen = !_langDDOpen;
-        if (_langDDOpen) {
-            var r = btn.getBoundingClientRect();
-            m.style.top     = (r.bottom + 6) + 'px';
-            m.style.right   = (window.innerWidth - r.right) + 'px';
-            m.style.left    = 'auto';
-            m.style.display = 'block';
-        } else {
-            m.style.display = 'none';
-        }
+        var m = document.getElementById('lang-dd-menu');
+        if (!m) return;
+        m.style.display = m.style.display === 'block' ? 'none' : 'block';
     };
     window._closeLangDD = function() {
-        _langDDOpen = false;
         var m = document.getElementById('lang-dd-menu');
         if (m) m.style.display = 'none';
     };
