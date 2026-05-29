@@ -150,6 +150,10 @@
                         <label data-key="om-phone-label" style="display:block;font-size:9px;font-weight:800;letter-spacing:0.2em;text-transform:uppercase;color:#2563eb;margin-bottom:6px">Telefon</label>
                         <input id="om-phone" type="tel" class="om-input" autocomplete="tel">
                     </div>
+                    <div>
+                        <label data-key="om-address-label" style="display:block;font-size:9px;font-weight:800;letter-spacing:0.2em;text-transform:uppercase;color:#2563eb;margin-bottom:6px">Tarneaadress</label>
+                        <input id="om-address" type="text" class="om-input" autocomplete="street-address">
+                    </div>
                 </div>
                 <div id="om-err" style="display:none;font-size:10px;font-weight:700;color:#f87171;background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.2);border-radius:10px;padding:10px 14px;margin-bottom:12px;text-align:center" data-key="om-err-msg">Midagi läks valesti. Palun proovi uuesti.</div>
                 <button id="om-submit" onclick="submitOrderForm()" data-key="om-submit" class="btn-ripple w-full bg-blue-600 hover:bg-blue-500 text-white py-4 rounded-2xl font-black uppercase tracking-widest transition" style="font-size:10px;border:none;cursor:pointer">Saada tellimus</button>
@@ -346,7 +350,7 @@
                 'legal-info': '* Eritellimusel valmiv toode.\nVÕS § 53 lg 4 kohaselt tagastamisõigus puudub.',
                
                 'om-title': 'Vormista tellimus',
-                'om-name-label': 'Täisnimi', 'om-email-label': 'E-posti aadress', 'om-phone-label': 'Telefon',
+                'om-name-label': 'Täisnimi', 'om-email-label': 'E-posti aadress', 'om-phone-label': 'Telefon', 'om-address-label': 'Tarneaadress',
                 'om-submit': 'Saada tellimus',
                 'om-success-msg': 'Tellimus vastu võetud!\nVõtame ühendust 24 tunni jooksul.',
                 'om-err-msg': 'Midagi läks valesti. Palun proovi uuesti.',
@@ -372,7 +376,7 @@
                 'legal-info': '* Товар под заказ.\nСогласно VÕS § 53 lg 4, возврат невозможен.',
                
                 'om-title': 'Оформить заказ',
-                'om-name-label': 'Полное имя', 'om-email-label': 'Электронная почта', 'om-phone-label': 'Номер телефона',
+                'om-name-label': 'Полное имя', 'om-email-label': 'Электронная почта', 'om-phone-label': 'Номер телефона', 'om-address-label': 'Адрес доставки',
                 'om-submit': 'Отправить заказ',
                 'om-success-msg': 'Заказ получен!\nСвяжемся с вами в течение 24 часов.',
                 'om-err-msg': 'Что-то пошло не так. Пожалуйста, попробуйте снова.',
@@ -398,7 +402,7 @@
                 'legal-info': '* Made to order.\nNo return right per VÕS § 53 lg 4.',
                
                 'om-title': 'Place order',
-                'om-name-label': 'Full name', 'om-email-label': 'Email address', 'om-phone-label': 'Phone number',
+                'om-name-label': 'Full name', 'om-email-label': 'Email address', 'om-phone-label': 'Phone number', 'om-address-label': 'Delivery address',
                 'om-submit': 'Send order',
                 'om-success-msg': 'Order received!\nWe will contact you within 24 hours.',
                 'om-err-msg': 'Something went wrong. Please try again.',
@@ -940,10 +944,11 @@
             document.getElementById('om-form').style.display    = '';
             document.getElementById('om-success').style.display  = 'none';
             document.getElementById('om-err').style.display      = 'none';
-            document.getElementById('om-name').value  = '';
-            document.getElementById('om-email').value = '';
-            document.getElementById('om-phone').value = '';
-            ['om-name','om-email','om-phone'].forEach(function (id) {
+            document.getElementById('om-name').value    = '';
+            document.getElementById('om-email').value   = '';
+            document.getElementById('om-phone').value   = '';
+            document.getElementById('om-address').value = '';
+            ['om-name','om-email','om-phone','om-address'].forEach(function (id) {
                 document.getElementById(id).classList.remove('err');
             });
             var btn = document.getElementById('om-submit');
@@ -993,19 +998,21 @@
             var isRu  = lang === 'ru';
             var isEn  = lang === 'en';
             var tr    = (window.pageTranslations || {})[lang] || {};
-            var nameEl  = document.getElementById('om-name');
-            var emailEl = document.getElementById('om-email');
-            var phoneEl = document.getElementById('om-phone');
-            var errEl   = document.getElementById('om-err');
-            var btn     = document.getElementById('om-submit');
+            var nameEl    = document.getElementById('om-name');
+            var emailEl   = document.getElementById('om-email');
+            var phoneEl   = document.getElementById('om-phone');
+            var addressEl = document.getElementById('om-address');
+            var errEl     = document.getElementById('om-err');
+            var btn       = document.getElementById('om-submit');
 
             /* Validate */
             var valid = true;
-            [nameEl, emailEl].forEach(function (el) { el.classList.remove('err'); });
+            [nameEl, emailEl, addressEl].forEach(function (el) { el.classList.remove('err'); });
             if (!nameEl.value.trim())  { nameEl.classList.add('err');  valid = false; }
             if (!emailEl.value.trim() || !emailEl.value.includes('@')) {
                 emailEl.classList.add('err'); valid = false;
             }
+            if (!addressEl.value.trim()) { addressEl.classList.add('err'); valid = false; }
             if (!valid) return;
 
             /* Loading state */
@@ -1022,6 +1029,7 @@
                 name:               nameEl.value.trim(),
                 email:              emailEl.value.trim(),
                 phone:              phoneEl.value.trim(),
+                address:            addressEl.value.trim(),
                 model:              snap.model,
                 os:                 snap.os,
                 'case':             snap.caseTxt,

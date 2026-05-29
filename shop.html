@@ -459,9 +459,10 @@
                 <button onclick="shopBackToProduct()" style="background:none;border:none;color:#52525b;cursor:pointer;font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:0.12em;margin-bottom:20px;padding:0;display:flex;align-items:center;gap:6px">← <span data-key="shop-back">Tagasi</span></button>
                 <h3 style="font-size:14px;font-weight:800;color:#fff;margin:0 0 20px" data-key="shop-your-info">Teie andmed</h3>
                 <div style="display:flex;flex-direction:column;gap:12px">
-                    <input id="shop-name"  class="shop-input" type="text"  placeholder="Nimi" autocomplete="name">
-                    <input id="shop-email" class="shop-input" type="email" placeholder="E-post" autocomplete="email">
-                    <input id="shop-phone" class="shop-input" type="tel"   placeholder="Telefon" autocomplete="tel">
+                    <input id="shop-name"    class="shop-input" type="text"  placeholder="Nimi" autocomplete="name">
+                    <input id="shop-email"   class="shop-input" type="email" placeholder="E-post" autocomplete="email">
+                    <input id="shop-phone"   class="shop-input" type="tel"   placeholder="Telefon" autocomplete="tel">
+                    <input id="shop-address" class="shop-input" type="text"  placeholder="Tarneaadress" autocomplete="street-address">
                 </div>
                 <div id="shop-error" style="display:none;margin-top:12px;color:#f87171;font-size:12px;font-weight:700"></div>
                 <button onclick="shopSubmitOrder()" id="shop-submit-btn" class="w-full py-4 rounded-2xl text-xs font-black uppercase tracking-widest transition" style="background:#2563eb;color:#fff;margin-top:20px" data-key="shop-pay">Maksa</button>
@@ -933,11 +934,12 @@
         async function shopSubmitOrder() {
             var btn   = document.getElementById('shop-submit-btn');
             var errEl = document.getElementById('shop-error');
-            var name  = document.getElementById('shop-name').value.trim();
-            var email = document.getElementById('shop-email').value.trim();
-            var phone = document.getElementById('shop-phone').value.trim();
+            var name    = document.getElementById('shop-name').value.trim();
+            var email   = document.getElementById('shop-email').value.trim();
+            var phone   = document.getElementById('shop-phone').value.trim();
+            var address = document.getElementById('shop-address').value.trim();
 
-            if (!name || !email || !phone) {
+            if (!name || !email || !phone || !address) {
                 errEl.textContent   = 'Palun täitke kõik väljad.';
                 errEl.style.display = 'block';
                 return;
@@ -955,7 +957,7 @@
                     method:  'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body:    JSON.stringify({
-                        name:  name,  email: email,  phone: phone,
+                        name:  name,  email: email,  phone: phone,  address: address,
                         model: p.name,  gpu: p.name,
                         os: 'N/A',  case: 'N/A',  cpu: 'N/A',  ram: 'N/A',  ssd: 'N/A',
                         price:     String(p.price),

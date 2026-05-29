@@ -105,7 +105,8 @@ function buildInternalHtml(d) {
     var customerBlock = '<table width="100%" cellpadding="0" cellspacing="0">'
         + specRow('Name',  d.name)
         + specRow('Email', '<a href="mailto:' + d.email + '" style="color:#60a5fa;text-decoration:none;font-weight:600">' + d.email + '</a>')
-        + (d.phone ? specRow('Phone', d.phone) : '')
+        + (d.phone   ? specRow('Phone',   d.phone)   : '')
+        + (d.address ? specRow('Address', d.address) : '')
         + '</table>';
 
     var inner = navHeader('New Order Received')
@@ -169,7 +170,9 @@ function buildConfirmationHtml(d) {
         + '</td></tr>'
         + '<tr><td style="padding:24px 32px;border-bottom:1px solid #1f1f1f">'
         + '<div style="font-size:9px;font-weight:800;letter-spacing:0.2em;text-transform:uppercase;color:#3f3f46;margin-bottom:14px">' + t.specLabel + '</div>'
-        + '<table width="100%" cellpadding="0" cellspacing="0">' + buildSpecRows(d) + '</table></td></tr>'
+        + '<table width="100%" cellpadding="0" cellspacing="0">' + buildSpecRows(d)
+        + (d.address ? specRow(lang === 'ru' ? 'Адрес доставки' : (lang === 'en' ? 'Delivery address' : 'Tarneaadress'), d.address) : '')
+        + '</table></td></tr>'
         + priceRow(d.price, d.estimatedDelivery, t.priceLabel, t.delivLabel)
         + '<tr><td style="padding:24px 32px;text-align:center">'
         + '<a href="https://sfflab.ee/?order=' + d.orderNumber + '" style="display:inline-block;padding:12px 28px;background:#2563eb;color:#fff;font-size:12px;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;text-decoration:none;border-radius:12px">'
@@ -256,6 +259,7 @@ module.exports = async function handler(req, res) {
                     name:              order.name,
                     email:             order.email,
                     phone:             order.phone,
+                    address:           order.address || '',
                     model:             order.model,
                     os:                order.os,
                     caseTxt:           order['case'],
