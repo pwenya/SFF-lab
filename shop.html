@@ -420,7 +420,7 @@
                                         <img id="k7ultra-img" src="/IMG/ACCESSORIES/7ULTRAREDGOLD.png" alt="MCHOSE K7 Ultra Mouse" style="transition:opacity 0.2s ease">
                                     </div>
                                     <span class="text-blue-500 text-[10px] font-black uppercase tracking-[0.2em] mb-2">MCHOSE · Mouse</span>
-                                    <h3 class="text-base font-extrabold text-white mb-4 leading-snug">MCHOSE K7 Ultra</h3>
+                                    <h3 class="text-base font-extrabold text-white mb-4 leading-snug">MCHOSE K7 Ultra + Charging Dock</h3>
                                     <div class="space-y-1.5 text-[11px] font-bold uppercase tracking-[0.1em] mb-4">
                                         <div class="text-zinc-600">Sensor <span class="text-zinc-400">PAW3950</span></div>
                                         <div class="text-zinc-600">Polling <span class="text-zinc-400">8000 Hz</span></div>
@@ -744,12 +744,12 @@
 
         function addK7UltraToCart() {
             var name = _k7ultraColorNames[_k7ultraColor];
-            addToCart({ title: 'MCHOSE K7 Ultra — ' + name, brand: 'MCHOSE', price: K7_ULTRA_PRICE + ' €', priceNum: K7_ULTRA_PRICE,
+            addToCart({ title: 'MCHOSE K7 Ultra + Charging Dock — ' + name, brand: 'MCHOSE', price: K7_ULTRA_PRICE + ' €', priceNum: K7_ULTRA_PRICE,
                 specs: [{ l: 'Color', v: name }, { l: 'Sensor', v: 'PAW3950' }, { l: 'Polling', v: '8000 Hz' }, { l: 'Weight', v: '59g' }] });
         }
         function orderK7Ultra() {
             var name = _k7ultraColorNames[_k7ultraColor];
-            openShopModal({ name: 'MCHOSE K7 Ultra — ' + name, brand: 'MCHOSE · Mouse', priceDisplay: K7_ULTRA_PRICE + ' €', price: K7_ULTRA_PRICE, orderType: 'accessory',
+            openShopModal({ name: 'MCHOSE K7 Ultra + Charging Dock — ' + name, brand: 'MCHOSE · Mouse', priceDisplay: K7_ULTRA_PRICE + ' €', price: K7_ULTRA_PRICE, orderType: 'accessory',
                 specs: [{ l: 'Color', v: name }, { l: 'Sensor', v: 'PAW3950' }, { l: 'Polling', v: '8000 Hz' }, { l: 'Weight', v: '59g' }] });
         }
 
