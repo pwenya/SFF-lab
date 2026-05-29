@@ -12,10 +12,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #050505; color: white; overflow-x: hidden; }
-        @media (max-width:899px) {
-            #nav-action-btn { display:flex !important; min-width:0 !important; padding:8px 14px !important; }
-            #main-nav-right { gap:8px !important; }
-        }
+        @media (max-width:899px) { #main-nav-right { gap:8px !important; } }
 
         .glass-card {
             background: rgba(255,255,255,0.02); backdrop-filter: blur(12px);
@@ -1127,11 +1124,31 @@
         function updateNavCartBtn() {
             var btn = document.getElementById('nav-action-btn');
             if (!btn) return;
-            var lang   = localStorage.getItem('selectedLanguage') || 'et';
-            var labels = { et: 'Ostukorv', ru: 'Корзина', en: 'Cart' };
-            var label  = labels[lang] || labels.et;
-            var count  = _cart.reduce(function(s, i) { return s + i.qty; }, 0);
-            btn.innerText        = count > 0 ? label + ' · ' + count : label;
+            var lang    = localStorage.getItem('selectedLanguage') || 'et';
+            var count   = _cart.reduce(function(s, i) { return s + i.qty; }, 0);
+            var mobile  = window.innerWidth < 900;
+            if (mobile) {
+                btn.style.display        = 'flex';
+                btn.style.minWidth       = '0';
+                btn.style.width          = '36px';
+                btn.style.height         = '36px';
+                btn.style.padding        = '0';
+                btn.style.borderRadius   = '10px';
+                btn.style.alignItems     = 'center';
+                btn.style.justifyContent = 'center';
+                btn.style.position       = 'relative';
+                btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>'
+                    + (count > 0 ? '<span style="position:absolute;top:-5px;right:-5px;background:#ef4444;color:white;font-size:8px;font-weight:900;border-radius:50%;width:15px;height:15px;display:flex;align-items:center;justify-content:center;font-family:inherit">' + count + '</span>' : '');
+            } else {
+                btn.style.display        = '';
+                btn.style.width          = '';
+                btn.style.height         = '';
+                btn.style.padding        = '';
+                btn.style.position       = '';
+                btn.style.borderRadius   = '';
+                var labels = { et: 'Ostukorv', ru: 'Корзина', en: 'Cart' };
+                btn.textContent = count > 0 ? (labels[lang] || labels.et) + ' · ' + count : (labels[lang] || labels.et);
+            }
             btn.style.background = '#2563eb';
             btn.style.color      = 'white';
         }

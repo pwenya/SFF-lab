@@ -86,7 +86,7 @@ posthog.init('phc_CQd2gFoyiJEiSVDvdiv46kPrcNSjfWUCw4GDhnPAf8Zb', {api_host: 'htt
         + '<span id="lang-dd-label">ET</span>'
         + '<svg width="8" height="5" viewBox="0 0 8 5" fill="none"><path d="M1 1l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'
         + '</button>'
-        + '<div id="lang-dd-menu" style="display:none;position:absolute;right:0;top:calc(100% + 6px);background:#0a0a0a;border:1px solid rgba(255,255,255,0.1);border-radius:10px;overflow:hidden;z-index:200;min-width:52px">'
+        + '<div id="lang-dd-menu" style="display:none;position:fixed;background:#0a0a0a;border:1px solid rgba(255,255,255,0.1);border-radius:10px;overflow:hidden;z-index:99999;min-width:52px">'
         + '<button onclick="setLanguage(\'et\');window._closeLangDD()" style="display:block;width:100%;padding:9px 14px;background:none;border:none;border-bottom:1px solid rgba(255,255,255,0.05);cursor:pointer;color:#71717a;font-size:11px;font-weight:800;letter-spacing:0.15em;font-family:inherit;text-align:center;transition:color 0.15s" onmouseover="this.style.color=\'white\'" onmouseout="this.style.color=\'#71717a\'">ET</button>'
         + '<button onclick="setLanguage(\'ru\');window._closeLangDD()" style="display:block;width:100%;padding:9px 14px;background:none;border:none;border-bottom:1px solid rgba(255,255,255,0.05);cursor:pointer;color:#71717a;font-size:11px;font-weight:800;letter-spacing:0.15em;font-family:inherit;text-align:center;transition:color 0.15s" onmouseover="this.style.color=\'white\'" onmouseout="this.style.color=\'#71717a\'">RU</button>'
         + '<button onclick="setLanguage(\'en\');window._closeLangDD()" style="display:block;width:100%;padding:9px 14px;background:none;border:none;cursor:pointer;color:#71717a;font-size:11px;font-weight:800;letter-spacing:0.15em;font-family:inherit;text-align:center;transition:color 0.15s" onmouseover="this.style.color=\'white\'" onmouseout="this.style.color=\'#71717a\'">EN</button>'
@@ -137,8 +137,9 @@ posthog.init('phc_CQd2gFoyiJEiSVDvdiv46kPrcNSjfWUCw4GDhnPAf8Zb', {api_host: 'htt
         });
 
         document.addEventListener('click', function(e) {
-            var ddBtn = document.getElementById('lang-dd-btn');
-            if (ddBtn && !ddBtn.parentNode.contains(e.target)) window._closeLangDD();
+            var ddBtn  = document.getElementById('lang-dd-btn');
+            var ddMenu = document.getElementById('lang-dd-menu');
+            if (ddBtn && !ddBtn.contains(e.target) && (!ddMenu || !ddMenu.contains(e.target))) window._closeLangDD();
         });
 
         // Auto-open order status popup if ?order= param present in URL
@@ -157,8 +158,18 @@ posthog.init('phc_CQd2gFoyiJEiSVDvdiv46kPrcNSjfWUCw4GDhnPAf8Zb', {api_host: 'htt
     }
 
     window._toggleLangDD = function() {
-        var m = document.getElementById('lang-dd-menu');
-        if (m) m.style.display = m.style.display === 'none' ? 'block' : 'none';
+        var m   = document.getElementById('lang-dd-menu');
+        var btn = document.getElementById('lang-dd-btn');
+        if (!m || !btn) return;
+        if (m.style.display !== 'none' && m.style.display !== '') {
+            m.style.display = 'none';
+        } else {
+            var r = btn.getBoundingClientRect();
+            m.style.top   = (r.bottom + 6) + 'px';
+            m.style.right = (window.innerWidth - r.right) + 'px';
+            m.style.left  = 'auto';
+            m.style.display = 'block';
+        }
     };
     window._closeLangDD = function() {
         var m = document.getElementById('lang-dd-menu');
