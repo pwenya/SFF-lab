@@ -37,7 +37,8 @@
         .os-switch-btn { transition: all 0.3s ease; border: 1px solid rgba(255,255,255,0.1); background: transparent; color: #52525b; cursor: pointer; }
         .os-switch-btn.active { background: white; color: black; border-color: white; }
         @keyframes _pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(0.88); } }
-        #tab-acc::after { content: 'NEW'; font-size: 8px; font-weight: 800; letter-spacing: 0.12em; color: #fff; background: #2563eb; padding: 2px 6px; border-radius: 4px; margin-left: 6px; display: inline-block; vertical-align: middle; animation: _pulse 2s ease-in-out infinite; }
+        #tab-acc { position: relative; }
+        #tab-acc::after { content: 'NEW'; position: absolute; top: -7px; right: -4px; font-size: 8px; font-weight: 800; letter-spacing: 0.12em; color: #fff; background: #2563eb; padding: 2px 6px; border-radius: 4px; animation: _pulse 2s ease-in-out infinite; }
 
         .shop-grid { transition: opacity 0.35s ease, transform 0.35s ease; }
         .shop-grid-hidden { opacity: 0; transform: translateY(12px); pointer-events: none; position: absolute; width: 100%; top: 0; max-height: 0; overflow: hidden; }
@@ -96,9 +97,9 @@
 
                 <!-- Category tabs -->
                 <div class="anim-hero-cta flex justify-center gap-4 mb-8">
-                    <button onclick="switchCategory('gpu')" id="tab-gpu" class="os-switch-btn active py-3 rounded-full text-[11px] font-black uppercase tracking-widest" style="width:185px;text-align:center" data-key="shop-gpu">Videokaardid</button>
-                    <button onclick="switchCategory('cpu')" id="tab-cpu" class="os-switch-btn py-3 rounded-full text-[11px] font-black uppercase tracking-widest" style="width:185px;text-align:center" data-key="shop-cpu">Protsessorid</button>
-                    <button onclick="switchCategory('acc')" id="tab-acc" class="os-switch-btn py-3 rounded-full text-[11px] font-black uppercase tracking-widest" style="width:185px;text-align:center" data-key="shop-acc">Aksessuaarid</button>
+                    <button onclick="switchCategory('gpu')" id="tab-gpu" class="os-switch-btn active py-3 rounded-full text-[11px] font-black uppercase tracking-widest" style="flex:1;max-width:185px;text-align:center" data-key="shop-gpu">Videokaardid</button>
+                    <button onclick="switchCategory('cpu')" id="tab-cpu" class="os-switch-btn py-3 rounded-full text-[11px] font-black uppercase tracking-widest" style="flex:1;max-width:185px;text-align:center" data-key="shop-cpu">Protsessorid</button>
+                    <button onclick="switchCategory('acc')" id="tab-acc" class="os-switch-btn py-3 rounded-full text-[11px] font-black uppercase tracking-widest" style="flex:1;max-width:185px;text-align:center" data-key="shop-acc">Aksessuaarid</button>
                 </div>
 
                 <!-- Brand sub-tabs: GPU (visible by default) -->
