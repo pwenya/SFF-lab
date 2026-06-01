@@ -39,8 +39,8 @@
         @keyframes _pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(0.88); } }
         #tab-acc { position: relative; }
         #tab-acc::after { content: 'NEW'; position: absolute; top: -7px; right: -4px; font-size: 8px; font-weight: 800; letter-spacing: 0.12em; color: #fff; background: #2563eb; padding: 2px 6px; border-radius: 4px; animation: _pulse 2s ease-in-out infinite; }
-        #brand-gpu-nvidia { position: relative; }
-        #brand-gpu-nvidia::after { content: 'NEW'; position: absolute; top: -7px; right: -4px; font-size: 8px; font-weight: 800; letter-spacing: 0.12em; color: #fff; background: #2563eb; padding: 2px 6px; border-radius: 4px; animation: _pulse 2s ease-in-out infinite; }
+        #tab-gpu { position: relative; }
+        #tab-gpu::after { content: 'NEW'; position: absolute; top: -7px; right: -4px; font-size: 8px; font-weight: 800; letter-spacing: 0.12em; color: #fff; background: #2563eb; padding: 2px 6px; border-radius: 4px; animation: _pulse 2s ease-in-out infinite; }
 
         .shop-grid { transition: opacity 0.35s ease, transform 0.35s ease; }
         .shop-grid-hidden { opacity: 0; transform: translateY(12px); pointer-events: none; position: absolute; width: 100%; top: 0; max-height: 0; overflow: hidden; }
@@ -132,14 +132,14 @@
 
                         <!-- Model tabs -->
                         <div class="flex justify-center gap-2 mb-8 flex-wrap">
-                            <button onclick="switchNvidiaModel('5060ti')" id="nvidia-model-5060ti" class="os-switch-btn px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest">RTX 5060 Ti</button>
+                            <button onclick="switchNvidiaModel('5060ti')" id="nvidia-model-5060ti" class="os-switch-btn px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest" style="color:#76b900;border-color:#76b900">RTX 5060 Ti</button>
                             <button onclick="switchNvidiaModel('5070')"   id="nvidia-model-5070"   class="os-switch-btn px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest">RTX 5070</button>
                             <button onclick="switchNvidiaModel('5070ti')" id="nvidia-model-5070ti" class="os-switch-btn px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest">RTX 5070 Ti</button>
-                            <button onclick="switchNvidiaModel('5080')"   id="nvidia-model-5080"   class="os-switch-btn px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest" style="color:#76b900;border-color:#76b900">RTX 5080</button>
+                            <button onclick="switchNvidiaModel('5080')"   id="nvidia-model-5080"   class="os-switch-btn px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest">RTX 5080</button>
                         </div>
 
                         <!-- 5060 Ti -->
-                        <div id="nvidia-grid-5060ti" style="display:none">
+                        <div id="nvidia-grid-5060ti">
                             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch">
 
                                 <div class="flex reveal"><div class="glass-card p-8 rounded-[40px] flex flex-col w-full">
@@ -510,7 +510,7 @@
                         </div>
 
                         <!-- 5080 -->
-                        <div id="nvidia-grid-5080">
+                        <div id="nvidia-grid-5080" style="display:none">
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch">
 
                             <div class="flex reveal">
@@ -1339,7 +1339,7 @@
             showGrid(cat, currentBrands[cat]);
         }
 
-        var currentNvidiaModel = '5080';
+        var currentNvidiaModel = '5060ti';
         var _nvidiaModels = ['5060ti', '5070', '5070ti', '5080'];
 
         function switchNvidiaModel(model) {
