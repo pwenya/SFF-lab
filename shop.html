@@ -214,7 +214,7 @@
                                     <span class="text-blue-500 text-[10px] font-black uppercase tracking-[0.2em] mb-2">AULA · Keyboard</span>
                                     <h3 class="text-base font-extrabold text-white mb-4 leading-snug">F75 PRO Mechanical Keyboard 75%</h3>
                                     <div class="space-y-1.5 text-[11px] font-bold uppercase tracking-[0.1em] mb-4">
-                                        <div class="text-zinc-600">Switch <span class="text-zinc-400">Hot-swap LEOBOG Reaper</span></div>
+                                        <div class="text-zinc-600">Switch <span class="text-zinc-400" id="f75pro-switch">Hot-swap LEOBOG Reaper</span></div>
                                         <div class="text-zinc-600">Connection <span class="text-zinc-400">USB-C · BT5.0 · 2.4GHz</span></div>
                                         <div class="text-zinc-600">Structure <span class="text-zinc-400">Gasket Mount · Flex-Cut PC Plate</span></div>
                                         <div>&nbsp;</div>
@@ -222,10 +222,10 @@
                                     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
                                         <div style="display:flex;gap:8px;align-items:center">
                                             <button onclick="selectF75ProColor('grey')" id="f75pro-grey"
-                                                style="width:22px;height:22px;border-radius:100%;background:#4b5259;border:2px solid white;cursor:pointer;outline:none;flex-shrink:0;transition:border-color 0.2s"
+                                                style="width:22px;height:22px;border-radius:100%;background:#4b5259;border:none;box-shadow:0 0 0 2px #050505, 0 0 0 4px rgba(255,255,255,0.8);cursor:pointer;outline:none;flex-shrink:0"
                                                 title="Graphite"></button>
                                             <button onclick="selectF75ProColor('pink')" id="f75pro-pink"
-                                                style="width:22px;height:22px;border-radius:100%;background:#f9a8d4;border:2px solid transparent;cursor:pointer;outline:none;flex-shrink:0;transition:border-color 0.2s"
+                                                style="width:22px;height:22px;border-radius:100%;background:#f9a8d4;border:none;opacity:0.55;cursor:pointer;outline:none;flex-shrink:0"
                                                 title="Pastel Pink"></button>
                                         </div>
                                         <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#a1a1aa" id="f75pro-color-label">Graphite</span>
@@ -255,16 +255,16 @@
                                     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
                                         <div style="display:flex;gap:8px;align-items:center">
                                             <button onclick="selectF75MaxColor('black')" id="f75max-black"
-                                                style="width:22px;height:22px;border-radius:100%;background:#1c1c1e;border:2px solid white;cursor:pointer;outline:none;flex-shrink:0;transition:border-color 0.2s"
+                                                style="width:22px;height:22px;border-radius:100%;background:#1c1c1e;border:none;box-shadow:0 0 0 2px #050505, 0 0 0 4px rgba(255,255,255,0.8);cursor:pointer;outline:none;flex-shrink:0"
                                                 title="Black"></button>
                                             <button onclick="selectF75MaxColor('caramel')" id="f75max-caramel"
-                                                style="width:22px;height:22px;border-radius:100%;background:#c8935a;border:2px solid rgba(255,255,255,0.15);cursor:pointer;outline:none;flex-shrink:0;transition:border-color 0.2s"
+                                                style="width:22px;height:22px;border-radius:100%;background:#c8935a;border:none;opacity:0.55;cursor:pointer;outline:none;flex-shrink:0"
                                                 title="Caramel Pudding"></button>
                                             <button onclick="selectF75MaxColor('pinkwhite')" id="f75max-pinkwhite"
-                                                style="width:22px;height:22px;border-radius:100%;background:#e88fa5;border:2px solid rgba(255,255,255,0.15);cursor:pointer;outline:none;flex-shrink:0;transition:border-color 0.2s"
+                                                style="width:22px;height:22px;border-radius:100%;background:linear-gradient(135deg,#e88fa5 50%,#f5f5f5 50%);border:none;opacity:0.55;cursor:pointer;outline:none;flex-shrink:0"
                                                 title="Pink White"></button>
                                             <button onclick="selectF75MaxColor('whiteblue')" id="f75max-whiteblue"
-                                                style="width:22px;height:22px;border-radius:100%;background:#7bb3f0;border:2px solid rgba(255,255,255,0.15);cursor:pointer;outline:none;flex-shrink:0;transition:border-color 0.2s"
+                                                style="width:22px;height:22px;border-radius:100%;background:linear-gradient(135deg,#f5f5f5 50%,#7bb3f0 50%);border:none;opacity:0.55;cursor:pointer;outline:none;flex-shrink:0"
                                                 title="White Blue"></button>
                                         </div>
                                         <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#a1a1aa" id="f75max-color-label">Black</span>
@@ -273,6 +273,48 @@
                                         <div id="f75max-price" class="text-3xl font-black tracking-tighter text-white mb-5">139 €</div>
                                         <button onclick="addF75MaxToCart()" class="w-full py-3 rounded-2xl text-xs font-bold uppercase tracking-widest mb-2" style="background:rgba(37,99,235,0.1);color:#60a5fa;border:1px solid rgba(37,99,235,0.3);cursor:pointer" data-key="cart-add">+ Ostukorvi</button>
                                         <button onclick="orderF75Max()" class="w-full py-4 rounded-2xl text-xs font-black uppercase tracking-widest" style="background:#2563eb;color:#fff;border:none;cursor:pointer" data-key="shop-order">Tellida</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- EPOMAKER X AULA F108 PRO -->
+                            <div class="flex reveal">
+                                <div class="glass-card p-8 rounded-[40px] flex flex-col w-full">
+                                    <div class="product-img-wrap">
+                                        <img id="f108pro-img" src="/IMG/ACCESSORIES/EPOMAKER%20X%20AULA%20F108%20PRO/AULAF108PROBLACKWHITEBLUE.png" alt="EPOMAKER X AULA F108 PRO Mechanical Keyboard" style="transition:opacity 0.2s ease;transform:scale(1.2);transform-origin:center center">
+                                    </div>
+                                    <span class="text-blue-500 text-[10px] font-black uppercase tracking-[0.2em] mb-2">AULA · Keyboard</span>
+                                    <h3 class="text-base font-extrabold text-white mb-4 leading-snug">F108 PRO Mechanical Keyboard 100%</h3>
+                                    <div class="space-y-1.5 text-[11px] font-bold uppercase tracking-[0.1em] mb-4">
+                                        <div class="text-zinc-600">Switch <span class="text-zinc-400" id="f108pro-switch">Hot-swap LEOBOG Reaper</span></div>
+                                        <div class="text-zinc-600">Connection <span class="text-zinc-400">USB-C · BT5.0 · 2.4GHz</span></div>
+                                        <div class="text-zinc-600">Structure <span class="text-zinc-400">Gasket Mount</span></div>
+                                        <div class="text-zinc-600">Key Feature <span class="text-zinc-400">LCD Display</span></div>
+                                    </div>
+                                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+                                        <div style="display:flex;gap:8px;align-items:center">
+                                            <button onclick="selectF108ProColor('blackwhiteblue')" id="f108pro-blackwhiteblue"
+                                                style="width:22px;height:22px;border-radius:100%;background:linear-gradient(135deg,#1a1a1a 33%,#e0e0e0 33% 66%,#4a80c0 66%);border:none;box-shadow:0 0 0 2px #050505, 0 0 0 4px rgba(255,255,255,0.8);cursor:pointer;outline:none;flex-shrink:0"
+                                                title="Black White Blue"></button>
+                                            <button onclick="selectF108ProColor('blackpink')" id="f108pro-blackpink"
+                                                style="width:22px;height:22px;border-radius:100%;background:linear-gradient(135deg,#1a1a1a 50%,#c06080 50%);border:none;opacity:0.55;cursor:pointer;outline:none;flex-shrink:0"
+                                                title="Black Pink"></button>
+                                            <button onclick="selectF108ProColor('gradientgray')" id="f108pro-gradientgray"
+                                                style="width:22px;height:22px;border-radius:100%;background:#606060;border:none;opacity:0.55;cursor:pointer;outline:none;flex-shrink:0"
+                                                title="Gradient Gray"></button>
+                                            <button onclick="selectF108ProColor('grayyellow')" id="f108pro-grayyellow"
+                                                style="width:22px;height:22px;border-radius:100%;background:linear-gradient(135deg,#505050 50%,#c8a830 50%);border:none;opacity:0.55;cursor:pointer;outline:none;flex-shrink:0"
+                                                title="Gray Yellow"></button>
+                                            <button onclick="selectF108ProColor('lightblue')" id="f108pro-lightblue"
+                                                style="width:22px;height:22px;border-radius:100%;background:#b8d8f0;border:none;opacity:0.55;cursor:pointer;outline:none;flex-shrink:0"
+                                                title="Light Blue"></button>
+                                        </div>
+                                        <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#a1a1aa" id="f108pro-color-label">Black White Blue</span>
+                                    </div>
+                                    <div class="mt-auto">
+                                        <div id="f108pro-price" class="text-3xl font-black tracking-tighter text-white mb-5">159 €</div>
+                                        <button onclick="addF108ProToCart()" class="w-full py-3 rounded-2xl text-xs font-bold uppercase tracking-widest mb-2" style="background:rgba(37,99,235,0.1);color:#60a5fa;border:1px solid rgba(37,99,235,0.3);cursor:pointer" data-key="cart-add">+ Ostukorvi</button>
+                                        <button onclick="orderF108Pro()" class="w-full py-4 rounded-2xl text-xs font-black uppercase tracking-widest" style="background:#2563eb;color:#fff;border:none;cursor:pointer" data-key="shop-order">Tellida</button>
                                     </div>
                                 </div>
                             </div>
@@ -294,19 +336,19 @@
                                     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
                                         <div style="display:flex;gap:8px;align-items:center">
                                             <button onclick="selectAce68Color('cyberblack')" id="ace68-cyberblack"
-                                                style="width:22px;height:22px;border-radius:100%;background:#1c1c1e;border:2px solid white;cursor:pointer;outline:none;flex-shrink:0;transition:border-color 0.2s"
+                                                style="width:22px;height:22px;border-radius:100%;background:#1c1c1e;border:none;box-shadow:0 0 0 2px #050505, 0 0 0 4px rgba(255,255,255,0.8);cursor:pointer;outline:none;flex-shrink:0"
                                                 title="Cyber Black"></button>
                                             <button onclick="selectAce68Color('galaxyorange')" id="ace68-galaxyorange"
-                                                style="width:22px;height:22px;border-radius:100%;background:#f97316;border:2px solid rgba(255,255,255,0.15);cursor:pointer;outline:none;flex-shrink:0;transition:border-color 0.2s"
+                                                style="width:22px;height:22px;border-radius:100%;background:#f97316;border:none;opacity:0.55;cursor:pointer;outline:none;flex-shrink:0"
                                                 title="Galaxy Orange"></button>
                                             <button onclick="selectAce68Color('berryred')" id="ace68-berryred"
-                                                style="width:22px;height:22px;border-radius:100%;background:#ef4444;border:2px solid rgba(255,255,255,0.15);cursor:pointer;outline:none;flex-shrink:0;transition:border-color 0.2s"
+                                                style="width:22px;height:22px;border-radius:100%;background:#ef4444;border:none;opacity:0.55;cursor:pointer;outline:none;flex-shrink:0"
                                                 title="Berry Red"></button>
                                             <button onclick="selectAce68Color('novawhite')" id="ace68-novawhite"
-                                                style="width:22px;height:22px;border-radius:100%;background:#e0e0e0;border:2px solid rgba(255,255,255,0.15);cursor:pointer;outline:none;flex-shrink:0;transition:border-color 0.2s"
+                                                style="width:22px;height:22px;border-radius:100%;background:#e0e0e0;border:none;opacity:0.55;cursor:pointer;outline:none;flex-shrink:0"
                                                 title="Nova White"></button>
                                             <button onclick="selectAce68Color('peachypink')" id="ace68-peachypink"
-                                                style="width:22px;height:22px;border-radius:100%;background:#f9a8d4;border:2px solid rgba(255,255,255,0.15);cursor:pointer;outline:none;flex-shrink:0;transition:border-color 0.2s"
+                                                style="width:22px;height:22px;border-radius:100%;background:#f9a8d4;border:none;opacity:0.55;cursor:pointer;outline:none;flex-shrink:0"
                                                 title="Peachy Pink"></button>
                                         </div>
                                         <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#a1a1aa" id="ace68-color-label">Cyber Black</span>
@@ -325,14 +367,14 @@
                     <!-- Accessories · Mice -->
                     <div id="grid-acc-mice" class="shop-grid shop-grid-hidden">
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch">
-                            <!-- MCHOSE A5 V3 -->
+                            <!-- A5 V3 -->
                             <div class="flex reveal">
                                 <div class="glass-card p-8 rounded-[40px] flex flex-col w-full">
                                     <div class="product-img-wrap">
-                                        <img id="a5v3-img" src="/IMG/ACCESSORIES/A5V3BLACK.png" alt="MCHOSE A5 V3 Mouse">
+                                        <img id="a5v3-img" src="/IMG/ACCESSORIES/A5V3BLACK.png" alt="A5 V3 Mouse">
                                     </div>
                                     <span class="text-blue-500 text-[10px] font-black uppercase tracking-[0.2em] mb-2">MCHOSE · Mouse</span>
-                                    <h3 class="text-base font-extrabold text-white mb-4 leading-snug">MCHOSE A5 V3</h3>
+                                    <h3 class="text-base font-extrabold text-white mb-4 leading-snug">A5 V3</h3>
                                     <div class="space-y-1.5 text-[11px] font-bold uppercase tracking-[0.1em] mb-4">
                                         <div class="text-zinc-600">Sensor <span class="text-zinc-400">PAW3395</span></div>
                                         <div class="text-zinc-600">Polling <span class="text-zinc-400">8000 Hz</span></div>
@@ -342,16 +384,16 @@
                                     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
                                         <div style="display:flex;gap:8px;align-items:center">
                                             <button onclick="selectA5V3Color('black')" id="a5v3-black"
-                                                style="width:22px;height:22px;border-radius:100%;background:#1c1c1e;border:2px solid white;cursor:pointer;outline:none;flex-shrink:0;transition:border-color 0.2s"
+                                                style="width:22px;height:22px;border-radius:100%;background:#1c1c1e;border:none;box-shadow:0 0 0 2px #050505, 0 0 0 4px rgba(255,255,255,0.8);cursor:pointer;outline:none;flex-shrink:0"
                                                 title="Black"></button>
                                             <button onclick="selectA5V3Color('white')" id="a5v3-white"
-                                                style="width:22px;height:22px;border-radius:100%;background:#ffffff;border:2px solid rgba(255,255,255,0.15);cursor:pointer;outline:none;flex-shrink:0;transition:border-color 0.2s"
+                                                style="width:22px;height:22px;border-radius:100%;background:#ffffff;border:none;opacity:0.55;cursor:pointer;outline:none;flex-shrink:0"
                                                 title="White"></button>
                                             <button onclick="selectA5V3Color('berryred')" id="a5v3-berryred"
-                                                style="width:22px;height:22px;border-radius:100%;background:#ef4444;border:2px solid rgba(255,255,255,0.15);cursor:pointer;outline:none;flex-shrink:0;transition:border-color 0.2s"
+                                                style="width:22px;height:22px;border-radius:100%;background:#ef4444;border:none;opacity:0.55;cursor:pointer;outline:none;flex-shrink:0"
                                                 title="Berry Red"></button>
                                             <button onclick="selectA5V3Color('blue')" id="a5v3-blue"
-                                                style="width:22px;height:22px;border-radius:100%;background:#3b82f6;border:2px solid rgba(255,255,255,0.15);cursor:pointer;outline:none;flex-shrink:0;transition:border-color 0.2s"
+                                                style="width:22px;height:22px;border-radius:100%;background:#3b82f6;border:none;opacity:0.55;cursor:pointer;outline:none;flex-shrink:0"
                                                 title="Blue"></button>
                                         </div>
                                         <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#a1a1aa" id="a5v3-color-label">Black</span>
@@ -371,7 +413,7 @@
                                         <img id="ax5v2-img" src="/IMG/ACCESSORIES/AX5V2PINK.png" alt="MCHOSE AX5 V2 Mouse" style="transition:opacity 0.2s ease;transform-origin:center center">
                                     </div>
                                     <span class="text-blue-500 text-[10px] font-black uppercase tracking-[0.2em] mb-2">MCHOSE · Mouse</span>
-                                    <h3 class="text-base font-extrabold text-white mb-4 leading-snug">MCHOSE AX5 V2 Magnesium alloy</h3>
+                                    <h3 class="text-base font-extrabold text-white mb-4 leading-snug">AX5 V2 Magnesium alloy</h3>
                                     <div class="space-y-1.5 text-[11px] font-bold uppercase tracking-[0.1em] mb-4">
                                         <div class="text-zinc-600">Sensor <span class="text-zinc-400">PAW3950</span></div>
                                         <div class="text-zinc-600">Polling <span class="text-zinc-400">Dual 8000 Hz</span></div>
@@ -381,10 +423,10 @@
                                     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
                                         <div style="display:flex;gap:8px;align-items:center">
                                             <button onclick="selectAX5V2Color('pink')" id="ax5v2-pink"
-                                                style="width:22px;height:22px;border-radius:100%;background:#f9a8d4;border:2px solid white;cursor:pointer;outline:none;flex-shrink:0;transition:border-color 0.2s"
+                                                style="width:22px;height:22px;border-radius:100%;background:#f9a8d4;border:none;box-shadow:0 0 0 2px #050505, 0 0 0 4px rgba(255,255,255,0.8);cursor:pointer;outline:none;flex-shrink:0"
                                                 title="Pink"></button>
                                             <button onclick="selectAX5V2Color('white')" id="ax5v2-white"
-                                                style="width:22px;height:22px;border-radius:100%;background:#ffffff;border:2px solid rgba(255,255,255,0.15);cursor:pointer;outline:none;flex-shrink:0;transition:border-color 0.2s"
+                                                style="width:22px;height:22px;border-radius:100%;background:#ffffff;border:none;opacity:0.55;cursor:pointer;outline:none;flex-shrink:0"
                                                 title="White"></button>
                                         </div>
                                         <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#a1a1aa" id="ax5v2-color-label">Pink</span>
@@ -404,7 +446,7 @@
                                         <img id="k7ultra-img" src="/IMG/ACCESSORIES/7ULTRAREDGOLD.png" alt="MCHOSE K7 Ultra Mouse" style="transition:opacity 0.2s ease">
                                     </div>
                                     <span class="text-blue-500 text-[10px] font-black uppercase tracking-[0.2em] mb-2">MCHOSE · Mouse</span>
-                                    <h3 class="text-base font-extrabold text-white mb-4 leading-snug">MCHOSE K7 Ultra + Charging Dock</h3>
+                                    <h3 class="text-base font-extrabold text-white mb-4 leading-snug">K7 Ultra + Charging Dock</h3>
                                     <div class="space-y-1.5 text-[11px] font-bold uppercase tracking-[0.1em] mb-4">
                                         <div class="text-zinc-600">Sensor <span class="text-zinc-400">PAW3950</span></div>
                                         <div class="text-zinc-600">Polling <span class="text-zinc-400">8000 Hz</span></div>
@@ -414,16 +456,16 @@
                                     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
                                         <div style="display:flex;gap:8px;align-items:center">
                                             <button onclick="selectK7UltraColor('redgold')" id="k7ultra-redgold"
-                                                style="width:22px;height:22px;border-radius:100%;background:#ef4444;border:2px solid white;cursor:pointer;outline:none;flex-shrink:0;transition:border-color 0.2s"
+                                                style="width:22px;height:22px;border-radius:100%;background:linear-gradient(135deg,#e03030 50%,#c8a830 50%);border:none;box-shadow:0 0 0 2px #050505, 0 0 0 4px rgba(255,255,255,0.8);cursor:pointer;outline:none;flex-shrink:0"
                                                 title="Red Gold"></button>
                                             <button onclick="selectK7UltraColor('rosered')" id="k7ultra-rosered"
-                                                style="width:22px;height:22px;border-radius:100%;background:#f9a8d4;border:2px solid rgba(255,255,255,0.15);cursor:pointer;outline:none;flex-shrink:0;transition:border-color 0.2s"
+                                                style="width:22px;height:22px;border-radius:100%;background:linear-gradient(135deg,#f9a8d4 50%,#e03030 50%);border:none;opacity:0.55;cursor:pointer;outline:none;flex-shrink:0"
                                                 title="Rose Red"></button>
                                             <button onclick="selectK7UltraColor('whitegold')" id="k7ultra-whitegold"
-                                                style="width:22px;height:22px;border-radius:100%;background:#e0e0e0;border:2px solid rgba(255,255,255,0.15);cursor:pointer;outline:none;flex-shrink:0;transition:border-color 0.2s"
+                                                style="width:22px;height:22px;border-radius:100%;background:linear-gradient(135deg,#f0f0f0 50%,#c8a830 50%);border:none;opacity:0.55;cursor:pointer;outline:none;flex-shrink:0"
                                                 title="White Gold"></button>
                                             <button onclick="selectK7UltraColor('blackgold')" id="k7ultra-blackgold"
-                                                style="width:22px;height:22px;border-radius:100%;background:#1c1c1e;border:2px solid rgba(255,255,255,0.15);cursor:pointer;outline:none;flex-shrink:0;transition:border-color 0.2s"
+                                                style="width:22px;height:22px;border-radius:100%;background:linear-gradient(135deg,#1c1c1e 50%,#c8a830 50%);border:none;opacity:0.55;cursor:pointer;outline:none;flex-shrink:0"
                                                 title="Black Gold"></button>
                                         </div>
                                         <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#a1a1aa" id="k7ultra-color-label">Red Gold</span>
@@ -638,10 +680,14 @@
 
         function selectF75ProColor(color) {
             _f75proColor = color;
-            document.getElementById('f75pro-grey').style.borderColor = (color === 'grey') ? 'white' : 'transparent';
-            document.getElementById('f75pro-pink').style.borderColor = (color === 'pink') ? 'white' : 'transparent';
+            ['grey','pink'].forEach(function(k) {
+                var el = document.getElementById('f75pro-' + k);
+                el.style.opacity   = (k === color) ? '1' : '0.55';
+                el.style.boxShadow = (k === color) ? '0 0 0 2px #050505, 0 0 0 4px rgba(255,255,255,0.8)' : 'none';
+            });
             document.getElementById('f75pro-color-label').textContent = _f75proColorNames[color];
             document.getElementById('f75pro-price').textContent = _f75proPrices[color] + ' €';
+            document.getElementById('f75pro-switch').textContent = (color === 'pink') ? 'Hot-swap LEOBOG Reaper Silent' : 'Hot-swap LEOBOG Reaper';
             var img = document.getElementById('f75pro-img');
             img.style.opacity = '0';
             setTimeout(function() {
@@ -665,13 +711,76 @@
         function orderF75Pro() {
             var name  = _f75proColorNames[_f75proColor];
             var price = _f75proPrices[_f75proColor];
+            var sw    = (_f75proColor === 'pink') ? 'Hot-swap LEOBOG Reaper Silent' : 'Hot-swap LEOBOG Reaper';
             openShopModal({
                 name:         'AULA F75 PRO Mechanical Keyboard 75% — ' + name,
                 brand:        'AULA · Keyboard',
                 priceDisplay: price + ' €',
                 price:        price,
                 orderType:    'accessory',
-                specs:        [{ l: 'Color', v: name }, { l: 'Switch', v: 'Hot-swap LEOBOG Reaper' }, { l: 'Connection', v: 'USB-C · BT5.0 · 2.4GHz' }]
+                specs:        [{ l: 'Color', v: name }, { l: 'Switch', v: sw }, { l: 'Connection', v: 'USB-C · BT5.0 · 2.4GHz' }]
+            });
+        }
+
+        var _f108proColor = 'blackwhiteblue';
+        var _f108proColorNames = {
+            blackwhiteblue: 'Black White Blue',
+            blackpink:      'Black Pink',
+            gradientgray:   'Gradient Gray',
+            grayyellow:     'Gray Yellow',
+            lightblue:      'Light Blue'
+        };
+        var _f108proSwitches = {
+            blackwhiteblue: 'Hot-swap LEOBOG Reaper',
+            blackpink:      'Hot-swap LEOBOG Greywood V3',
+            gradientgray:   'Hot-swap LEOBOG Reaper',
+            grayyellow:     'Hot-swap LEOBOG Reaper',
+            lightblue:      'Hot-swap LEOBOG Reaper'
+        };
+        var _f108proImages = {
+            blackwhiteblue: '/IMG/ACCESSORIES/EPOMAKER%20X%20AULA%20F108%20PRO/AULAF108PROBLACKWHITEBLUE.png',
+            blackpink:      '/IMG/ACCESSORIES/EPOMAKER%20X%20AULA%20F108%20PRO/AULAF108PROGRADIENTBLACKPINK.png',
+            gradientgray:   '/IMG/ACCESSORIES/EPOMAKER%20X%20AULA%20F108%20PRO/AULAF108PROGRADIENTGRAY.png',
+            grayyellow:     '/IMG/ACCESSORIES/EPOMAKER%20X%20AULA%20F108%20PRO/AULAF108PROGRAYYELLOW.png',
+            lightblue:      '/IMG/ACCESSORIES/EPOMAKER%20X%20AULA%20F108%20PRO/AULAF108PROLIGHTBLUE.png'
+        };
+        var F108_PRO_PRICE = 159;
+        var _f108proColorKeys = ['blackwhiteblue', 'blackpink', 'gradientgray', 'grayyellow', 'lightblue'];
+
+        function selectF108ProColor(color) {
+            _f108proColor = color;
+            _f108proColorKeys.forEach(function(k) {
+                var el = document.getElementById('f108pro-' + k);
+                el.style.opacity   = (k === color) ? '1' : '0.55';
+                el.style.boxShadow = (k === color) ? '0 0 0 2px #050505, 0 0 0 4px rgba(255,255,255,0.8)' : 'none';
+            });
+            document.getElementById('f108pro-color-label').textContent = _f108proColorNames[color];
+            document.getElementById('f108pro-switch').textContent = _f108proSwitches[color];
+            var img = document.getElementById('f108pro-img');
+            img.style.opacity = '0';
+            setTimeout(function() { img.src = _f108proImages[color]; img.style.opacity = '1'; }, 150);
+        }
+
+        function addF108ProToCart() {
+            var name = _f108proColorNames[_f108proColor];
+            addToCart({
+                title:    'EPOMAKER X AULA F108 PRO Mechanical Keyboard 100% — ' + name,
+                brand:    'AULA',
+                price:    F108_PRO_PRICE + ' €',
+                priceNum: F108_PRO_PRICE,
+                specs:    [{ l: 'Color', v: name }, { l: 'Switch', v: _f108proSwitches[_f108proColor] }, { l: 'Connection', v: 'USB-C · BT5.0 · 2.4GHz' }]
+            });
+        }
+
+        function orderF108Pro() {
+            var name = _f108proColorNames[_f108proColor];
+            openShopModal({
+                name:         'EPOMAKER X AULA F108 PRO Mechanical Keyboard 100% — ' + name,
+                brand:        'AULA · Keyboard',
+                priceDisplay: F108_PRO_PRICE + ' €',
+                price:        F108_PRO_PRICE,
+                orderType:    'accessory',
+                specs:        [{ l: 'Color', v: name }, { l: 'Switch', v: _f108proSwitches[_f108proColor] }, { l: 'Connection', v: 'USB-C · BT5.0 · 2.4GHz' }, { l: 'Structure', v: 'Gasket Mount' }, { l: 'Key Feature', v: 'LCD Display' }]
             });
         }
 
@@ -714,7 +823,7 @@
             _f75maxColor = color;
             _f75maxColorKeys.forEach(function(c) {
                 var el = document.getElementById('f75max-' + c);
-                if (el) el.style.borderColor = (c === color) ? 'white' : 'rgba(255,255,255,0.15)';
+                if (el) { el.style.opacity = (c === color) ? '1' : '0.55'; el.style.boxShadow = (c === color) ? '0 0 0 2px #050505, 0 0 0 4px rgba(255,255,255,0.8)' : 'none'; }
             });
             document.getElementById('f75max-color-label').textContent = _f75maxColorNames[color];
             var img = document.getElementById('f75max-img');
@@ -729,12 +838,12 @@
 
         function addK7UltraToCart() {
             var name = _k7ultraColorNames[_k7ultraColor];
-            addToCart({ title: 'MCHOSE K7 Ultra + Charging Dock — ' + name, brand: 'MCHOSE', price: K7_ULTRA_PRICE + ' €', priceNum: K7_ULTRA_PRICE,
+            addToCart({ title: 'K7 Ultra + Charging Dock — ' + name, brand: 'MCHOSE', price: K7_ULTRA_PRICE + ' €', priceNum: K7_ULTRA_PRICE,
                 specs: [{ l: 'Color', v: name }, { l: 'Sensor', v: 'PAW3950' }, { l: 'Polling', v: '8000 Hz' }, { l: 'Weight', v: '59g' }] });
         }
         function orderK7Ultra() {
             var name = _k7ultraColorNames[_k7ultraColor];
-            openShopModal({ name: 'MCHOSE K7 Ultra + Charging Dock — ' + name, brand: 'MCHOSE · Mouse', priceDisplay: K7_ULTRA_PRICE + ' €', price: K7_ULTRA_PRICE, orderType: 'accessory',
+            openShopModal({ name: 'K7 Ultra + Charging Dock — ' + name, brand: 'MCHOSE · Mouse', priceDisplay: K7_ULTRA_PRICE + ' €', price: K7_ULTRA_PRICE, orderType: 'accessory',
                 specs: [{ l: 'Color', v: name }, { l: 'Sensor', v: 'PAW3950' }, { l: 'Polling', v: '8000 Hz' }, { l: 'Weight', v: '59g' }] });
         }
 
@@ -752,7 +861,7 @@
             _k7ultraColor = color;
             _k7ultraColorKeys.forEach(function(c) {
                 var el = document.getElementById('k7ultra-' + c);
-                if (el) el.style.borderColor = (c === color) ? 'white' : 'rgba(255,255,255,0.15)';
+                if (el) { el.style.opacity = (c === color) ? '1' : '0.55'; el.style.boxShadow = (c === color) ? '0 0 0 2px #050505, 0 0 0 4px rgba(255,255,255,0.8)' : 'none'; }
             });
             document.getElementById('k7ultra-color-label').textContent = _k7ultraColorNames[color];
             var img = document.getElementById('k7ultra-img');
@@ -790,7 +899,7 @@
             _ace68Color = color;
             _ace68ColorKeys.forEach(function(c) {
                 var el = document.getElementById('ace68-' + c);
-                if (el) el.style.borderColor = (c === color) ? 'white' : 'rgba(255,255,255,0.15)';
+                if (el) { el.style.opacity = (c === color) ? '1' : '0.55'; el.style.boxShadow = (c === color) ? '0 0 0 2px #050505, 0 0 0 4px rgba(255,255,255,0.8)' : 'none'; }
             });
             document.getElementById('ace68-color-label').textContent = _ace68ColorNames[color];
             var img = document.getElementById('ace68-img');
@@ -805,12 +914,12 @@
 
         function addA5V3ToCart() {
             var name = _a5v3ColorNames[_a5v3Color];
-            addToCart({ title: 'MCHOSE A5 V3 — ' + name, brand: 'MCHOSE', price: A5V3_PRICE + ' €', priceNum: A5V3_PRICE,
+            addToCart({ title: 'A5 V3 — ' + name, brand: 'MCHOSE', price: A5V3_PRICE + ' €', priceNum: A5V3_PRICE,
                 specs: [{ l: 'Color', v: name }, { l: 'Sensor', v: 'PAW3395' }, { l: 'Polling', v: '8000 Hz' }, { l: 'Weight', v: '56g' }] });
         }
         function orderA5V3() {
             var name = _a5v3ColorNames[_a5v3Color];
-            openShopModal({ name: 'MCHOSE A5 V3 — ' + name, brand: 'MCHOSE · Mouse', priceDisplay: A5V3_PRICE + ' €', price: A5V3_PRICE, orderType: 'accessory',
+            openShopModal({ name: 'A5 V3 — ' + name, brand: 'MCHOSE · Mouse', priceDisplay: A5V3_PRICE + ' €', price: A5V3_PRICE, orderType: 'accessory',
                 specs: [{ l: 'Color', v: name }, { l: 'Sensor', v: 'PAW3395' }, { l: 'Polling', v: '8000 Hz' }, { l: 'Weight', v: '56g' }] });
         }
 
@@ -828,7 +937,7 @@
             _a5v3Color = color;
             _a5v3ColorKeys.forEach(function(c) {
                 var el = document.getElementById('a5v3-' + c);
-                if (el) el.style.borderColor = (c === color) ? 'white' : 'rgba(255,255,255,0.15)';
+                if (el) { el.style.opacity = (c === color) ? '1' : '0.55'; el.style.boxShadow = (c === color) ? '0 0 0 2px #050505, 0 0 0 4px rgba(255,255,255,0.8)' : 'none'; }
             });
             document.getElementById('a5v3-color-label').textContent = _a5v3ColorNames[color];
             var img = document.getElementById('a5v3-img');
@@ -843,12 +952,12 @@
 
         function addAX5V2ToCart() {
             var name = _ax5v2ColorNames[_ax5v2Color];
-            addToCart({ title: 'MCHOSE AX5 V2 Magnesium alloy — ' + name, brand: 'MCHOSE', price: AX5V2_PRICE + ' €', priceNum: AX5V2_PRICE,
+            addToCart({ title: 'AX5 V2 Magnesium alloy — ' + name, brand: 'MCHOSE', price: AX5V2_PRICE + ' €', priceNum: AX5V2_PRICE,
                 specs: [{ l: 'Color', v: name }, { l: 'Sensor', v: 'PAW3950' }, { l: 'Polling', v: 'Dual 8000 Hz' }, { l: 'Weight', v: '54g' }] });
         }
         function orderAX5V2() {
             var name = _ax5v2ColorNames[_ax5v2Color];
-            openShopModal({ name: 'MCHOSE AX5 V2 Magnesium alloy — ' + name, brand: 'MCHOSE · Mouse', priceDisplay: AX5V2_PRICE + ' €', price: AX5V2_PRICE, orderType: 'accessory',
+            openShopModal({ name: 'AX5 V2 Magnesium alloy — ' + name, brand: 'MCHOSE · Mouse', priceDisplay: AX5V2_PRICE + ' €', price: AX5V2_PRICE, orderType: 'accessory',
                 specs: [{ l: 'Color', v: name }, { l: 'Sensor', v: 'PAW3950' }, { l: 'Polling', v: 'Dual 8000 Hz' }, { l: 'Weight', v: '54g' }] });
         }
 
@@ -864,7 +973,7 @@
             _ax5v2Color = color;
             _ax5v2ColorKeys.forEach(function(c) {
                 var el = document.getElementById('ax5v2-' + c);
-                if (el) el.style.borderColor = (c === color) ? 'white' : 'rgba(255,255,255,0.15)';
+                if (el) { el.style.opacity = (c === color) ? '1' : '0.55'; el.style.boxShadow = (c === color) ? '0 0 0 2px #050505, 0 0 0 4px rgba(255,255,255,0.8)' : 'none'; }
             });
             document.getElementById('ax5v2-color-label').textContent = _ax5v2ColorNames[color];
             var img = document.getElementById('ax5v2-img');
