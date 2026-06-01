@@ -52,7 +52,7 @@ It also defines these globals used by all pages:
 **Rule: any site-wide UI (footer, banners, etc.) belongs in nav.js — never duplicate it in individual HTML files.**
 
 ### Nav links
-- Desktop order: Shop (DEMO badge) · Eksklusiiv · Paketid — inside `class="hidden min-[900px]:flex"`
+- Desktop order: Shop · Eksklusiiv · Paketid — inside `class="hidden min-[900px]:flex"`
 - Mobile: Shop and Eksklusiiv links added separately with `class="min-[900px]:hidden flex ..."` before the desktop nav div
 - Pricing links to `https://sfflab.ee/#pricing` (absolute URL)
 - Logo links to `/` (not `index.html`) — Vercel serves index.html at `/` but `index.html` as a path returns 404
@@ -129,7 +129,10 @@ The site is deployed on Vercel at `https://sfflab.ee`. Use **root-relative paths
 - **NVIDIA/AMD GPU toggle:** shown next to the GPU label when Windows OS is active (`selectedOS === 'windows'` or `?os=windows` URL param), hidden in dualboot mode. IDs: `nvidia-toggle-wrap`, `nvidia-track`, `nvidia-knob`. State: `var nvidiaMode = false`. Toggle function: `toggleNvidiaMode()` — calls `_updateNvidiaVisual()`, `_updateGpuButtons()`, `updatePrice()`. Visual: red (`#ef4444`) = AMD (default/left), green (`#76b900`) = NVIDIA (right).
   - NVIDIA GPU labels: `NVIDIA GeForce RTX 5060 Ti 16GB OC`, `NVIDIA GeForce RTX 5070 Ti 16GB OC`
   - NVIDIA price extra (`NVIDIA_GPU_EXTRA`): 9060xt +170€, 9070xt16 +300€ — applied on top of AMD GPU price in ALL modes (including core/plus), stored separately and added to total via `nvExtra` variable.
+- **Intel/AMD CPU toggle:** shown next to the CPU label when Windows OS is active, hidden in dualboot. IDs: `intel-toggle-wrap`, `intel-track`, `intel-knob`. State: `var intelMode = false`. Toggle function: `toggleIntelMode()`. Visual: red (`#ef4444`) = AMD (default/left), blue (`#0071c5`) = Intel (right). Intel labels: `INTEL_CPU_LABELS = { '7500f': 'Intel Core i5-14400F', '7500x3d': 'Intel Core i5-14600KF' }`. CPU prices are unchanged (+0/+65), only display names switch.
 - **Win11 Pro toggle:** inline toggle inside the OS-steamos button (replaces "18 000+ mängu" label). IDs: `win11-track`, `win11-knob`. State: `var win11Enabled = true` (ON by default). `toggleWin11()` is a no-op in dualboot mode. Adds +79€ when ON. Activated visually via `_updateWin11Visual()`. Auto-enabled when URL param `?os=windows` is present.
+- **Custom request modal:** button "Tahad teisi komponente?" next to "Mis sisaldub hinnas?". Opens form with Name/Email/Phone/Textarea. Submits to `/api/contact` with current config snapshot appended to message. IDs: `custom-req-modal`, `crm-form`, `crm-success`. Functions: `openCustomReqModal()`, `closeCustomReqModal()`, `submitCustomReq()`.
+- **Case photo counts:** `PHOTO_COUNTS = { 'Mood': 3, 'Terra': 3, 'Ridge': 2 }`. Arrows cycle up to the correct max per case model. `selectCaseModel` resets `currentPhotoNum = 1` on switch.
 - **Dual Boot mode (`mode=dualboot`):**
   - URL from index: `configurator.html?base=2199&mode=dualboot`
   - All hardware selectable: CPU, GPU, RAM, PSU (defaults: 7500F, 9060XT 16GB OC, 16GB, 650W)
@@ -149,6 +152,7 @@ The site is deployed on Vercel at `https://sfflab.ee`. Use **root-relative paths
 - Cases in order: Terra, Ridge, Mood, **Tetra R** (Pine). Tetra R is last.
 - **Tetra R Pine** — single color (pine `#4a5e3c`), 3 photos (`TetraPine.1–3.png`), volume ~12.9 L. Order buttons are disabled (`opacity:0.4;pointer-events:none`).
 - **Per-image sizing** via `sizes` array in `config`: `tetra: { ..., sizes: [127, 85, 68] }`. `nav()` reads `m.sizes[m.idx]` and applies `img.style.maxWidth/maxHeight` on each swipe. First image also has inline `style="max-width:127%;max-height:127%"` for the initial render.
+- **Configurator URLs use correct base params:** Baas `base=2199`, Baas+ `base=2799`, Custom `base=2199` — both in static `href` attributes and in the dynamic JS `updateOrderButtons()` function.
 
 ### index.html
 - Text column has `min-w-0` to prevent long EN words (e.g. "STRONGER.") from compressing the adjacent showcase column via flex min-width.
@@ -161,33 +165,63 @@ The site is deployed on Vercel at `https://sfflab.ee`. Use **root-relative paths
 - **Current prices (SteamOS):** Baas 2199 €, Baas+ 2799 €, Custom from 2199 €
 - **Windows section buttons are disabled** (`<button disabled>`) for all three cards — Windows ordering not yet available.
 - **Dual Boot Edition button is disabled** — test configuration, shows disclaimer text via `data-key="db-desc"` (red, bold) instead of description.
-- Configurator links use `?base=` param: Baas `base=2250`, Baas+ `base=2850`, Custom/Dual Boot `base=2250`.
+- Configurator links use `?base=` param: Baas `base=2199`, Baas+ `base=2799`, Custom/Dual Boot `base=2199`.
 
 ### shop.html
 - Three category tabs: GPU / CPU / Accessories (`shop-gpu` / `shop-cpu` / `shop-acc`).
-- GPU and CPU have brand sub-tabs; Accessories has no sub-tabs — `switchCategory('acc')` calls `showGrid('acc', 'aula')` directly.
+- GPU and CPU have brand sub-tabs; Accessories has Keyboards / Mice sub-tabs (`switchBrand('acc','keyboards')` / `switchBrand('acc','mice')`).
 - Brand sub-tab active colors: NVIDIA `#76b900`, AMD `#ed1c24`, Intel `#0071c5` — applied via inline `style`, not `.os-switch-btn.active` class, to avoid class override.
-- Grid visibility toggle uses CSS classes `shop-grid-visible` / `shop-grid-hidden` (same pattern as `os-grid-*` in index.html). `shop-grid-hidden` uses `position:absolute;width:100%` to keep layout stable.
+- Grid visibility toggle uses CSS classes `shop-grid-visible` / `shop-grid-hidden`. `shop-grid-hidden` uses `position:absolute;width:100%` to keep layout stable.
 - `brands-cpu` div and hidden grids use `style="display:none"` — **not** Tailwind `hidden` — because Tailwind CDN may generate `.flex` after `.hidden`, making elements always visible.
-- On init, an IIFE applies brand button colors only — it does NOT call `showGrid()`, so the default `grid-gpu-nvidia` (which starts with class `shop-grid-visible` in HTML) stays visible.
-- `showGrid` list includes: `grid-gpu-nvidia`, `grid-gpu-amd`, `grid-cpu-intel`, `grid-cpu-amd`, `grid-acc-aula`.
-- Products currently listed: PNY RTX 5080 16GB OC, PNY RTX 5080 16GB ARGB OC. AMD GPU / Intel CPU / AMD CPU show "Coming Soon" placeholders.
-- **Pricing and order buttons are currently disabled** on all NVIDIA cards: price replaced with `tulevikus` (same text for all languages, zinc-600 color), both "add to cart" and "Tellida" buttons have `opacity:0.4;pointer-events:none` and no `onclick`.
-- **Accessories tab (`grid-acc-aula`):** keyboard and mouse cards in `grid-acc-aula`.
-  - **AULA F75 PRO Mechanical Keyboard 75%** — active for sale. Color picker: Graphite `#4b5259` (119 €) / Pastel Pink `#f9a8d4` (129 €). JS state: `_f75proColor`, `_f75proPrices`, `_f75proColorNames`. Functions: `selectF75ProColor(color)`, `addF75ProToCart()`, `orderF75Pro()`.
-  - Specs shown: Switch `Hot-swap LEOBOG Reaper`, Connection `USB-C · BT5.0 · 2.4GHz`.
-  - **AULA F75 MAX Mechanical Keyboard 75%** — disabled (same specs shown, buttons `opacity:0.4;pointer-events:none`).
-  - **MCHOSE K7 Ultra + Charging Dock** — mouse card. Full product name includes "+ Charging Dock" everywhere (card title, `addToCart`, `openShopModal`).
-  - **MCHOSE A5 V3** — mouse card.
-  - **MCHOSE AX5 V2 Magnesium alloy** — mouse card.
-- **Order modal:** two-step — step 1 shows product overview; step 2 is customer form (name/email/phone). Submit calls `/api/order` then `/api/payment/create` and redirects to LHV payment page. `shopSubmitOrder` uses `p.name` and `p.price` (number).
-- **Cart (`#cart-overlay`, `.cart-overlay`):** centered overlay (same animation as order modal — `translateY(20px) scale(0.97)` → `(0) scale(1)`). No floating FAB — the nav `#nav-action-btn` is the cart entry point on this page.
+- `showGrid` list includes: `grid-gpu-nvidia`, `grid-gpu-amd`, `grid-cpu-intel`, `grid-cpu-amd`, `grid-acc-keyboards`, `grid-acc-mice`.
+- **NEW badge** on `#tab-gpu` via CSS `::after` (same as `#tab-acc`).
+- **GPU image scaling:** CSS rule `#grid-gpu-nvidia .product-img-wrap img, #grid-gpu-amd .product-img-wrap img { transform: scale(0.833) }` — applies automatically to all GPU cards.
+- **Product img wrap background:** `#050505` (same as site background — clean look for transparent PNGs).
+- **Color swatches:** `border:none`, selection shown via `box-shadow: 0 0 0 2px #050505, 0 0 0 4px rgba(255,255,255,0.8)` (ring outside circle). Multi-color swatches use CSS `linear-gradient(135deg,...)` diagonals.
+
+#### GPU — NVIDIA model sub-tabs
+- `switchNvidiaModel(model)` toggles between `#nvidia-grid-5060ti`, `#nvidia-grid-5070`, `#nvidia-grid-5070ti`, `#nvidia-grid-5080`. Default: `5060ti`.
+- Active model tab: `color:#76b900;border-color:#76b900` (no `.active` class).
+- **5060 Ti (16GB GDDR7, 180W):** 6 cards, all active, prices 610–750 €. Sorted ascending.
+- **5070 (12GB GDDR7, 250W):** 8 cards, all active, prices 640–730 €. Sorted ascending.
+- **5070 Ti (16GB GDDR7, 300W):** 14 cards, all active, prices 980–1410 €. Sorted ascending.
+- **5080 (16GB GDDR7, 360W):** 8 cards, all active, prices 1389–1700 €. Sorted ascending.
+- Generic functions: `addGpuToCart(name, brand, price, vram, tdp)`, `orderGpu(name, brand, price, vram, tdp)`.
+
+#### GPU — AMD model sub-tabs
+- `switchAmdModel(model)` toggles between `#amd-grid-9060xt`, `#amd-grid-9070xt`. Default: `9060xt`.
+- Active model tab: `color:#ed1c24;border-color:#ed1c24`.
+- **9060 XT (16GB GDDR6, 150W):** 8 cards, all `tulevikus` (coming soon).
+- **9070 XT (16GB GDDR6, 220W):** 6 cards, all `tulevikus`.
+
+#### Accessories — Keyboards (`grid-acc-keyboards`)
+Cards sorted by price ascending:
+- **AULA F75 PRO Mechanical Keyboard 75%** — active (119/129 €). Graphite: Reaper switch. Pastel Pink: Reaper Silent switch. JS: `_f75proColor`, `selectF75ProColor()`, `addF75ProToCart()`, `orderF75Pro()`.
+- **EPOMAKER X AULA F108 PRO Mechanical Keyboard 100%** — active (159 €). 5 colors; Black Pink uses LEOBOG Greywood V3, others LEOBOG Reaper. Images in `IMG/ACCESSORIES/EPOMAKER X AULA F108 PRO/` (URL-encoded). JS: `_f108proColor`, `selectF108ProColor()`.
+- **AULA F75 MAX Mechanical Keyboard 75%** — active (139 €). 4 colors incl. White Blue diagonal swatch. JS: `_f75maxColor`, `selectF75MaxColor()`.
+- **MCHOSE Ace 68 Turbo Full-aluminum** — active (159 €). 5 colors.
+- Additional MCHOSE keyboard cards (Ace 68 etc.) — see HTML.
+- Connection spec uses `USB-C · BT · 2.4GHz` (not BT5.0).
+
+#### Accessories — Mice (`grid-acc-mice`)
+Cards sorted by price ascending:
+- **Epomaker Click Lite** — 49 €. 2 colors (Gray/White). EPOMAKER brand.
+- **A5 V3** (MCHOSE) — 79 €. Connectivity: USB-C · BT · 2.4GHz. Polling: Up to 8000 Hz.
+- **Epomaker CarbonX** — 99 €. Single color Black. Polling: Up to 8000 Hz.
+- **AX5 V2 Magnesium alloy** (MCHOSE) — 119 €. 2 colors. Polling: Up to 8000 Hz.
+- **K7 Ultra + Charging Dock** (MCHOSE) — 129 €. 4 colors with diagonal gradients. Polling: Up to 8000 Hz.
+- **Epomaker** mice in `IMG/ACCESSORIES/` with URL-encoded paths for spaces.
+- Mouse names no longer include "MCHOSE" prefix in product title (brand field handles it).
+- All mice: Connectivity `USB-C · BT · 2.4GHz`, Polling `Up to 8000 Hz` (or `Up to 1000 Hz` for Click Lite).
+
+- **Order modal:** two-step — step 1 shows product overview; step 2 is customer form (name/email/phone/address). Submit calls `/api/order` then `/api/payment/create` and redirects to LHV payment page. `shopSubmitOrder` uses `p.name` and `p.price` (number).
+- **Cart (`#cart-overlay`, `.cart-overlay`):** centered overlay. No floating FAB — the nav `#nav-action-btn` is the cart entry point on this page.
   - Cart items: `{title, brand, price (string "X €"), priceNum (number), specs, qty}`.
   - `checkoutFromCart()` maps `title→name`, `priceNum→price`, `price→priceDisplay` before calling `openShopModal`.
   - Cart persists in `localStorage` key `sff_cart` (JSON). Restored and re-rendered on every page load via `updateCartUI()` in the `load` event.
   - Nav button is always blue on shop page; shows `Ostukorv · N` / `Корзина · N` / `Cart · N` when items present, plain label when empty.
-  - Toast on add: pops below the nav button (reads its `getBoundingClientRect()`), spring animation, language-aware text: ET `Lisatud`, RU `Добавлено`, EN `Added`. Falls back to bottom-right on mobile (button hidden, rect is zero).
-  - All cart overlay static texts use `data-key`: `cart-title`, `cart-total-label`, `cart-checkout`, `cart-empty-text` — translated via `pageTranslations`.
+  - Toast on add: pops below the nav button, spring animation, language-aware: ET `Lisatud`, RU `Добавлено`, EN `Added`.
+  - All cart overlay static texts use `data-key`: `cart-title`, `cart-total-label`, `cart-checkout`, `cart-empty-text`.
   - Product card "add to cart" buttons use `data-key="cart-add"`: ET `+ Ostukorvi`, RU `+ В корзину`, EN `+ Add to cart`.
 
 ## Token efficiency rules
