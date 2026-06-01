@@ -49,6 +49,8 @@
             display: flex; align-items: center; justify-content: center; margin-bottom: 20px; overflow: hidden;
         }
         .product-img-wrap img { height: 200px; width: 100%; object-fit: contain; }
+        #grid-gpu-nvidia .product-img-wrap img,
+        #grid-gpu-amd .product-img-wrap img { transform: scale(0.833); }
 
         .shop-modal-overlay {
             position: fixed; inset: 0; z-index: 1000; display: flex; align-items: center; justify-content: center;
@@ -125,18 +127,62 @@
 
                     <!-- GPU · NVIDIA -->
                     <div id="grid-gpu-nvidia" class="shop-grid shop-grid-visible">
+
+                        <!-- Model tabs -->
+                        <div class="flex justify-center gap-2 mb-8 flex-wrap">
+                            <button onclick="switchNvidiaModel('5060ti')" id="nvidia-model-5060ti" class="os-switch-btn px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest">RTX 5060 Ti</button>
+                            <button onclick="switchNvidiaModel('5070')"   id="nvidia-model-5070"   class="os-switch-btn px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest">RTX 5070</button>
+                            <button onclick="switchNvidiaModel('5070ti')" id="nvidia-model-5070ti" class="os-switch-btn px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest">RTX 5070 Ti</button>
+                            <button onclick="switchNvidiaModel('5080')"   id="nvidia-model-5080"   class="os-switch-btn px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest" style="color:#76b900;border-color:#76b900">RTX 5080</button>
+                        </div>
+
+                        <!-- 5060 Ti -->
+                        <div id="nvidia-grid-5060ti" style="display:none">
+                            <div class="flex justify-center py-16">
+                                <div class="glass-card p-12 rounded-[40px] text-center" style="min-height:auto;width:320px">
+                                    <div class="text-4xl mb-4">⏳</div>
+                                    <p class="text-2xl font-black uppercase tracking-widest text-white mb-2" data-key="shop-soon">Peagi</p>
+                                    <p class="text-zinc-600 text-[10px] uppercase tracking-widest font-bold">RTX 5060 Ti</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 5070 -->
+                        <div id="nvidia-grid-5070" style="display:none">
+                            <div class="flex justify-center py-16">
+                                <div class="glass-card p-12 rounded-[40px] text-center" style="min-height:auto;width:320px">
+                                    <div class="text-4xl mb-4">⏳</div>
+                                    <p class="text-2xl font-black uppercase tracking-widest text-white mb-2" data-key="shop-soon">Peagi</p>
+                                    <p class="text-zinc-600 text-[10px] uppercase tracking-widest font-bold">RTX 5070</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 5070 Ti -->
+                        <div id="nvidia-grid-5070ti" style="display:none">
+                            <div class="flex justify-center py-16">
+                                <div class="glass-card p-12 rounded-[40px] text-center" style="min-height:auto;width:320px">
+                                    <div class="text-4xl mb-4">⏳</div>
+                                    <p class="text-2xl font-black uppercase tracking-widest text-white mb-2" data-key="shop-soon">Peagi</p>
+                                    <p class="text-zinc-600 text-[10px] uppercase tracking-widest font-bold">RTX 5070 Ti</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 5080 -->
+                        <div id="nvidia-grid-5080">
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch">
 
                             <div class="flex reveal">
                                 <div class="glass-card p-8 rounded-[40px] flex flex-col w-full">
                                     <div class="product-img-wrap">
-                                        <img src="" alt="PNY GeForce RTX 5080 16GB OC Triple Fan">
+                                        <img src="/IMG/ACCESSORIES/GeForce%20RTX%205080/GeForce%20RTX%205080%2016GB%20OC%20Triple%20Fan.png" alt="PNY GeForce RTX 5080 16GB OC Triple Fan">
                                     </div>
                                     <span class="text-blue-500 text-[10px] font-black uppercase tracking-[0.2em] mb-2">NVIDIA · PNY</span>
                                     <h3 class="text-base font-extrabold text-white mb-4 leading-snug">GeForce RTX 5080 16GB OC Triple Fan</h3>
                                     <div class="space-y-1.5 text-[11px] font-bold uppercase tracking-[0.1em] mb-6">
                                         <div class="text-zinc-600">VRAM <span class="text-zinc-400">16GB GDDR7</span></div>
-                                        <div class="text-zinc-600">TDP <span class="text-zinc-400">850W</span></div>
+                                        <div class="text-zinc-600">TDP <span class="text-zinc-400">360W</span></div>
                                     </div>
                                     <div class="mt-auto">
                                         <div class="text-3xl font-black tracking-tighter text-zinc-600 mb-5">tulevikus</div>
@@ -149,13 +195,127 @@
                             <div class="flex reveal">
                                 <div class="glass-card p-8 rounded-[40px] flex flex-col w-full">
                                     <div class="product-img-wrap">
-                                        <img src="" alt="PNY GeForce RTX 5080 16GB ARGB OC Triple Fan">
+                                        <img src="/IMG/ACCESSORIES/GeForce%20RTX%205080/GeForce%20RTX%205080%2016GB%20ARGB%20OC%20Triple%20Fan.png" alt="PNY GeForce RTX 5080 16GB ARGB OC Triple Fan">
                                     </div>
                                     <span class="text-blue-500 text-[10px] font-black uppercase tracking-[0.2em] mb-2">NVIDIA · PNY</span>
                                     <h3 class="text-base font-extrabold text-white mb-4 leading-snug">GeForce RTX 5080 16GB ARGB OC Triple Fan</h3>
                                     <div class="space-y-1.5 text-[11px] font-bold uppercase tracking-[0.1em] mb-6">
                                         <div class="text-zinc-600">VRAM <span class="text-zinc-400">16GB GDDR7</span></div>
-                                        <div class="text-zinc-600">TDP <span class="text-zinc-400">850W</span></div>
+                                        <div class="text-zinc-600">TDP <span class="text-zinc-400">360W</span></div>
+                                    </div>
+                                    <div class="mt-auto">
+                                        <div class="text-3xl font-black tracking-tighter text-zinc-600 mb-5">tulevikus</div>
+                                        <button class="w-full py-3 rounded-2xl text-xs font-bold uppercase tracking-widest mb-2" style="background:rgba(37,99,235,0.1);color:#60a5fa;border:1px solid rgba(37,99,235,0.3);opacity:0.4;pointer-events:none;cursor:not-allowed" data-key="cart-add">+ Ostukorvi</button>
+                                        <button class="w-full py-4 rounded-2xl text-xs font-black uppercase tracking-widest" style="background:#2563eb;color:#fff;opacity:0.4;pointer-events:none;cursor:not-allowed" data-key="shop-order">Tellida</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="flex reveal">
+                                <div class="glass-card p-8 rounded-[40px] flex flex-col w-full">
+                                    <div class="product-img-wrap">
+                                        <img src="/IMG/ACCESSORIES/GeForce%20RTX%205080/ASUS%20ROG%20Astral%20GeForce%20RTX%205080%2016GB.png" alt="ASUS ROG Astral GeForce RTX 5080 16GB">
+                                    </div>
+                                    <span class="text-blue-500 text-[10px] font-black uppercase tracking-[0.2em] mb-2">NVIDIA · ASUS ROG</span>
+                                    <h3 class="text-base font-extrabold text-white mb-4 leading-snug">ROG Astral GeForce RTX 5080 16GB</h3>
+                                    <div class="space-y-1.5 text-[11px] font-bold uppercase tracking-[0.1em] mb-6">
+                                        <div class="text-zinc-600">VRAM <span class="text-zinc-400">16GB GDDR7</span></div>
+                                        <div class="text-zinc-600">TDP <span class="text-zinc-400">360W</span></div>
+                                    </div>
+                                    <div class="mt-auto">
+                                        <div class="text-3xl font-black tracking-tighter text-zinc-600 mb-5">tulevikus</div>
+                                        <button class="w-full py-3 rounded-2xl text-xs font-bold uppercase tracking-widest mb-2" style="background:rgba(37,99,235,0.1);color:#60a5fa;border:1px solid rgba(37,99,235,0.3);opacity:0.4;pointer-events:none;cursor:not-allowed" data-key="cart-add">+ Ostukorvi</button>
+                                        <button class="w-full py-4 rounded-2xl text-xs font-black uppercase tracking-widest" style="background:#2563eb;color:#fff;opacity:0.4;pointer-events:none;cursor:not-allowed" data-key="shop-order">Tellida</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="flex reveal">
+                                <div class="glass-card p-8 rounded-[40px] flex flex-col w-full">
+                                    <div class="product-img-wrap">
+                                        <img src="/IMG/ACCESSORIES/GeForce%20RTX%205080/ASUS%20TUF%20Gaming%20GeForce%20RTX%205080%20OC%20Edition%2016GB.png" alt="ASUS TUF Gaming GeForce RTX 5080 OC Edition 16GB">
+                                    </div>
+                                    <span class="text-blue-500 text-[10px] font-black uppercase tracking-[0.2em] mb-2">NVIDIA · ASUS TUF</span>
+                                    <h3 class="text-base font-extrabold text-white mb-4 leading-snug">TUF Gaming GeForce RTX 5080 OC 16GB</h3>
+                                    <div class="space-y-1.5 text-[11px] font-bold uppercase tracking-[0.1em] mb-6">
+                                        <div class="text-zinc-600">VRAM <span class="text-zinc-400">16GB GDDR7</span></div>
+                                        <div class="text-zinc-600">TDP <span class="text-zinc-400">360W</span></div>
+                                    </div>
+                                    <div class="mt-auto">
+                                        <div class="text-3xl font-black tracking-tighter text-zinc-600 mb-5">tulevikus</div>
+                                        <button class="w-full py-3 rounded-2xl text-xs font-bold uppercase tracking-widest mb-2" style="background:rgba(37,99,235,0.1);color:#60a5fa;border:1px solid rgba(37,99,235,0.3);opacity:0.4;pointer-events:none;cursor:not-allowed" data-key="cart-add">+ Ostukorvi</button>
+                                        <button class="w-full py-4 rounded-2xl text-xs font-black uppercase tracking-widest" style="background:#2563eb;color:#fff;opacity:0.4;pointer-events:none;cursor:not-allowed" data-key="shop-order">Tellida</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="flex reveal">
+                                <div class="glass-card p-8 rounded-[40px] flex flex-col w-full">
+                                    <div class="product-img-wrap">
+                                        <img src="/IMG/ACCESSORIES/GeForce%20RTX%205080/Gigabyte%20GeForce%20RTX%205080%20AERO%20OC%20SFF%2016GB.png" alt="Gigabyte GeForce RTX 5080 AERO OC SFF 16GB">
+                                    </div>
+                                    <span class="text-blue-500 text-[10px] font-black uppercase tracking-[0.2em] mb-2">NVIDIA · Gigabyte</span>
+                                    <h3 class="text-base font-extrabold text-white mb-4 leading-snug">GeForce RTX 5080 AERO OC SFF 16GB</h3>
+                                    <div class="space-y-1.5 text-[11px] font-bold uppercase tracking-[0.1em] mb-6">
+                                        <div class="text-zinc-600">VRAM <span class="text-zinc-400">16GB GDDR7</span></div>
+                                        <div class="text-zinc-600">TDP <span class="text-zinc-400">360W</span></div>
+                                    </div>
+                                    <div class="mt-auto">
+                                        <div class="text-3xl font-black tracking-tighter text-zinc-600 mb-5">tulevikus</div>
+                                        <button class="w-full py-3 rounded-2xl text-xs font-bold uppercase tracking-widest mb-2" style="background:rgba(37,99,235,0.1);color:#60a5fa;border:1px solid rgba(37,99,235,0.3);opacity:0.4;pointer-events:none;cursor:not-allowed" data-key="cart-add">+ Ostukorvi</button>
+                                        <button class="w-full py-4 rounded-2xl text-xs font-black uppercase tracking-widest" style="background:#2563eb;color:#fff;opacity:0.4;pointer-events:none;cursor:not-allowed" data-key="shop-order">Tellida</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="flex reveal">
+                                <div class="glass-card p-8 rounded-[40px] flex flex-col w-full">
+                                    <div class="product-img-wrap">
+                                        <img src="/IMG/ACCESSORIES/GeForce%20RTX%205080/Gigabyte%20GeForce%20RTX%205080%20Gaming%20OC%2016GB.png" alt="Gigabyte GeForce RTX 5080 Gaming OC 16GB">
+                                    </div>
+                                    <span class="text-blue-500 text-[10px] font-black uppercase tracking-[0.2em] mb-2">NVIDIA · Gigabyte</span>
+                                    <h3 class="text-base font-extrabold text-white mb-4 leading-snug">GeForce RTX 5080 Gaming OC 16GB</h3>
+                                    <div class="space-y-1.5 text-[11px] font-bold uppercase tracking-[0.1em] mb-6">
+                                        <div class="text-zinc-600">VRAM <span class="text-zinc-400">16GB GDDR7</span></div>
+                                        <div class="text-zinc-600">TDP <span class="text-zinc-400">360W</span></div>
+                                    </div>
+                                    <div class="mt-auto">
+                                        <div class="text-3xl font-black tracking-tighter text-zinc-600 mb-5">tulevikus</div>
+                                        <button class="w-full py-3 rounded-2xl text-xs font-bold uppercase tracking-widest mb-2" style="background:rgba(37,99,235,0.1);color:#60a5fa;border:1px solid rgba(37,99,235,0.3);opacity:0.4;pointer-events:none;cursor:not-allowed" data-key="cart-add">+ Ostukorvi</button>
+                                        <button class="w-full py-4 rounded-2xl text-xs font-black uppercase tracking-widest" style="background:#2563eb;color:#fff;opacity:0.4;pointer-events:none;cursor:not-allowed" data-key="shop-order">Tellida</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="flex reveal">
+                                <div class="glass-card p-8 rounded-[40px] flex flex-col w-full">
+                                    <div class="product-img-wrap">
+                                        <img src="/IMG/ACCESSORIES/GeForce%20RTX%205080/MSI%20GeForce%20RTX%205080%2016G%20Gaming%20Trio%20OC%2016GB.png" alt="MSI GeForce RTX 5080 Gaming Trio OC 16GB">
+                                    </div>
+                                    <span class="text-blue-500 text-[10px] font-black uppercase tracking-[0.2em] mb-2">NVIDIA · MSI</span>
+                                    <h3 class="text-base font-extrabold text-white mb-4 leading-snug">GeForce RTX 5080 Gaming Trio OC 16GB</h3>
+                                    <div class="space-y-1.5 text-[11px] font-bold uppercase tracking-[0.1em] mb-6">
+                                        <div class="text-zinc-600">VRAM <span class="text-zinc-400">16GB GDDR7</span></div>
+                                        <div class="text-zinc-600">TDP <span class="text-zinc-400">360W</span></div>
+                                    </div>
+                                    <div class="mt-auto">
+                                        <div class="text-3xl font-black tracking-tighter text-zinc-600 mb-5">tulevikus</div>
+                                        <button class="w-full py-3 rounded-2xl text-xs font-bold uppercase tracking-widest mb-2" style="background:rgba(37,99,235,0.1);color:#60a5fa;border:1px solid rgba(37,99,235,0.3);opacity:0.4;pointer-events:none;cursor:not-allowed" data-key="cart-add">+ Ostukorvi</button>
+                                        <button class="w-full py-4 rounded-2xl text-xs font-black uppercase tracking-widest" style="background:#2563eb;color:#fff;opacity:0.4;pointer-events:none;cursor:not-allowed" data-key="shop-order">Tellida</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="flex reveal">
+                                <div class="glass-card p-8 rounded-[40px] flex flex-col w-full">
+                                    <div class="product-img-wrap">
+                                        <img src="/IMG/ACCESSORIES/GeForce%20RTX%205080/MSI%20GeForce%20RTX%205080%2016G%20Ventus%203X%20OC%2016GB.png" alt="MSI GeForce RTX 5080 Ventus 3X OC 16GB">
+                                    </div>
+                                    <span class="text-blue-500 text-[10px] font-black uppercase tracking-[0.2em] mb-2">NVIDIA · MSI</span>
+                                    <h3 class="text-base font-extrabold text-white mb-4 leading-snug">GeForce RTX 5080 Ventus 3X OC 16GB</h3>
+                                    <div class="space-y-1.5 text-[11px] font-bold uppercase tracking-[0.1em] mb-6">
+                                        <div class="text-zinc-600">VRAM <span class="text-zinc-400">16GB GDDR7</span></div>
+                                        <div class="text-zinc-600">TDP <span class="text-zinc-400">360W</span></div>
                                     </div>
                                     <div class="mt-auto">
                                         <div class="text-3xl font-black tracking-tighter text-zinc-600 mb-5">tulevikus</div>
@@ -166,6 +326,7 @@
                             </div>
 
                         </div>
+                        </div><!-- /nvidia-grid-5080 -->
                     </div>
 
                     <!-- GPU · AMD -->
@@ -668,6 +829,27 @@
             document.getElementById('brands-cpu').style.display = cat === 'cpu' ? 'flex' : 'none';
             document.getElementById('brands-acc').style.display = cat === 'acc' ? 'flex' : 'none';
             showGrid(cat, currentBrands[cat]);
+        }
+
+        var currentNvidiaModel = '5080';
+        var _nvidiaModels = ['5060ti', '5070', '5070ti', '5080'];
+
+        function switchNvidiaModel(model) {
+            currentNvidiaModel = model;
+            _nvidiaModels.forEach(function(m) {
+                var btn  = document.getElementById('nvidia-model-' + m);
+                var grid = document.getElementById('nvidia-grid-' + m);
+                if (btn) {
+                    if (m === model) {
+                        btn.style.color       = '#76b900';
+                        btn.style.borderColor = '#76b900';
+                    } else {
+                        btn.style.color       = '';
+                        btn.style.borderColor = '';
+                    }
+                }
+                if (grid) grid.style.display = (m === model) ? '' : 'none';
+            });
         }
 
         function switchBrand(cat, brand) {
