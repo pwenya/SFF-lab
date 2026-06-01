@@ -39,13 +39,17 @@
         @keyframes _pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(0.88); } }
         #tab-acc { position: relative; }
         #tab-acc::after { content: 'NEW'; position: absolute; top: -7px; right: -4px; font-size: 8px; font-weight: 800; letter-spacing: 0.12em; color: #fff; background: #2563eb; padding: 2px 6px; border-radius: 4px; animation: _pulse 2s ease-in-out infinite; }
+        #brand-gpu-nvidia { position: relative; }
+        #brand-gpu-nvidia::after { content: 'NEW'; position: absolute; top: -7px; right: -4px; font-size: 8px; font-weight: 800; letter-spacing: 0.12em; color: #fff; background: #2563eb; padding: 2px 6px; border-radius: 4px; animation: _pulse 2s ease-in-out infinite; }
+        #nvidia-model-5080 { position: relative; }
+        #nvidia-model-5080::after { content: 'NEW'; position: absolute; top: -7px; right: -4px; font-size: 8px; font-weight: 800; letter-spacing: 0.12em; color: #fff; background: #2563eb; padding: 2px 6px; border-radius: 4px; animation: _pulse 2s ease-in-out infinite; }
 
         .shop-grid { transition: opacity 0.35s ease, transform 0.35s ease; }
         .shop-grid-hidden { opacity: 0; transform: translateY(12px); pointer-events: none; position: absolute; width: 100%; top: 0; max-height: 0; overflow: hidden; }
         .shop-grid-visible { opacity: 1; transform: translateY(0); }
 
         .product-img-wrap {
-            height: 200px; background: rgba(255,255,255,0.02); border-radius: 16px;
+            height: 200px; background: #050505; border-radius: 16px;
             display: flex; align-items: center; justify-content: center; margin-bottom: 20px; overflow: hidden;
         }
         .product-img-wrap img { height: 200px; width: 100%; object-fit: contain; }
