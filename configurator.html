@@ -210,7 +210,14 @@
                     <div id="case-colors" class="flex gap-2"></div>
                 </div>
                 <div>
-                    <label data-key="cpu-label" class="block text-[10px] font-black uppercase tracking-widest text-blue-500 mb-3">Protsessor (CPU)</label>
+                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+                        <label data-key="cpu-label" class="text-[10px] font-black uppercase tracking-widest text-blue-500">Protsessor (CPU)</label>
+                        <span id="intel-toggle-wrap" style="display:none;align-items:center;gap:6px">
+                            <span id="intel-amd-lbl" style="font-size:9px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:#ef4444">AMD</span>
+                            <span onclick="toggleIntelMode()" id="intel-track" style="display:inline-flex;width:32px;height:18px;border-radius:9px;background:#ef4444;position:relative;transition:background 0.2s;cursor:pointer;flex-shrink:0"><span id="intel-knob" style="position:absolute;top:3px;left:3px;width:12px;height:12px;border-radius:50%;background:#ffffff;transition:all 0.2s"></span></span>
+                            <span id="intel-int-lbl" style="font-size:9px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:#52525b">Intel</span>
+                        </span>
+                    </div>
                     <div id="cpu-container" class="flex gap-2" style="pointer-events:none">
                         <button onclick="selectCpu('7500f')"   id="cpu-7500f"   class="os-btn active flex-1 py-3 px-2 rounded-xl text-[9px] font-black uppercase tracking-wider text-center">Ryzen 5 7500F</button>
                         <button onclick="selectCpu('7500x3d')" id="cpu-7500x3d" class="os-btn flex-1 py-3 px-2 rounded-xl text-[9px] font-black uppercase tracking-wider text-center" style="opacity:0.35">Ryzen 5 7500X3D</button>
@@ -456,7 +463,9 @@
         var GPU_LABELS        = { '9060xt': 'AMD Radeon RX 9060 XT 16GB OC', '9070xt16': 'AMD Radeon RX 9070 XT 16GB OC', '9070xt20': 'AMD Radeon RX 9070 XT 20GB' };
         var NVIDIA_GPU_LABELS = { '9060xt': 'NVIDIA GeForce RTX 5060 Ti 16GB OC', '9070xt16': 'NVIDIA GeForce RTX 5070 Ti 16GB OC' };
         var NVIDIA_GPU_EXTRA  = { '9060xt': 170, '9070xt16': 300 };
+        var INTEL_CPU_LABELS  = { '7500f': 'Intel Core i5-14400F', '7500x3d': 'Intel Core i5-14600KF' };
         var nvidiaMode = false;
+        var intelMode  = false;
         var selectedRam = '16';
         var selectedSsd = '1';
         var selectedCpu = '7500f';
@@ -477,6 +486,7 @@
             disp.innerText   = labels[os];
             disp.style.color = colors[os];
             _updateNvidiaToggleVisibility();
+            _updateIntelToggleVisibility();
             updatePrice();
         }
 
@@ -741,6 +751,49 @@
             }
         }
 
+        /* ── Intel / AMD CPU toggle ── */
+        function toggleIntelMode() {
+            intelMode = !intelMode;
+            _updateIntelVisual();
+            _updateCpuButtons();
+            updatePrice();
+        }
+        function _updateIntelVisual() {
+            var track  = document.getElementById('intel-track');
+            var knob   = document.getElementById('intel-knob');
+            var amdLbl = document.getElementById('intel-amd-lbl');
+            var intLbl = document.getElementById('intel-int-lbl');
+            if (!track) return;
+            if (intelMode) {
+                track.style.background = '#0071c5';
+                knob.style.left        = '17px';
+                if (amdLbl) amdLbl.style.color = '#52525b';
+                if (intLbl) intLbl.style.color  = '#0071c5';
+            } else {
+                track.style.background = '#ef4444';
+                knob.style.left        = '3px';
+                if (amdLbl) amdLbl.style.color = '#ef4444';
+                if (intLbl) intLbl.style.color  = '#52525b';
+            }
+        }
+        function _updateCpuButtons() {
+            var btn1 = document.getElementById('cpu-7500f');
+            var btn2 = document.getElementById('cpu-7500x3d');
+            if (btn1) btn1.textContent = intelMode ? 'i5-14400F' : 'Ryzen 5 7500F';
+            if (btn2) btn2.textContent = intelMode ? 'i5-14600KF' : 'Ryzen 5 7500X3D';
+        }
+        function _updateIntelToggleVisibility() {
+            var wrap = document.getElementById('intel-toggle-wrap');
+            if (!wrap) return;
+            var show = (urlParams.get('os') === 'windows' || selectedOS === 'windows') && MODE !== 'dualboot';
+            wrap.style.display = show ? 'flex' : 'none';
+            if (!show && intelMode) {
+                intelMode = false;
+                _updateIntelVisual();
+                _updateCpuButtons();
+            }
+        }
+
         /* ── Win11 toggle ── */
         function _updateWin11Visual() {
             var track = document.getElementById('win11-track');
@@ -895,7 +948,7 @@
                 model:    document.getElementById('model-display').innerText,
                 os:       osDisplay,
                 caseTxt:  selectedCaseModel + ' — ' + selectedCaseColor,
-                cpu:      CPU_LABELS[selectedCpu],
+                cpu:      (intelMode ? INTEL_CPU_LABELS[selectedCpu] : null) || CPU_LABELS[selectedCpu],
                 gpu:      (nvidiaMode ? NVIDIA_GPU_LABELS[selectedGpu] : null) || GPU_LABELS[selectedGpu],
                 ram:      RAM_LABELS[selectedRam],
                 ssd:      SSD_LABELS[selectedSsd],
@@ -1232,6 +1285,7 @@
             renderCaseColors(); initMode();
             if (urlParams.get('os') === 'windows') win11Enabled = true;
             _updateNvidiaToggleVisibility();
+            _updateIntelToggleVisibility();
             _updateWin11Visual();
             updatePrice(); window.updateCaseImage();
             Object.values(CASE_IMAGES).forEach(function(base) {
