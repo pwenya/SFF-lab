@@ -954,7 +954,7 @@
             var p    = _shopCurrentProduct;
 
             try {
-                var orderRes = await fetch('/api/orders', {
+                var orderRes = await fetch('/api/order', {
                     method:  'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body:    JSON.stringify({
