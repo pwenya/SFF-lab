@@ -1337,6 +1337,7 @@
             document.getElementById('brands-cpu').style.display = cat === 'cpu' ? 'flex' : 'none';
             document.getElementById('brands-acc').style.display = cat === 'acc' ? 'flex' : 'none';
             showGrid(cat, currentBrands[cat]);
+            _updateHash();
         }
 
         var currentNvidiaModel = '5060ti';
@@ -1367,6 +1368,7 @@
                 }
                 if (grid) grid.style.display = (m === model) ? '' : 'none';
             });
+            _updateHash();
         }
 
         var currentAmdModel = '9060xt';
@@ -1388,6 +1390,7 @@
                 }
                 if (grid) grid.style.display = (m === model) ? '' : 'none';
             });
+            _updateHash();
         }
 
         function switchBrand(cat, brand) {
@@ -1421,6 +1424,7 @@
                 }
             });
             showGrid(cat, brand);
+            _updateHash();
         }
 
         function showGrid(cat, brand) {
@@ -1431,6 +1435,30 @@
                 el.classList.toggle('shop-grid-visible', active);
                 el.classList.toggle('shop-grid-hidden', !active);
             });
+        }
+
+        function _updateHash() {
+            var hash = currentCategory + '-' + currentBrands[currentCategory];
+            if (currentCategory === 'gpu') {
+                if (currentBrands.gpu === 'nvidia') hash += '-' + currentNvidiaModel;
+                else if (currentBrands.gpu === 'amd') hash += '-' + currentAmdModel;
+            }
+            history.replaceState(null, '', '#' + hash);
+        }
+
+        function _restoreFromHash() {
+            var hash = window.location.hash.replace('#', '');
+            if (!hash) return;
+            var parts = hash.split('-');
+            var cat = parts[0], brand = parts[1], model = parts[2];
+            var valid = { gpu: ['nvidia','amd'], cpu: ['intel','amd'], acc: ['keyboards','mice'] };
+            if (!valid[cat] || valid[cat].indexOf(brand) === -1) return;
+            switchCategory(cat);
+            switchBrand(cat, brand);
+            if (model) {
+                if (cat === 'gpu' && brand === 'nvidia' && _nvidiaModels.indexOf(model) !== -1) switchNvidiaModel(model);
+                if (cat === 'gpu' && brand === 'amd'    && _amdModels.indexOf(model) !== -1)    switchAmdModel(model);
+            }
         }
 
         // Apply initial brand colors without touching grid visibility
@@ -1449,6 +1477,8 @@
                 }
             });
         })();
+
+        _restoreFromHash();
 
         var _f75proColor = 'grey';
         var _f75proPrices = { grey: 119, pink: 129 };
