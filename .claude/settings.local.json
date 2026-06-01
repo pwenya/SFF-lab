@@ -2,7 +2,8 @@
   "permissions": {
     "allow": [
       "Bash(git add *)",
-      "Bash(git commit -m ' *)"
+      "Bash(git commit -m ' *)",
+      "PowerShell(Get-ChildItem \"D:\\\\SFF-lab\\\\IMG\" | Where-Object { $_.Name -match \"Ridge\" } | Select-Object Name)"
     ]
   }
 }
