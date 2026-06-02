@@ -35,6 +35,13 @@
         .contact-input:focus { border-color: rgba(59,130,246,0.6); }
         .contact-input::placeholder { color: #52525b; }
         textarea.contact-input { resize: vertical; min-height: 180px; }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(36px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn  { from { opacity: 0; } to { opacity: 1; } }
+        .anim-title { animation: fadeUp 1s cubic-bezier(0.16,1,0.3,1) 0.1s both; }
+        .anim-sub   { animation: fadeUp 0.9s cubic-bezier(0.16,1,0.3,1) 0.28s both; }
+        .anim-desc  { animation: fadeUp 0.9s cubic-bezier(0.16,1,0.3,1) 0.44s both; }
+        .anim-btn   { animation: fadeUp 0.9s cubic-bezier(0.16,1,0.3,1) 0.58s both; }
+        .anim-glow  { animation: fadeIn 1.4s ease 0.05s both; }
     </style>
     <script defer src="/_vercel/insights/script.js"></script>
 </head>
@@ -42,16 +49,16 @@
 
     <div class="pt-[73px] md:pt-[88px]">
         <section class="min-h-[80vh] flex items-center justify-center py-20 px-6 relative overflow-hidden">
-            <div class="absolute inset-0 pointer-events-none">
+            <div class="absolute inset-0 pointer-events-none anim-glow">
                 <div class="absolute top-1/2 left-1/2 w-[700px] h-[500px] bg-blue-600/8 blur-[140px] rounded-full" style="transform:translate(-50%,-50%)"></div>
             </div>
             <div class="relative z-10 max-w-3xl w-full text-center">
-                <h1 class="text-gradient text-[3.5rem] sm:text-[5.5rem] md:text-[7.5rem] font-extrabold tracking-tighter leading-none uppercase mb-4" style="display:inline-block" data-key="excl-title">Eksklusiiv</h1>
-                <p class="text-zinc-500 uppercase text-[10px] md:text-[11px] tracking-[0.4em] font-bold mb-10" data-key="excl-subtitle">Premium · Custom</p>
-                <p class="text-zinc-400 text-base md:text-lg leading-relaxed max-w-xl mx-auto mb-12" data-key="excl-desc">
+                <h1 class="anim-title text-gradient text-[3.5rem] sm:text-[5.5rem] md:text-[7.5rem] font-extrabold tracking-tighter leading-none uppercase mb-4" style="display:inline-block" data-key="excl-title">Eksklusiiv</h1>
+                <p class="anim-sub text-zinc-500 uppercase text-[10px] md:text-[11px] tracking-[0.4em] font-bold mb-10" data-key="excl-subtitle">Premium · Custom</p>
+                <p class="anim-desc text-zinc-400 text-base md:text-lg leading-relaxed max-w-xl mx-auto mb-12" data-key="excl-desc">
                     Eksklusiivne koostöö, eritellimus või äripartnerlus — kirjutage meile ja räägime lähemalt.
                 </p>
-                <button onclick="openContact()" class="px-10 py-4 rounded-full text-sm font-black uppercase tracking-widest text-white transition-all" style="background:#2563eb;box-shadow:0 8px 32px rgba(37,99,235,0.3);border:none;cursor:pointer;font-family:inherit" onmouseover="this.style.background='#3b82f6'" onmouseout="this.style.background='#2563eb'" data-key="excl-btn">Võta ühendust</button>
+                <button onclick="openContact()" class="anim-btn px-10 py-4 rounded-full text-sm font-black uppercase tracking-widest text-white transition-all" style="background:#2563eb;box-shadow:0 8px 32px rgba(37,99,235,0.3);border:none;cursor:pointer;font-family:inherit" onmouseover="this.style.background='#3b82f6'" onmouseout="this.style.background='#2563eb'" data-key="excl-btn">Võta ühendust</button>
             </div>
         </section>
     </div>
