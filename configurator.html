@@ -8,6 +8,7 @@
     <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link rel="apple-touch-icon" href="/favicon-192.png">
+    <script>if(new URLSearchParams(location.search).get('os')==='windows')document.documentElement.classList.add('os-windows');</script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
@@ -116,6 +117,9 @@
         #main-footer { margin-left: -24px; margin-right: -24px; }
         @media (min-width: 768px) { #main-footer { margin-left: -80px; margin-right: -80px; } }
         @media (max-width: 767px) { #case-image-panel button { display:none !important; } }
+        #win11-inline-toggle { display: none; }
+        .os-windows #win11-inline-toggle { display: inline-flex; }
+        .os-windows #steamos-label { display: none; }
     </style>
     <script defer src="/_vercel/insights/script.js"></script>
 </head>
@@ -227,11 +231,10 @@
                 <div>
                     <label data-key="os-label" class="block text-[10px] font-black uppercase tracking-widest text-blue-500 mb-3">Operatsioonisüsteem (OS)</label>
                     <div id="os-btn-row" class="flex gap-2">
-                        <button onclick="selectOS('steamos')" id="os-steamos" class="os-btn active flex-1 px-2 rounded-xl text-[9px] font-black uppercase tracking-wider flex items-center justify-center" style="padding-top:18px;padding-bottom:18px"><span onclick="event.stopPropagation();toggleWin11()" id="win11-inline-toggle" style="display:none;align-items:center;justify-content:center;gap:6px;cursor:pointer;pointer-events:auto;user-select:none"><span id="win11-track" style="display:inline-flex;width:26px;height:14px;border-radius:7px;background:#3f3f46;position:relative;transition:background 0.2s;flex-shrink:0"><span id="win11-knob" style="position:absolute;top:2px;left:2px;width:10px;height:10px;border-radius:50%;background:#71717a;transition:all 0.2s"></span></span>Win 11 Pro</span><span id="steamos-label">SteamOS</span></button>
+                        <button onclick="selectOS('steamos')" id="os-steamos" class="os-btn active flex-1 px-2 rounded-xl text-[9px] font-black uppercase tracking-wider flex items-center justify-center" style="padding-top:18px;padding-bottom:18px"><span onclick="event.stopPropagation();toggleWin11()" id="win11-inline-toggle" style="align-items:center;justify-content:center;gap:6px;cursor:pointer;pointer-events:auto;user-select:none"><span id="win11-track" style="display:inline-flex;width:26px;height:14px;border-radius:7px;background:#3f3f46;position:relative;transition:background 0.2s;flex-shrink:0"><span id="win11-knob" style="position:absolute;top:2px;left:2px;width:10px;height:10px;border-radius:50%;background:#71717a;transition:all 0.2s"></span></span>Win 11 Pro</span><span id="steamos-label">SteamOS</span></button>
                         <button onclick="selectOS('windows')" id="os-windows" class="os-btn flex-1 py-3 px-2 rounded-xl text-[9px] font-black uppercase tracking-wider text-center">Windows 11<br><span class="text-[8px] opacity-60">+79€</span></button>
                         <button onclick="selectOS('dualboot')" id="os-dualboot" class="os-btn flex-1 py-3 px-2 rounded-xl text-[9px] font-black uppercase tracking-wider text-center">Dual Boot<br><span class="text-[8px] opacity-60">+79€</span></button>
                     </div>
-                    <script>(function(){if(new URLSearchParams(location.search).get('os')==='windows'){var t=document.getElementById('win11-inline-toggle');if(t)t.style.display='inline-flex';var s=document.getElementById('steamos-label');if(s)s.style.display='none';}}());</script>
                     <div id="os-dualboot-display" style="display:none;padding-top:18px;padding-bottom:18px" class="os-btn active px-4 rounded-xl text-[9px] font-black uppercase tracking-wider text-center">SteamOS + Win 11 Pro</div>
                     <div id="os-note-windows" class="os-note os-note-blue"        data-key="os-note-windows">✓ Maksimaalne mänguühilduvus · Windows litsents kaasas</div>
                     <div id="os-note-dualboot" class="os-note os-note-violet"    data-key="os-note-dualboot">✓ SteamOS + Windows 11 · Parim mõlemast maailmast</div>
