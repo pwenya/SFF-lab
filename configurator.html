@@ -479,7 +479,7 @@
         var CASE_PARAM  = urlParams.get('case');
         var COLOR_PARAM = urlParams.get('color');
         var selectedOS  = 'steamos';
-        var win11Enabled = true;
+        var win11Enabled = false;
         var selectedSsdOs  = '1';
         var selectedSsdWin = '1';
         var selectedPreset = null;
@@ -526,7 +526,7 @@
         /* ── OS selector ── */
         function selectOS(os) {
             selectedOS = os;
-            document.querySelectorAll('.os-btn').forEach(function (b) { b.classList.remove('active', 'active-green'); });
+            document.querySelectorAll('#os-btn-row .os-btn').forEach(function (b) { b.classList.remove('active', 'active-green'); });
             document.getElementById('os-' + os).classList.add('active');
             document.querySelectorAll('.os-note').forEach(function (n) { n.classList.remove('show'); });
             var osNote = document.getElementById('os-note-' + os);
@@ -1408,6 +1408,10 @@
             }
             renderCaseColors(); initMode();
             if (urlParams.get('os') === 'windows') win11Enabled = true;
+            if (urlParams.get('os') !== 'windows' && MODE !== 'dualboot') {
+                var _win11Toggle = document.getElementById('win11-inline-toggle');
+                if (_win11Toggle) _win11Toggle.style.display = 'none';
+            }
             _updateNvidiaToggleVisibility();
             _updateIntelToggleVisibility();
             _updateWin11Visual();
