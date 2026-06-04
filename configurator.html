@@ -8,7 +8,7 @@
     <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link rel="apple-touch-icon" href="/favicon-192.png">
-    <script>if(new URLSearchParams(location.search).get('os')==='windows')document.documentElement.classList.add('os-windows');</script>
+    <script>(function(){var p=new URLSearchParams(location.search),m=p.get('mode');if(p.get('os')==='windows')document.documentElement.classList.add('os-windows');if(m==='core'||m==='plus'||m==='enthusiast')document.documentElement.classList.add('mode-steamos');if(m==='dualboot')document.documentElement.classList.add('mode-dualboot');})();</script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
@@ -120,6 +120,11 @@
         #win11-inline-toggle { display: none; }
         .os-windows #win11-inline-toggle { display: inline-flex; }
         .os-windows #steamos-label { display: none; }
+        .mode-steamos #os-windows,
+        .mode-steamos #os-dualboot,
+        .mode-steamos #os-note-dualboot,
+        .mode-steamos #os-note-windows { display: none; }
+        .mode-dualboot #os-btn-row { display: none; }
     </style>
     <script defer src="/_vercel/insights/script.js"></script>
 </head>
