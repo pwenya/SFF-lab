@@ -227,7 +227,7 @@
                 <div>
                     <label data-key="os-label" class="block text-[10px] font-black uppercase tracking-widest text-blue-500 mb-3">Operatsioonisüsteem (OS)</label>
                     <div id="os-btn-row" class="flex gap-2">
-                        <button onclick="selectOS('steamos')" id="os-steamos" class="os-btn active flex-1 px-2 rounded-xl text-[9px] font-black uppercase tracking-wider flex items-center justify-center" style="padding-top:18px;padding-bottom:18px"><span onclick="event.stopPropagation();toggleWin11()" id="win11-inline-toggle" style="display:inline-flex;align-items:center;justify-content:center;gap:6px;cursor:pointer;pointer-events:auto;user-select:none"><span id="win11-track" style="display:inline-flex;width:26px;height:14px;border-radius:7px;background:#3f3f46;position:relative;transition:background 0.2s;flex-shrink:0"><span id="win11-knob" style="position:absolute;top:2px;left:2px;width:10px;height:10px;border-radius:50%;background:#71717a;transition:all 0.2s"></span></span>Win 11 Pro</span></button>
+                        <button onclick="selectOS('steamos')" id="os-steamos" class="os-btn active flex-1 px-2 rounded-xl text-[9px] font-black uppercase tracking-wider flex items-center justify-center" style="padding-top:18px;padding-bottom:18px"><span onclick="event.stopPropagation();toggleWin11()" id="win11-inline-toggle" style="display:inline-flex;align-items:center;justify-content:center;gap:6px;cursor:pointer;pointer-events:auto;user-select:none"><span id="win11-track" style="display:inline-flex;width:26px;height:14px;border-radius:7px;background:#3f3f46;position:relative;transition:background 0.2s;flex-shrink:0"><span id="win11-knob" style="position:absolute;top:2px;left:2px;width:10px;height:10px;border-radius:50%;background:#71717a;transition:all 0.2s"></span></span>Win 11 Pro</span><span id="steamos-label" style="display:none">SteamOS</span></button>
                         <button onclick="selectOS('windows')" id="os-windows" class="os-btn flex-1 py-3 px-2 rounded-xl text-[9px] font-black uppercase tracking-wider text-center">Windows 11<br><span class="text-[8px] opacity-60">+79€</span></button>
                         <button onclick="selectOS('dualboot')" id="os-dualboot" class="os-btn flex-1 py-3 px-2 rounded-xl text-[9px] font-black uppercase tracking-wider text-center">Dual Boot<br><span class="text-[8px] opacity-60">+79€</span></button>
                     </div>
@@ -1411,6 +1411,8 @@
             if (urlParams.get('os') !== 'windows' && MODE !== 'dualboot') {
                 var _win11Toggle = document.getElementById('win11-inline-toggle');
                 if (_win11Toggle) _win11Toggle.style.display = 'none';
+                var _steamosLabel = document.getElementById('steamos-label');
+                if (_steamosLabel) _steamosLabel.style.display = '';
             }
             _updateNvidiaToggleVisibility();
             _updateIntelToggleVisibility();
