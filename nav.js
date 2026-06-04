@@ -68,7 +68,7 @@ posthog.init('phc_CQd2gFoyiJEiSVDvdiv46kPrcNSjfWUCw4GDhnPAf8Zb', {api_host: 'htt
         + '</div>'
         + '</div>'
         + '</div>'
-        + '<nav id="main-nav" class="anim-nav fixed w-full border-b border-white/5 bg-black/70 backdrop-blur-md" style="top:0;left:0;right:0;z-index:100;transition:background 0.3s,border-color 0.3s">'
+        + '<nav id="main-nav" class="anim-nav fixed w-full border-b border-white/5 bg-black/85" style="top:0;left:0;right:0;z-index:100;transition:background 0.3s,border-color 0.3s;will-change:transform">'
         + '<div class="max-w-[1400px] mx-auto py-4 md:py-6 px-6 md:px-10" style="display:flex;align-items:center;justify-content:space-between;gap:16px">'
         + '<a href="/" class="text-2xl md:text-3xl font-extrabold tracking-tighter uppercase text-white hover:opacity-80 transition" style="flex-shrink:0">SFF LAB<span class="text-blue-600">.</span></a>'
         + '<div id="main-nav-right" style="display:flex;align-items:center;gap:16px;flex-shrink:1;min-width:0">'
@@ -116,7 +116,7 @@ posthog.init('phc_CQd2gFoyiJEiSVDvdiv46kPrcNSjfWUCw4GDhnPAf8Zb', {api_host: 'htt
             var nav = document.getElementById('main-nav');
             if (!nav) return;
             var scrolled = window.scrollY > 40;
-            nav.style.background = scrolled ? 'rgba(0,0,0,0.92)' : 'rgba(0,0,0,0.7)';
+            nav.style.background = scrolled ? 'rgba(0,0,0,0.96)' : 'rgba(0,0,0,0.85)';
             nav.style.borderColor = scrolled ? 'rgba(255,255,255,0.08)' : 'rgba(255,255,255,0.05)';
         }, { passive: true });
 
