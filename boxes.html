@@ -14,7 +14,7 @@
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #050505; color: white; overflow-x: clip; }
         .glass-panel {
             background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(12px); position: relative; width: 100%; height: 350px;
+            position: relative; width: 100%; height: 350px;
             min-height: 350px; max-height: 350px; overflow: hidden;
         }
         @media (min-width: 768px) { .glass-panel { height: 600px; min-height: 600px; max-height: 600px; width: 750px; } }
@@ -45,7 +45,7 @@
         .btn-left { left: 15px; }
         .btn-right { right: 15px; }
         .panel-badge {
-            position: absolute; z-index: 10; backdrop-filter: blur(8px);
+            position: absolute; z-index: 10;
             font-size: 9px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase;
             padding: 5px 11px; border-radius: 10px;
         }
