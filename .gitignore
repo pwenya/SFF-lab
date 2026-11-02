@@ -1,0 +1,7 @@
+# Private business data — never commit (the repo and site are public)
+*.csv
+*.pdf
+Invoice/
+
+# Secrets
+.env*
