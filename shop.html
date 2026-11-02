@@ -1968,7 +1968,7 @@
                     method:  'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body:    JSON.stringify({
-                        amount:        p.price * 100,
+                        amount:        Math.round(p.price * 100),
                         currency:      'EUR',
                         orderId:       orderData.orderNumber,
                         customerEmail: email,
