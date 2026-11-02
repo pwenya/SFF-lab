@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="et">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SFF Lab | Arvustused</title>
+    <link rel="icon" href="/favicon.ico" sizes="32x32">
+    <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="apple-touch-icon" href="/favicon-192.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #050505; color: white; overflow-x: clip; }
+        .text-gradient { background: linear-gradient(to right, #fff 30%, #64748b 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+        .review-grid { display: grid; grid-template-columns: 1fr; gap: 24px; }
+        @media (min-width: 900px) { .review-grid { grid-template-columns: 1fr 1fr; } }
+
+        .review-card {
+            position: relative; display: flex; flex-direction: column; justify-content: space-between;
+            background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 40px; padding: 40px 44px 36px;
+            transition: border-color 0.5s cubic-bezier(0.4,0,0.2,1), transform 0.5s cubic-bezier(0.4,0,0.2,1), box-shadow 0.5s cubic-bezier(0.4,0,0.2,1);
+        }
+        .review-card:hover { border-color: rgba(59,130,246,0.45); transform: translateY(-4px); box-shadow: 0 24px 48px rgba(59,130,246,0.12); }
+        @media (max-width: 599px) { .review-card { padding: 32px 26px 28px; border-radius: 32px; } }
+
+        .review-mark { font-size: 64px; line-height: 0.6; font-weight: 800; color: #2563eb; margin-bottom: 18px; user-select: none; }
+        .review-text { color: #d4d4d8; font-size: 16px; line-height: 1.7; margin: 0; white-space: pre-line; }
+        .review-author { margin-top: 28px; text-align: right; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.15em; color: #fff; }
+        .review-author .company { color: #71717a; }
+
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(36px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn  { from { opacity: 0; } to { opacity: 1; } }
+        .anim-title { animation: fadeUp 1s cubic-bezier(0.16,1,0.3,1) 0.1s both; }
+        .anim-sub   { animation: fadeUp 0.9s cubic-bezier(0.16,1,0.3,1) 0.28s both; }
+        .anim-grid  { animation: fadeUp 0.9s cubic-bezier(0.16,1,0.3,1) 0.44s both; }
+        .anim-glow  { animation: fadeIn 1.4s ease 0.05s both; }
+    </style>
+    <script defer src="/_vercel/insights/script.js"></script>
+</head>
+<body class="antialiased">
+
+    <div class="pt-[73px] md:pt-[88px]">
+        <section class="relative overflow-hidden px-6 pt-20 md:pt-28 pb-20 md:pb-28">
+            <div class="absolute inset-0 pointer-events-none anim-glow">
+                <div class="absolute top-[160px] left-1/2 w-[700px] h-[400px] bg-blue-600/8 blur-[140px] rounded-full" style="transform:translateX(-50%)"></div>
+            </div>
+            <div class="relative z-10 max-w-6xl mx-auto">
+                <div class="text-center mb-14 md:mb-20">
+                    <h1 class="anim-title text-gradient text-[3rem] sm:text-[4.5rem] md:text-[6rem] font-extrabold tracking-tighter leading-none uppercase mb-4" style="display:inline-block" data-key="rev-title">Arvustused</h1>
+                    <p class="anim-sub text-zinc-500 uppercase text-[10px] md:text-[11px] tracking-[0.4em] font-bold" data-key="rev-subtitle">Mida meie kliendid ütlevad</p>
+                </div>
+                <div id="review-grid" class="review-grid anim-grid"></div>
+                <p id="review-empty" class="anim-grid text-center text-zinc-500 text-sm uppercase tracking-[0.2em] font-bold" style="display:none" data-key="rev-empty">Arvustused lisanduvad peagi</p>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        /*
+         * Reviews — add one object per review. Text is shown as written (not translated).
+         *   text:    review body (use \n for a line break)
+         *   name:    customer name
+         *   company: company name (optional — leave '' to show only the name)
+         *
+         * TODO: replace the placeholder entries below with real reviews.
+         */
+        var REVIEWS = [
+            { text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.', name: 'Nimi', company: 'Ettevõte' },
+            { text: 'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident.', name: 'Nimi', company: 'Ettevõte' },
+            { text: 'Sunt in culpa qui officia deserunt mollit anim id est laborum. Curabitur pretium tincidunt lacus, nulla gravida orci a odio.', name: 'Nimi', company: '' },
+            { text: 'Nullam varius, turpis et commodo pharetra, est eros bibendum elit, nec luctus magna felis sollicitudin mauris. Integer in mauris eu nibh euismod gravida.', name: 'Nimi', company: 'Ettevõte' }
+        ];
+
+        (function renderReviews() {
+            function esc(s) {
+                return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+                    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+                });
+            }
+            var grid = document.getElementById('review-grid');
+            if (!REVIEWS.length) {
+                grid.style.display = 'none';
+                document.getElementById('review-empty').style.display = 'block';
+                return;
+            }
+            grid.innerHTML = REVIEWS.map(function (r) {
+                var author = esc(r.name) + (r.company ? '<span class="company">. ' + esc(r.company) + '</span>' : '');
+                return '<article class="review-card">'
+                    + '<div><div class="review-mark">&ldquo;</div>'
+                    + '<p class="review-text">' + esc(r.text) + '</p></div>'
+                    + '<div class="review-author">' + author + '</div>'
+                    + '</article>';
+            }).join('');
+        })();
+
+        window.pageTranslations = {
+            et: {
+                'page-title':   'SFF Lab | Arvustused',
+                'rev-title':    'Arvustused',
+                'rev-subtitle': 'Mida meie kliendid ütlevad',
+                'rev-empty':    'Arvustused lisanduvad peagi'
+            },
+            ru: {
+                'page-title':   'SFF Lab | Отзывы',
+                'rev-title':    'Отзывы',
+                'rev-subtitle': 'Что говорят наши клиенты',
+                'rev-empty':    'Отзывы скоро появятся'
+            },
+            en: {
+                'page-title':   'SFF Lab | Reviews',
+                'rev-title':    'Reviews',
+                'rev-subtitle': 'What our customers say',
+                'rev-empty':    'Reviews coming soon'
+            }
+        };
+    </script>
+    <script src="nav.js"></script>
+</body>
+</html>

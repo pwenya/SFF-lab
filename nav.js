@@ -11,7 +11,7 @@ posthog.init('phc_CQd2gFoyiJEiSVDvdiv46kPrcNSjfWUCw4GDhnPAf8Zb', {api_host: 'htt
 
 (function () {
     /* ── Reviews link (desktop nav) — set the real URL here ── */
-    var REVIEWS_URL = '#';
+    var REVIEWS_URL = '/reviews.html';
 
     /* ── Inject shared CSS ── */
     var s = document.createElement('style');

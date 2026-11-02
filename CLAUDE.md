@@ -23,6 +23,7 @@ boxes.html           — product showcase (Mood/Terra/Ridge/Tetra R cases with c
 configurator.html    — build configurator (pricing logic via URL params)
 shop.html            — shop page (GPU/CPU tabs, brand sub-tabs, product cards)
 exclusive.html       — exclusive/contact page (hero text + contact form popup)
+reviews.html         — customer reviews (2-column cards on desktop, rendered from the REVIEWS array in the page; linked from desktop nav)
 admin.html           — order management panel (Google OAuth protected)
 legal.html           — legal pages (terms, privacy, returns)
 nav.js               — shared nav + modal + i18n engine (injected into every page)
@@ -52,7 +53,7 @@ It also defines these globals used by all pages:
 **Rule: any site-wide UI (footer, banners, etc.) belongs in nav.js — never duplicate it in individual HTML files.**
 
 ### Nav links
-- Desktop order: Shop · Eksklusiiv · Paketid — inside `class="hidden min-[900px]:flex"`
+- Desktop order: Shop · Eksklusiiv · Paketid · Arvustused (→ `/reviews.html`, URL in `REVIEWS_URL` at top of nav.js) — inside `class="hidden min-[900px]:flex"`
 - Mobile: Shop and Eksklusiiv links added separately with `class="min-[900px]:hidden flex ..."` before the desktop nav div
 - Pricing links to `https://sfflab.ee/#pricing` (absolute URL)
 - Logo links to `/` (not `index.html`) — Vercel serves index.html at `/` but `index.html` as a path returns 404
@@ -83,7 +84,7 @@ Injected by nav.js via `insertAdjacentHTML('beforeend', FOOTER_HTML)`. Structure
 
 ## i18n pattern
 - Language stored in `localStorage.selectedLanguage` (default: `'et'`)
-- nav.js handles nav-level and footer-level keys via `_NAV_TR`: `nav-pricing`, `nav-exclusive`, `nav-status`, `legal-terms`, `legal-privacy`, `legal-returns`, `footer-built`
+- nav.js handles nav-level and footer-level keys via `_NAV_TR`: `nav-pricing`, `nav-exclusive`, `nav-reviews`, `nav-status`, `legal-terms`, `legal-privacy`, `legal-returns`, `footer-built`
 - Each page sets `window.pageTranslations = { et: {...}, ru: {...} }` before `nav.js` loads
 - Elements get translated via `data-key="some-key"` attribute
 - `window.load` in nav.js calls `setLanguage(localStorage.getItem('selectedLanguage') || 'et')` — applies saved language on every page load
@@ -302,7 +303,7 @@ Every HTML page must include all three link tags:
 
 ## Vercel Analytics
 All HTML pages include `<script defer src="/_vercel/insights/script.js"></script>` before `</head>`.
-Currently added to: index.html, boxes.html, configurator.html, shop.html, exclusive.html, legal.html, admin.html.
+Currently added to: index.html, boxes.html, configurator.html, shop.html, exclusive.html, reviews.html, legal.html, admin.html.
 If adding a new page, include this script tag.
 
 ## Legal
