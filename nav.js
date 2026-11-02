@@ -10,6 +10,9 @@ gtag('config', 'AW-18179171560');
 posthog.init('phc_CQd2gFoyiJEiSVDvdiv46kPrcNSjfWUCw4GDhnPAf8Zb', {api_host: 'https://eu.i.posthog.com'});
 
 (function () {
+    /* ── Reviews link (desktop nav) — set the real URL here ── */
+    var REVIEWS_URL = '#';
+
     /* ── Inject shared CSS ── */
     var s = document.createElement('style');
     s.textContent = [
@@ -80,6 +83,8 @@ posthog.init('phc_CQd2gFoyiJEiSVDvdiv46kPrcNSjfWUCw4GDhnPAf8Zb', {api_host: 'htt
         + '<a href="exclusive.html" data-key="nav-exclusive" class="hover:text-white transition whitespace-nowrap" style="font-size:16px;font-weight:700;text-transform:uppercase;letter-spacing:0.2em">Eksklusiiv</a>'
         + '<span class="text-zinc-800 mx-2">·</span>'
         + '<a href="https://sfflab.ee/#pricing" data-key="nav-pricing" class="hover:text-white transition whitespace-nowrap">Paketid</a>'
+        + '<span class="text-zinc-800 mx-2">·</span>'
+        + '<a href="' + REVIEWS_URL + '" data-key="nav-reviews" class="hover:text-white transition whitespace-nowrap">Arvustused</a>'
         + '</div>'
         + '<div class="min-[900px]:hidden" style="position:relative;flex-shrink:0">'
         + '<button id="lang-dd-btn" onclick="window._toggleLangDD()" style="background:none;border:1px solid rgba(255,255,255,0.12);border-radius:8px;cursor:pointer;color:#71717a;font-size:11px;font-weight:800;letter-spacing:0.15em;padding:6px 9px;display:flex;align-items:center;gap:4px;font-family:inherit;transition:border-color 0.2s,color 0.2s" onmouseover="this.style.color=\'white\';this.style.borderColor=\'rgba(255,255,255,0.3)\'" onmouseout="this.style.color=\'#71717a\';this.style.borderColor=\'rgba(255,255,255,0.12)\'">'
@@ -169,13 +174,13 @@ posthog.init('phc_CQd2gFoyiJEiSVDvdiv46kPrcNSjfWUCw4GDhnPAf8Zb', {api_host: 'htt
 
     /* ── i18n ── */
     var _NAV_TR = {
-        et: { 'nav-pricing': 'Paketid',  'nav-exclusive': 'Eksklusiiv', 'nav-status': 'Tellimuse staatus',
+        et: { 'nav-pricing': 'Paketid',  'nav-exclusive': 'Eksklusiiv', 'nav-status': 'Tellimuse staatus', 'nav-reviews': 'Arvustused',
               'legal-terms': 'Müügitingimused', 'legal-privacy': 'Privaatsuspoliitika', 'legal-returns': 'Tagastuspoliitika',
               'footer-built': 'Ehitatud Eestis' },
-        ru: { 'nav-pricing': 'Цены',     'nav-exclusive': 'Эксклюзив', 'nav-status': 'Статус заказа',
+        ru: { 'nav-pricing': 'Цены',     'nav-exclusive': 'Эксклюзив', 'nav-status': 'Статус заказа', 'nav-reviews': 'Отзывы',
               'legal-terms': 'Условия продажи', 'legal-privacy': 'Конфиденциальность',  'legal-returns': 'Возврат',
               'footer-built': 'Собрано в Эстонии' },
-        en: { 'nav-pricing': 'Packages', 'nav-exclusive': 'Exclusive', 'nav-status': 'Order Status',
+        en: { 'nav-pricing': 'Packages', 'nav-exclusive': 'Exclusive', 'nav-status': 'Order Status', 'nav-reviews': 'Reviews',
               'legal-terms': 'Terms of Sale',   'legal-privacy': 'Privacy Policy',      'legal-returns': 'Returns',
               'footer-built': 'Built in Estonia' }
     };
