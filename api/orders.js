@@ -41,16 +41,13 @@ function parseCookie(req, name) {
 function isAdmin(req) {
     const token = parseCookie(req, 'admin_session') || parseCookie(req, '__Secure-next-auth.session-token');
     if (!token || !process.env.NEXTAUTH_SECRET) return false;
+    // Only a token signed with NEXTAUTH_SECRET (issued by /api/auth/callback) is accepted.
     try {
-        jwt.verify(token, process.env.NEXTAUTH_SECRET);
-        return true;
+        const payload = jwt.verify(token, process.env.NEXTAUTH_SECRET, { algorithms: ['HS256'] });
+        const adminEmail = (process.env.ADMIN_EMAIL || '').trim().toLowerCase();
+        return !!(payload && payload.email && (!adminEmail || String(payload.email).trim().toLowerCase() === adminEmail));
     } catch (e) {
-        try {
-            const decoded = jwt.decode(token);
-            return !!(decoded && decoded.email);
-        } catch (decodeErr) {
-            return false;
-        }
+        return false;
     }
 }
 

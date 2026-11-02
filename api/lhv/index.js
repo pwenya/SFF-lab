@@ -1,5 +1,6 @@
 const { Redis } = require('@upstash/redis');
 const crypto = require('crypto');
+const jwt = require('jsonwebtoken');
 
 // --- REDIS & CORS HELPERS ---
 function createRedis() {
@@ -20,6 +21,26 @@ function setCors(req, res) {
     res.setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
     res.setHeader('Vary', 'Origin');
+}
+
+// --- ADMIN AUTH (same check as api/orders.js) ---
+function parseCookie(req, name) {
+    const cookies = req.headers.cookie || '';
+    const match = cookies.split(';').map(c => c.trim()).find(c => c.startsWith(name + '='));
+    return match ? decodeURIComponent(match.slice(name.length + 1)) : null;
+}
+
+function isAdmin(req) {
+    const token = parseCookie(req, 'admin_session') || parseCookie(req, '__Secure-next-auth.session-token');
+    if (!token || !process.env.NEXTAUTH_SECRET) return false;
+    // Only a token signed with NEXTAUTH_SECRET (issued by /api/auth/callback) is accepted.
+    try {
+        const payload = jwt.verify(token, process.env.NEXTAUTH_SECRET, { algorithms: ['HS256'] });
+        const adminEmail = (process.env.ADMIN_EMAIL || '').trim().toLowerCase();
+        return !!(payload && payload.email && (!adminEmail || String(payload.email).trim().toLowerCase() === adminEmail));
+    } catch (e) {
+        return false;
+    }
 }
 
 // --- LOGIC ---
@@ -318,6 +339,12 @@ export default async function handler(req, res) {
     if (req.method === 'OPTIONS') return res.status(200).end();
 
     const redis = createRedis();
+
+    // ingest is called by the VPS and checks its own Bearer secret; everything else is admin-only
+    const isIngest = req.method === 'POST' && req.query.action === 'ingest';
+    if (!isIngest && !isAdmin(req)) {
+        return res.status(401).json({ success: false, error: 'Unauthorized' });
+    }
 
     if (req.method === 'GET') {
         return handleGet(req, res, redis);

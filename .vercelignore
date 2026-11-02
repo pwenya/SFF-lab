@@ -1,0 +1,9 @@
+# Files that must never be served on sfflab.ee
+*.csv
+*.pdf
+Invoice/
+vps/
+.idea/
+.claude/
+CLAUDE.md
+start.bat

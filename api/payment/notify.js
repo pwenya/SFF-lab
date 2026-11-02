@@ -239,8 +239,54 @@ module.exports = async function handler(req, res) {
                 return res.status(200).json({ received: true });
             }
 
+            // Compare the amount LHV actually took with the order price.
+            // order.price is parsed exactly like the checkout pages do before calling /api/payment/create.
+            var expectedEur = parseFloat(String(order.price || '').replace(/[^0-9.]/g, '')) || 0;
+            var paidRaw     = paymentData.initial_amount != null ? paymentData.initial_amount
+                            : paymentData.standing_amount != null ? paymentData.standing_amount
+                            : paymentData.amount;
+            var paidEur     = parseFloat(paidRaw);
+            var amountKnown = !isNaN(paidEur);
+
+            if (amountKnown && Math.round(paidEur * 100) !== Math.round(expectedEur * 100)) {
+                console.error('[LHV notify] AMOUNT MISMATCH for', orderReference, '— paid', paidEur, 'expected', expectedEur);
+                if (!order.amountMismatchAlertSent) {
+                    await redis.set(orderKey, Object.assign({}, order, {
+                        amountMismatch:          true,
+                        amountPaid:              paidEur,
+                        paymentReference:        paymentReference,
+                        paymentState:            paymentState,
+                        amountMismatchAlertSent: true
+                    }));
+                    try {
+                        var alertTransport = nodemailer.createTransport({
+                            host: 'smtp.gmail.com', port: 465, secure: true,
+                            auth: { user: process.env.GMAIL_USER, pass: process.env.GMAIL_APP_PASSWORD }
+                        });
+                        await alertTransport.sendMail({
+                            from:    'SFF Lab Orders <info@sfflab.ee>',
+                            to:      'info@sfflab.ee',
+                            subject: '⚠ AMOUNT MISMATCH — ' + order.orderNumber + ' — paid ' + paidEur + ' € / order ' + (order.price || '?'),
+                            text:    'Order ' + order.orderNumber + ' was paid with a different amount than the order price.\n\n'
+                                   + 'Paid (LHV): ' + paidEur + ' €\n'
+                                   + 'Order price: ' + (order.price || '?') + '\n'
+                                   + 'Payment reference: ' + paymentReference + '\n'
+                                   + 'Customer: ' + (order.name || '') + ' <' + (order.email || '') + '>\n\n'
+                                   + 'The order was NOT marked as paid and no confirmation was sent to the customer. Check it in the LHV portal.'
+                        });
+                    } catch (alertErr) {
+                        console.error('[LHV notify] mismatch alert mail error:', alertErr.message);
+                    }
+                }
+                return res.status(200).json({ received: true });
+            }
+            if (!amountKnown) {
+                console.warn('[LHV notify] paid amount not present in payment data for', orderReference, '— amount not verified');
+            }
+
             await redis.set(orderKey, Object.assign({}, order, {
                 status:           'in_progress',
+                amountPaid:       amountKnown ? paidEur : null,
                 paymentReference: paymentReference,
                 paymentState:     paymentState,
                 paidAt:           new Date().toISOString(),
